@@ -1,0 +1,1 @@
+Weather symbols for yr.no
