@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
+	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  bottomLeftOrigin="true" height="16383" width="1078" y="-8242" x="6"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<g id="snow_shower_thunder">
+</g>
+<g id="sleet_shower_thunder">
+</g>
+<g id="rain_shower_thunder">
+</g>
+<g id="clouds">
+	<g id="heavy_rain_thunder">
+	</g>
+	<g id="rain_thunder">
+	</g>
+	<g id="heavy_snow">
+	</g>
+	<g id="sleet">
+	</g>
+	<g id="heavy_rain">
+	</g>
+	<g id="rain_1_">
+	</g>
+	<g id="heavy_cloud">
+	</g>
+	<g id="fog">
+	</g>
+</g>
+<g id="snow_shower">
+</g>
+<g id="sleet_shower">
+</g>
+<g id="rain_shower">
+</g>
+<g id="partly_cloudy">
+</g>
+<g id="fair">
+</g>
+<g id="clear">
+	<path id="night-7" fill="#AFC1C9" d="M25,50c0,13.784,11.216,25,25,25s25-11.216,25-25S63.784,25,50,25S25,36.216,25,50z M50,30
+		c11.03,0,20,8.97,20,20s-8.97,20-20,20V30z"/>
+</g>
+</svg>

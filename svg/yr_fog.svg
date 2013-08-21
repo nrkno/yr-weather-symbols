@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
+	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  bottomLeftOrigin="true" height="16383" width="1078" y="-8242" x="6"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<g id="snow_shower_thunder">
+</g>
+<g id="sleet_shower_thunder">
+</g>
+<g id="rain_shower_thunder">
+</g>
+<g id="clouds">
+	<g id="heavy_rain_thunder">
+	</g>
+	<g id="rain_thunder">
+	</g>
+	<g id="heavy_snow">
+	</g>
+	<g id="sleet">
+	</g>
+	<g id="heavy_rain">
+	</g>
+	<g id="rain_1_">
+	</g>
+	<g id="heavy_cloud">
+	</g>
+	<g id="fog">
+		<path fill="#BFBFBF" d="M87.5,60.001h-75c-1.377,0-2.5,1.123-2.5,2.5s1.123,2.5,2.5,2.5h75c1.377,0,2.5-1.123,2.5-2.5
+			S88.877,60.001,87.5,60.001z"/>
+		<path fill="#BFBFBF" d="M82.5,70.001h-65c-1.377,0-2.5,1.123-2.5,2.5s1.123,2.5,2.5,2.5h65c1.377,0,2.5-1.123,2.5-2.5
+			S83.877,70.001,82.5,70.001z"/>
+		<path fill="#BFBFBF" d="M82.5,80h-60c-1.377,0-2.5,1.123-2.5,2.5s1.123,2.5,2.5,2.5h60c1.377,0,2.5-1.123,2.5-2.5
+			S83.877,80,82.5,80z"/>
+		<path fill="#BFBFBF" d="M89.978,55.006c-0.232-4.811-4.12-8.588-8.507-9.083c4.004-12.51-7.496-20.501-19-15.99
+			c-7.492-9.542-21.063-3.995-22.486,6.058c-6.359-2.116-13.108,1.884-13.108,9.038c-6.461-2.445-11.317,2.438-11.833,5.917
+			c-2.535,0.374-4.042,2.042-4.681,4.061H89.978z"/>
+	</g>
+</g>
+<g id="snow_shower">
+</g>
+<g id="sleet_shower">
+</g>
+<g id="rain_shower">
+</g>
+<g id="partly_cloudy">
+</g>
+<g id="fair">
+</g>
+<g id="clear">
+</g>
+</svg>

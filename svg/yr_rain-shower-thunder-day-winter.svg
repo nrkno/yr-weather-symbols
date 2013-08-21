@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
+	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  bottomLeftOrigin="true" height="16383" width="1078" y="-8242" x="6"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<g id="snow_shower_thunder">
+</g>
+<g id="sleet_shower_thunder">
+</g>
+<g id="rain_shower_thunder">
+	<g id="day-winter_10_">
+		<path fill="#C9AF16" d="M38.413,68l-6.25,12.484h8.325L28,93l25.001-16.68h-8.338L52.995,68H38.413z"/>
+		<g id="day-winter_11_">
+			<path fill="#E88D15" d="M68,22H53c0,1.502-0.373,2.626-0.754,3.75L68,22z"/>
+			<path fill="#E88D15" d="M45.5,35.125l13.872,8.254L51.125,29.5C49.623,31.748,47.748,33.623,45.5,35.125z"/>
+			<path fill="#E88D15" d="M23,22H8l15.751,3.75C23.373,24.626,23,23.502,23,22z"/>
+			<path fill="#E88D15" d="M24.875,29.5l-8.251,13.879L30.5,35.125C28.252,33.623,26.377,31.748,24.875,29.5z"/>
+			<path fill="#E88D15" d="M34.023,36.353L38.003,52l3.974-15.645C39.326,36.883,36.674,36.883,34.023,36.353z"/>
+			<path fill="#FABA2F" d="M50,22c0,6.624-5.375,12-12,12c-6.63,0-12-5.376-12-12H50z"/>
+			<rect x="8" y="16" fill="#4D4D4D" width="60" height="3"/>
+		</g>
+		<g>
+			<path fill="#FFFFFF" d="M52.804,22c-6.845,0-13.075,4.347-15.664,10.438c-0.2-0.009-0.401-0.013-0.603-0.013
+				c-6.129,0-11.072,3.622-12.899,8.945c-0.071-0.001-0.144-0.002-0.215-0.002c-5.479,0-9.766,3.463-11.538,7.351
+				C8.28,50.292,6,53.908,6,58.393C6,64.901,11.051,70,17.498,70h62.938C87.662,70,94,63.672,94,56.457
+				c0-5.306-3.22-10.078-7.846-12.291c0.509-4.308-0.474-8.347-2.889-11.655c-3.176-4.353-8.377-6.85-14.27-6.851
+				c-1.778,0.001-3.559,0.229-5.32,0.685C60.646,23.524,56.871,22,52.804,22L52.804,22z"/>
+			<path fill="#808080" d="M17.498,66C13.489,66,10,62.907,10,58.393c0-2.964,1.551-5.932,5.043-6.447
+				c0.516-3.479,5.373-8.362,11.834-5.917c0-7.154,6.748-11.154,13.108-9.038c1.423-10.053,14.993-15.6,22.486-6.058
+				c11.503-4.511,23.004,3.48,18.999,15.99C85.995,47.434,90,51.432,90,56.457C90,61.488,85.476,66,80.437,66H17.498z"/>
+		</g>
+		<g>
+			<circle fill="#FFFFFF" cx="62" cy="69" r="8"/>
+			<path fill="#1362B1" d="M71,74.909C71,77.724,68.759,80,66,80c-2.763,0-5-2.276-5-5.091C61,73.327,61,66,61,66
+				C65.57,70.494,71,70.295,71,74.909z"/>
+		</g>
+	</g>
+</g>
+<g id="clouds">
+	<g id="heavy_rain_thunder">
+	</g>
+	<g id="rain_thunder">
+	</g>
+	<g id="heavy_snow">
+	</g>
+	<g id="sleet">
+	</g>
+	<g id="heavy_rain">
+	</g>
+	<g id="rain_1_">
+	</g>
+	<g id="heavy_cloud">
+	</g>
+	<g id="fog">
+	</g>
+</g>
+<g id="snow_shower">
+</g>
+<g id="sleet_shower">
+</g>
+<g id="rain_shower">
+</g>
+<g id="partly_cloudy">
+</g>
+<g id="fair">
+</g>
+<g id="clear">
+</g>
+</svg>
