@@ -1,0 +1,46 @@
+{
+  "name": "yr-symbols",
+  "version": "0.1.0",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "simple-browser-require": "0.1.7",
+    "buddy": "~0.17.0"
+  },
+  "scripts": {
+  },
+  "repository": "https://github.com/YR/yr-symbols.git",
+  "private": true,
+  "buddy": {
+    "build": {
+      "js": {
+        "sources": [
+          "src/js"
+        ],
+        "targets": [
+          {
+            "input": "src/js/main.js",
+            "output": "bin/js/main.js"
+          }
+        ]
+      },
+      "html": {
+        "sources": [
+          "src/html"
+        ],
+        "targets": [
+          {
+            "input": "src/html/index.html",
+            "output": "index.html"
+          }
+        ]
+      }
+    },
+    "settings": {
+      "server": {
+        "directory": ".",
+        "port": 8000
+      }
+    }
+  }
+}
