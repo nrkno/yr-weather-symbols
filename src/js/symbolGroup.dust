@@ -1,0 +1,32 @@
+{#symbols}
+<h2>{title}</h2>
+{#variations}
+<section class="symbol-group">
+	<h3>#{id}</h3>
+	<figure class="s128">
+		<img src="./bin/svg/{id}.svg">
+		<figcaption>svg@128px</figcaption>
+	</figure>
+	<figure class="s64">
+		<img src="./bin/svg/{id}.svg">
+		<figcaption>svg@64px</figcaption>
+	</figure>
+	<figure class="s32">
+		<img src="./bin/svg/{id}.svg">
+		<figcaption>svg@32px</figcaption>
+	</figure>
+	<figure class="s128">
+		<canvas class="symbol" data-id="{id}"></canvas>
+		<figcaption>canvas@128px</figcaption>
+	</figure>
+	<figure class="s64">
+		<canvas class="symbol" data-id="{id}"></canvas>
+		<figcaption>canvas@64px</figcaption>
+	</figure>
+	<figure class="s32">
+		<canvas class="symbol" data-id="{id}"></canvas>
+		<figcaption>canvas@32px</figcaption>
+	</figure>
+</section>
+{/variations}
+{/symbols}

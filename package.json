@@ -2,9 +2,10 @@
   "name": "yr-symbols",
   "version": "0.1.0",
   "dependencies": {
+    "simple-browser-require": "0.1.7",
+    "dustjs-linkedin": "*"
   },
   "devDependencies": {
-    "simple-browser-require": "0.1.7",
     "buddy": "~0.17.0"
   },
   "scripts": {
@@ -20,7 +21,10 @@
         "targets": [
           {
             "input": "src/js/main.js",
-            "output": "bin/js/main.js"
+            "output": "bin/js/main.js",
+            "alias": {
+              "dust": "./node_modules/dustjs-linkedin/dist/dust-core-2.0.3.js"
+            }
           }
         ]
       },

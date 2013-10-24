@@ -204,7 +204,7 @@ var sun = require('./primitives/sunPrimitive')
 			],
 
 			// Winter sun
-			'16': [
+			'01m': [
 				{
 					primitive: sun,
 					x: 0,
@@ -227,7 +227,7 @@ var sun = require('./primitives/sunPrimitive')
 					tint: 0.2
 				}
 			],
-			'17': [
+			'03m': [
 				{
 					primitive: sun,
 					x: 0,
@@ -242,7 +242,7 @@ var sun = require('./primitives/sunPrimitive')
 					tint: 0.4
 				}
 			],
-			'18': [
+			'05m': [
 				{
 					primitive: sun,
 					x: 0,
@@ -292,7 +292,7 @@ var sun = require('./primitives/sunPrimitive')
 					y: 82
 				}
 			],
-			'19': [
+			'08m': [
 				{
 					primitive: sun,
 					x: 0,
