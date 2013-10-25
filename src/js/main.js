@@ -1,8 +1,8 @@
-var SymbolGenerator = require('./SymbolGenerator')
+var Symbol = require('./Symbol')
 	, dust = require('dust')
 	, template = require('./symbolGroup')
 	, data = require('../symbols.json')
-	, symbol = new SymbolGenerator(1)
+	, symbol = new Symbol(1)
 	, el = document.getElementById('symbols');
 
 // Render template

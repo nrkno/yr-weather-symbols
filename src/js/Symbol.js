@@ -875,13 +875,14 @@ var sun = require('./primitives/sunPrimitive')
 			]
 		};
 
-module.exports = SymbolGenerator;
+module.exports = Symbol;
 
 /**
  * Constructor
  */
-function SymbolGenerator (scale) {
+function Symbol (scale, canvas) {
 	this.scale = scale || 1;
+	this.canvas = canvas;
 }
 
 /**
@@ -889,7 +890,10 @@ function SymbolGenerator (scale) {
  * Takes data from 'data-' attributes
  * @param {CanvasElement} canvas
  */
-SymbolGenerator.prototype.draw = function(canvas) {
+Symbol.prototype.draw = function(canvas) {
+	canvas = this.canvas || canvas;
+	if (!canvas) return;
+
 	var ctx = canvas.getContext('2d')
 		, attr = canvas.getAttribute('data-id').split('.')
 		, id = attr[0]

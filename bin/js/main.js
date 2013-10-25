@@ -772,7 +772,7 @@ require.register('primitives/lightningPrimitive', function(module, exports, requ
   	ctx.restore();  
   };
 });
-require.register('SymbolGenerator', function(module, exports, require) {
+require.register('Symbol', function(module, exports, require) {
   var sun = require('./primitives/sunPrimitive')
   	, moon = require('./primitives/moonPrimitive')
   	, cloud = require('./primitives/cloudPrimitive')
@@ -1650,13 +1650,14 @@ require.register('SymbolGenerator', function(module, exports, require) {
   			]
   		};
   
-  module.exports = SymbolGenerator;
+  module.exports = Symbol;
   
   /**
    * Constructor
    */
-  function SymbolGenerator (scale) {
+  function Symbol (scale, canvas) {
   	this.scale = scale || 1;
+  	this.canvas = canvas;
   }
   
   /**
@@ -1664,7 +1665,10 @@ require.register('SymbolGenerator', function(module, exports, require) {
    * Takes data from 'data-' attributes
    * @param {CanvasElement} canvas
    */
-  SymbolGenerator.prototype.draw = function(canvas) {
+  Symbol.prototype.draw = function(canvas) {
+  	canvas = this.canvas || canvas;
+  	if (!canvas) return;
+  
   	var ctx = canvas.getContext('2d')
   		, attr = canvas.getAttribute('data-id').split('.')
   		, id = attr[0]
@@ -2364,11 +2368,11 @@ require.register('symbolGroup', function(module, exports, require) {
   module.exports = (function(){dust.register("symbolGroup",body_0);function body_0(chk,ctx){return chk.section(ctx.get("symbols"),ctx,{"block":body_1},null);}function body_1(chk,ctx){return chk.write("<h2>").reference(ctx.get("title"),ctx,"h").write("</h2>").section(ctx.get("variations"),ctx,{"block":body_2},null);}function body_2(chk,ctx){return chk.write("<section class=\"symbol-group\"><h3>#").reference(ctx.get("id"),ctx,"h").write("</h3><figure class=\"s128\"><img src=\"./bin/svg/").reference(ctx.get("id"),ctx,"h").write(".svg\"><figcaption>svg@128px</figcaption></figure><figure class=\"s64\"><img src=\"./bin/svg/").reference(ctx.get("id"),ctx,"h").write(".svg\"><figcaption>svg@64px</figcaption></figure><figure class=\"s32\"><img src=\"./bin/svg/").reference(ctx.get("id"),ctx,"h").write(".svg\"><figcaption>svg@32px</figcaption></figure><figure class=\"s128\"><canvas class=\"symbol\" data-id=\"").reference(ctx.get("id"),ctx,"h").write("\"></canvas><figcaption>canvas@128px</figcaption></figure><figure class=\"s64\"><canvas class=\"symbol\" data-id=\"").reference(ctx.get("id"),ctx,"h").write("\"></canvas><figcaption>canvas@64px</figcaption></figure><figure class=\"s32\"><canvas class=\"symbol\" data-id=\"").reference(ctx.get("id"),ctx,"h").write("\"></canvas><figcaption>canvas@32px</figcaption></figure></section>");}return body_0;})();
 });
 require.register('main', function(module, exports, require) {
-  var SymbolGenerator = require('./SymbolGenerator')
+  var Symbol = require('./Symbol')
   	, dust = require('dust')
   	, template = require('./symbolGroup')
   	, data = {"symbols":[{"title":"clear","variations":[{"id":"01d"},{"id":"01m"},{"id":"01n.00"},{"id":"01n.01"},{"id":"01n.02"},{"id":"01n.03"},{"id":"01n.04"},{"id":"01n.05"},{"id":"01n.06"},{"id":"01n.07"}]},{"title":"fair","variations":[{"id":"02d"},{"id":"02m"},{"id":"02n.00"},{"id":"02n.01"},{"id":"02n.02"},{"id":"02n.03"},{"id":"02n.04"},{"id":"02n.05"},{"id":"02n.06"},{"id":"02n.07"}]},{"title":"partly cloudy","variations":[{"id":"03d"},{"id":"03m"},{"id":"03n.00"},{"id":"03n.01"},{"id":"03n.02"},{"id":"03n.03"},{"id":"03n.04"},{"id":"03n.05"},{"id":"03n.06"},{"id":"03n.07"}]},{"title":"cloudy","variations":[{"id":"04"}]},{"title":"rain showers","variations":[{"id":"05d"},{"id":"05m"},{"id":"05n.00"},{"id":"05n.01"},{"id":"05n.02"},{"id":"05n.03"},{"id":"05n.04"},{"id":"05n.05"},{"id":"05n.06"},{"id":"05n.07"}]},{"title":"sleet showers","variations":[{"id":"07d"},{"id":"07m"},{"id":"07n.00"},{"id":"07n.01"},{"id":"07n.02"},{"id":"07n.03"},{"id":"07n.04"},{"id":"07n.05"},{"id":"07n.06"},{"id":"07n.07"}]},{"title":"snow showers","variations":[{"id":"08d"},{"id":"08m"},{"id":"08n.00"},{"id":"08n.01"},{"id":"08n.02"},{"id":"08n.03"},{"id":"08n.04"},{"id":"08n.05"},{"id":"08n.06"},{"id":"08n.07"}]},{"title":"rain","variations":[{"id":"09"}]},{"title":"heavy rain","variations":[{"id":"10"}]},{"title":"sleet","variations":[{"id":"12"}]},{"title":"snow","variations":[{"id":"13"}]},{"title":"fog","variations":[{"id":"15"}]},{"title":"rain showers with thunder","variations":[{"id":"06d"},{"id":"06m"},{"id":"06n.00"},{"id":"06n.01"},{"id":"06n.02"},{"id":"06n.03"},{"id":"06n.04"},{"id":"06n.05"},{"id":"06n.06"},{"id":"06n.07"}]},{"title":"sleet showers with thunder","variations":[{"id":"20d"},{"id":"20m"},{"id":"20n.00"},{"id":"20n.01"},{"id":"20n.02"},{"id":"20n.03"},{"id":"20n.04"},{"id":"20n.05"},{"id":"20n.06"},{"id":"20n.07"}]},{"title":"snow showers with thunder","variations":[{"id":"21d"},{"id":"21m"},{"id":"21n.00"},{"id":"21n.01"},{"id":"21n.02"},{"id":"21n.03"},{"id":"21n.04"},{"id":"21n.05"},{"id":"21n.06"},{"id":"21n.07"}]},{"title":"rain with thunder","variations":[{"id":"22"}]},{"title":"sleet with thunder","variations":[{"id":"23"}]},{"title":"snow with thunder","variations":[{"id":"14"}]}]}
-  	, symbol = new SymbolGenerator(1)
+  	, symbol = new Symbol(1)
   	, el = document.getElementById('symbols');
   
   // Render template

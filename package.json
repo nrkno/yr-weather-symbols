@@ -10,6 +10,7 @@
   },
   "scripts": {
   },
+  "main": "Symbol.js",
   "repository": "https://github.com/YR/yr-symbols.git",
   "private": true,
   "buddy": {
