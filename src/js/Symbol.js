@@ -11,20 +11,20 @@ var sun = require('./primitives/sunPrimitive')
 			'01d': [
 				{
 					primitive: sun,
-					x: 0,
-					y: 0
+					x: 10,
+					y: 10
 				}
 			],
 			'02d': [
 				{
 					primitive: sun,
-					x: 0,
-					y: 0
+					x: 10,
+					y: 10
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 65,
+					x: 14,
+					y: 62,
 					small: true,
 					tint: 0.2
 				}
@@ -32,14 +32,14 @@ var sun = require('./primitives/sunPrimitive')
 			'03d': [
 				{
 					primitive: sun,
-					x: 0,
-					y: 7,
+					x: 10,
+					y: 15,
 					small: true
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 44,
+					x: 10,
+					y: 38,
 					tint: 0.4
 				}
 			],
@@ -207,22 +207,22 @@ var sun = require('./primitives/sunPrimitive')
 			'01m': [
 				{
 					primitive: sun,
-					x: 0,
-					y: 30,
+					x: 10,
+					y: 35,
 					winter: true
 				}
 			],
 			'02m': [
 				{
 					primitive: sun,
-					x: 0,
-					y: 32,
+					x: 10,
+					y: 30,
 					winter: true
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 60,
+					x: 15,
+					y: 50,
 					small: true,
 					tint: 0.2
 				}
@@ -230,15 +230,15 @@ var sun = require('./primitives/sunPrimitive')
 			'03m': [
 				{
 					primitive: sun,
-					x: 0,
-					y: 22,
+					x: 10,
+					y: 28,
 					small: true,
 					winter: true
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 44,
+					x: 10,
+					y: 38,
 					tint: 0.4
 				}
 			],
@@ -412,35 +412,35 @@ var sun = require('./primitives/sunPrimitive')
 			'01n': [
 				{
 					primitive: moon,
-					x: 20,
-					y: 20
+					x: 25,
+					y: 25
 				}
 			],
 			'02n': [
 				{
 					primitive: moon,
-					x: 20,
-					y: 20
+					x: 25,
+					y: 25
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 65,
+					x: 16,
+					y: 55,
 					small: true,
-					tint: 0.2
+					tint: 0.25
 				}
 			],
 			'03n': [
 				{
 					primitive: moon,
-					x: 10,
-					y: 16,
+					x: 12,
+					y: 24,
 					small: true
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 44,
+					x: 10,
+					y: 38,
 					tint: 0.4
 				}
 			],
@@ -618,14 +618,14 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 4,
 					y: 26,
-					small: true,
-					tint: 0.25
+					// small: true,
+					tint: 0.15
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 44,
-					tint: 0.4
+					x: 10,
+					y: 41,
+					tint: 0.25
 				}
 			],
 			'09': [
