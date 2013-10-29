@@ -1,8 +1,8 @@
-var Symbol = require('./Symbol')
+var WeatherSymbol = require('./WeatherSymbol')
 	, dust = require('dust')
 	, template = require('./symbolGroup')
 	, data = require('../symbols.json')
-	, symbol = new Symbol(1)
+	, symbol = new WeatherSymbol(1)
 	, el = document.getElementById('symbols');
 
 // Render template

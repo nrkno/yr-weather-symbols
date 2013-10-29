@@ -875,12 +875,12 @@ var sun = require('./primitives/sunPrimitive')
 			]
 		};
 
-module.exports = Symbol;
+module.exports = WeatherSymbol;
 
 /**
  * Constructor
  */
-function Symbol (scale, canvas) {
+function WeatherSymbol (scale, canvas) {
 	this.scale = scale || 1;
 	this.canvas = canvas;
 }
@@ -890,7 +890,7 @@ function Symbol (scale, canvas) {
  * Takes data from 'data-' attributes
  * @param {CanvasElement} canvas
  */
-Symbol.prototype.draw = function(canvas) {
+WeatherSymbol.prototype.draw = function(canvas) {
 	canvas = this.canvas || canvas;
 	if (!canvas) return;
 
