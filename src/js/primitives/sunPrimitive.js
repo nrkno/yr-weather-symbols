@@ -1,8 +1,8 @@
 var TWO_PI = Math.PI * 2
 	, BG_COLOUR = '#ffffff'
-	, RAY_COLOUR = '#d16218'
-	, HORIZON_COLOUR = '#666666'
-	, CENTER_COLOUR = '#e1a122';
+	, RAY_COLOUR = '#e88d15'
+	, HORIZON_COLOUR = '#4d4d4d'
+	, CENTER_COLOUR = '#faba2f';
 
 exports.render = function(ctx, options) {
 	ctx.save();
@@ -15,79 +15,79 @@ exports.render = function(ctx, options) {
 			ctx.fillStyle = HORIZON_COLOUR;
 			ctx.beginPath();
 			ctx.moveTo(0,0);
-			ctx.fillRect(0,0,75,4);
+			ctx.fillRect(0,0,60,3);
 			ctx.fill();
 
 			// Horizon
 			ctx.fillStyle = RAY_COLOUR;
 			ctx.beginPath();
-			ctx.moveTo(51.961,14.99);
-			ctx.lineTo(75,9);
-			ctx.lineTo(0,9.026);
-			ctx.lineTo(23.039,15.003);
-			ctx.lineTo(10.983,35.522);
-			ctx.lineTo(31.51,23.463);
-			ctx.lineTo(37.5,46.5);
-			ctx.lineTo(43.49,23.461);
-			ctx.lineTo(64.017,35.517);
-			ctx.lineTo(51.961,14.99);
+			ctx.moveTo(41.569,10.792);
+			ctx.lineTo(60,6);
+			ctx.lineTo(0,6.021);
+			ctx.lineTo(18.431,10.802);
+			ctx.lineTo(8.786,27.218);
+			ctx.lineTo(25.208,17.57);
+			ctx.lineTo(30,36);
+			ctx.lineTo(34.792,17.569);
+			ctx.lineTo(51.214,27.213);
+			ctx.lineTo(41.569,10.792);
 			ctx.closePath();
 			ctx.fill();
 
 			// Center stroke
 			ctx.fillStyle = BG_COLOUR;
 			ctx.beginPath();
-			ctx.moveTo(57.001,9);
-			ctx.bezierCurveTo(57.001,19,48.272999999999996,28.499,37.501,28.499);
-			ctx.bezierCurveTo(26.729,28.499,18.001,19,18.001,9);
-			ctx.lineTo(57.001,9);
+			ctx.moveTo(45.001,6);
+			ctx.bezierCurveTo(45.001,13.693,38.286,20.999000000000002,30.000999999999998,20.999000000000002);
+			ctx.bezierCurveTo(21.715999999999994,20.999000000000002,15.000999999999998,13.693000000000001,15.000999999999998,6.000000000000002);
+			ctx.lineTo(45.001,6.000000000000002);
 			ctx.closePath();
 			ctx.fill();
 
 			// Center fill
 			ctx.fillStyle = CENTER_COLOUR;
 			ctx.beginPath();
-			ctx.moveTo(52.501,9);
-			ctx.bezierCurveTo(52.501,17,45.786,23.999000000000002,37.501,23.999000000000002);
-			ctx.bezierCurveTo(29.217999999999996,23.999000000000002,22.500999999999998,17.000000000000004,22.500999999999998,9.000000000000002);
-			ctx.lineTo(52.501,9.000000000000002);
+			ctx.moveTo(42,6);
+			ctx.bezierCurveTo(42,12.401,36.627,18,30,18);
+			ctx.bezierCurveTo(23.375,18,18,12.401,18,6);
+			ctx.lineTo(42,6);
 			ctx.closePath();
 			ctx.fill();
 		} else {
 			// Rays
 			ctx.fillStyle = RAY_COLOUR;
 			ctx.beginPath();
-			ctx.moveTo(51.961,43.49);
-			ctx.lineTo(75,37.5);
-			ctx.lineTo(51.961,31.51);
-			ctx.lineTo(64.017,10.983);
-			ctx.lineTo(43.49,23.039);
-			ctx.lineTo(37.5,0);
-			ctx.lineTo(31.51,23.039);
-			ctx.lineTo(10.983,10.983);
-			ctx.lineTo(23.039,31.51);
-			ctx.lineTo(0,37.5);
-			ctx.lineTo(23.039,43.49);
-			ctx.lineTo(10.983,64.017);
-			ctx.lineTo(31.51,51.961);
-			ctx.lineTo(37.5,75);
-			ctx.lineTo(43.49,51.961);
-			ctx.lineTo(64.017,64.017);
-			ctx.lineTo(51.961,43.49);
+			ctx.moveTo(41.569,34.792);
+			ctx.lineTo(60,30);
+			ctx.lineTo(41.569,25.208);
+			ctx.lineTo(51.214,8.787);
+			ctx.lineTo(34.792,18.431);
+			ctx.lineTo(30,0);
+			ctx.lineTo(25.208,18.431);
+			ctx.lineTo(8.786,8.787);
+			ctx.lineTo(18.431,25.208);
+			ctx.lineTo(0,30);
+			ctx.lineTo(18.431,34.792);
+			ctx.lineTo(8.786,51.214);
+			ctx.lineTo(25.208,41.569);
+			ctx.lineTo(30,60);
+			ctx.lineTo(34.792,41.569);
+			ctx.lineTo(51.214,51.214);
+			ctx.lineTo(41.569,34.792);
 			ctx.closePath();
 			ctx.fill();
 
 			// Center stroke
 			ctx.fillStyle = BG_COLOUR;
 			ctx.beginPath();
-			ctx.arc(37.5,37.5,19.5,0,TWO_PI,true);
+			ctx.arc(30,30,15,0,TWO_PI,true);
 			ctx.closePath();
 			ctx.fill();
 
 			// Center fill
 			ctx.fillStyle = CENTER_COLOUR;
 			ctx.beginPath();
-			ctx.arc(37.5,37.5,15,0,TWO_PI,true);
+			ctx.arc(30,30,12,0,TWO_PI,true);
 			ctx.closePath();
 			ctx.fill();
 		}
@@ -97,79 +97,79 @@ exports.render = function(ctx, options) {
 			ctx.fillStyle = HORIZON_COLOUR;
 			ctx.beginPath();
 			ctx.moveTo(0,0);
-			ctx.fillRect(0,0,100,6);
+			ctx.fillRect(0,0,80,4);
 			ctx.fill();
 
 			// Rays
 			ctx.fillStyle = RAY_COLOUR;
 			ctx.beginPath();
-			ctx.moveTo(69.281,19.986);
-			ctx.lineTo(100,12);
-			ctx.lineTo(0,12.035);
-			ctx.lineTo(30.719,20.004);
-			ctx.lineTo(14.645,47.363);
-			ctx.lineTo(42.014,31.284);
-			ctx.lineTo(50,62);
-			ctx.lineTo(57.986,31.281);
-			ctx.lineTo(85.355,47.355);
-			ctx.lineTo(69.281,19.986);
+			ctx.moveTo(55.426,14.389);
+			ctx.lineTo(80,8);
+			ctx.lineTo(0,8.028);
+			ctx.lineTo(24.574,14.403);
+			ctx.lineTo(11.715,36.291);
+			ctx.lineTo(33.611,23.428);
+			ctx.lineTo(40,48);
+			ctx.lineTo(46.389,23.425);
+			ctx.lineTo(68.285,36.284);
+			ctx.lineTo(55.426,14.389);
 			ctx.closePath();
 			ctx.fill();
 
 			// Center stroke
 			ctx.fillStyle = BG_COLOUR;
 			ctx.beginPath();
-			ctx.moveTo(76.001,12);
-			ctx.bezierCurveTo(76.001,26,64.363,37.998999999999995,50.001000000000005,37.998999999999995);
-			ctx.bezierCurveTo(35.63900000000001,37.998999999999995,24.001,26,24.001,12);
-			ctx.lineTo(76.001,12);
+			ctx.moveTo(60.001,8);
+			ctx.bezierCurveTo(60.001,18.771,51.047,27.999,40.001,27.999);
+			ctx.bezierCurveTo(28.955,27.999,20.000999999999998,18.771,20.000999999999998,8);
+			ctx.lineTo(60.001,8);
 			ctx.closePath();
 			ctx.fill();
 
 			// Center fill
 			ctx.fillStyle = CENTER_COLOUR;
 			ctx.beginPath();
-			ctx.moveTo(70.001,12);
-			ctx.bezierCurveTo(70.001,23,61.048,31.999,50.001000000000005,31.999);
-			ctx.bezierCurveTo(38.95700000000001,31.999,30.001000000000005,23,30.001000000000005,12);
-			ctx.lineTo(70.001,12);
+			ctx.moveTo(56.001,8);
+			ctx.bezierCurveTo(56.001,16.801000000000002,48.836999999999996,23.999000000000002,40.001,23.999000000000002);
+			ctx.bezierCurveTo(31.168,23.999000000000002,24.000999999999998,16.801000000000002,24.000999999999998,8.000000000000002);
+			ctx.lineTo(56.001,8.000000000000002);
 			ctx.closePath();
 			ctx.fill();
 		} else {
 			// Rays
 			ctx.fillStyle = RAY_COLOUR;
 			ctx.beginPath();
-			ctx.moveTo(69.281,57.986);
-			ctx.lineTo(100,50);
-			ctx.lineTo(69.281,42.014);
-			ctx.lineTo(85.355,14.645);
-			ctx.lineTo(57.986,30.719);
-			ctx.lineTo(50,0);
-			ctx.lineTo(42.013,30.719);
-			ctx.lineTo(14.645,14.645);
-			ctx.lineTo(30.718,42.014);
-			ctx.lineTo(0,50);
-			ctx.lineTo(30.718,57.986);
-			ctx.lineTo(14.645,85.355);
-			ctx.lineTo(42.013,69.281);
-			ctx.lineTo(50,100);
-			ctx.lineTo(57.986,69.281);
-			ctx.lineTo(85.355,85.355);
-			ctx.lineTo(69.281,57.986);
+			ctx.moveTo(55.427,46.389);
+			ctx.lineTo(80,40);
+			ctx.lineTo(55.427,33.612);
+			ctx.lineTo(68.286,11.716);
+			ctx.lineTo(46.389,24.575);
+			ctx.lineTo(40,0);
+			ctx.lineTo(33.611,24.575);
+			ctx.lineTo(11.716,11.716);
+			ctx.lineTo(24.575,33.612);
+			ctx.lineTo(0,40);
+			ctx.lineTo(24.575,46.389);
+			ctx.lineTo(11.716,68.286);
+			ctx.lineTo(33.611,55.427);
+			ctx.lineTo(40,80);
+			ctx.lineTo(46.389,55.427);
+			ctx.lineTo(68.286,68.286);
+			ctx.lineTo(55.427,46.389);
 			ctx.closePath();
 			ctx.fill();
 
 			// Center stroke
 			ctx.fillStyle = BG_COLOUR;
 			ctx.beginPath();
-			ctx.arc(50,50,26,0,TWO_PI,true);
+			ctx.arc(40,40,20,0,TWO_PI,true);
 			ctx.closePath();
 			ctx.fill();
 
 			// Center fill
 			ctx.fillStyle = CENTER_COLOUR;
 			ctx.beginPath();
-			ctx.arc(50,50,20,0,TWO_PI,true);
+			ctx.arc(40,40,16,0,TWO_PI,true);
 			ctx.closePath();
 			ctx.fill();
 		}
