@@ -4,12 +4,6 @@
 <title>YR symbols</title>
 <style >
 	section, header, footer {display: block;}
-	body {
-		font-family: sans-serif;
-		color: #444;
-		line-height: 1.5;
-		font-size: 1em;
-	}
 	* {
 		-moz-box-sizing: border-box;
 		-webkit-box-sizing: border-box;
@@ -18,9 +12,10 @@
 		padding: 0;
 	}
 	body {
-		padding: 0 2em;
-		/*background-color: #fff;*/
-		background: url("bin/tile.png") repeat;
+		line-height: 1;
+		font-size: 100%;
+		padding: 0 30px;
+		/*background-color: #eee;*/
 		color: #243640;
 		font-family: Avenir, 'Gill Sans', 'Gill Sans MT', Roboto, Calibri, sans-serif;
 		font-weight: 100;
@@ -28,8 +23,7 @@
 		-webkit-font-smoothing: antialiased;
 	}
 	header {
-		margin: 2em 0;
-		padding-bottom: .5em;
+		margin-top: 20px;
 	}
 	h1,
 	h2,
@@ -37,44 +31,63 @@
 		font-weight: 100;
 	}
 	h1 {
-		font-size: 2em;
+		background-color: #fff;
+		font-size: 30px;
 	}
 	h2 {
-		font-size: 1.2em;
+		font-size: 20px;
 		text-transform: uppercase;
 		border-bottom: 1px solid rgba(33,33,66,0.2);
-		margin-bottom: 1em;
-	}
-	section {
+		margin-bottom: 20px;
+		padding-top: 20px;
+		background-color: #fff;
 	}
 	figure {
+		position: relative;
 		display: inline-block;
 		text-align: center;
-		margin: 0 0.5em;
+		margin: 0 20px;
 	}
 	figcaption {
-		font-size: 0.8em;
+		position: absolute;
+		font-size: 10px;
+		width: 100%;
 	}
 	img,
 	canvas {
-		/*border: 1px solid black;*/
+		background-color: white;
+	}
+	#viewport {
+		width: 801px;
+		margin: 0 auto;
+		/*background: url("bin/tile.png") repeat;*/
 	}
 	.symbol-group {
-		margin-bottom: 2em;
+		margin-bottom: 40px;
 	}
 	.id {
 		text-transform: lowercase;
 		font-style: italic;
+	}
+	.s128 {
+		width: 130px;
+		height: 130px;
 	}
 	.s128 img,
 	.s128 canvas {
 		width: 128px;
 		height: 128px;
 	}
+	.s64 {
+		width: 70px;
+	}
 	.s64 img,
 	.s64 canvas {
 		width: 64px;
 		height: 64px;
+	}
+	.s32 {
+		width: 40px;
 	}
 	.s32 img,
 	.s32 canvas {

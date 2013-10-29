@@ -1,11 +1,17 @@
-var BG_COLOUR = '#ffffff';
+var BG_COLOUR = '#ffffff'
+	, WIDTH = 80;
 
 exports.render = function(ctx, options) {
 	var tint = Math.floor(255 * (1-options.tint));
 
 	ctx.save();
-	ctx.translate(options.x, options.y)
-	ctx.scale(options.scale, options.scale);
+	if (options.flip) {
+		ctx.translate((WIDTH * options.scale) + options.x, options.y)
+		ctx.scale(-1 * options.scale, options.scale);
+	} else {
+		ctx.translate(options.x, options.y)
+		ctx.scale(options.scale, options.scale);
+	}
 
 	if (options.small) {
 		// Stroke
