@@ -1,6 +1,6 @@
 {
   "name": "yr-weather-symbols",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "dependencies": {
     "simple-browser-require": "0.1.7",
     "dustjs-linkedin": "*"
@@ -10,7 +10,7 @@
   },
   "scripts": {
   },
-  "main": "./src/js/WeatherSymbol.js",
+  "main": "index.js",
   "repository": "https://github.com/YR/yr-weather-symbols.git",
   "private": true,
   "buddy": {
