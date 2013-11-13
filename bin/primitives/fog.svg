@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="100px" height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
-<g>
-	<path d="M77.5,35.001h-75c-1.377,0-2.5,1.123-2.5,2.5s1.123,2.5,2.5,2.5h75c1.377,0,2.5-1.123,2.5-2.5S78.877,35.001,77.5,35.001z"
-		/>
-	<path d="M72.5,45.001h-65c-1.377,0-2.5,1.123-2.5,2.5s1.123,2.5,2.5,2.5h65c1.377,0,2.5-1.123,2.5-2.5S73.877,45.001,72.5,45.001z"
-		/>
-	<path d="M72.5,55h-60c-1.377,0-2.5,1.123-2.5,2.5s1.123,2.5,2.5,2.5h60c1.377,0,2.5-1.123,2.5-2.5S73.877,55,72.5,55z"/>
-	<path d="M79.978,30.006c-0.232-4.811-4.12-8.588-8.507-9.083c4.004-12.51-7.496-20.501-19-15.99
-		c-7.492-9.542-21.063-3.995-22.486,6.058c-6.359-2.116-13.108,1.884-13.108,9.038c-6.461-2.445-11.317,2.438-11.833,5.917
-		c-2.535,0.374-4.042,2.042-4.681,4.061H79.978z"/>
+<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
+	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  y="-185" x="-2.5" bottomLeftOrigin="true" height="225" width="782.5"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<g id="fog">
+	<path d="M87.188,40H2.812C1.264,40,0,41.123,0,42.5S1.264,45,2.812,45h84.375C88.736,45,90,43.877,90,42.5S88.736,40,87.188,40z"/>
+	<path d="M82.143,50.001H7.857c-1.574,0-2.857,1.123-2.857,2.5s1.283,2.5,2.857,2.5h74.285c1.574,0,2.857-1.123,2.857-2.5
+		S83.717,50.001,82.143,50.001z"/>
+	<path d="M82.119,60H12.886C11.294,60,10,61.123,10,62.5s1.294,2.5,2.886,2.5h69.233C83.701,65,85,63.877,85,62.5
+		S83.701,60,82.119,60z"/>
+	<path d="M90,35c-0.263-5.611-4.657-10.017-9.616-10.595C84.91,9.813,71.91,0.492,58.905,5.753
+		c-8.47-11.129-23.812-4.659-25.419,7.066c-7.189-2.468-14.818,2.196-14.818,10.542c-7.304-2.853-12.794,2.843-13.377,6.901
+		C2.426,30.699,0.722,32.645,0,35H90z"/>
 </g>
 </svg>

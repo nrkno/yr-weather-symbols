@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="100px" height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
-<path fill="#FFFFFF" d="M42.804-4C35.959-4,29.729,0.347,27.14,6.438c-0.2-0.009-0.401-0.013-0.603-0.013
-	c-6.129,0-11.072,3.622-12.899,8.945c-0.071-0.001-0.144-0.002-0.215-0.002c-5.479,0-9.766,3.463-11.538,7.351
-	C-1.72,24.292-4,27.908-4,32.393C-4,38.901,1.051,44,7.498,44h62.938C77.662,44,84,37.672,84,30.457
-	c0-5.306-3.22-10.078-7.846-12.291c0.509-4.308-0.474-8.347-2.889-11.655c-3.176-4.353-8.377-6.85-14.27-6.851
-	c-1.778,0.001-3.559,0.229-5.32,0.685C50.646-2.476,46.871-4,42.804-4L42.804-4z"/>
-<path d="M7.498,40C3.489,40,0,36.907,0,32.393c0-2.964,1.551-5.932,5.043-6.447c0.516-3.479,5.373-8.362,11.834-5.917
-	c0-7.154,6.748-11.154,13.108-9.038c1.423-10.053,14.993-15.6,22.486-6.058c11.503-4.511,23.004,3.48,18.999,15.99
-	C75.995,21.434,80,25.432,80,30.457C80,35.488,75.476,40,70.437,40H7.498z"/>
+<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
+	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  y="-185" x="-2.5" bottomLeftOrigin="true" height="225" width="782.5"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<path id="cloud_29_" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M9.377,50C4.357,50,0,45.609,0,41.051
+	c0-4.613,2.231-8.439,6.938-10.191c1.625-5.422,6.562-9.172,12.875-9.359C21.188,14.562,30,10.422,36.188,12.172
+	C38.914,2.484,54.936-5.453,65.5,4.797c15.438-4.25,26.272,5.37,24.607,19.992C96.21,26.542,100,31.901,100,38.172
+	C100,44.466,94.355,50,88.054,50H9.377z"/>
 </svg>

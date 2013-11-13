@@ -1,10 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="100px" height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
-<rect width="80" height="4"/>
-<polygon points="55.426,14.389 80,8 0,8.028 24.574,14.403 11.715,36.291 33.611,23.428 40,48 46.389,23.425 68.285,36.284 "/>
-<path fill="#FFFFFF" d="M60.001,8c0,10.771-8.954,19.999-20,19.999s-20-9.228-20-19.999H60.001z"/>
-<path d="M56.001,8c0,8.801-7.164,15.999-16,15.999c-8.833,0-16-7.198-16-15.999H56.001z"/>
+<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
+	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  y="-185" x="-2.5" bottomLeftOrigin="true" height="225" width="782.5"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<g id="day-winter">
+	<g>
+		<defs>
+			<rect id="SVGID_1_" y="10" width="100" height="50"/>
+		</defs>
+		<clipPath id="SVGID_2_">
+			<use xlink:href="#SVGID_1_"  overflow="visible"/>
+		</clipPath>
+		<g clip-path="url(#SVGID_2_)">
+			<polygon points="69.284,17.986 100,10 69.284,2.014 85.358,-25.355 57.986,-9.281 50,-40 42.014,-9.281 14.645,-25.355 
+				30.719,2.014 0,10 30.719,17.986 14.645,45.358 42.014,29.284 50,60 57.986,29.284 85.358,45.358 			"/>
+			<circle stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" cx="50" cy="10" r="22.5"/>
+		</g>
+	</g>
+	<rect width="100" height="5"/>
+</g>
 </svg>

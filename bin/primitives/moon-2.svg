@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="100px" height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
-<path d="M0.001,25c0,13.784,11.211,25,25,25c13.779,0,25-11.216,25-25s-11.221-25-25-25C11.212,0,0.001,11.216,0.001,25z"/>
-<path fill="#FFFFFF" d="M5.001,24.997C5.001,13.971,13.966,5,24.999,5c3.047,0,10.002,8.971,10.002,19.997
-	C35.001,36.029,27.735,45,24.999,45C13.966,45,5.001,36.029,5.001,24.997z"/>
+<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
+	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  y="-185" x="-2.5" bottomLeftOrigin="true" height="225" width="782.5"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<path fill="#FFFFFF" d="M5.001,24.663c0-11.026,8.965-19.997,19.998-19.997c3.047,0,10.002,8.971,10.002,19.997
+	c0,11.032-7.266,20.003-10.002,20.003C13.966,44.666,5.001,35.695,5.001,24.663z"/>
+<path id="night-2_1_" d="M0,30c0,16.541,13.453,30,30,30c16.535,0,30-13.459,30-30S46.535,0,30,0C13.453,0,0,13.459,0,30z M6,30
+	C6,16.764,16.758,6,30,6c3.656,0,12,10.764,12,24s-8.719,24-12,24C16.758,54,6,43.236,6,30z"/>
 </svg>

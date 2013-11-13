@@ -11,15 +11,15 @@ var sun = require('./primitives/sunPrimitive')
 			'01d': [
 				{
 					primitive: sun,
-					x: 10,
-					y: 10
+					x: 0,
+					y: 0
 				}
 			],
 			'02d': [
 				{
 					primitive: sun,
-					x: 10,
-					y: 10
+					x: 0,
+					y: 0
 				},
 				{
 					primitive: cloud,
@@ -32,9 +32,9 @@ var sun = require('./primitives/sunPrimitive')
 			'03d': [
 				{
 					primitive: sun,
-					x: 9,
+					x: 5,
 					y: 15,
-					small: true
+					scale: 0.6
 				},
 				{
 					primitive: cloud,
@@ -46,9 +46,9 @@ var sun = require('./primitives/sunPrimitive')
 			'05d': [
 				{
 					primitive: sun,
-					x: 9,
-					y: 10,
-					small: true
+					x: 5,
+					y: 5,
+					scale: 0.6
 				},
 				{
 					primitive: cloud,
@@ -70,9 +70,9 @@ var sun = require('./primitives/sunPrimitive')
 			'07d': [
 				{
 					primitive: sun,
-					x: 9,
-					y: 10,
-					small: true
+					x: 5,
+					y: 5,
+					scale: 0.6
 				},
 				{
 					primitive: cloud,
@@ -94,9 +94,9 @@ var sun = require('./primitives/sunPrimitive')
 			'08d': [
 				{
 					primitive: sun,
-					x: 9,
-					y: 10,
-					small: true
+					x: 5,
+					y: 5,
+					scale: 0.6
 				},
 				{
 					primitive: cloud,
@@ -118,9 +118,9 @@ var sun = require('./primitives/sunPrimitive')
 			'06d': [
 				{
 					primitive: sun,
-					x: 9,
-					y: 2,
-					small: true
+					x: 5,
+					y: 5,
+					scale: 0.6
 				},
 				{
 					primitive: cloud,
@@ -142,9 +142,9 @@ var sun = require('./primitives/sunPrimitive')
 			'20d': [
 				{
 					primitive: sun,
-					x: 9,
-					y: 2,
-					small: true
+					x: 5,
+					y: 5,
+					scale: 0.6
 				},
 				{
 					primitive: cloud,
@@ -171,9 +171,9 @@ var sun = require('./primitives/sunPrimitive')
 			'21d': [
 				{
 					primitive: sun,
-					x: 9,
-					y: 2,
-					small: true
+					x: 5,
+					y: 5,
+					scale: 0.6
 				},
 				{
 					primitive: cloud,
@@ -197,15 +197,15 @@ var sun = require('./primitives/sunPrimitive')
 			'01m': [
 				{
 					primitive: sun,
-					x: 10,
-					y: 35,
+					x: 0,
+					y: 30,
 					winter: true
 				}
 			],
 			'02m': [
 				{
 					primitive: sun,
-					x: 10,
+					x: 0,
 					y: 30,
 					winter: true
 				},
@@ -220,9 +220,9 @@ var sun = require('./primitives/sunPrimitive')
 			'03m': [
 				{
 					primitive: sun,
-					x: 8,
-					y: 28,
-					small: true,
+					x: 10,
+					y: 24,
+					scale: 0.6,
 					winter: true
 				},
 				{
@@ -235,9 +235,9 @@ var sun = require('./primitives/sunPrimitive')
 			'05m': [
 				{
 					primitive: sun,
-					x: 8,
-					y: 24,
-					small: true,
+					x: 10,
+					y: 14,
+					scale: 0.6,
 					winter: true
 				},
 				{
@@ -260,9 +260,9 @@ var sun = require('./primitives/sunPrimitive')
 			'07m': [
 				{
 					primitive: sun,
-					x: 8,
-					y: 24,
-					small: true,
+					x: 10,
+					y: 14,
+					scale: 0.6,
 					winter: true
 				},
 				{
@@ -285,9 +285,9 @@ var sun = require('./primitives/sunPrimitive')
 			'08m': [
 				{
 					primitive: sun,
-					x: 8,
-					y: 24,
-					small: true,
+					x: 10,
+					y: 14,
+					scale: 0.6,
 					winter: true
 				},
 				{
@@ -310,9 +310,9 @@ var sun = require('./primitives/sunPrimitive')
 			'06m': [
 				{
 					primitive: sun,
-					x: 8,
-					y: 16,
-					small: true,
+					x: 10,
+					y: 14,
+					scale: 0.6,
 					winter: true
 				},
 				{
@@ -335,9 +335,9 @@ var sun = require('./primitives/sunPrimitive')
 			'20m': [
 				{
 					primitive: sun,
-					x: 8,
-					y: 16,
-					small: true,
+					x: 10,
+					y: 14,
+					scale: 0.6,
 					winter: true
 				},
 				{
@@ -365,9 +365,9 @@ var sun = require('./primitives/sunPrimitive')
 			'21m': [
 				{
 					primitive: sun,
-					x: 8,
-					y: 16,
-					small: true,
+					x: 10,
+					y: 14,
+					scale: 0.6,
 					winter: true
 				},
 				{
@@ -869,7 +869,7 @@ WeatherSymbol.prototype.draw = function(canvas) {
 			options = {
 				x: Math.round(layer.x * scale),
 				y: Math.round(layer.y * scale),
-				scale: scale,
+				scale: (layer.scale || 1) * scale,
 				small: layer.small,
 				flip: layer.flip,
 				tint: layer.tint,
