@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px"
-	 height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
+	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  y="-8242" x="-2.5" bottomLeftOrigin="true" height="16383" width="1095"></sliceSourceBounds>
+	</sfw>
+</metadata>
 <g id="snow_shower_thunder">
 </g>
 <g id="sleet_shower_thunder">
@@ -10,22 +26,6 @@
 <g id="rain_shower_thunder">
 </g>
 <g id="clouds">
-	<g id="heavy_rain_thunder">
-	</g>
-	<g id="rain_thunder">
-	</g>
-	<g id="heavy_snow">
-	</g>
-	<g id="sleet">
-	</g>
-	<g id="heavy_rain">
-	</g>
-	<g id="rain_1_">
-	</g>
-	<g id="heavy_cloud">
-	</g>
-	<g id="fog">
-	</g>
 </g>
 <g id="snow_shower">
 </g>
@@ -36,25 +36,26 @@
 <g id="partly_cloudy">
 </g>
 <g id="fair">
-	<g id="day-winter_2_">
+	<g id="day-winter_1_">
 		<g>
-			<path fill="#E88D15" d="M90,38H70c0,2.002-0.498,3.501-1.006,5L90,38z"/>
-			<path fill="#E88D15" d="M60,55.5l18.496,11.006L67.5,48C65.498,50.998,62.998,53.498,60,55.5z"/>
-			<path fill="#E88D15" d="M30,38H10l21.001,5C30.498,41.501,30,40.002,30,38z"/>
-			<path fill="#FABA2F" d="M66,38c0,8.833-7.166,16-16,16c-8.839,0-16-7.167-16-16H66z"/>
-			<rect x="10" y="30" fill="#4D4D4D" width="80" height="4"/>
+			<defs>
+				<rect id="SVGID_15_" y="40" width="100" height="50"/>
+			</defs>
+			<clipPath id="SVGID_2_">
+				<use xlink:href="#SVGID_15_"  overflow="visible"/>
+			</clipPath>
+			<g clip-path="url(#SVGID_2_)">
+				<polygon fill="#E88D15" points="69.284,47.986 100,40 69.284,32.014 85.358,4.645 57.986,20.719 50,-10 42.014,20.719 
+					14.645,4.645 30.719,32.014 0,40 30.719,47.986 14.645,75.358 42.014,59.284 50,90 57.986,59.284 85.358,75.358 				"/>
+				<circle fill="#FABA2F" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" cx="50" cy="40" r="22.5"/>
+			</g>
 		</g>
-		<g>
-			<path fill="#FFFFFF" d="M38.248,46c-2.662,0-5.145,0.901-7.203,2.581c-0.967-0.195-1.941-0.294-2.916-0.294
-				c-4.17,0-7.864,1.787-10.135,4.902c-1.543,2.117-2.273,4.634-2.163,7.316c-2.891,1.784-4.83,4.995-4.83,8.529
-				c0,5.309,4.662,9.965,9.978,9.965h39.406C65.223,78.963,69,75.131,69,70.244c0-3.171-1.588-5.843-4.074-7.172
-				c-1.35-2.484-4.045-4.619-7.449-4.932c-1.527-3.201-4.699-5.411-8.494-5.611C46.928,48.671,42.777,46.001,38.25,46l0,0
-				C38.249,46,38.248,46,38.248,46L38.248,46z"/>
-			<path fill="#BFBFBF" d="M60.314,75.004c2.506,0,4.686-1.933,4.686-4.752c0-1.854-0.969-3.708-3.15-4.03
-				c-0.322-2.176-3.357-5.229-7.396-3.698c0-4.473-4.218-6.972-8.192-5.648c-0.889-6.285-9.371-9.751-14.055-3.788
-				c-7.189-2.819-14.378,2.176-11.874,9.995c-2.828,0.318-5.331,2.818-5.331,5.96c0,3.144,2.827,5.962,5.978,5.962H60.314z"/>
-		</g>
+		<rect y="30" fill="#4D4D4D" width="100" height="5"/>
 	</g>
+	<path id="cloud_8_" fill="#D9D9D9" stroke="#FFFFFF" stroke-width="3" stroke-miterlimit="10" d="M59.373,75
+		C62.385,75,65,72.367,65,69.631c0-2.768-1.338-5.062-4.162-6.115c-0.975-3.254-3.938-5.504-7.725-5.615
+		c-0.826-4.163-6.113-6.647-9.826-5.597c-1.635-5.812-11.248-10.576-17.588-4.426C16.438,45.327,9.938,51.1,10.936,59.875
+		C7.275,60.925,5,64.141,5,67.902C5,71.681,8.387,75,12.168,75H59.373z"/>
 </g>
 <g id="clear">
 </g>

@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px"
-	 height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
+	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  y="-8242" x="-2.5" bottomLeftOrigin="true" height="16383" width="1095"></sliceSourceBounds>
+	</sfw>
+</metadata>
 <g id="snow_shower_thunder">
 </g>
 <g id="sleet_shower_thunder">
@@ -10,51 +26,49 @@
 <g id="rain_shower_thunder">
 </g>
 <g id="clouds">
-	<g id="heavy_rain_thunder">
-	</g>
-	<g id="rain_thunder">
-	</g>
-	<g id="heavy_snow">
-	</g>
-	<g id="sleet">
-	</g>
-	<g id="heavy_rain">
-	</g>
-	<g id="rain_1_">
-	</g>
-	<g id="heavy_cloud">
-	</g>
-	<g id="fog">
-	</g>
 </g>
 <g id="snow_shower">
 </g>
 <g id="sleet_shower">
 </g>
 <g id="rain_shower">
+	<g id="day-winter_2_">
+		<g>
+			<defs>
+				<rect id="SVGID_11_" x="10" y="130" width="60" height="30"/>
+			</defs>
+			<clipPath id="SVGID_2_">
+				<use xlink:href="#SVGID_11_"  overflow="visible"/>
+			</clipPath>
+			<g clip-path="url(#SVGID_2_)">
+				<polygon fill="#E88D15" points="51.569,134.791 70,130 51.569,125.209 61.214,108.786 44.791,118.431 40,100 35.209,118.431 
+					18.786,108.786 28.431,125.209 10,130 28.431,134.791 18.786,151.214 35.209,141.569 40,160 44.791,141.569 61.214,151.214 				
+					"/>
+			</g>
+		</g>
+	</g>
 </g>
 <g id="partly_cloudy">
 	<g id="day-winter_3_">
-		<g id="day-winter_1_">
-			<path fill="#E88D15" d="M68,34H53c0,1.502-0.373,2.626-0.754,3.75L68,34z"/>
-			<path fill="#E88D15" d="M45.5,47.125l13.872,8.254L51.125,41.5C49.623,43.748,47.748,45.623,45.5,47.125z"/>
-			<path fill="#E88D15" d="M23,34H8l15.751,3.75C23.373,36.626,23,35.502,23,34z"/>
-			<path fill="#E88D15" d="M24.875,41.5l-8.251,13.879L30.5,47.125C28.252,45.623,26.377,43.748,24.875,41.5z"/>
-			<path fill="#E88D15" d="M34.023,48.353L38.003,64l3.974-15.645C39.326,48.883,36.674,48.883,34.023,48.353z"/>
-			<path fill="#FABA2F" d="M50,34c0,6.624-5.375,12-12,12c-6.63,0-12-5.376-12-12H50z"/>
-			<rect x="8" y="28" fill="#4D4D4D" width="60" height="3"/>
-		</g>
 		<g>
-			<path fill="#FFFFFF" d="M52.804,34c-6.845,0-13.075,4.347-15.664,10.438c-0.2-0.009-0.401-0.013-0.603-0.013
-				c-6.129,0-11.072,3.622-12.899,8.945c-0.071-0.001-0.144-0.002-0.215-0.002c-5.479,0-9.766,3.463-11.538,7.351
-				C8.28,62.292,6,65.908,6,70.393C6,76.901,11.051,82,17.498,82h62.938C87.662,82,94,75.672,94,68.457
-				c0-5.306-3.22-10.078-7.846-12.291c0.509-4.308-0.474-8.347-2.889-11.655c-3.176-4.353-8.377-6.85-14.27-6.851
-				c-1.778,0.001-3.559,0.229-5.32,0.685C60.646,35.524,56.871,34,52.804,34L52.804,34z"/>
-			<path fill="#999999" d="M17.498,78C13.489,78,10,74.907,10,70.393c0-2.964,1.551-5.932,5.043-6.447
-				c0.516-3.479,5.373-8.362,11.834-5.917c0-7.154,6.748-11.154,13.108-9.038c1.423-10.053,14.993-15.6,22.486-6.058
-				c11.503-4.511,23.004,3.48,18.999,15.99C85.995,59.434,90,63.432,90,68.457C90,73.488,85.476,78,80.437,78H17.498z"/>
+			<defs>
+				<rect id="SVGID_13_" x="10" y="30" width="60" height="30"/>
+			</defs>
+			<clipPath id="SVGID_4_">
+				<use xlink:href="#SVGID_13_"  overflow="visible"/>
+			</clipPath>
+			<g clip-path="url(#SVGID_4_)">
+				<polygon fill="#E88D15" points="51.569,34.791 70,30 51.569,25.209 61.214,8.786 44.791,18.431 40,0 35.209,18.431 
+					18.786,8.786 28.431,25.209 10,30 28.431,34.791 18.786,51.214 35.209,41.569 40,60 44.791,41.569 61.214,51.214 				"/>
+				<circle fill="#FABA2F" stroke="#FFFFFF" stroke-width="3" stroke-miterlimit="10" cx="40" cy="30" r="13.5"/>
+			</g>
 		</g>
+		<rect x="10" y="24" fill="#4D4D4D" width="60" height="3"/>
 	</g>
+	<path id="cloud_28_" fill="#A6A6A6" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M9.377,85
+		C4.357,85,0,80.609,0,76.051c0-4.613,2.231-8.439,6.938-10.191c1.625-5.422,6.562-9.172,12.875-9.359
+		C21.188,49.562,30,45.422,36.188,47.172c2.727-9.688,18.748-17.625,29.312-7.375c15.438-4.25,26.272,5.37,24.607,19.992
+		C96.21,61.542,100,66.901,100,73.172C100,79.466,94.355,85,88.054,85H9.377z"/>
 </g>
 <g id="fair">
 </g>

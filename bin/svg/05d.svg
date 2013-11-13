@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px"
-	 height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
+	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  y="-8242" x="-2.5" bottomLeftOrigin="true" height="16383" width="1095"></sliceSourceBounds>
+	</sfw>
+</metadata>
 <g id="snow_shower_thunder">
 </g>
 <g id="sleet_shower_thunder">
@@ -10,61 +26,30 @@
 <g id="rain_shower_thunder">
 </g>
 <g id="clouds">
-	<g id="heavy_rain_thunder">
-	</g>
-	<g id="rain_thunder">
-	</g>
-	<g id="heavy_snow">
-	</g>
-	<g id="sleet">
-	</g>
-	<g id="heavy_rain">
-	</g>
-	<g id="rain_1_">
-	</g>
-	<g id="heavy_cloud">
-	</g>
-	<g id="fog">
-	</g>
 </g>
 <g id="snow_shower">
 </g>
 <g id="sleet_shower">
 </g>
 <g id="rain_shower">
-	<g id="day_4_">
-		<g id="day_5_">
-			<path fill="#E88D15" d="M52.029,32.557l8.185-13.771l-13.765,8.186C48.676,28.465,50.54,30.324,52.029,32.557z"/>
-			<path fill="#E88D15" d="M31.561,26.972l-13.771-8.186l8.189,13.771C27.465,30.324,29.324,28.465,31.561,26.972z"/>
-			<path fill="#E88D15" d="M46.449,53.029l13.762,8.192l-8.182-13.78C50.54,49.676,48.676,51.535,46.449,53.029z"/>
-			<path fill="#E88D15" d="M24.525,36.047L9,39.997l15.525,3.95C24,41.312,24,38.68,24.525,36.047z"/>
-			<path fill="#E88D15" d="M53.473,43.947L69,40.003l-15.527-3.956C54,38.68,54,41.312,53.473,43.947z"/>
-			<path fill="#E88D15" d="M25.979,47.441l-8.189,13.777l13.771-8.196C29.324,51.535,27.465,49.676,25.979,47.441z"/>
-			<path fill="#E88D15" d="M42.955,25.525L38.996,10l-3.949,15.525C37.684,25,40.318,25,42.955,25.525z"/>
-			<path fill="#E88D15" d="M35.047,54.473L39.004,70l3.951-15.527C40.318,54.992,37.684,54.992,35.047,54.473z"/>
-			<path fill="#FABA2F" d="M38.999,28.003C45.625,28.003,51,33.376,51,40.001c0,6.629-5.375,11.996-12.001,11.996
-				C32.372,51.997,27,46.63,27,40.001C27,33.376,32.372,28.003,38.999,28.003z"/>
-		</g>
-		<g>
-			<path fill="#FFFFFF" d="M52.804,30c-6.845,0-13.075,4.347-15.664,10.438c-0.2-0.009-0.401-0.013-0.603-0.013
-				c-6.129,0-11.072,3.622-12.899,8.945c-0.071-0.001-0.144-0.002-0.215-0.002c-5.479,0-9.766,3.463-11.538,7.351
-				C8.28,58.292,6,61.908,6,66.393C6,72.901,11.051,78,17.498,78h62.938C87.662,78,94,71.672,94,64.457
-				c0-5.306-3.22-10.078-7.846-12.291c0.509-4.308-0.474-8.347-2.889-11.655c-3.176-4.353-8.377-6.85-14.27-6.851
-				c-1.778,0.001-3.559,0.229-5.32,0.685C60.646,31.524,56.871,30,52.804,30L52.804,30z"/>
-			<path fill="#808080" d="M17.498,74C13.489,74,10,70.907,10,66.393c0-2.964,1.551-5.932,5.043-6.447
-				c0.516-3.479,5.373-8.362,11.834-5.917c0-7.154,6.748-11.154,13.108-9.038c1.423-10.053,14.993-15.6,22.486-6.058
-				c11.503-4.511,23.004,3.48,18.999,15.99C85.995,55.434,90,59.432,90,64.457C90,69.488,85.476,74,80.437,74H17.498z"/>
-		</g>
-		<g>
-			<circle fill="#FFFFFF" cx="66" cy="79" r="8"/>
-			<path fill="#1362B1" d="M75,84.909C75,87.724,72.759,90,70,90c-2.763,0-5-2.276-5-5.091C65,83.327,65,76,65,76
-				C69.57,80.494,75,80.295,75,84.909z"/>
-		</g>
-		<g>
-			<circle fill="#FFFFFF" cx="51" cy="76" r="8"/>
-			<path fill="#1362B1" d="M60,81.909C60,84.724,57.759,87,55,87c-2.763,0-5-2.276-5-5.091C50,80.327,50,73,50,73
-				C54.57,77.494,60,77.295,60,81.909z"/>
-		</g>
+	<g id="day_2_">
+		<polygon fill="#E88D15" points="46.57,39.791 65,35 46.57,30.209 56.214,13.786 39.792,23.431 35,5 30.208,23.431 13.787,13.786 
+			23.431,30.209 5,35 23.431,39.791 13.787,56.214 30.208,46.569 35,65 39.792,46.569 56.214,56.214 		"/>
+		<circle fill="#FABA2F" stroke="#FFFFFF" stroke-width="3" stroke-miterlimit="10" cx="35" cy="35" r="13.5"/>
+	</g>
+	<path id="cloud_19_" fill="#808080" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M9.377,75
+		C4.357,75,0,70.609,0,66.051c0-4.613,2.231-8.439,6.938-10.191c1.625-5.422,6.562-9.172,12.875-9.359
+		C21.188,39.562,30,35.422,36.188,37.172c2.727-9.688,18.748-17.625,29.312-7.375c15.438-4.25,26.272,5.37,24.607,19.992
+		C96.21,51.542,100,56.901,100,63.172C100,69.466,94.355,75,88.054,75H9.377z"/>
+	<g>
+		<path fill="#FFFFFF" d="M79,77c0,4.969-4.031,9-9.001,9C65.031,86,61,81.969,61,77s4.031-9,8.999-9C74.969,68,79,72.031,79,77z"/>
+		<path fill="#1362B1" d="M85,87.368C85,91.586,81.634,95,77.502,95C73.355,95,70,91.586,70,87.368C70,84.986,70,74,70,74
+			C76.853,80.748,85,80.447,85,87.368z"/>
+	</g>
+	<g>
+		<circle fill="#FFFFFF" cx="52" cy="74" r="9"/>
+		<path fill="#1362B1" d="M67,84.368C67,88.586,63.634,92,59.502,92C55.355,92,52,88.586,52,84.368C52,81.986,52,71,52,71
+			C58.853,77.748,67,77.447,67,84.368z"/>
 	</g>
 </g>
 <g id="partly_cloudy">
