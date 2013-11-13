@@ -97,333 +97,108 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   };
 });
 require.register('primitives/moonPrimitive', function(module, exports, require) {
-  var FILL_COLOUR = '#afc1c9'  
-  	, CENTER_COLOUR = '#ffffff';  
+  var TWO_PI = Math.PI * 2  
+  	, FILL_COLOUR = '#afc1c9'  
+  	, WIDTH = 60;  
     
   exports.render = function(ctx, options) {  
   	ctx.save();  
-  	ctx.translate(options.x, options.y);  
-  	ctx.scale(options.scale, options.scale);  
     
-  	if (options.phase === 1) {  
-  		if (options.small) {  
-  			ctx.fillStyle = FILL_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(19.001,0);  
-  			ctx.bezierCurveTo(8.523000000000001,0,0.0010000000000012221,8.521,0.0010000000000012221,19);  
-  			ctx.bezierCurveTo(0.0010000000000012221,29.479,8.523000000000001,38,19.001,38);  
-  			ctx.bezierCurveTo(29.479,38,38.001000000000005,29.479,38.001000000000005,19);  
-  			ctx.bezierCurveTo(38.001000000000005,8.521,29.479,0,19.001,0);  
-  			ctx.closePath();  
-  			ctx.fill();  
+  	// Flip  
+  	if (options.phase > 5) {  
+  		ctx.translate((WIDTH * options.scale) + options.x, options.y)  
+  		ctx.scale(-1 * options.scale, options.scale);  
+  	} else {  
+  		ctx.translate(options.x, options.y)  
+  		ctx.scale(options.scale, options.scale);  
+  	}  
     
-  			ctx.fillStyle = CENTER_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(19,34);  
-  			ctx.bezierCurveTo(10.726,34,4,27.275,4,19);  
-  			ctx.bezierCurveTo(4,10.725000000000001,10.726,4,19,4);  
-  			ctx.bezierCurveTo(27.274,4,34,10.725,34,19);  
-  			ctx.bezierCurveTo(34,27.275,27.274,34,19,34);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		} else {  
-  			ctx.fillStyle = FILL_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(25.001,0);  
-  			ctx.bezierCurveTo(11.217,0,0.0010000000000012221,11.216,0.0010000000000012221,25);  
-  			ctx.bezierCurveTo(0.0010000000000012221,38.784,11.217,50,25.001,50);  
-  			ctx.bezierCurveTo(38.785000000000004,50,50.001000000000005,38.784,50.001000000000005,25);  
-  			ctx.bezierCurveTo(50.001000000000005,11.216000000000001,38.785,0,25.001,0);  
-  			ctx.closePath();  
-  			ctx.fill();  
     
-  			ctx.fillStyle = CENTER_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(25,45);  
-  			ctx.bezierCurveTo(13.974,45,5,36.026,5,25);  
-  			ctx.bezierCurveTo(5,13.973999999999997,13.974,5,25,5);  
-  			ctx.bezierCurveTo(36.025999999999996,5,45,13.974,45,25);  
-  			ctx.bezierCurveTo(45,36.025999999999996,36.026,45,25,45);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		}  
-  	} else if (options.phase === 2) {  
-  		if (options.small) {  
+  	switch (options.phase) {  
+  		case 1:  
   			ctx.fillStyle = FILL_COLOUR;  
   			ctx.beginPath();  
-  			ctx.moveTo(0.001,19);  
-  			ctx.bezierCurveTo(0.001,29.479,8.519,38,19.001,38);  
-  			ctx.bezierCurveTo(29.475,38,38.001000000000005,29.479,38.001000000000005,19);  
-  			ctx.bezierCurveTo(38.001000000000005,8.521,29.475000000000005,0,19.001000000000005,0);  
-  			ctx.bezierCurveTo(8.519,0,0.001,8.521,0.001,19);  
+  			ctx.moveTo(31,0);  
+  			ctx.bezierCurveTo(14.459,0,1,13.459,1,30);  
+  			ctx.bezierCurveTo(1,46.541,14.459,60,31,60);  
+  			ctx.bezierCurveTo(47.541,60,61,46.541,61,30);  
+  			ctx.bezierCurveTo(61,13.459000000000003,47.541,0,31,0);  
+  			ctx.closePath();  
+  			ctx.moveTo(31,54);  
+  			ctx.bezierCurveTo(17.764,54,7,43.236,7,30);  
+  			ctx.bezierCurveTo(7,16.764000000000003,17.764,6,31,6);  
+  			ctx.bezierCurveTo(44.236000000000004,6,55,16.764,55,30);  
+  			ctx.bezierCurveTo(55,43.236000000000004,44.236,54,31,54);  
   			ctx.closePath();  
   			ctx.fill();  
-    
-  			ctx.fillStyle = CENTER_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(4,19.002);  
-  			ctx.bezierCurveTo(4,10.269,10.873,4,19.332,4);  
-  			ctx.bezierCurveTo(21.668,4,27,10.269,27,19.002);  
-  			ctx.bezierCurveTo(27,27.732,21.43,34,19.332,34);  
-  			ctx.bezierCurveTo(10.873,34,4,27.732,4,19.002);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		} else {  
+  			break;  
+  		case 2:  
+  		case 8:  
   			ctx.fillStyle = FILL_COLOUR;  
   			ctx.beginPath();  
-  			ctx.moveTo(0.001,25);  
-  			ctx.bezierCurveTo(0.001,38.784,11.212,50,25.001,50);  
-  			ctx.bezierCurveTo(38.78,50,50.001000000000005,38.784,50.001000000000005,25);  
-  			ctx.bezierCurveTo(50.001000000000005,11.216000000000001,38.78,0,25.001000000000005,0);  
-  			ctx.bezierCurveTo(11.212,0,0.001,11.216,0.001,25);  
+  			ctx.moveTo(0,30);  
+  			ctx.bezierCurveTo(0,46.541,13.453,60,30,60);  
+  			ctx.bezierCurveTo(46.535,60,60,46.541,60,30);  
+  			ctx.bezierCurveTo(60,13.459000000000003,46.535,0,30,0);  
+  			ctx.bezierCurveTo(13.453,0,0,13.459,0,30);  
+  			ctx.closePath();  
+  			ctx.moveTo(6,30);  
+  			ctx.bezierCurveTo(6,16.764,16.758,6,30,6);  
+  			ctx.bezierCurveTo(33.656,6,42,16.764,42,30);  
+  			ctx.bezierCurveTo(42,43.236000000000004,33.281,54,30,54);  
+  			ctx.bezierCurveTo(16.758,54,6,43.236,6,30);  
   			ctx.closePath();  
   			ctx.fill();  
-    
-  			ctx.fillStyle = CENTER_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(5.001,24.997);  
-  			ctx.bezierCurveTo(5.001,13.971,13.966,5,24.999,5);  
-  			ctx.bezierCurveTo(28.046,5,35.001,13.971,35.001,24.997);  
-  			ctx.bezierCurveTo(35.001,36.029,27.735,45,24.999,45);  
-  			ctx.bezierCurveTo(13.966,45,5.001,36.029,5.001,24.997);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		}  
-  	} else if (options.phase === 3) {  
-  		if (options.small) {  
+  			break;  
+  		case 3:  
+  		case 7:  
   			ctx.fillStyle = FILL_COLOUR;  
   			ctx.beginPath();  
-  			ctx.moveTo(19,0);  
-  			ctx.bezierCurveTo(8.521,0,0,8.521,0,19);  
-  			ctx.bezierCurveTo(0,29.479,8.521,38,19,38);  
-  			ctx.bezierCurveTo(29.479,38,38,29.479,38,19);  
-  			ctx.bezierCurveTo(38,8.521,29.479,0,19,0);  
+  			ctx.moveTo(30,0);  
+  			ctx.bezierCurveTo(13.459,0,0,13.459,0,30);  
+  			ctx.bezierCurveTo(0,46.541,13.459,60,30,60);  
+  			ctx.bezierCurveTo(46.541,60,60,46.541,60,30);  
+  			ctx.bezierCurveTo(60,13.459000000000003,46.541,0,30,0);  
+  			ctx.closePath();  
+  			ctx.moveTo(30,54);  
+  			ctx.bezierCurveTo(16.764,54,6,43.236,6,30);  
+  			ctx.bezierCurveTo(6,16.764000000000003,16.764,6,30,6);  
+  			ctx.lineTo(30,54);  
   			ctx.closePath();  
   			ctx.fill();  
-    
-  			ctx.fillStyle = CENTER_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(19,34);  
-  			ctx.bezierCurveTo(10.729,34,4,27.271,4,19);  
-  			ctx.bezierCurveTo(4,10.729,10.729,4,19,4);  
-  			ctx.lineTo(19,34);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		} else {  
+  			break;  
+  		case 4:  
+  		case 6:  
   			ctx.fillStyle = FILL_COLOUR;  
   			ctx.beginPath();  
-  			ctx.moveTo(25,0);  
-  			ctx.bezierCurveTo(11.216,0,0,11.216,0,25);  
-  			ctx.bezierCurveTo(0,38.784,11.216,50,25,50);  
-  			ctx.bezierCurveTo(38.784,50,50,38.784,50,25);  
-  			ctx.bezierCurveTo(50,11.216000000000001,38.784,0,25,0);  
+  			ctx.moveTo(30,0);  
+  			ctx.bezierCurveTo(13.459,0,0,13.459,0,30);  
+  			ctx.bezierCurveTo(0,46.541,13.459,60,30,60);  
+  			ctx.bezierCurveTo(46.541,60,60,46.541,60,30);  
+  			ctx.bezierCurveTo(60,13.459000000000003,46.541,0,30,0);  
+  			ctx.closePath();  
+  			ctx.moveTo(6,30);  
+  			ctx.bezierCurveTo(6,16.746,16.746,6,30,6);  
+  			ctx.bezierCurveTo(26.344,6,18,16.764,18,30);  
+  			ctx.bezierCurveTo(18,43.236000000000004,26.713,54,30,54);  
+  			ctx.bezierCurveTo(16.746,54,6,43.254,6,30);  
   			ctx.closePath();  
   			ctx.fill();  
-    
-  			ctx.fillStyle = CENTER_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(25,45);  
-  			ctx.bezierCurveTo(13.971,45,5,36.029,5,25);  
-  			ctx.bezierCurveTo(5,13.970999999999997,13.971,5,25,5);  
-  			ctx.lineTo(25,45);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		}  
-  	} else if (options.phase === 4) {  
-  		if (options.small) {  
+  			break;  
+  		case 5:  
   			ctx.fillStyle = FILL_COLOUR;  
   			ctx.beginPath();  
-  			ctx.moveTo(19,0);  
-  			ctx.bezierCurveTo(8.521,0,0,8.521,0,19);  
-  			ctx.bezierCurveTo(0,29.479,8.521,38,19,38);  
-  			ctx.bezierCurveTo(29.479,38,38,29.479,38,19);  
-  			ctx.bezierCurveTo(38,8.521,29.479,0,19,0);  
+  			ctx.arc(30,30,30,0,TWO_PI,true);  
   			ctx.closePath();  
   			ctx.fill();  
-    
-  			ctx.fillStyle = CENTER_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(4,19);  
-  			ctx.bezierCurveTo(4,10.717,10.716999999999999,4,19,4);  
-  			ctx.bezierCurveTo(16.715,4,11.5,10.729,11.5,19);  
-  			ctx.bezierCurveTo(11.5,27.271,16.944,34,19,34);  
-  			ctx.bezierCurveTo(10.717,34,4,27.283,4,19);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		} else {  
-  			ctx.fillStyle = FILL_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(25,0);  
-  			ctx.bezierCurveTo(11.216,0,0,11.216,0,25);  
-  			ctx.bezierCurveTo(0,38.784,11.216,50,25,50);  
-  			ctx.bezierCurveTo(38.784,50,50,38.784,50,25);  
-  			ctx.bezierCurveTo(50,11.216000000000001,38.784,0,25,0);  
-  			ctx.closePath();  
-  			ctx.fill();  
-    
-  			ctx.fillStyle = CENTER_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(5,25);  
-  			ctx.bezierCurveTo(5,13.955,13.956,5,25,5);  
-  			ctx.bezierCurveTo(21.953,5,15,13.971,15,25);  
-  			ctx.bezierCurveTo(15,36.028999999999996,22.259999999999998,45,25,45);  
-  			ctx.bezierCurveTo(13.956,45,5,36.044,5,25);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		}  
-  	} else if (options.phase === 5) {  
-  		if (options.small) {  
-  			ctx.fillStyle = FILL_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(19,0);  
-  			ctx.bezierCurveTo(8.521,0,0,8.521,0,19);  
-  			ctx.bezierCurveTo(0,29.479,8.521,38,19,38);  
-  			ctx.bezierCurveTo(29.479,38,38,29.479,38,19);  
-  			ctx.bezierCurveTo(38,8.521,29.479,0,19,0);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		} else {  
-  			ctx.fillStyle = FILL_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(25,0);  
-  			ctx.bezierCurveTo(11.216,0,0,11.216,0,25);  
-  			ctx.bezierCurveTo(0,38.784,11.216,50,25,50);  
-  			ctx.bezierCurveTo(38.784,50,50,38.784,50,25);  
-  			ctx.bezierCurveTo(50,11.216000000000001,38.784,0,25,0);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		}  
-  	} else if (options.phase === 6) {  
-  		if (options.small) {  
-  			ctx.fillStyle = FILL_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(0,19);  
-  			ctx.bezierCurveTo(0,29.479,8.521,38,19,38);  
-  			ctx.bezierCurveTo(29.479,38,38,29.479,38,19);  
-  			ctx.bezierCurveTo(38,8.521,29.479,0,19,0);  
-  			ctx.bezierCurveTo(8.521,0,0,8.521,0,19);  
-  			ctx.closePath();  
-  			ctx.fill();  
-    
-  			ctx.fillStyle = CENTER_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(34,19);  
-  			ctx.bezierCurveTo(34,10.717,27.283,4,19,4);  
-  			ctx.bezierCurveTo(21.285,4,26.5,10.729,26.5,19);  
-  			ctx.bezierCurveTo(26.5,27.271,21.056,34,19,34);  
-  			ctx.bezierCurveTo(27.283,34,34,27.283,34,19);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		} else {  
-  			ctx.fillStyle = FILL_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(0,25);  
-  			ctx.bezierCurveTo(0,38.784,11.216,50,25,50);  
-  			ctx.bezierCurveTo(38.784,50,50,38.784,50,25);  
-  			ctx.bezierCurveTo(50,11.216000000000001,38.784,0,25,0);  
-  			ctx.bezierCurveTo(11.216000000000001,0,0,11.216,0,25);  
-  			ctx.closePath();  
-  			ctx.fill();  
-    
-  			ctx.fillStyle = CENTER_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(45,25);  
-  			ctx.bezierCurveTo(45,13.955,36.044,5,25,5);  
-  			ctx.bezierCurveTo(28.047,5,35,13.971,35,25);  
-  			ctx.bezierCurveTo(35,36.028999999999996,27.740000000000002,45,25,45);  
-  			ctx.bezierCurveTo(36.044,45,45,36.044,45,25);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		}  
-  	} else if (options.phase === 7) {  
-  		if (options.small) {  
-  			ctx.fillStyle = FILL_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(0,19);  
-  			ctx.bezierCurveTo(0,29.479,8.521,38,19,38);  
-  			ctx.bezierCurveTo(29.479,38,38,29.479,38,19);  
-  			ctx.bezierCurveTo(38,8.521,29.479,0,19,0);  
-  			ctx.bezierCurveTo(8.521,0,0,8.521,0,19);  
-  			ctx.closePath();  
-  			ctx.fill();  
-    
-  			ctx.fillStyle = CENTER_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(19,34);  
-  			ctx.bezierCurveTo(27.271,34,34,27.271,34,19);  
-  			ctx.bezierCurveTo(34,10.729,27.271,4,19,4);  
-  			ctx.lineTo(19,34);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		} else {  
-  			ctx.fillStyle = FILL_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(0,25);  
-  			ctx.bezierCurveTo(0,38.784,11.216,50,25,50);  
-  			ctx.bezierCurveTo(38.784,50,50,38.784,50,25);  
-  			ctx.bezierCurveTo(50,11.216000000000001,38.784,0,25,0);  
-  			ctx.bezierCurveTo(11.216000000000001,0,0,11.216,0,25);  
-  			ctx.closePath();  
-  			ctx.fill();  
-    
-  			ctx.fillStyle = CENTER_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(25,45);  
-  			ctx.bezierCurveTo(36.028999999999996,45,45,36.028999999999996,45,25);  
-  			ctx.bezierCurveTo(45,13.971000000000004,36.029,5,25,5);  
-  			ctx.lineTo(25,45);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		}  
-  	} else if (options.phase === 8) {  
-  		if (options.small) {  
-  			ctx.fillStyle = FILL_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(19,0);  
-  			ctx.bezierCurveTo(8.526,0,0,8.521,0,19);  
-  			ctx.bezierCurveTo(0,29.479,8.526,38,19,38);  
-  			ctx.bezierCurveTo(29.482,38,38,29.479,38,19);  
-  			ctx.bezierCurveTo(38,8.521,29.482,0,19,0);  
-  			ctx.closePath();  
-  			ctx.fill();  
-    
-  			ctx.fillStyle = CENTER_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(34.001,19.002);  
-  			ctx.bezierCurveTo(34.001,10.269,27.128,4,18.669,4);  
-  			ctx.bezierCurveTo(16.333000000000002,4,11.001000000000001,10.269,11.001000000000001,19.002000000000002);  
-  			ctx.bezierCurveTo(11.001000000000001,27.732000000000003,16.571,34,18.669,34);  
-  			ctx.bezierCurveTo(27.128,34,34.001,27.732,34.001,19.002);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		} else {  
-  			ctx.fillStyle = FILL_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(25,0);  
-  			ctx.bezierCurveTo(11.221,0,0,11.216,0,25);  
-  			ctx.bezierCurveTo(0,38.784,11.221,50,25,50);  
-  			ctx.bezierCurveTo(38.789,50,50,38.784,50,25);  
-  			ctx.bezierCurveTo(50,11.216000000000001,38.789,0,25,0);  
-  			ctx.closePath();  
-  			ctx.fill();  
-    
-  			ctx.fillStyle = CENTER_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(45,24.997);  
-  			ctx.bezierCurveTo(45,13.971,36.035,5,25.002,5);  
-  			ctx.bezierCurveTo(21.955,5,15,13.971,15,24.997);  
-  			ctx.bezierCurveTo(15,36.029,22.266,45,25.002,45);  
-  			ctx.bezierCurveTo(36.035,45,45,36.029,45,24.997);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		}  
   	}  
   	ctx.restore();  
   };
 });
 require.register('primitives/cloudPrimitive', function(module, exports, require) {
   var BG_COLOUR = '#ffffff'  
-  	, WIDTH = 80;  
+  	, STROKE_WIDTH = 5  
+  	, WIDTH = 100;  
     
   exports.render = function(ctx, options) {  
   	var tint = Math.floor(255 * (1-options.tint));  
@@ -437,83 +212,25 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
   		ctx.scale(options.scale, options.scale);  
   	}  
     
-  	if (options.small) {  
-  		// Stroke  
-  		ctx.fillStyle = BG_COLOUR;  
-  		ctx.beginPath();  
-  		ctx.moveTo(23.247,-4);  
-  		ctx.bezierCurveTo(20.585,-4,18.102,-3.099,16.044,-1.419);  
-  		ctx.bezierCurveTo(15.077,-1.614,14.103,-1.713,13.128,-1.713);  
-  		ctx.bezierCurveTo(8.958,-1.713,5.264,0.07399999999999984,2.9930000000000003,3.189);  
-  		ctx.bezierCurveTo(1.45,5.307,0.72,7.823,0.83,10.506);  
-  		ctx.bezierCurveTo(-2.061,12.29,-4,15.501,-4,19.035);  
-  		ctx.bezierCurveTo(-4,24.344,0.662,29,5.978,29);  
-  		ctx.lineTo(45.384,29);  
-  		ctx.bezierCurveTo(50.222,28.963,53.999,25.131,53.999,20.244);  
-  		ctx.bezierCurveTo(53.999,17.073,52.411,14.401,49.925000000000004,13.072);  
-  		ctx.bezierCurveTo(48.575,10.588,45.88,8.453,42.476000000000006,8.139999999999999);  
-  		ctx.bezierCurveTo(40.949000000000005,4.938999999999998,37.77700000000001,2.728999999999999,33.982000000000006,2.528999999999999);  
-  		ctx.bezierCurveTo(31.927,-1.329,27.776,-3.999,23.249,-4);  
-  		ctx.lineTo(23.249,-4);  
-  		ctx.bezierCurveTo(23.248,-4,23.247,-4,23.247,-4);  
-  		ctx.lineTo(23.247,-4);  
-  		ctx.closePath();  
-  		ctx.fill();  
-    
-  		// Fill  
-  		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
-  		ctx.beginPath();  
-  		ctx.moveTo(45.313,25);  
-  		ctx.bezierCurveTo(47.819,25,49.999,23.067,49.999,20.248);  
-  		ctx.bezierCurveTo(49.999,18.394000000000002,49.03,16.54,46.849000000000004,16.218);  
-  		ctx.bezierCurveTo(46.527,14.042,43.492000000000004,10.989,39.453,12.52);  
-  		ctx.bezierCurveTo(39.453,8.047,35.235,5.547999999999999,31.261000000000003,6.872);  
-  		ctx.bezierCurveTo(30.372000000000003,0.5869999999999997,21.89,-2.8789999999999996,17.206000000000003,3.084);  
-  		ctx.bezierCurveTo(10.016,0.264,2.827,5.259,5.331,13.078);  
-  		ctx.bezierCurveTo(2.503,13.396,0,15.896,0,19.038);  
-  		ctx.bezierCurveTo(0,22.182,2.827,25,5.978,25);  
-  		ctx.lineTo(45.313,25);  
-  		ctx.closePath();  
-  		ctx.fill();  
-  	} else {  
-  		// Stroke  
-  		ctx.fillStyle = BG_COLOUR;  
-  		ctx.beginPath();  
-  		ctx.moveTo(42.804,-4);  
-  		ctx.bezierCurveTo(35.959,-4,29.729,0.347,27.14,6.438);  
-  		ctx.bezierCurveTo(26.94,6.428999999999999,26.739,6.425,26.537,6.425);  
-  		ctx.bezierCurveTo(20.408,6.425,15.465,10.047,13.638,15.370000000000001);  
-  		ctx.bezierCurveTo(13.567,15.369000000000002,13.494,15.368,13.423,15.368);  
-  		ctx.bezierCurveTo(7.944,15.368,3.657,18.831,1.8849999999999998,22.719);  
-  		ctx.bezierCurveTo(-1.72,24.292,-4,27.908,-4,32.393);  
-  		ctx.bezierCurveTo(-4,38.901,1.051,44,7.498,44);  
-  		ctx.lineTo(70.436,44);  
-  		ctx.bezierCurveTo(77.662,44,84,37.672,84,30.457);  
-  		ctx.bezierCurveTo(84,25.151,80.78,20.379,76.154,18.166);  
-  		ctx.bezierCurveTo(76.663,13.858,75.67999999999999,9.819,73.265,6.511000000000001);  
-  		ctx.bezierCurveTo(70.089,2.1580000000000013,64.888,-0.33899999999999864,58.995000000000005,-0.33999999999999897);  
-  		ctx.bezierCurveTo(57.217000000000006,-0.33899999999999897,55.43600000000001,-0.11099999999999896,53.675000000000004,0.3450000000000011);  
-  		ctx.bezierCurveTo(50.646,-2.476,46.871,-4,42.804,-4);  
-  		ctx.lineTo(42.804,-4);  
-  		ctx.closePath();  
-  		ctx.fill();  
-    
-  		// Fill  
-  		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
-  		ctx.beginPath();  
-  		ctx.moveTo(7.498,40);  
-  		ctx.bezierCurveTo(3.489,40,0,36.907,0,32.393);  
-  		ctx.bezierCurveTo(0,29.429000000000002,1.551,26.461,5.043,25.946);  
-  		ctx.bezierCurveTo(5.559,22.467000000000002,10.416,17.584000000000003,16.877,20.029000000000003);  
-  		ctx.bezierCurveTo(16.877,12.875000000000004,23.625,8.875000000000004,29.985,10.991000000000003);  
-  		ctx.bezierCurveTo(31.408,0.9380000000000024,44.978,-4.608999999999996,52.471000000000004,4.933000000000003);  
-  		ctx.bezierCurveTo(63.974000000000004,0.42200000000000326,75.47500000000001,8.413000000000004,71.47,20.923000000000002);  
-  		ctx.bezierCurveTo(75.995,21.434,80,25.432,80,30.457);  
-  		ctx.bezierCurveTo(80,35.488,75.476,40,70.437,40);  
-  		ctx.lineTo(7.498,40);  
-  		ctx.closePath();  
-  		ctx.fill();  
-  	}  
+  	// Fill  
+  	ctx.strokeStyle = BG_COLOUR;  
+  	ctx.lineWidth = STROKE_WIDTH;  
+  	ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
+  	ctx.beginPath();  
+  	ctx.moveTo(7.498,40);  
+  	ctx.moveTo(9.377,50);  
+  	ctx.bezierCurveTo(4.357,50,0,45.609,0,41.051);  
+  	ctx.bezierCurveTo(0,36.438,2.231,32.612,6.938,30.86);  
+  	ctx.bezierCurveTo(8.562999999999999,25.438,13.5,21.688,19.813,21.500999999999998);  
+  	ctx.bezierCurveTo(21.188,14.562,30,10.422,36.188,12.172);  
+  	ctx.bezierCurveTo(38.914,2.484,54.936,-5.453,65.5,4.797);  
+  	ctx.bezierCurveTo(80.938,0.5469999999999997,91.77199999999999,10.167,90.107,24.789);  
+  	ctx.bezierCurveTo(96.21,26.542,100,31.901,100,38.172);  
+  	ctx.bezierCurveTo(100,44.466,94.355,50,88.054,50);  
+  	ctx.lineTo(9.377,50);  
+  	ctx.closePath();  
+  	ctx.fill();  
+  	ctx.stroke();  
   	ctx.restore();  
   };  
   
@@ -531,18 +248,18 @@ require.register('primitives/raindropPrimitive', function(module, exports, requi
   	ctx.scale(options.scale, options.scale);  
   	ctx.fillStyle = BG_COLOUR;  
   	ctx.beginPath();  
-  	ctx.arc(1,3,8,0,TWO_PI,true);  
+  	ctx.arc(0,3,9,0,TWO_PI,true);  
   	ctx.closePath();  
   	ctx.fill();  
     
   	// Fill  
   	ctx.fillStyle = FILL_COLOUR;  
   	ctx.beginPath();  
-  	ctx.moveTo(10,8.909);  
-  	ctx.bezierCurveTo(10,11.724,7.759,14,5,14);  
-  	ctx.bezierCurveTo(2.237,14,0,11.724,0,8.908999999999999);  
-  	ctx.bezierCurveTo(0,7.327,0,0,0,0);  
-  	ctx.bezierCurveTo(4.57,4.494,10,4.295,10,8.909);  
+  	ctx.moveTo(15,13.368);  
+  	ctx.bezierCurveTo(15,17.586,11.634,21,7.502,21);  
+  	ctx.bezierCurveTo(3.355,21,0,17.586,0,13.368);  
+  	ctx.bezierCurveTo(0,10.986,0,0,0,0);  
+  	ctx.bezierCurveTo(6.853,6.748,15,6.447,15,13.368);  
   	ctx.closePath();  
   	ctx.fill();  
   	ctx.restore();  
@@ -561,61 +278,58 @@ require.register('primitives/snowflakePrimitive', function(module, exports, requ
   	ctx.scale(options.scale, options.scale);  
   	ctx.fillStyle = BG_COLOUR;  
   	ctx.beginPath();  
-  	ctx.arc(7,2.875,8,0,TWO_PI,true);  
+  	ctx.arc(10,3,9,0,TWO_PI,true);  
   	ctx.closePath();  
   	ctx.fill();  
     
   	// Fill  
   	ctx.fillStyle = FILL_COLOUR;  
   	ctx.beginPath();  
-  	ctx.moveTo(11.393,1.906);  
-  	ctx.lineTo(9.326,3.979);  
-  	ctx.bezierCurveTo(9.055,3.849,8.783,3.728,8.48,3.637);  
-  	ctx.bezierCurveTo(8.188,3.567,7.897,3.536,7.605,3.527);  
-  	ctx.lineTo(6.842,0.688);  
-  	ctx.bezierCurveTo(6.681,0.105,6.077,-0.247,5.494,-0.086);  
-  	ctx.bezierCurveTo(4.91,0.065,4.549,0.668,4.719,1.268);  
-  	ctx.lineTo(5.474,4.096);  
-  	ctx.bezierCurveTo(4.966,4.412,4.539,4.845,4.222,5.353);  
-  	ctx.lineTo(1.391,4.604);  
-  	ctx.bezierCurveTo(0.803,4.4430000000000005,0.19399999999999995,4.795,0.04299999999999993,5.3740000000000006);  
-  	ctx.bezierCurveTo(-0.12900000000000006,5.978000000000001,0.22899999999999993,6.5760000000000005,0.822,6.737);  
-  	ctx.lineTo(3.648,7.488);  
-  	ctx.bezierCurveTo(3.668,8.092,3.8240000000000003,8.690000000000001,4.101,9.218);  
-  	ctx.lineTo(2.034,11.286);  
-  	ctx.bezierCurveTo(1.6009999999999998,11.708,1.6109999999999998,12.407,2.045,12.841);  
-  	ctx.bezierCurveTo(2.477,13.273,3.171,13.283,3.598,12.841);  
-  	ctx.lineTo(5.664,10.767);  
-  	ctx.bezierCurveTo(5.926,10.918999999999999,6.202999999999999,11.045,6.5,11.120999999999999);  
-  	ctx.bezierCurveTo(6.807,11.190999999999999,7.093,11.225999999999999,7.384,11.225999999999999);  
-  	ctx.lineTo(8.144,14.062999999999999);  
-  	ctx.bezierCurveTo(8.3,14.646999999999998,8.915000000000001,14.994,9.498000000000001,14.838);  
-  	ctx.bezierCurveTo(10.092,14.677,10.434000000000001,14.081999999999999,10.272000000000002,13.488999999999999);  
-  	ctx.lineTo(9.518000000000002,10.661);  
-  	ctx.bezierCurveTo(10.031000000000002,10.344999999999999,10.458000000000002,9.907,10.765000000000002,9.394);  
-  	ctx.lineTo(13.611000000000002,10.158);  
-  	ctx.bezierCurveTo(14.194000000000003,10.304,14.807000000000002,9.956999999999999,14.964000000000002,9.373999999999999);  
-  	ctx.bezierCurveTo(15.120000000000003,8.78,14.773000000000001,8.177,14.180000000000001,8.024999999999999);  
-  	ctx.lineTo(11.344000000000001,7.259999999999999);  
-  	ctx.bezierCurveTo(11.323,6.655999999999999,11.173000000000002,6.071999999999999,10.891000000000002,5.5379999999999985);  
-  	ctx.lineTo(12.958000000000002,3.4759999999999986);  
-  	ctx.bezierCurveTo(13.390000000000002,3.042999999999999,13.390000000000002,2.3379999999999987,12.968000000000002,1.9059999999999986);  
-  	ctx.bezierCurveTo(12.524,1.484,11.815,1.484,11.393,1.906);  
+  	ctx.moveTo(15.95,2.844);  
+  	ctx.lineTo(13.056999999999999,5.743);  
+  	ctx.bezierCurveTo(12.676999999999998,5.5600000000000005,12.296999999999999,5.392,11.871999999999998,5.266);  
+  	ctx.bezierCurveTo(11.462999999999997,5.166,11.056999999999999,5.124,10.645999999999997,5.109);  
+  	ctx.lineTo(9.579,1.14);  
+  	ctx.bezierCurveTo(9.354,0.322,8.51,-0.171,7.692,0.055);  
+  	ctx.bezierCurveTo(6.875,0.265,6.369,1.1079999999999999,6.606,1.948);  
+  	ctx.lineTo(7.663,5.9079999999999995);  
+  	ctx.bezierCurveTo(6.953,6.353,6.356,6.955,5.91,7.668);  
+  	ctx.lineTo(1.948,6.62);  
+  	ctx.bezierCurveTo(1.126,6.395,0.271,6.888,0.062,7.694);  
+  	ctx.bezierCurveTo(-0.18,8.542,0.321,9.378,1.1520000000000001,9.603);  
+  	ctx.lineTo(5.109,10.658);  
+  	ctx.bezierCurveTo(5.137,11.503,5.355,12.341,5.744,13.081);  
+  	ctx.lineTo(2.85,15.977);  
+  	ctx.bezierCurveTo(2.245,16.568,2.257,17.544,2.864,18.153);  
+  	ctx.bezierCurveTo(3.468,18.756,4.441,18.773,5.038,18.153);  
+  	ctx.lineTo(7.931,15.248);  
+  	ctx.bezierCurveTo(8.298,15.463999999999999,8.687,15.638,9.100999999999999,15.745999999999999);  
+  	ctx.bezierCurveTo(9.531999999999998,15.841999999999999,9.931,15.892999999999999,10.338999999999999,15.892999999999999);  
+  	ctx.lineTo(11.402999999999999,19.863);  
+  	ctx.bezierCurveTo(11.621999999999998,20.681,12.480999999999998,21.168,13.299,20.948999999999998);  
+  	ctx.bezierCurveTo(14.129999999999999,20.723,14.607,19.892,14.381,19.061);  
+  	ctx.lineTo(13.325,15.1);  
+  	ctx.bezierCurveTo(14.043,14.66,14.641,14.047,15.072,13.329);  
+  	ctx.lineTo(19.054,14.398);  
+  	ctx.bezierCurveTo(19.871,14.603,20.729999999999997,14.115,20.947999999999997,13.298);  
+  	ctx.bezierCurveTo(21.166999999999998,12.468,20.680999999999997,11.623,19.850999999999996,11.408);  
+  	ctx.lineTo(15.880999999999995,10.338999999999999);  
+  	ctx.bezierCurveTo(15.851999999999995,9.493999999999998,15.640999999999995,8.675999999999998,15.245999999999995,7.929999999999999);  
+  	ctx.lineTo(18.139999999999993,5.041999999999999);  
+  	ctx.bezierCurveTo(18.743999999999993,4.433999999999999,18.743999999999993,3.446999999999999,18.152999999999995,2.843999999999999);  
+  	ctx.bezierCurveTo(17.535,2.252,16.543,2.252,15.95,2.844);  
   	ctx.closePath();  
-  	ctx.fill();  
-    
-  	// Center  
-  	ctx.fillStyle = BG_COLOUR;  
-  	ctx.beginPath();  
-  	ctx.arc(7.5,7.375,2,0,TWO_PI,true);  
+  	ctx.moveTo(13.086,11.215);  
+  	ctx.bezierCurveTo(12.719000000000001,12.651,11.227,13.511,9.790000000000001,13.114);  
+  	ctx.bezierCurveTo(8.347000000000001,12.734,7.496,11.241000000000001,7.876000000000001,9.802000000000001);  
+  	ctx.bezierCurveTo(8.256000000000002,8.350000000000001,9.734000000000002,7.505000000000001,11.183000000000002,7.887000000000001);  
+  	ctx.bezierCurveTo(12.622,8.282,13.487,9.761,13.086,11.215);  
   	ctx.closePath();  
   	ctx.fill();  
   	ctx.restore();  
   };
 });
 require.register('primitives/fogPrimitive', function(module, exports, require) {
-  var BG_COLOUR = '#ffffff';  
-    
   exports.render = function(ctx, options) {  
   	var tint = Math.floor(255 * (1-options.tint));  
     
@@ -624,47 +338,47 @@ require.register('primitives/fogPrimitive', function(module, exports, require) {
   	ctx.translate(options.x, options.y)  
   	ctx.scale(options.scale, options.scale);  
   	ctx.beginPath();  
-  	ctx.moveTo(77.5,35.001);  
-  	ctx.lineTo(2.5,35.001);  
-  	ctx.bezierCurveTo(1.123,35.001,0,36.123999999999995,0,37.501);  
-  	ctx.bezierCurveTo(0,38.878,1.123,40.001,2.5,40.001);  
-  	ctx.lineTo(77.5,40.001);  
-  	ctx.bezierCurveTo(78.877,40.001,80,38.878,80,37.501);  
-  	ctx.bezierCurveTo(80,36.123999999999995,78.877,35.001,77.5,35.001);  
+  	ctx.moveTo(87.188,40);  
+  	ctx.lineTo(2.812,40);  
+  	ctx.bezierCurveTo(1.264,40,0,41.123,0,42.5);  
+  	ctx.bezierCurveTo(0,43.877,1.264,45,2.812,45);  
+  	ctx.lineTo(87.187,45);  
+  	ctx.bezierCurveTo(88.736,45,90,43.877,90,42.5);  
+  	ctx.bezierCurveTo(90,41.123,88.736,40,87.188,40);  
   	ctx.closePath();  
   	ctx.fill();  
     
   	ctx.beginPath();  
-  	ctx.moveTo(72.5,45.001);  
-  	ctx.lineTo(7.5,45.001);  
-  	ctx.bezierCurveTo(6.123,45.001,5,46.123999999999995,5,47.501);  
-  	ctx.bezierCurveTo(5,48.878,6.123,50.001,7.5,50.001);  
-  	ctx.lineTo(72.5,50.001);  
-  	ctx.bezierCurveTo(73.877,50.001,75,48.878,75,47.501);  
-  	ctx.bezierCurveTo(75,46.123999999999995,73.877,45.001,72.5,45.001);  
+  	ctx.moveTo(82.143,50.001);  
+  	ctx.lineTo(7.857,50.001);  
+  	ctx.bezierCurveTo(6.283,50.001,5,51.123999999999995,5,52.501);  
+  	ctx.bezierCurveTo(5,53.878,6.2829999999999995,55.001,7.857,55.001);  
+  	ctx.lineTo(82.142,55.001);  
+  	ctx.bezierCurveTo(83.716,55.001,84.999,53.878,84.999,52.501);  
+  	ctx.bezierCurveTo(84.999,51.123999999999995,83.717,50.001,82.143,50.001);  
   	ctx.closePath();  
   	ctx.fill();  
     
   	ctx.beginPath();  
-  	ctx.moveTo(72.5,55);  
-  	ctx.lineTo(12.5,55);  
-  	ctx.bezierCurveTo(11.123,55,10,56.123,10,57.5);  
-  	ctx.bezierCurveTo(10,58.877,11.123,60,12.5,60);  
-  	ctx.lineTo(72.5,60);  
-  	ctx.bezierCurveTo(73.877,60,75,58.877,75,57.5);  
-  	ctx.bezierCurveTo(75,56.123,73.877,55,72.5,55);  
+  	ctx.moveTo(82.119,60);  
+  	ctx.lineTo(12.886,60);  
+  	ctx.bezierCurveTo(11.294,60,10,61.123,10,62.5);  
+  	ctx.bezierCurveTo(10,63.877,11.294,65,12.886,65);  
+  	ctx.lineTo(82.119,65);  
+  	ctx.bezierCurveTo(83.701,65,85,63.877,85,62.5);  
+  	ctx.bezierCurveTo(85,61.123,83.701,60,82.119,60);  
   	ctx.closePath();  
   	ctx.fill();  
     
   	ctx.beginPath();  
-  	ctx.moveTo(79.978,30.006);  
-  	ctx.bezierCurveTo(79.746,25.195,75.85799999999999,21.418,71.47099999999999,20.923000000000002);  
-  	ctx.bezierCurveTo(75.475,8.413000000000002,63.97499999999999,0.4220000000000006,52.47099999999999,4.933000000000002);  
-  	ctx.bezierCurveTo(44.97899999999999,-4.608999999999998,31.40799999999999,0.9380000000000015,29.98499999999999,10.991000000000001);  
-  	ctx.bezierCurveTo(23.62599999999999,8.875000000000002,16.87699999999999,12.875000000000002,16.87699999999999,20.029000000000003);  
-  	ctx.bezierCurveTo(10.415999999999988,17.584000000000003,5.559999999999988,22.467000000000002,5.043999999999988,25.946000000000005);  
-  	ctx.bezierCurveTo(2.508999999999988,26.320000000000004,1.0019999999999882,27.988000000000007,0.362999999999988,30.007000000000005);  
-  	ctx.lineTo(79.978,30.007000000000005);  
+  	ctx.moveTo(90,35);  
+  	ctx.bezierCurveTo(89.737,29.389,85.343,24.983,80.384,24.405);  
+  	ctx.bezierCurveTo(84.91,9.813,71.91,0.492,58.905,5.753);  
+  	ctx.bezierCurveTo(50.435,-5.3759999999999994,35.093,1.0940000000000003,33.486000000000004,12.818999999999999);  
+  	ctx.bezierCurveTo(26.297000000000004,10.350999999999999,18.668000000000006,15.014999999999999,18.668000000000006,23.360999999999997);  
+  	ctx.bezierCurveTo(11.364000000000006,20.507999999999996,5.874000000000006,26.203999999999997,5.291000000000006,30.261999999999997);  
+  	ctx.bezierCurveTo(2.426,30.699,0.722,32.645,0,35);  
+  	ctx.lineTo(90,35);  
   	ctx.closePath();  
   	ctx.fill();  
   	ctx.restore();  
@@ -672,24 +386,24 @@ require.register('primitives/fogPrimitive', function(module, exports, require) {
   
 });
 require.register('primitives/lightningPrimitive', function(module, exports, require) {
-  var BG_COLOUR = '#ffffff'  
-  	, FILL_COLOUR = '#c9af16';  
+  var FILL_COLOUR = '#c9af16';  
     
   exports.render = function(ctx, options) {  
   	// Fill  
   	ctx.save();  
-  	ctx.fillStyle = FILL_COLOUR;  
   	ctx.translate(options.x, options.y)  
   	ctx.scale(options.scale, options.scale);  
+    
+  	ctx.fillStyle = FILL_COLOUR;  
   	ctx.beginPath();  
-  	ctx.moveTo(9.412,0);  
-  	ctx.lineTo(4.163,10.484);  
-  	ctx.lineTo(12.488,10.484);  
-  	ctx.lineTo(0,23);  
-  	ctx.lineTo(25.001,6.32);  
-  	ctx.lineTo(16.663000000000004,6.32);  
-  	ctx.lineTo(22.991,0);  
-  	ctx.lineTo(9.412,0);  
+  	ctx.moveTo(10.413,0);  
+  	ctx.lineTo(4.163,12.484);  
+  	ctx.lineTo(12.488,12.484);  
+  	ctx.lineTo(0,25);  
+  	ctx.lineTo(25.001,8.32);  
+  	ctx.lineTo(16.663000000000004,8.32);  
+  	ctx.lineTo(24.995,0);  
+  	ctx.lineTo(10.413,0);  
   	ctx.closePath();  
   	ctx.fill();  
   	ctx.restore();  
@@ -722,10 +436,11 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: cloud,
-  					x: 14,
-  					y: 62,
-  					small: true,
-  					tint: 0.2
+  					x: 5,
+  					y: 55,
+  					scale: 0.6,
+  					flip: true,
+  					tint: 0.15
   				}
   			],
   			'03d': [
@@ -737,9 +452,9 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 38,
-  					tint: 0.4
+  					x: 0,
+  					y: 35,
+  					tint: 0.35
   				}
   			],
   			'05d': [
@@ -751,19 +466,19 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 34,
+  					x: 0,
+  					y: 25,
   					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 65,
-  					y: 76
+  					x: 70,
+  					y: 74
   				},
   				{
   					primitive: raindrop,
-  					x: 50,
-  					y: 73
+  					x: 52,
+  					y: 71
   				}
   			],
   			'07d': [
@@ -775,19 +490,19 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 34,
+  					x: 0,
+  					y: 25,
   					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 59,
-  					y: 76
+  					x: 61,
+  					y: 74
   				},
   				{
   					primitive: snowflake,
-  					x: 38,
-  					y: 73
+  					x: 33,
+  					y: 71
   				}
   			],
   			'08d': [
@@ -799,19 +514,19 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 34,
+  					x: 0,
+  					y: 25,
   					tint: 0.5
   				},
   				{
   					primitive: snowflake,
-  					x: 27,
-  					y: 76
+  					x: 22,
+  					y: 74
   				},
   				{
   					primitive: snowflake,
   					x: 43,
-  					y: 73
+  					y: 71
   				}
   			],
   			'06d': [
@@ -822,20 +537,20 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					scale: 0.6
   				},
   				{
+  					primitive: lightning,
+  					x: 30,
+  					y: 75
+  				},
+  				{
   					primitive: cloud,
-  					x: 10,
-  					y: 26,
+  					x: 0,
+  					y: 25,
   					tint: 0.5
   				},
   				{
-  					primitive: lightning,
-  					x: 28,
-  					y: 69
-  				},
-  				{
   					primitive: raindrop,
-  					x: 61,
-  					y: 66
+  					x: 63,
+  					y: 71
   				}
   			],
   			'20d': [
@@ -846,25 +561,25 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					scale: 0.6
   				},
   				{
+  					primitive: lightning,
+  					x: 14,
+  					y: 75
+  				},
+  				{
   					primitive: cloud,
-  					x: 10,
-  					y: 26,
+  					x: 0,
+  					y: 25,
   					tint: 0.5
   				},
   				{
-  					primitive: lightning,
-  					x: 20,
-  					y: 69
-  				},
-  				{
   					primitive: raindrop,
-  					x: 70,
-  					y: 68
+  					x: 72,
+  					y: 74
   				},
   				{
   					primitive: snowflake,
-  					x: 49,
-  					y: 66
+  					x: 44,
+  					y: 71
   				}
   			],
   			'21d': [
@@ -875,20 +590,20 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					scale: 0.6
   				},
   				{
+  					primitive: lightning,
+  					x: 14,
+  					y: 75
+  				},
+  				{
   					primitive: cloud,
-  					x: 10,
-  					y: 26,
+  					x: 0,
+  					y: 25,
   					tint: 0.5
   				},
   				{
-  					primitive: lightning,
-  					x: 28,
-  					y: 69
-  				},
-  				{
   					primitive: snowflake,
-  					x: 57,
-  					y: 65
+  					x: 44,
+  					y: 71
   				}
   			],
   
@@ -910,10 +625,11 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: cloud,
-  					x: 15,
-  					y: 50,
-  					small: true,
-  					tint: 0.2
+  					x: 5,
+  					y: 45,
+  					scale: 0.6,
+  					flip: true,
+  					tint: 0.15
   				}
   			],
   			'03m': [
@@ -926,9 +642,9 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 38,
-  					tint: 0.4
+  					x: 0,
+  					y: 35,
+  					tint: 0.35
   				}
   			],
   			'05m': [
@@ -941,19 +657,19 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 34,
+  					x: 0,
+  					y: 25,
   					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 65,
-  					y: 76
+  					x: 70,
+  					y: 74
   				},
   				{
   					primitive: raindrop,
-  					x: 50,
-  					y: 73
+  					x: 52,
+  					y: 71
   				}
   			],
   			'07m': [
@@ -966,19 +682,19 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 34,
+  					x: 0,
+  					y: 25,
   					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 59,
-  					y: 76
+  					x: 61,
+  					y: 74
   				},
   				{
   					primitive: snowflake,
-  					x: 38,
-  					y: 73
+  					x: 33,
+  					y: 71
   				}
   			],
   			'08m': [
@@ -991,19 +707,19 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 34,
+  					x: 0,
+  					y: 25,
   					tint: 0.5
   				},
   				{
   					primitive: snowflake,
-  					x: 27,
-  					y: 76
+  					x: 22,
+  					y: 74
   				},
   				{
   					primitive: snowflake,
   					x: 43,
-  					y: 73
+  					y: 71
   				}
   			],
   			'06m': [
@@ -1015,20 +731,20 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					winter: true
   				},
   				{
+  					primitive: lightning,
+  					x: 30,
+  					y: 75
+  				},
+  				{
   					primitive: cloud,
-  					x: 10,
-  					y: 26,
+  					x: 0,
+  					y: 25,
   					tint: 0.5
   				},
   				{
-  					primitive: lightning,
-  					x: 28,
-  					y: 69
-  				},
-  				{
   					primitive: raindrop,
-  					x: 61,
-  					y: 66
+  					x: 63,
+  					y: 71
   				}
   			],
   			'20m': [
@@ -1040,25 +756,25 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					winter: true
   				},
   				{
+  					primitive: lightning,
+  					x: 14,
+  					y: 75
+  				},
+  				{
   					primitive: cloud,
-  					x: 10,
-  					y: 26,
+  					x: 0,
+  					y: 25,
   					tint: 0.5
   				},
   				{
-  					primitive: lightning,
-  					x: 20,
-  					y: 69
-  				},
-  				{
   					primitive: raindrop,
-  					x: 70,
-  					y: 68
+  					x: 72,
+  					y: 74
   				},
   				{
   					primitive: snowflake,
-  					x: 49,
-  					y: 66
+  					x: 44,
+  					y: 71
   				}
   			],
   			'21m': [
@@ -1070,20 +786,20 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					winter: true
   				},
   				{
+  					primitive: lightning,
+  					x: 14,
+  					y: 75
+  				},
+  				{
   					primitive: cloud,
-  					x: 10,
-  					y: 26,
+  					x: 0,
+  					y: 25,
   					tint: 0.5
   				},
   				{
-  					primitive: lightning,
-  					x: 28,
-  					y: 69
-  				},
-  				{
   					primitive: snowflake,
-  					x: 57,
-  					y: 65
+  					x: 44,
+  					y: 71
   				}
   			],
   
@@ -1091,185 +807,186 @@ require.register('WeatherSymbol', function(module, exports, require) {
   			'01n': [
   				{
   					primitive: moon,
-  					x: 25,
-  					y: 25
+  					x: 20,
+  					y: 20
   				}
   			],
   			'02n': [
   				{
   					primitive: moon,
-  					x: 25,
-  					y: 22
+  					x: 20,
+  					y: 20
   				},
   				{
   					primitive: cloud,
-  					x: 15,
-  					y: 54,
-  					small: true,
-  					tint: 0.25
+  					x: 5,
+  					y: 55,
+  					scale: 0.6,
+  					flip: true,
+  					tint: 0.15
   				}
   			],
   			'03n': [
   				{
   					primitive: moon,
-  					x: 10,
-  					y: 24,
-  					small: true
+  					x: 15,
+  					y: 22,
+  					scale: 0.6
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 38,
-  					tint: 0.4
+  					x: 0,
+  					y: 35,
+  					tint: 0.35
   				}
   			],
   			'05n': [
   				{
   					primitive: moon,
-  					x: 10,
-  					y: 19,
-  					small: true
+  					x: 15,
+  					y: 12,
+  					scale: 0.6
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 34,
+  					x: 0,
+  					y: 25,
   					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 65,
-  					y: 76
+  					x: 70,
+  					y: 74
   				},
   				{
   					primitive: raindrop,
-  					x: 50,
-  					y: 73
+  					x: 52,
+  					y: 71
   				}
   			],
   			'07n': [
   				{
   					primitive: moon,
-  					x: 10,
-  					y: 19,
-  					small: true
+  					x: 15,
+  					y: 12,
+  					scale: 0.6
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 34,
+  					x: 0,
+  					y: 25,
   					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 59,
-  					y: 76
+  					x: 61,
+  					y: 74
   				},
   				{
   					primitive: snowflake,
-  					x: 38,
-  					y: 73
+  					x: 33,
+  					y: 71
   				}
   			],
   			'08n': [
   				{
   					primitive: moon,
-  					x: 10,
-  					y: 19,
-  					small: true
+  					x: 15,
+  					y: 12,
+  					scale: 0.6
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 34,
+  					x: 0,
+  					y: 25,
   					tint: 0.5
   				},
   				{
   					primitive: snowflake,
-  					x: 27,
-  					y: 76
+  					x: 22,
+  					y: 74
   				},
   				{
   					primitive: snowflake,
   					x: 43,
-  					y: 73
+  					y: 71
   				}
   			],
   			'06n': [
   				{
   					primitive: moon,
-  					x: 10,
-  					y: 11,
-  					small: true
-  				},
-  				{
-  					primitive: cloud,
-  					x: 10,
-  					y: 26,
-  					tint: 0.5
+  					x: 15,
+  					y: 12,
+  					scale: 0.6
   				},
   				{
   					primitive: lightning,
-  					x: 28,
-  					y: 69
+  					x: 30,
+  					y: 75
+  				},
+  				{
+  					primitive: cloud,
+  					x: 0,
+  					y: 25,
+  					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 61,
-  					y: 66
+  					x: 63,
+  					y: 71
   				}
   			],
   			'20n': [
   				{
   					primitive: moon,
-  					x: 10,
-  					y: 11,
-  					small: true
-  				},
-  				{
-  					primitive: cloud,
-  					x: 10,
-  					y: 26,
-  					tint: 0.5
+  					x: 15,
+  					y: 12,
+  					scale: 0.6
   				},
   				{
   					primitive: lightning,
-  					x: 20,
-  					y: 69
+  					x: 14,
+  					y: 75
+  				},
+  				{
+  					primitive: cloud,
+  					x: 0,
+  					y: 25,
+  					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 70,
-  					y: 68
+  					x: 72,
+  					y: 74
   				},
   				{
   					primitive: snowflake,
-  					x: 49,
-  					y: 66
+  					x: 44,
+  					y: 71
   				}
   			],
   			'21n': [
   				{
   					primitive: moon,
-  					x: 10,
-  					y: 11,
-  					small: true
-  				},
-  				{
-  					primitive: cloud,
-  					x: 10,
-  					y: 26,
-  					tint: 0.5
+  					x: 15,
+  					y: 12,
+  					scale: 0.6
   				},
   				{
   					primitive: lightning,
-  					x: 28,
-  					y: 69
+  					x: 14,
+  					y: 75
+  				},
+  				{
+  					primitive: cloud,
+  					x: 0,
+  					y: 25,
+  					tint: 0.5
   				},
   				{
   					primitive: snowflake,
-  					x: 57,
-  					y: 65
+  					x: 44,
+  					y: 71
   				}
   			],
   
@@ -1277,254 +994,258 @@ require.register('WeatherSymbol', function(module, exports, require) {
   			'15': [
   				{
   					primitive: fog,
-  					x: 10,
-  					y: 25,
+  					x: 5,
+  					y: 15,
   					tint: 0.25
   				}
   			],
   			'04': [
   				{
   					primitive: cloud,
-  					x: 4,
-  					y: 22,
+  					x: 5,
+  					y: 9,
+  					scale: 0.8,
   					flip: true,
   					tint: 0.15
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 41,
+  					x: 0,
+  					y: 25,
   					tint: 0.25
   				}
   			],
   			'09': [
   				{
   					primitive: cloud,
-  					x: 4,
-  					y: 15,
+  					x: 5,
+  					y: 9,
+  					scale: 0.8,
   					flip: true,
   					tint: 0.35
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 32,
+  					x: 0,
+  					y: 25,
   					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 66,
+  					x: 70,
   					y: 74
   				},
   				{
   					primitive: raindrop,
-  					x: 50,
+  					x: 52,
   					y: 71
   				}
   			],
   			'10': [
   				{
   					primitive: cloud,
-  					x: 4,
-  					y: 15,
+  					x: 5,
+  					y: 9,
+  					scale: 0.8,
   					flip: true,
-  					tint: 0.45
+  					tint: 0.5
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 32,
+  					x: 0,
+  					y: 25,
   					tint: 0.6
   				},
   				{
   					primitive: raindrop,
-  					x: 44,
-  					y: 75
+  					x: 76,
+  					y: 74
   				},
   				{
   					primitive: raindrop,
-  					x: 73,
-  					y: 75
+  					x: 41,
+  					y: 76
   				},
   				{
   					primitive: raindrop,
   					x: 58,
-  					y: 70
+  					y: 71
   				}
   			],
   			'12': [
   				{
   					primitive: cloud,
-  					x: 4,
-  					y: 15,
+  					x: 5,
+  					y: 9,
+  					scale: 0.8,
   					flip: true,
-  					tint: 0.45
+  					tint: 0.4
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 32,
-  					tint: 0.6
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 30,
-  					y: 73
+  					x: 0,
+  					y: 25,
+  					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 67,
-  					y: 73
+  					x: 69,
+  					y: 74
   				},
   				{
   					primitive: snowflake,
-  					x: 46,
-  					y: 69
+  					x: 20,
+  					y: 74
+  				},
+  				{
+  					primitive: snowflake,
+  					x: 41,
+  					y: 71
   				}
   			],
   			'13': [
   				{
   					primitive: cloud,
-  					x: 4,
-  					y: 15,
+  					x: 5,
+  					y: 9,
+  					scale: 0.8,
   					flip: true,
-  					tint: 0.45
+  					tint: 0.5
   				},
   				{
   					primitive: cloud,
-  					x: 10,
-  					y: 32,
+  					x: 0,
+  					y: 25,
   					tint: 0.6
   				},
   				{
   					primitive: snowflake,
-  					x: 19,
+  					x: 54,
+  					y: 73
+  				},
+  				{
+  					primitive: snowflake,
+  					x: 12,
   					y: 76
   				},
   				{
   					primitive: snowflake,
-  					x: 34,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 52,
-  					y: 72
+  					x: 33,
+  					y: 71
   				}
   			],
   			'22': [
   				{
   					primitive: cloud,
-  					x: 4,
+  					x: 5,
   					y: 9,
+  					scale: 0.8,
   					flip: true,
-  					tint: 0.35
-  				},
-  				{
-  					primitive: cloud,
-  					x: 10,
-  					y: 27,
-  					tint: 0.5
+  					tint: 0.4
   				},
   				{
   					primitive: lightning,
-  					x: 27,
-  					y: 70
+  					x: 30,
+  					y: 75
+  				},
+  				{
+  					primitive: cloud,
+  					x: 0,
+  					y: 25,
+  					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 62,
-  					y: 68
+  					x: 63,
+  					y: 71
   				}
   			],
   			'11': [
   				{
   					primitive: cloud,
-  					x: 4,
-  					y: 19,
-  					small: true,
-  					tint: 0.35
-  				},
-  				{
-  					primitive: cloud,
-  					x: 0,
-  					y: 36,
+  					x: 5,
+  					y: 9,
+  					scale: 0.8,
+  					flip: true,
   					tint: 0.5
   				},
   				{
   					primitive: lightning,
-  					x: 10,
+  					x: 25,
+  					y: 75
+  				},
+  				{
+  					primitive: cloud,
+  					x: 0,
+  					y: 25,
+  					tint: 0.6
+  				},
+  				{
+  					primitive: raindrop,
+  					x: 76,
   					y: 74
   				},
   				{
   					primitive: raindrop,
-  					x: 48,
-  					y: 80
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 86,
-  					y: 81
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 66,
-  					y: 76
+  					x: 58,
+  					y: 71
   				}
   			],
   			'23': [
   				{
   					primitive: cloud,
-  					x: 4,
+  					x: 5,
   					y: 9,
+  					scale: 0.8,
   					flip: true,
-  					tint: 0.35
-  				},
-  				{
-  					primitive: cloud,
-  					x: 10,
-  					y: 27,
-  					tint: 0.5
+  					tint: 0.4
   				},
   				{
   					primitive: lightning,
-  					x: 20,
-  					y: 71
+  					x: 14,
+  					y: 75
+  				},
+  				{
+  					primitive: cloud,
+  					x: 0,
+  					y: 25,
+  					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 70,
-  					y: 69
+  					x: 72,
+  					y: 74
   				},
   				{
   					primitive: snowflake,
-  					x: 49,
-  					y: 66
+  					x: 44,
+  					y: 71
   				}
   			],
   			'14': [
   				{
   					primitive: cloud,
-  					x: 4,
+  					x: 5,
   					y: 9,
+  					scale: 0.8,
   					flip: true,
-  					tint: 0.35
-  				},
-  				{
-  					primitive: cloud,
-  					x: 10,
-  					y: 27,
-  					tint: 0.5
+  					tint: 0.4
   				},
   				{
   					primitive: lightning,
-  					x: 28,
-  					y: 71
+  					x: 14,
+  					y: 75
+  				},
+  				{
+  					primitive: cloud,
+  					x: 0,
+  					y: 25,
+  					tint: 0.5
   				},
   				{
   					primitive: snowflake,
-  					x: 57,
-  					y: 66
+  					x: 44,
+  					y: 71
   				}
   			]
   		};
@@ -2253,7 +1974,7 @@ require.register('main', function(module, exports, require) {
   var WeatherSymbol = require('./WeatherSymbol')
   	, dust = require('dust')
   	, template = require('./symbolGroup')
-  	, data = {"symbols":[{"title":"clear","variations":[{"id":"01d"},{"id":"01m"},{"id":"01n.00"},{"id":"01n.01"},{"id":"01n.02"},{"id":"01n.03"},{"id":"01n.04"},{"id":"01n.05"},{"id":"01n.06"},{"id":"01n.07"}]},{"title":"fair","variations":[{"id":"02d"},{"id":"02m"},{"id":"02n.00"},{"id":"02n.01"},{"id":"02n.02"},{"id":"02n.03"},{"id":"02n.04"},{"id":"02n.05"},{"id":"02n.06"},{"id":"02n.07"}]},{"title":"partly cloudy","variations":[{"id":"03d"},{"id":"03m"},{"id":"03n.00"},{"id":"03n.01"},{"id":"03n.02"},{"id":"03n.03"},{"id":"03n.04"},{"id":"03n.05"},{"id":"03n.06"},{"id":"03n.07"}]},{"title":"cloudy","variations":[{"id":"04"}]},{"title":"rain showers","variations":[{"id":"05d"},{"id":"05m"},{"id":"05n.00"},{"id":"05n.01"},{"id":"05n.02"},{"id":"05n.03"},{"id":"05n.04"},{"id":"05n.05"},{"id":"05n.06"},{"id":"05n.07"}]},{"title":"sleet showers","variations":[{"id":"07d"},{"id":"07m"},{"id":"07n.00"},{"id":"07n.01"},{"id":"07n.02"},{"id":"07n.03"},{"id":"07n.04"},{"id":"07n.05"},{"id":"07n.06"},{"id":"07n.07"}]},{"title":"snow showers","variations":[{"id":"08d"},{"id":"08m"},{"id":"08n.00"},{"id":"08n.01"},{"id":"08n.02"},{"id":"08n.03"},{"id":"08n.04"},{"id":"08n.05"},{"id":"08n.06"},{"id":"08n.07"}]},{"title":"rain","variations":[{"id":"09"}]},{"title":"heavy rain","variations":[{"id":"10"}]},{"title":"sleet","variations":[{"id":"12"}]},{"title":"snow","variations":[{"id":"13"}]},{"title":"fog","variations":[{"id":"15"}]},{"title":"rain showers with thunder","variations":[{"id":"06d"},{"id":"06m"},{"id":"06n.00"},{"id":"06n.01"},{"id":"06n.02"},{"id":"06n.03"},{"id":"06n.04"},{"id":"06n.05"},{"id":"06n.06"},{"id":"06n.07"}]},{"title":"sleet showers with thunder","variations":[{"id":"20d"},{"id":"20m"},{"id":"20n.00"},{"id":"20n.01"},{"id":"20n.02"},{"id":"20n.03"},{"id":"20n.04"},{"id":"20n.05"},{"id":"20n.06"},{"id":"20n.07"}]},{"title":"snow showers with thunder","variations":[{"id":"21d"},{"id":"21m"},{"id":"21n.00"},{"id":"21n.01"},{"id":"21n.02"},{"id":"21n.03"},{"id":"21n.04"},{"id":"21n.05"},{"id":"21n.06"},{"id":"21n.07"}]},{"title":"rain with thunder","variations":[{"id":"22"}]},{"title":"sleet with thunder","variations":[{"id":"23"}]},{"title":"snow with thunder","variations":[{"id":"14"}]}]}
+  	, data = {"symbols":[{"title":"clear","variations":[{"id":"01d"},{"id":"01m"},{"id":"01n.00"},{"id":"01n.01"},{"id":"01n.02"},{"id":"01n.03"},{"id":"01n.04"},{"id":"01n.05"},{"id":"01n.06"},{"id":"01n.07"}]},{"title":"fair","variations":[{"id":"02d"},{"id":"02m"},{"id":"02n.00"},{"id":"02n.01"},{"id":"02n.02"},{"id":"02n.03"},{"id":"02n.04"},{"id":"02n.05"},{"id":"02n.06"},{"id":"02n.07"}]},{"title":"partly cloudy","variations":[{"id":"03d"},{"id":"03m"},{"id":"03n.00"},{"id":"03n.01"},{"id":"03n.02"},{"id":"03n.03"},{"id":"03n.04"},{"id":"03n.05"},{"id":"03n.06"},{"id":"03n.07"}]},{"title":"cloudy","variations":[{"id":"04"}]},{"title":"rain showers","variations":[{"id":"05d"},{"id":"05m"},{"id":"05n.00"},{"id":"05n.01"},{"id":"05n.02"},{"id":"05n.03"},{"id":"05n.04"},{"id":"05n.05"},{"id":"05n.06"},{"id":"05n.07"}]},{"title":"sleet showers","variations":[{"id":"07d"},{"id":"07m"},{"id":"07n.00"},{"id":"07n.01"},{"id":"07n.02"},{"id":"07n.03"},{"id":"07n.04"},{"id":"07n.05"},{"id":"07n.06"},{"id":"07n.07"}]},{"title":"snow showers","variations":[{"id":"08d"},{"id":"08m"},{"id":"08n.00"},{"id":"08n.01"},{"id":"08n.02"},{"id":"08n.03"},{"id":"08n.04"},{"id":"08n.05"},{"id":"08n.06"},{"id":"08n.07"}]},{"title":"rain","variations":[{"id":"09"}]},{"title":"heavy rain","variations":[{"id":"10"}]},{"title":"sleet","variations":[{"id":"12"}]},{"title":"snow","variations":[{"id":"13"}]},{"title":"fog","variations":[{"id":"15"}]},{"title":"rain showers with thunder","variations":[{"id":"06d"},{"id":"06m"},{"id":"06n.00"},{"id":"06n.01"},{"id":"06n.02"},{"id":"06n.03"},{"id":"06n.04"},{"id":"06n.05"},{"id":"06n.06"},{"id":"06n.07"}]},{"title":"sleet showers with thunder","variations":[{"id":"20d"},{"id":"20m"},{"id":"20n.00"},{"id":"20n.01"},{"id":"20n.02"},{"id":"20n.03"},{"id":"20n.04"},{"id":"20n.05"},{"id":"20n.06"},{"id":"20n.07"}]},{"title":"snow showers with thunder","variations":[{"id":"21d"},{"id":"21m"},{"id":"21n.00"},{"id":"21n.01"},{"id":"21n.02"},{"id":"21n.03"},{"id":"21n.04"},{"id":"21n.05"},{"id":"21n.06"},{"id":"21n.07"}]},{"title":"rain with thunder","variations":[{"id":"22"}]},{"title":"heavy rain with thunder","variations":[{"id":"11"}]},{"title":"sleet with thunder","variations":[{"id":"23"}]},{"title":"snow with thunder","variations":[{"id":"14"}]}]}
   	, symbol = new WeatherSymbol(1)
   	, el = document.getElementById('symbols');
   

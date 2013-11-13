@@ -1,27 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
-	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
-	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
-	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
-	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
-	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
-	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
-	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
-	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
-]>
-<svg version="1.1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
-	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
-<metadata>
-	<sfw  xmlns="&ns_sfw;">
-		<slices></slices>
-		<sliceSourceBounds  y="-8242" x="-2.5" bottomLeftOrigin="true" height="16383" width="1095"></sliceSourceBounds>
-	</sfw>
-</metadata>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px"
+	 height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
 <g id="snow_shower_thunder">
-	<path id="night-6_8_" fill="#AFC1C9" d="M10,32c0,11.027,8.973,20,20,20s20-8.973,20-20s-8.973-20-20-20S10,20.973,10,32z M30,48
-		c2.191,0,8-7.176,8-16s-5.562-16-8-16c8.836,0,16,7.164,16,16S38.836,48,30,48z"/>
+	<path id="night-6_8_" fill="#AFC1C9" d="M15,30c0,9.926,8.074,18,18,18s18-8.074,18-18s-8.074-18-18-18S15,20.074,15,30z
+		 M33,44.398c1.973,0,7.199-6.457,7.199-14.398S35.195,15.602,33,15.602c7.953,0,14.398,6.445,14.398,14.398
+		S40.953,44.398,33,44.398z"/>
 	<path fill="#C9AF16" d="M24.412,75l-6.25,12.484h8.326L14,100l25-16.68h-8.338L38.994,75H24.412z"/>
 	<path id="cloud_94_" fill="#808080" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M9.377,75
 		C4.357,75,0,70.609,0,66.051c0-4.613,2.23-8.439,6.938-10.191c1.625-5.422,6.562-9.172,12.875-9.359
