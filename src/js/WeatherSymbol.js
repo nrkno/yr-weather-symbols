@@ -646,17 +646,17 @@ var sun = require('./primitives/sunPrimitive')
 				{
 					primitive: raindrop,
 					x: 76,
-					y: 74
+					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 41,
-					y: 76
+					x: 4,
+					y: 71
 				},
 				{
 					primitive: raindrop,
 					x: 58,
-					y: 71
+					y: 74
 				}
 			],
 			'12': [
@@ -708,17 +708,17 @@ var sun = require('./primitives/sunPrimitive')
 				{
 					primitive: snowflake,
 					x: 54,
-					y: 73
+					y: 71
 				},
 				{
 					primitive: snowflake,
 					x: 12,
-					y: 76
+					y: 73
 				},
 				{
 					primitive: snowflake,
 					x: 33,
-					y: 71
+					y: 74
 				}
 			],
 			'22': [
