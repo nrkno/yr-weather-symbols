@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px"
-	 height="100px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
+	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  x="-2.5" y="-8242" height="16383" width="1095" bottomLeftOrigin="true"></sliceSourceBounds>
+	</sfw>
+</metadata>
 <g id="snow_shower_thunder">
 </g>
 <g id="sleet_shower_thunder">
@@ -25,11 +41,11 @@
 	</g>
 </g>
 <g id="clouds">
-	<path id="cloud_51_" fill="#D9D9D9" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10" d="M77.498,49
+	<path id="cloud_51_" fill="#BFBFBF" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10" d="M77.498,49
 		C81.514,49,85,45.488,85,41.84c0-3.689-1.785-6.75-5.551-8.152c-1.299-4.338-5.25-7.338-10.299-7.488
 		c-1.1-5.549-8.15-8.861-13.1-7.461c-2.182-7.75-15-14.102-23.451-5.9c-12.35-3.4-21.018,4.296-19.686,15.994
 		C8.032,30.233,5,34.521,5,39.537C5,44.573,9.516,49,14.558,49H77.498z"/>
-	<path id="cloud_50_" fill="#BFBFBF" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M9.377,75
+	<path id="cloud_50_" fill="#A6A6A6" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M9.377,75
 		C4.357,75,0,70.609,0,66.051c0-4.613,2.231-8.439,6.938-10.191c1.625-5.422,6.562-9.172,12.875-9.359
 		C21.188,39.562,30,35.422,36.188,37.172c2.727-9.688,18.748-17.625,29.312-7.375c15.438-4.25,26.272,5.37,24.607,19.992
 		C96.21,51.542,100,56.901,100,63.172C100,69.466,94.355,75,88.054,75H9.377z"/>
