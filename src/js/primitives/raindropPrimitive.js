@@ -1,14 +1,13 @@
 var TWO_PI = Math.PI * 2
-	, BG_COLOUR = '#ffffff'
 	, FILL_COLOUR = '#1362b1';
 
 exports.render = function(ctx, options) {
 	// Stroke
 	ctx.save();
-	ctx.fillStyle = BG_COLOUR;
+	ctx.fillStyle = options.bg;
 	ctx.translate(options.x, options.y)
 	ctx.scale(options.scale, options.scale);
-	ctx.fillStyle = BG_COLOUR;
+	ctx.fillStyle = options.bg;
 	ctx.beginPath();
 	ctx.arc(0,3,9,0,TWO_PI,true);
 	ctx.closePath();

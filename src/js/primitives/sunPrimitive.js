@@ -1,5 +1,4 @@
 var TWO_PI = Math.PI * 2
-	, BG_COLOUR = '#ffffff'
 	, RAY_COLOUR = '#e88d15'
 	, HORIZON_COLOUR = '#4d4d4d'
 	, CENTER_COLOUR = '#faba2f'
@@ -9,7 +8,7 @@ exports.render = function(ctx, options) {
 	ctx.save();
 	ctx.translate(options.x, options.y);
 	ctx.scale(options.scale, options.scale);
-	ctx.strokeStyle = BG_COLOUR;
+	ctx.strokeStyle = options.bg;
 	ctx.lineWidth = STROKE_WIDTH;
 
 	if (options.winter) {

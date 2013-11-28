@@ -6,6 +6,7 @@ var sun = require('./primitives/sunPrimitive')
 	, fog = require('./primitives/fogPrimitive')
 	, lightning = require('./primitives/lightningPrimitive')
 
+	, DEFAULT_BG = '#ffffff'
 	, FORMULA = {
 			// Sun
 			'01d': [
@@ -41,7 +42,7 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 0,
 					y: 35,
-					tint: 0.35
+					tint: 0.25
 				}
 			],
 			'05d': [
@@ -231,7 +232,7 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 0,
 					y: 35,
-					tint: 0.35
+					tint: 0.25
 				}
 			],
 			'05m': [
@@ -424,7 +425,7 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 0,
 					y: 35,
-					tint: 0.35
+					tint: 0.25
 				}
 			],
 			'05n': [
@@ -593,13 +594,13 @@ var sun = require('./primitives/sunPrimitive')
 					y: 9,
 					scale: 0.8,
 					flip: true,
-					tint: 0.15
+					tint: 0.25
 				},
 				{
 					primitive: cloud,
 					x: 0,
 					y: 25,
-					tint: 0.25
+					tint: 0.35
 				}
 			],
 			'09': [
@@ -650,13 +651,13 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: raindrop,
-					x: 4,
-					y: 71
+					x: 58,
+					y: 74
 				},
 				{
 					primitive: raindrop,
-					x: 58,
-					y: 74
+					x: 39,
+					y: 71
 				}
 			],
 			'12': [
@@ -666,13 +667,13 @@ var sun = require('./primitives/sunPrimitive')
 					y: 9,
 					scale: 0.8,
 					flip: true,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: cloud,
 					x: 0,
 					y: 25,
-					tint: 0.5
+					tint: 0.6
 				},
 				{
 					primitive: raindrop,
@@ -728,7 +729,7 @@ var sun = require('./primitives/sunPrimitive')
 					y: 9,
 					scale: 0.8,
 					flip: true,
-					tint: 0.4
+					tint: 0.35
 				},
 				{
 					primitive: lightning,
@@ -785,7 +786,7 @@ var sun = require('./primitives/sunPrimitive')
 					y: 9,
 					scale: 0.8,
 					flip: true,
-					tint: 0.4
+					tint: 0.35
 				},
 				{
 					primitive: lightning,
@@ -816,7 +817,7 @@ var sun = require('./primitives/sunPrimitive')
 					y: 9,
 					scale: 0.8,
 					flip: true,
-					tint: 0.4
+					tint: 0.35
 				},
 				{
 					primitive: lightning,
@@ -844,7 +845,13 @@ module.exports = WeatherSymbol;
  */
 function WeatherSymbol (scale, canvas) {
 	this.scale = scale || 1;
-	this.canvas = canvas;
+	this.canvas;
+	this.bg;
+
+	if (canvas) {
+		this.canvas = canvas;
+		this.bg = this.getBG(canvas);
+	}
 }
 
 /**
@@ -856,7 +863,8 @@ WeatherSymbol.prototype.draw = function(canvas) {
 	canvas = this.canvas || canvas;
 	if (!canvas) return;
 
-	var ctx = canvas.getContext('2d')
+	var bg = this.getBG(canvas)
+		, ctx = canvas.getContext('2d')
 		, attr = canvas.getAttribute('data-id').split('.')
 		, id = attr[0]
 		, phase = (attr.length > 1)
@@ -883,9 +891,15 @@ WeatherSymbol.prototype.draw = function(canvas) {
 				winter: layer.winter,
 				phase: phase,
 				width: w * this.scale,
-				height: h * this.scale
+				height: h * this.scale,
+				bg: bg
 			};
 			layer.primitive.render(ctx, options);
 		}
 	}
+};
+
+WeatherSymbol.prototype.getBG = function (canvas) {
+	return this.bg
+		|| window.getComputedStyle(canvas).getPropertyValue('background-color');
 };

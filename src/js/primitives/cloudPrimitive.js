@@ -1,5 +1,4 @@
-var BG_COLOUR = '#ffffff'
-	, STROKE_WIDTH = 5
+var STROKE_WIDTH = 5
 	, WIDTH = 100;
 
 exports.render = function(ctx, options) {
@@ -15,7 +14,7 @@ exports.render = function(ctx, options) {
 	}
 
 	// Fill
-	ctx.strokeStyle = BG_COLOUR;
+	ctx.strokeStyle = options.bg;
 	ctx.lineWidth = STROKE_WIDTH;
 	ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';
 	ctx.beginPath();
