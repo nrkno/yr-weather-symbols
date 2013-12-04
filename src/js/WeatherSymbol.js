@@ -35,13 +35,13 @@ var sun = require('./primitives/sunPrimitive')
 				{
 					primitive: sun,
 					x: 5,
-					y: 15,
+					y: 5,
 					scale: 0.6
 				},
 				{
 					primitive: cloud,
 					x: 0,
-					y: 35,
+					y: 25,
 					tint: 0.25
 				}
 			],
@@ -224,14 +224,14 @@ var sun = require('./primitives/sunPrimitive')
 				{
 					primitive: sun,
 					x: 10,
-					y: 24,
+					y: 14,
 					scale: 0.6,
 					winter: true
 				},
 				{
 					primitive: cloud,
 					x: 0,
-					y: 35,
+					y: 25,
 					tint: 0.25
 				}
 			],
@@ -418,13 +418,13 @@ var sun = require('./primitives/sunPrimitive')
 				{
 					primitive: moon,
 					x: 15,
-					y: 22,
+					y: 12,
 					scale: 0.6
 				},
 				{
 					primitive: cloud,
 					x: 0,
-					y: 35,
+					y: 25,
 					tint: 0.25
 				}
 			],

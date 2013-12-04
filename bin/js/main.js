@@ -1,6 +1,5 @@
 require.register('primitives/sunPrimitive', function(module, exports, require) {
   var TWO_PI = Math.PI * 2  
-  	, BG_COLOUR = '#ffffff'  
   	, RAY_COLOUR = '#e88d15'  
   	, HORIZON_COLOUR = '#4d4d4d'  
   	, CENTER_COLOUR = '#faba2f'  
@@ -10,7 +9,7 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   	ctx.save();  
   	ctx.translate(options.x, options.y);  
   	ctx.scale(options.scale, options.scale);  
-  	ctx.strokeStyle = BG_COLOUR;  
+  	ctx.strokeStyle = options.bg;  
   	ctx.lineWidth = STROKE_WIDTH;  
     
   	if (options.winter) {  
@@ -196,8 +195,7 @@ require.register('primitives/moonPrimitive', function(module, exports, require) 
   };
 });
 require.register('primitives/cloudPrimitive', function(module, exports, require) {
-  var BG_COLOUR = '#ffffff'  
-  	, STROKE_WIDTH = 5  
+  var STROKE_WIDTH = 5  
   	, WIDTH = 100;  
     
   exports.render = function(ctx, options) {  
@@ -213,7 +211,7 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
   	}  
     
   	// Fill  
-  	ctx.strokeStyle = BG_COLOUR;  
+  	ctx.strokeStyle = options.bg;  
   	ctx.lineWidth = STROKE_WIDTH;  
   	ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
   	ctx.beginPath();  
@@ -237,16 +235,15 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
 });
 require.register('primitives/raindropPrimitive', function(module, exports, require) {
   var TWO_PI = Math.PI * 2  
-  	, BG_COLOUR = '#ffffff'  
   	, FILL_COLOUR = '#1362b1';  
     
   exports.render = function(ctx, options) {  
   	// Stroke  
   	ctx.save();  
-  	ctx.fillStyle = BG_COLOUR;  
+  	ctx.fillStyle = options.bg;  
   	ctx.translate(options.x, options.y)  
   	ctx.scale(options.scale, options.scale);  
-  	ctx.fillStyle = BG_COLOUR;  
+  	ctx.fillStyle = options.bg;  
   	ctx.beginPath();  
   	ctx.arc(0,3,9,0,TWO_PI,true);  
   	ctx.closePath();  
@@ -267,16 +264,15 @@ require.register('primitives/raindropPrimitive', function(module, exports, requi
 });
 require.register('primitives/snowflakePrimitive', function(module, exports, require) {
   var TWO_PI = Math.PI * 2  
-  	, BG_COLOUR = '#ffffff'  
   	, FILL_COLOUR = '#6fc6e3';  
     
   exports.render = function(ctx, options) {  
   	// Stroke  
   	ctx.save();  
-  	ctx.fillStyle = BG_COLOUR;  
+  	ctx.fillStyle = options.bg;  
   	ctx.translate(options.x, options.y)  
   	ctx.scale(options.scale, options.scale);  
-  	ctx.fillStyle = BG_COLOUR;  
+  	ctx.fillStyle = options.bg;  
   	ctx.beginPath();  
   	ctx.arc(10,3,9,0,TWO_PI,true);  
   	ctx.closePath();  
@@ -419,6 +415,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   	, fog = require('./primitives/fogPrimitive')
   	, lightning = require('./primitives/lightningPrimitive')
   
+  	, DEFAULT_BG = '#ffffff'
   	, FORMULA = {
   			// Sun
   			'01d': [
@@ -447,14 +444,14 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				{
   					primitive: sun,
   					x: 5,
-  					y: 15,
+  					y: 5,
   					scale: 0.6
   				},
   				{
   					primitive: cloud,
   					x: 0,
-  					y: 35,
-  					tint: 0.35
+  					y: 25,
+  					tint: 0.25
   				}
   			],
   			'05d': [
@@ -636,15 +633,15 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				{
   					primitive: sun,
   					x: 10,
-  					y: 24,
+  					y: 14,
   					scale: 0.6,
   					winter: true
   				},
   				{
   					primitive: cloud,
   					x: 0,
-  					y: 35,
-  					tint: 0.35
+  					y: 25,
+  					tint: 0.25
   				}
   			],
   			'05m': [
@@ -830,14 +827,14 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				{
   					primitive: moon,
   					x: 15,
-  					y: 22,
+  					y: 12,
   					scale: 0.6
   				},
   				{
   					primitive: cloud,
   					x: 0,
-  					y: 35,
-  					tint: 0.35
+  					y: 25,
+  					tint: 0.25
   				}
   			],
   			'05n': [
@@ -1006,13 +1003,13 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					y: 9,
   					scale: 0.8,
   					flip: true,
-  					tint: 0.15
+  					tint: 0.25
   				},
   				{
   					primitive: cloud,
   					x: 0,
   					y: 25,
-  					tint: 0.25
+  					tint: 0.35
   				}
   			],
   			'09': [
@@ -1059,16 +1056,16 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				{
   					primitive: raindrop,
   					x: 76,
-  					y: 74
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 41,
-  					y: 76
+  					y: 72
   				},
   				{
   					primitive: raindrop,
   					x: 58,
+  					y: 74
+  				},
+  				{
+  					primitive: raindrop,
+  					x: 39,
   					y: 71
   				}
   			],
@@ -1079,13 +1076,13 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					y: 9,
   					scale: 0.8,
   					flip: true,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: cloud,
   					x: 0,
   					y: 25,
-  					tint: 0.5
+  					tint: 0.6
   				},
   				{
   					primitive: raindrop,
@@ -1121,17 +1118,17 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				{
   					primitive: snowflake,
   					x: 54,
-  					y: 73
+  					y: 71
   				},
   				{
   					primitive: snowflake,
   					x: 12,
-  					y: 76
+  					y: 73
   				},
   				{
   					primitive: snowflake,
   					x: 33,
-  					y: 71
+  					y: 74
   				}
   			],
   			'22': [
@@ -1141,7 +1138,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					y: 9,
   					scale: 0.8,
   					flip: true,
-  					tint: 0.4
+  					tint: 0.35
   				},
   				{
   					primitive: lightning,
@@ -1198,7 +1195,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					y: 9,
   					scale: 0.8,
   					flip: true,
-  					tint: 0.4
+  					tint: 0.35
   				},
   				{
   					primitive: lightning,
@@ -1229,7 +1226,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					y: 9,
   					scale: 0.8,
   					flip: true,
-  					tint: 0.4
+  					tint: 0.35
   				},
   				{
   					primitive: lightning,
@@ -1257,7 +1254,13 @@ require.register('WeatherSymbol', function(module, exports, require) {
    */
   function WeatherSymbol (scale, canvas) {
   	this.scale = scale || 1;
-  	this.canvas = canvas;
+  	this.canvas;
+  	this.bg;
+  
+  	if (canvas) {
+  		this.canvas = canvas;
+  		this.bg = this.getBG(canvas);
+  	}
   }
   
   /**
@@ -1269,7 +1272,8 @@ require.register('WeatherSymbol', function(module, exports, require) {
   	canvas = this.canvas || canvas;
   	if (!canvas) return;
   
-  	var ctx = canvas.getContext('2d')
+  	var bg = this.getBG(canvas)
+  		, ctx = canvas.getContext('2d')
   		, attr = canvas.getAttribute('data-id').split('.')
   		, id = attr[0]
   		, phase = (attr.length > 1)
@@ -1296,11 +1300,17 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				winter: layer.winter,
   				phase: phase,
   				width: w * this.scale,
-  				height: h * this.scale
+  				height: h * this.scale,
+  				bg: bg
   			};
   			layer.primitive.render(ctx, options);
   		}
   	}
+  };
+  
+  WeatherSymbol.prototype.getBG = function (canvas) {
+  	return this.bg
+  		|| window.getComputedStyle(canvas).getPropertyValue('background-color');
   };
   
 });
