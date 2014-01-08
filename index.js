@@ -1,1 +1,1 @@
-exports.WeatherSymbol = require('src/js/WeatherSymbol');
+exports.WeatherSymbol = require('./src/js/WeatherSymbol');
