@@ -16,50 +16,23 @@
 <metadata>
 	<sfw  xmlns="&ns_sfw;">
 		<slices></slices>
-		<sliceSourceBounds  x="-2.5" y="-8242" height="16383" width="1095" bottomLeftOrigin="true"></sliceSourceBounds>
+		<sliceSourceBounds  x="0" y="-430" bottomLeftOrigin="true" width="1642.504" height="430"></sliceSourceBounds>
 	</sfw>
 </metadata>
-<g id="snow_shower_thunder">
-</g>
-<g id="sleet_shower_thunder">
-</g>
-<g id="rain_shower_thunder">
-	<g id="day-winter_6_">
-		<g>
-			<defs>
-				<rect id="SVGID_5_" x="10" y="130" width="60" height="30"/>
-			</defs>
-			<clipPath id="SVGID_2_">
-				<use xlink:href="#SVGID_5_"  overflow="visible"/>
-			</clipPath>
-			<g clip-path="url(#SVGID_2_)">
-				<polygon fill="#E88D15" points="51.569,134.791 70,130 51.569,125.209 61.214,108.786 44.791,118.431 40,100 35.209,118.431 
-					18.786,108.786 28.431,125.209 10,130 28.431,134.791 18.786,151.214 35.209,141.569 40,160 44.791,141.569 61.214,151.214 				
-					"/>
-			</g>
-		</g>
-	</g>
-</g>
-<g id="clouds">
-	<path id="cloud_51_" fill="#BFBFBF" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10" d="M77.498,49
+<g id="overcast">
+	<path id="cloud_51_" fill="#E6E6E6" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10" d="M77.498,49
 		C81.514,49,85,45.488,85,41.84c0-3.689-1.785-6.75-5.551-8.152c-1.299-4.338-5.25-7.338-10.299-7.488
 		c-1.1-5.549-8.15-8.861-13.1-7.461c-2.182-7.75-15-14.102-23.451-5.9c-12.35-3.4-21.018,4.296-19.686,15.994
 		C8.032,30.233,5,34.521,5,39.537C5,44.573,9.516,49,14.558,49H77.498z"/>
-	<path id="cloud_50_" fill="#A6A6A6" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M9.377,75
+	<path id="cloud_50_" fill="#D9D9D9" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M9.377,75
 		C4.357,75,0,70.609,0,66.051c0-4.613,2.231-8.439,6.938-10.191c1.625-5.422,6.562-9.172,12.875-9.359
 		C21.188,39.562,30,35.422,36.188,37.172c2.727-9.688,18.748-17.625,29.312-7.375c15.438-4.25,26.272,5.37,24.607,19.992
 		C96.21,51.542,100,56.901,100,63.172C100,69.466,94.355,75,88.054,75H9.377z"/>
 </g>
-<g id="snow_shower">
+<g id="night">
 </g>
-<g id="sleet_shower">
+<g id="winter_day">
 </g>
-<g id="rain_shower">
-</g>
-<g id="partly_cloudy">
-</g>
-<g id="fair">
-</g>
-<g id="clear">
+<g id="day_15_">
 </g>
 </svg>

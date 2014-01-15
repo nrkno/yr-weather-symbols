@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg version="1.1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
+	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
+<metadata>
+	<sfw  xmlns="&ns_sfw;">
+		<slices></slices>
+		<sliceSourceBounds  x="0" y="-430" bottomLeftOrigin="true" width="1642.504" height="430"></sliceSourceBounds>
+	</sfw>
+</metadata>
+<g id="overcast">
+</g>
+<g id="night">
+	<path fill="#AFC1C9" d="M25.333,25.334c0-5.119,1.926-9.785,5.087-13.324C30.28,12.008,30.142,12,30,12c-11.046,0-20,8.955-20,20
+		s8.954,20,20,20c5.927,0,11.25-2.58,14.912-6.678C34.062,45.098,25.333,36.237,25.333,25.334z"/>
+	<path fill="#C9AF16" d="M40.417,75l-6.25,12.484h8.325L30.004,100l25.001-16.68h-8.338L54.999,75H40.417z"/>
+	<path id="cloud_73_" fill="#999999" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M9.381,75
+		c-5.02,0-9.377-4.391-9.377-8.949c0-4.613,2.231-8.439,6.938-10.191c1.625-5.422,6.562-9.172,12.875-9.359
+		c1.375-6.938,10.188-11.078,16.375-9.328c2.727-9.688,18.748-17.625,29.312-7.375c15.438-4.25,26.272,5.37,24.607,19.992
+		c6.103,1.753,9.893,7.112,9.893,13.383c0,6.294-5.645,11.828-11.946,11.828H9.381z"/>
+	<g>
+		<path fill="#FFFFFF" d="M72.004,74c0,4.969-4.031,9-9.001,9c-4.968,0-8.999-4.031-8.999-9s4.031-9,8.999-9
+			C67.973,65,72.004,69.031,72.004,74z"/>
+		<path fill="#1362B1" d="M78.004,84.368c0,4.218-3.366,7.632-7.498,7.632c-4.146,0-7.502-3.414-7.502-7.632
+			c0-2.382,0-13.368,0-13.368C69.856,77.748,78.004,77.447,78.004,84.368z"/>
+	</g>
+</g>
+<g id="winter_day">
+</g>
+<g id="day_15_">
+</g>
+</svg>

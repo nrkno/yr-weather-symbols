@@ -1,7 +1,7 @@
-var WeatherSymbol = require('./WeatherSymbol')
-	, dust = require('dust')
-	, template = require('./symbolGroup')
+var dust = require('dust')
 	, data = require('../symbols.json')
+	, template = require('./symbolGroup')
+	, WeatherSymbol = require('./WeatherSymbol')
 	, symbol = new WeatherSymbol(1)
 	, el = document.getElementById('symbols');
 

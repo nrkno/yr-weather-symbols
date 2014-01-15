@@ -16,10 +16,14 @@
 <metadata>
 	<sfw  xmlns="&ns_sfw;">
 		<slices></slices>
-		<sliceSourceBounds  x="-2.5" y="-8242" height="16383" width="1095" bottomLeftOrigin="true"></sliceSourceBounds>
+		<sliceSourceBounds  x="0" y="-430" bottomLeftOrigin="true" width="1642.504" height="430"></sliceSourceBounds>
 	</sfw>
 </metadata>
-<g id="snow_shower_thunder">
+<g id="overcast">
+</g>
+<g id="night">
+</g>
+<g id="winter_day">
 	<g id="day-winter_8_">
 		<g>
 			<defs>
@@ -37,7 +41,7 @@
 		<rect x="10" y="14" fill="#4D4D4D" width="60" height="3"/>
 	</g>
 	<path fill="#C9AF16" d="M24.412,75l-6.25,12.484h8.326L14,100l25-16.68h-8.338L38.994,75H24.412z"/>
-	<path id="cloud_88_" fill="#808080" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M9.377,75
+	<path id="cloud_88_" fill="#999999" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M9.377,75
 		C4.357,75,0,70.609,0,66.051c0-4.613,2.23-8.439,6.938-10.191c1.625-5.422,6.562-9.172,12.875-9.359
 		C21.188,39.562,30,35.422,36.188,37.172c2.727-9.688,18.748-17.625,29.312-7.375c15.438-4.25,26.271,5.37,24.607,19.992
 		C96.209,51.542,100,56.901,100,63.172C100,69.466,94.355,75,88.053,75H9.377z"/>
@@ -55,22 +59,6 @@
 			c-1.443-0.38-2.293-1.873-1.914-3.312c0.381-1.452,1.859-2.297,3.307-1.915C56.621,79.282,57.486,80.761,57.086,82.215z"/>
 	</g>
 </g>
-<g id="sleet_shower_thunder">
-</g>
-<g id="rain_shower_thunder">
-</g>
-<g id="clouds">
-</g>
-<g id="snow_shower">
-</g>
-<g id="sleet_shower">
-</g>
-<g id="rain_shower">
-</g>
-<g id="partly_cloudy">
-</g>
-<g id="fair">
-</g>
-<g id="clear">
+<g id="day_15_">
 </g>
 </svg>

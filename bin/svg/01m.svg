@@ -16,52 +16,23 @@
 <metadata>
 	<sfw  xmlns="&ns_sfw;">
 		<slices></slices>
-		<sliceSourceBounds  x="-2.5" y="-8242" height="16383" width="1095" bottomLeftOrigin="true"></sliceSourceBounds>
+		<sliceSourceBounds  x="0" y="-430" bottomLeftOrigin="true" width="1642.504" height="430"></sliceSourceBounds>
 	</sfw>
 </metadata>
-<g id="snow_shower_thunder">
+<g id="overcast">
 </g>
-<g id="sleet_shower_thunder">
+<g id="night">
 </g>
-<g id="rain_shower_thunder">
-</g>
-<g id="clouds">
-</g>
-<g id="snow_shower">
-</g>
-<g id="sleet_shower">
-</g>
-<g id="rain_shower">
-</g>
-<g id="partly_cloudy">
-</g>
-<g id="fair">
-	<g id="day-winter_1_">
-		<g>
-			<defs>
-				<rect id="SVGID_15_" y="150" width="100" height="50"/>
-			</defs>
-			<clipPath id="SVGID_2_">
-				<use xlink:href="#SVGID_15_"  overflow="visible"/>
-			</clipPath>
-			<g clip-path="url(#SVGID_2_)">
-				<polygon fill="#E88D15" points="69.284,157.986 100,150 69.284,142.014 85.358,114.645 57.986,130.719 50,100 42.014,130.719 
-					14.645,114.645 30.719,142.014 0,150 30.719,157.986 14.645,185.358 42.014,169.284 50,200 57.986,169.284 85.358,185.358 				
-					"/>
-			</g>
-		</g>
-	</g>
-</g>
-<g id="clear">
+<g id="winter_day">
 	<g id="day-winter">
 		<g>
 			<defs>
-				<rect id="SVGID_17_" y="40" width="100" height="50"/>
+				<rect id="SVGID_29_" y="40" width="100" height="50"/>
 			</defs>
-			<clipPath id="SVGID_4_">
-				<use xlink:href="#SVGID_17_"  overflow="visible"/>
+			<clipPath id="SVGID_2_">
+				<use xlink:href="#SVGID_29_"  overflow="visible"/>
 			</clipPath>
-			<g clip-path="url(#SVGID_4_)">
+			<g clip-path="url(#SVGID_2_)">
 				<polygon fill="#E88D15" points="69.284,47.986 100,40 69.284,32.014 85.358,4.645 57.986,20.719 50,-10 42.014,20.719 
 					14.645,4.645 30.719,32.014 0,40 30.719,47.986 14.645,75.358 42.014,59.284 50,90 57.986,59.284 85.358,75.358 				"/>
 				<circle fill="#FABA2F" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" cx="50" cy="40" r="22.5"/>
@@ -69,5 +40,7 @@
 		</g>
 		<rect y="30" fill="#4D4D4D" width="100" height="5"/>
 	</g>
+</g>
+<g id="day_15_">
 </g>
 </svg>

@@ -6,7 +6,7 @@
     "dustjs-linkedin": "*"
   },
   "devDependencies": {
-    "buddy": "~0.17.0"
+    "buddy": "~1.0.0"
   },
   "scripts": {
   },
@@ -23,8 +23,10 @@
           {
             "input": "src/js/main.js",
             "output": "bin/js/main.js",
+            "boilerplate": true,
+            "bootstrap": true,
             "alias": {
-              "dust": "./node_modules/dustjs-linkedin/dist/dust-core-2.0.3.js"
+              "dust": "./node_modules/dustjs-linkedin/dist/dust-core-2.2.3.js"
             }
           }
         ]

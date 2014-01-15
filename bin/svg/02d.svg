@@ -16,37 +16,39 @@
 <metadata>
 	<sfw  xmlns="&ns_sfw;">
 		<slices></slices>
-		<sliceSourceBounds  x="-2.5" y="-8242" height="16383" width="1095" bottomLeftOrigin="true"></sliceSourceBounds>
+		<sliceSourceBounds  x="0" y="-430" bottomLeftOrigin="true" width="1642.504" height="430"></sliceSourceBounds>
 	</sfw>
 </metadata>
-<g id="snow_shower_thunder">
+<g id="overcast">
 </g>
-<g id="sleet_shower_thunder">
+<g id="night">
 </g>
-<g id="rain_shower_thunder">
-</g>
-<g id="clouds">
-</g>
-<g id="snow_shower">
-</g>
-<g id="sleet_shower">
-</g>
-<g id="rain_shower">
-</g>
-<g id="partly_cloudy">
-</g>
-<g id="fair">
-	<g id="day_1_">
-		<polygon fill="#E88D15" points="69.284,57.986 100,50 69.284,42.014 85.358,14.645 57.986,30.719 50,0 42.013,30.719 
-			14.645,14.645 30.718,42.014 0,50 30.718,57.986 14.645,85.358 42.013,69.284 50,100 57.986,69.284 85.358,85.358 		"/>
-		<path fill="#FABA2F" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M72.5,50c0,12.427-10.073,22.5-22.5,22.5
-			c-12.423,0-22.5-10.073-22.5-22.5c0-12.424,10.077-22.5,22.5-22.5C62.427,27.5,72.5,37.576,72.5,50z"/>
+<g id="winter_day">
+	<g id="day-winter_1_">
+		<g>
+			<defs>
+				<rect id="SVGID_27_" y="150" width="100" height="50"/>
+			</defs>
+			<clipPath id="SVGID_2_">
+				<use xlink:href="#SVGID_27_"  overflow="visible"/>
+			</clipPath>
+			<g clip-path="url(#SVGID_2_)">
+				<polygon fill="#E88D15" points="69.284,157.986 100,150 69.284,142.014 85.358,114.645 57.986,130.719 50,100 42.014,130.719 
+					14.645,114.645 30.719,142.014 0,150 30.719,157.986 14.645,185.358 42.014,169.284 50,200 57.986,169.284 85.358,185.358 				
+					"/>
+			</g>
+		</g>
 	</g>
-	<path id="cloud_9_" fill="#D9D9D9" stroke="#FFFFFF" stroke-width="3" stroke-miterlimit="10" d="M59.373,85
-		C62.385,85,65,82.367,65,79.631c0-2.768-1.339-5.062-4.162-6.115c-0.975-3.254-3.938-5.504-7.725-5.615
-		c-0.826-4.163-6.113-6.647-9.826-5.597c-1.635-5.812-11.248-10.576-17.587-4.426C16.438,55.327,9.937,61.1,10.936,69.875
-		C7.274,70.925,5,74.141,5,77.902C5,81.681,8.387,85,12.167,85H59.373z"/>
 </g>
-<g id="clear">
+<g id="day_15_">
+	<g id="day_1_">
+		<polygon fill="#E88D15" points="69.284,57.986 100,50 69.284,42.014 85.358,14.645 57.986,30.719 50,0 42.014,30.719 
+			14.645,14.645 30.719,42.014 0,50 30.719,57.986 14.645,85.358 42.014,69.284 50,100 57.986,69.284 85.358,85.358 		"/>
+		<circle fill="#FABA2F" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" cx="50" cy="50" r="22.5"/>
+	</g>
+	<path id="cloud_9_" fill="#E6E6E6" stroke="#FFFFFF" stroke-width="3" stroke-miterlimit="10" d="M59.373,85
+		C62.385,85,65,82.367,65,79.631c0-2.768-1.339-5.062-4.162-6.115c-0.975-3.254-3.938-5.504-7.725-5.615
+		c-0.826-4.163-6.113-6.647-9.826-5.597c-1.635-5.812-11.248-10.576-17.588-4.426C16.438,55.327,9.937,61.1,10.936,69.875
+		C7.274,70.925,5,74.141,5,77.902C5,81.681,8.387,85,12.168,85H59.373z"/>
 </g>
 </svg>

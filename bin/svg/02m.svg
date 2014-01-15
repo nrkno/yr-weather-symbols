@@ -16,33 +16,21 @@
 <metadata>
 	<sfw  xmlns="&ns_sfw;">
 		<slices></slices>
-		<sliceSourceBounds  x="-2.5" y="-8242" height="16383" width="1095" bottomLeftOrigin="true"></sliceSourceBounds>
+		<sliceSourceBounds  x="0" y="-430" bottomLeftOrigin="true" width="1642.504" height="430"></sliceSourceBounds>
 	</sfw>
 </metadata>
-<g id="snow_shower_thunder">
+<g id="overcast">
 </g>
-<g id="sleet_shower_thunder">
+<g id="night">
 </g>
-<g id="rain_shower_thunder">
-</g>
-<g id="clouds">
-</g>
-<g id="snow_shower">
-</g>
-<g id="sleet_shower">
-</g>
-<g id="rain_shower">
-</g>
-<g id="partly_cloudy">
-</g>
-<g id="fair">
+<g id="winter_day">
 	<g id="day-winter_1_">
 		<g>
 			<defs>
-				<rect id="SVGID_15_" y="40" width="100" height="50"/>
+				<rect id="SVGID_27_" y="40" width="100" height="50"/>
 			</defs>
 			<clipPath id="SVGID_2_">
-				<use xlink:href="#SVGID_15_"  overflow="visible"/>
+				<use xlink:href="#SVGID_27_"  overflow="visible"/>
 			</clipPath>
 			<g clip-path="url(#SVGID_2_)">
 				<polygon fill="#E88D15" points="69.284,47.986 100,40 69.284,32.014 85.358,4.645 57.986,20.719 50,-10 42.014,20.719 
@@ -52,11 +40,11 @@
 		</g>
 		<rect y="30" fill="#4D4D4D" width="100" height="5"/>
 	</g>
-	<path id="cloud_8_" fill="#D9D9D9" stroke="#FFFFFF" stroke-width="3" stroke-miterlimit="10" d="M59.373,75
+	<path id="cloud_8_" fill="#E6E6E6" stroke="#FFFFFF" stroke-width="3" stroke-miterlimit="10" d="M59.373,75
 		C62.385,75,65,72.367,65,69.631c0-2.768-1.338-5.062-4.162-6.115c-0.975-3.254-3.938-5.504-7.725-5.615
 		c-0.826-4.163-6.113-6.647-9.826-5.597c-1.635-5.812-11.248-10.576-17.588-4.426C16.438,45.327,9.938,51.1,10.936,59.875
 		C7.275,60.925,5,64.141,5,67.902C5,71.681,8.387,75,12.168,75H59.373z"/>
 </g>
-<g id="clear">
+<g id="day_15_">
 </g>
 </svg>

@@ -16,46 +16,23 @@
 <metadata>
 	<sfw  xmlns="&ns_sfw;">
 		<slices></slices>
-		<sliceSourceBounds  x="-2.5" y="-8242" height="16383" width="1095" bottomLeftOrigin="true"></sliceSourceBounds>
+		<sliceSourceBounds  x="0" y="-430" bottomLeftOrigin="true" width="1642.504" height="430"></sliceSourceBounds>
 	</sfw>
 </metadata>
-<g id="snow_shower_thunder">
+<g id="overcast">
 </g>
-<g id="sleet_shower_thunder">
+<g id="night">
 </g>
-<g id="rain_shower_thunder">
-</g>
-<g id="clouds">
-</g>
-<g id="snow_shower">
-</g>
-<g id="sleet_shower">
-	<g id="day-winter_4_">
-		<g>
-			<defs>
-				<rect id="SVGID_9_" x="10" y="130" width="60" height="30"/>
-			</defs>
-			<clipPath id="SVGID_2_">
-				<use xlink:href="#SVGID_9_"  overflow="visible"/>
-			</clipPath>
-			<g clip-path="url(#SVGID_2_)">
-				<polygon fill="#E88D15" points="51.569,134.791 70,130 51.569,125.209 61.214,108.786 44.791,118.431 40,100 35.209,118.431 
-					18.786,108.786 28.431,125.209 10,130 28.431,134.791 18.786,151.214 35.209,141.569 40,160 44.791,141.569 61.214,151.214 				
-					"/>
-			</g>
-		</g>
-	</g>
-</g>
-<g id="rain_shower">
+<g id="winter_day">
 	<g id="day-winter_2_">
 		<g>
 			<defs>
-				<rect id="SVGID_11_" x="10" y="20" width="60" height="30"/>
+				<rect id="SVGID_19_" x="10" y="20" width="60" height="30"/>
 			</defs>
-			<clipPath id="SVGID_4_">
-				<use xlink:href="#SVGID_11_"  overflow="visible"/>
+			<clipPath id="SVGID_2_">
+				<use xlink:href="#SVGID_19_"  overflow="visible"/>
 			</clipPath>
-			<g clip-path="url(#SVGID_4_)">
+			<g clip-path="url(#SVGID_2_)">
 				<polygon fill="#E88D15" points="51.569,24.791 70,20 51.569,15.209 61.214,-1.214 44.791,8.431 40,-10 35.209,8.431 
 					18.786,-1.214 28.431,15.209 10,20 28.431,24.791 18.786,41.214 35.209,31.569 40,50 44.791,31.569 61.214,41.214 				"/>
 				<circle fill="#FABA2F" stroke="#FFFFFF" stroke-width="3" stroke-miterlimit="10" cx="40" cy="20" r="13.5"/>
@@ -63,7 +40,7 @@
 		</g>
 		<rect x="10" y="14" fill="#4D4D4D" width="60" height="3"/>
 	</g>
-	<path id="cloud_18_" fill="#808080" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M9.377,75
+	<path id="cloud_18_" fill="#999999" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M9.377,75
 		C4.357,75,0,70.609,0,66.051c0-4.613,2.231-8.439,6.938-10.191c1.625-5.422,6.562-9.172,12.875-9.359
 		C21.188,39.562,30,35.422,36.188,37.172c2.727-9.688,18.748-17.625,29.312-7.375c15.438-4.25,26.272,5.37,24.607,19.992
 		C96.21,51.542,100,56.901,100,63.172C100,69.466,94.355,75,88.054,75H9.377z"/>
@@ -78,10 +55,6 @@
 			C58.853,77.748,67,77.447,67,84.368z"/>
 	</g>
 </g>
-<g id="partly_cloudy">
-</g>
-<g id="fair">
-</g>
-<g id="clear">
+<g id="day_15_">
 </g>
 </svg>
