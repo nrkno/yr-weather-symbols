@@ -875,8 +875,10 @@ WeatherSymbol.prototype.draw = function(canvas) {
 		, h = canvas.offsetHeight
 		, scale = (w/100) * this.scale
 		, layer, options;
-	canvas.width = w * this.scale;
-	canvas.height = h * this.scale;
+	if (!('width' in canvas)) {
+		canvas.width = w * this.scale;
+		canvas.height = h * this.scale;
+	}
 
 	if (formula) {
 		for (var i = 0, n = formula.length; i < n; i++) {
