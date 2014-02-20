@@ -84,60 +84,58 @@
 })(window != null ? window : global);
 
 require.register('dust', function(module, exports, require) {
-  //
-  // Dust - Asynchronous Templating v2.2.3
-  // http://akdubya.github.com/dustjs
-  //
-  // Copyright (c) 2010, Aleksander Williams
-  // Released under the MIT License.
-  //
-  
-  /*global console */
-  var dust = {};
-  
-  function getGlobal(){
-    return (function(){
-      return this.dust;
-    }).call(null);
-  }
-  
-  (function(dust) {
-  
-    if(!dust) {
-      return;
-    }
-    var ERROR = 'ERROR',
+  /*! Dust - Asynchronous Templating - v2.3.3
+  * http://linkedin.github.io/dustjs/
+  * Copyright (c) 2014 Aleksander Williams; Released under the MIT License */
+  (function(root) {
+    var dust = {},
+        NONE = 'NONE',
+        ERROR = 'ERROR',
         WARN = 'WARN',
         INFO = 'INFO',
         DEBUG = 'DEBUG',
-        levels = [DEBUG, INFO, WARN, ERROR],
-        logger = function() {};
+        loggingLevels = [DEBUG, INFO, WARN, ERROR, NONE],
+        EMPTY_FUNC = function() {},
+        logger = EMPTY_FUNC,
+        loggerContext = this;
   
-    dust.isDebug = false;
-    dust.debugLevel = INFO;
+    dust.debugLevel = NONE;
+    dust.silenceErrors = false;
   
-    // Try to find the console logger in window scope (browsers) or top level scope (node.js)
-    if (typeof window !== 'undefined' && window && window.console && window.console.log) {
-      logger = window.console.log;
-    } else if (typeof console !== 'undefined' && console && console.log) {
-      logger = console.log;
+    // Try to find the console logger in global scope
+    if (root && root.console && root.console.log) {
+      logger = root.console.log;
+      loggerContext = root.console;
     }
   
     /**
      * If dust.isDebug is true, Log dust debug statements, info statements, warning statements, and errors.
      * This default implementation will print to the console if it exists.
-     * @param {String} message the message to print
+     * @param {String|Error} message the message to print/throw
      * @param {String} type the severity of the message(ERROR, WARN, INFO, or DEBUG)
      * @public
      */
     dust.log = function(message, type) {
-      var type = type || INFO;
-      if(dust.isDebug && levels.indexOf(type) >= levels.indexOf(dust.debugLevel)) {
+      if(dust.isDebug && dust.debugLevel === NONE) {
+        logger.call(loggerContext, '[!!!DEPRECATION WARNING!!!]: dust.isDebug is deprecated.  Set dust.debugLevel instead to the level of logging you want ["debug","info","warn","error","none"]');
+        dust.debugLevel = INFO;
+      }
+  
+      type = type || INFO;
+      if (loggingLevels.indexOf(type) >= loggingLevels.indexOf(dust.debugLevel)) {
         if(!dust.logQueue) {
           dust.logQueue = [];
         }
         dust.logQueue.push({message: message, type: type});
-        logger.call(console || window.console, '[DUST ' + type + ']: ' + message);
+        logger.call(loggerContext, '[DUST ' + type + ']: ' + message);
+      }
+  
+      if (!dust.silenceErrors && type === ERROR) {
+        if (typeof message === 'string') {
+          throw new Error(message);
+        } else {
+          throw message;
+        }
       }
     };
   
@@ -149,8 +147,9 @@ require.register('dust', function(module, exports, require) {
      * @public
      */
     dust.onError = function(error, chunk) {
+      logger.call(loggerContext, '[!!!DEPRECATION WARNING!!!]: dust.onError will no longer return a chunk object.');
       dust.log(error.message || error, ERROR);
-      if(dust.isDebug) {
+      if(!dust.silenceErrors) {
         throw error;
       } else {
         return chunk;
@@ -173,7 +172,7 @@ require.register('dust', function(module, exports, require) {
       try {
         dust.load(name, chunk, Context.wrap(context, name)).end();
       } catch (err) {
-        dust.onError(err, chunk);
+        dust.log(err, ERROR);
       }
     };
   
@@ -183,7 +182,7 @@ require.register('dust', function(module, exports, require) {
         try {
           dust.load(name, stream.head, Context.wrap(context, name)).end();
         } catch (err) {
-          dust.onError(err, stream.head);
+          dust.log(err, ERROR);
         }
       });
       return stream;
@@ -194,6 +193,9 @@ require.register('dust', function(module, exports, require) {
     };
   
     dust.compileFn = function(source, name) {
+      // name is optional. When name is not provided the template can only be rendered using the callable returned by this function.
+      // If a name is provided the compiled template can also be rendered by name.
+      name = name || null;
       var tmpl = dust.loadSource(dust.compile(source, name));
       return function(context, callback) {
         var master = callback ? new Stub(callback) : new Stream();
@@ -202,7 +204,7 @@ require.register('dust', function(module, exports, require) {
             tmpl(master.head, Context.wrap(context, name)).end();
           }
           else {
-            dust.onError(new Error('Template [' + name + '] cannot be resolved to a Dust function'));
+            dust.log(new Error('Template [' + name + '] cannot be resolved to a Dust function'), ERROR);
           }
         });
         return master;
@@ -244,13 +246,9 @@ require.register('dust', function(module, exports, require) {
     }
   
     dust.nextTick = (function() {
-      if (typeof process !== 'undefined') {
-        return process.nextTick;
-      } else {
-        return function(callback) {
-          setTimeout(callback,0);
-        };
-      }
+      return function(callback) {
+        setTimeout(callback,0);
+      };
     } )();
   
     dust.isEmpty = function(value) {
@@ -276,7 +274,7 @@ require.register('dust', function(module, exports, require) {
             string = dust.filters[name](string);
           }
           else {
-            dust.onError(new Error('Invalid filter [' + name + ']'));
+            dust.log('Invalid filter [' + name + ']', WARN);
           }
         }
       }
@@ -405,7 +403,11 @@ require.register('dust', function(module, exports, require) {
       // Return the ctx or a function wrapping the application of the context.
       if (typeof ctx === 'function') {
         var fn = function() {
-          return ctx.apply(ctxThis, arguments);
+          try {
+            return ctx.apply(ctxThis, arguments);
+          } catch (err) {
+            return dust.log(err, ERROR);
+          }
         };
         fn.isFunction = true;
         return fn;
@@ -471,7 +473,7 @@ require.register('dust', function(module, exports, require) {
   
     Context.prototype.getTemplateName = function() {
       return this.templateName;
-    }
+    };
   
     function Stack(head, tail, idx, len) {
       this.tail = tail;
@@ -495,8 +497,8 @@ require.register('dust', function(module, exports, require) {
           this.out += chunk.data.join(''); //ie7 perf
         } else if (chunk.error) {
           this.callback(chunk.error);
-          dust.onError(new Error('Chunk error [' + chunk.error + '] thrown. Ceasing to render this template.'));
-          this.flush = function() {};
+          dust.log('Chunk error [' + chunk.error + '] thrown. Ceasing to render this template.', WARN);
+          this.flush = EMPTY_FUNC;
           return;
         } else {
           return;
@@ -519,8 +521,8 @@ require.register('dust', function(module, exports, require) {
           this.emit('data', chunk.data.join('')); //ie7 perf
         } else if (chunk.error) {
           this.emit('error', chunk.error);
-          dust.onError(new Error('Chunk error [' + chunk.error + '] thrown. Ceasing to render this template.'));
-          this.flush = function() {};
+          dust.log('Chunk error [' + chunk.error + '] thrown. Ceasing to render this template.', WARN);
+          this.flush = EMPTY_FUNC;
           return;
         } else {
           return;
@@ -549,7 +551,7 @@ require.register('dust', function(module, exports, require) {
           listeners[i](data);
         }
       } else {
-        dust.onError(new Error('Event Handler [' + handler + '] is not of a type that is handled by emit'));
+        dust.log('Event Handler [' + handler + '] is not of a type that is handled by emit', WARN);
       }
     };
   
@@ -577,13 +579,13 @@ require.register('dust', function(module, exports, require) {
         try {
           stream.write(data, 'utf8');
         } catch (err) {
-          dust.onError(err, stream.head);
+          dust.log(err, ERROR);
         }
       }).on('end', function() {
         try {
           return stream.end();
         } catch (err) {
-          dust.onError(err, stream.head);
+          dust.log(err, ERROR);
         }
       }).on('error', function(err) {
         stream.error(err);
@@ -819,10 +821,12 @@ require.register('dust', function(module, exports, require) {
         if(dust.helpers[name]) {
           return dust.helpers[name](chunk, context, bodies, params);
         } else {
-          return dust.onError(new Error('Invalid helper [' + name + ']'), chunk);
+          dust.log('Invalid helper [' + name + ']', WARN);
+          return chunk;
         }
       } catch (err) {
-        return dust.onError(err, chunk);
+        dust.log(err, ERROR);
+        return chunk;
       }
     };
   
@@ -909,14 +913,15 @@ require.register('dust', function(module, exports, require) {
       return s;
     };
   
-  })(dust);
   
-  if (typeof exports !== 'undefined') {
-    if (typeof process !== 'undefined') {
-      require('./server')(dust);
+    if (typeof exports === 'object') {
+      module.exports = dust;
+    } else {
+      root.dust = dust;
     }
-    module.exports = dust;
-  }
+  
+  })(this);
+  
   
 });
 require.register('symbolGroup', function(module, exports, require) {
@@ -928,7 +933,7 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   	, RAY_COLOUR = '#e88d15'  
   	, HORIZON_COLOUR = '#4d4d4d'  
   	, CENTER_COLOUR = '#faba2f'  
-  	, STROKE_WIDTH = 5;  
+  	, STROKE_WIDTH = 4;  
     
   exports.render = function(ctx, options) {  
   	ctx.save();  
@@ -941,46 +946,63 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   		// Horizon  
   		ctx.fillStyle = HORIZON_COLOUR;  
   		ctx.beginPath();  
-  		ctx.moveTo(0,0);  
-  		ctx.fillRect(0,0,100,5);  
+  		ctx.moveTo(2.5,0);  
+  		ctx.lineTo(87.6,0);  
+  		ctx.bezierCurveTo(88.9,0,90,0.9,90,2);  
+  		ctx.lineTo(90,2);  
+  		ctx.bezierCurveTo(90,3.1,88.9,4,87.5,4);  
+  		ctx.lineTo(2.5,4);  
+  		ctx.bezierCurveTo(1.1,4,0,3.1,0,2);  
+  		ctx.lineTo(0,2);  
+  		ctx.bezierCurveTo(0,0.9,1.1,0,2.5,0);  
   		ctx.fill();  
+  		ctx.closePath();  
     
   		// Mask  
-  		ctx.moveTo(0,10);  
-  		ctx.lineTo(100,10);  
-  		ctx.lineTo(100,60);  
-  		ctx.lineTo(0,60);  
-  		ctx.lineTo(0,10);  
+  		ctx.beginPath()  
+  		ctx.moveTo(0,8);  
+  		ctx.lineTo(100,8);  
+  		ctx.lineTo(100,100);  
+  		ctx.lineTo(0,100);  
+  		ctx.lineTo(0,8);  
   		ctx.closePath();  
   		ctx.clip();  
     
   		// Rays  
   		ctx.fillStyle = RAY_COLOUR;  
   		ctx.beginPath();  
-  		ctx.moveTo(69.284,17.986);  
-  		ctx.lineTo(100,10);  
-  		ctx.lineTo(69.284,2.014);  
-  		ctx.lineTo(85.358,-25.355);  
-  		ctx.lineTo(57.986,-9.281);  
-  		ctx.lineTo(50,-40);  
-  		ctx.lineTo(42.014,-9.281);  
-  		ctx.lineTo(14.645,-25.355);  
-  		ctx.lineTo(30.719,2.014);  
-  		ctx.lineTo(0,10);  
-  		ctx.lineTo(30.719,17.986);  
-  		ctx.lineTo(14.645,45.358);  
-  		ctx.lineTo(42.014,29.284);  
-  		ctx.lineTo(50,60);  
-  		ctx.lineTo(57.986,29.284);  
-  		ctx.lineTo(85.358,45.358);  
-  		ctx.lineTo(69.284,17.986);  
+  		ctx.moveTo(64.4,16.1);  
+  		ctx.lineTo(87.6,10);  
+  		ctx.bezierCurveTo(89.6,9.5,89.6,6.7,87.6,6.1);  
+  		ctx.lineTo(64.4,0.1);  
+  		ctx.lineTo(76.60000000000001,-20.7);  
+  		ctx.bezierCurveTo(77.60000000000001,-22.5,75.60000000000001,-24.5,73.9,-23.4);  
+  		ctx.lineTo(53.1,-11.2);  
+  		ctx.lineTo(47,-34.5);  
+  		ctx.bezierCurveTo(46.5,-36.5,43.7,-36.5,43.1,-34.5);  
+  		ctx.lineTo(37,-11.2);  
+  		ctx.lineTo(16.3,-23.4);  
+  		ctx.bezierCurveTo(14.5,-24.4,12.5,-22.4,13.600000000000001,-20.7);  
+  		ctx.lineTo(25.8,0.1);  
+  		ctx.lineTo(2.5,6.1);  
+  		ctx.bezierCurveTo(0.5,6.6,0.5,9.399999999999999,2.5,10);  
+  		ctx.lineTo(25.8,16.1);  
+  		ctx.lineTo(13.6,36.8);  
+  		ctx.bezierCurveTo(12.6,38.599999999999994,14.6,40.599999999999994,16.3,39.5);  
+  		ctx.lineTo(37.1,27.3);  
+  		ctx.lineTo(43.2,50.6);  
+  		ctx.bezierCurveTo(43.7,52.6,46.5,52.6,47.1,50.6);  
+  		ctx.lineTo(53.2,27.3);  
+  		ctx.lineTo(74,39.5);  
+  		ctx.bezierCurveTo(75.8,40.5,77.8,38.5,76.7,36.8);  
+  		ctx.lineTo(64.4,16.1);  
   		ctx.closePath();  
   		ctx.fill();  
     
   		// Center fill  
   		ctx.fillStyle = CENTER_COLOUR;  
   		ctx.beginPath();  
-  		ctx.arc(50,10,22.5,0,TWO_PI,true);  
+  		ctx.arc(45,8,22.5,0,TWO_PI,true);  
   		ctx.closePath();  
   		ctx.fill();  
   		ctx.stroke();  
@@ -989,30 +1011,38 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   		// Rays  
   		ctx.fillStyle = RAY_COLOUR;  
   		ctx.beginPath();  
-  		ctx.moveTo(69.284,57.986);  
-  		ctx.lineTo(100,50);  
-  		ctx.lineTo(69.284,42.014);  
-  		ctx.lineTo(85.358,14.645);  
-  		ctx.lineTo(57.986,30.719);  
-  		ctx.lineTo(50,0);  
-  		ctx.lineTo(42.013,30.719);  
-  		ctx.lineTo(14.645,14.645);  
-  		ctx.lineTo(30.718,42.014);  
-  		ctx.lineTo(0,50);  
-  		ctx.lineTo(30.718,57.986);  
-  		ctx.lineTo(14.645,85.358);  
-  		ctx.lineTo(42.013,69.284);  
-  		ctx.lineTo(50,100);  
-  		ctx.lineTo(57.986,69.284);  
-  		ctx.lineTo(85.358,85.358);  
-  		ctx.lineTo(69.284,57.986);  
+  		ctx.moveTo(64.3,53);  
+  		ctx.lineTo(87.6,46.9);  
+  		ctx.bezierCurveTo(89.6,46.4,89.6,43.6,87.6,43);  
+  		ctx.lineTo(64.3,37);  
+  		ctx.lineTo(76.5,16.2);  
+  		ctx.bezierCurveTo(77.5,14.399999999999999,75.5,12.399999999999999,73.8,13.5);  
+  		ctx.lineTo(53,25.7);  
+  		ctx.lineTo(46.9,2.4);  
+  		ctx.bezierCurveTo(46.4,0.3999999999999999,43.6,0.3999999999999999,43,2.4);  
+  		ctx.lineTo(37,25.7);  
+  		ctx.lineTo(16.3,13.5);  
+  		ctx.bezierCurveTo(14.5,12.5,12.5,14.5,13.600000000000001,16.2);  
+  		ctx.lineTo(25.7,37);  
+  		ctx.lineTo(2.4,43.1);  
+  		ctx.bezierCurveTo(0.3999999999999999,43.6,0.3999999999999999,46.4,2.4,47);  
+  		ctx.lineTo(25.7,53);  
+  		ctx.lineTo(13.5,73.7);  
+  		ctx.bezierCurveTo(12.5,75.5,14.5,77.5,16.2,76.4);  
+  		ctx.lineTo(37,64.3);  
+  		ctx.lineTo(43.1,87.6);  
+  		ctx.bezierCurveTo(43.6,89.6,46.4,89.6,47,87.6);  
+  		ctx.lineTo(53,64.3);  
+  		ctx.lineTo(73.8,76.5);  
+  		ctx.bezierCurveTo(75.6,77.5,77.6,75.5,76.5,73.8);  
+  		ctx.lineTo(64.3,53);  
   		ctx.closePath();  
   		ctx.fill();  
     
   		// Center fill  
   		ctx.fillStyle = CENTER_COLOUR;  
   		ctx.beginPath();  
-  		ctx.arc(50,50,22.5,0,TWO_PI,true);  
+  		ctx.arc(45,45,22.5,0,TWO_PI,true);  
   		ctx.closePath();  
   		ctx.fill();  
   		ctx.stroke();  
@@ -1045,7 +1075,7 @@ require.register('primitives/moonPrimitive', function(module, exports, require) 
   };
 });
 require.register('primitives/cloudPrimitive', function(module, exports, require) {
-  var STROKE_WIDTH = 5  
+  var STROKE_WIDTH = 4  
   	, WIDTH = 100;  
     
   exports.render = function(ctx, options) {  
@@ -1065,27 +1095,24 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
   	ctx.lineWidth = STROKE_WIDTH;  
   	ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
   	ctx.beginPath();  
-  	ctx.moveTo(7.498,40);  
-  	ctx.moveTo(9.377,50);  
-  	ctx.bezierCurveTo(4.357,50,0,45.609,0,41.051);  
-  	ctx.bezierCurveTo(0,36.438,2.231,32.612,6.938,30.86);  
-  	ctx.bezierCurveTo(8.562999999999999,25.438,13.5,21.688,19.813,21.500999999999998);  
-  	ctx.bezierCurveTo(21.188,14.562,30,10.422,36.188,12.172);  
-  	ctx.bezierCurveTo(38.914,2.484,54.936,-5.453,65.5,4.797);  
-  	ctx.bezierCurveTo(80.938,0.5469999999999997,91.77199999999999,10.167,90.107,24.789);  
-  	ctx.bezierCurveTo(96.21,26.542,100,31.901,100,38.172);  
-  	ctx.bezierCurveTo(100,44.466,94.355,50,88.054,50);  
-  	ctx.lineTo(9.377,50);  
+  	ctx.moveTo(55.6,2);  
+  	ctx.bezierCurveTo(46,1.7,37.1,7,34.1,17.3);  
+  	ctx.bezierCurveTo(28,15.8,18.1,19.7,16.3,28.200000000000003);  
+  	ctx.bezierCurveTo(10.1,28,2,33.1,2,41.6);  
+  	ctx.bezierCurveTo(2,51,9,56,21.5,56);  
+  	ctx.lineTo(65.1,56);  
+  	ctx.bezierCurveTo(70.69999999999999,56,78,55.5,82.39999999999999,53.4);  
+  	ctx.bezierCurveTo(97.3,46.199999999999996,94.69999999999999,21.1,75.99999999999999,18.799999999999997);  
+  	ctx.bezierCurveTo(73.7,7.9,65.1,2.3,55.6,2);  
   	ctx.closePath();  
   	ctx.fill();  
   	ctx.stroke();  
   	ctx.restore();  
-  };  
-  
+  };
 });
 require.register('primitives/raindropPrimitive', function(module, exports, require) {
   var TWO_PI = Math.PI * 2  
-  	, FILL_COLOUR = '#1362b1';  
+  	, FILL_COLOUR = '#1671CC';  
     
   exports.render = function(ctx, options) {  
   	// Stroke  
@@ -1095,26 +1122,58 @@ require.register('primitives/raindropPrimitive', function(module, exports, requi
   	ctx.scale(options.scale, options.scale);  
   	ctx.fillStyle = options.bg;  
   	ctx.beginPath();  
-  	ctx.arc(0,3,9,0,TWO_PI,true);  
+  	ctx.arc(9,9,9,0,TWO_PI,true);  
   	ctx.closePath();  
   	ctx.fill();  
     
   	// Fill  
   	ctx.fillStyle = FILL_COLOUR;  
   	ctx.beginPath();  
-  	ctx.moveTo(15,13.368);  
-  	ctx.bezierCurveTo(15,17.586,11.634,21,7.502,21);  
-  	ctx.bezierCurveTo(3.355,21,0,17.586,0,13.368);  
-  	ctx.bezierCurveTo(0,10.986,0,0,0,0);  
-  	ctx.bezierCurveTo(6.853,6.748,15,6.447,15,13.368);  
+  	ctx.moveTo(20,16.8);  
+  	ctx.bezierCurveTo(20,20.2,17.3,23,14,23);  
+  	ctx.bezierCurveTo(10.7,23,8,20.2,8,16.8);  
+  	ctx.bezierCurveTo(8,14.9,8,6,8,6);  
+  	ctx.bezierCurveTo(13.5,11.5,20,11.2,20,16.8);  
   	ctx.closePath();  
   	ctx.fill();  
   	ctx.restore();  
   };
 });
+require.register('primitives/sleetPrimitive', function(module, exports, require) {
+  var TWO_PI = Math.PI * 2
+  	, FILL_COLOUR = '#1EB9D8';
+  
+  exports.render = function(ctx, options) {
+  	// Stroke
+  	ctx.save();
+  	ctx.fillStyle = options.bg;
+  	ctx.translate(options.x, options.y)
+  	ctx.scale(options.scale, options.scale);
+  	ctx.fillStyle = options.bg;
+  	ctx.beginPath();
+  	ctx.arc(9,9,9,0,TWO_PI,true);
+  	ctx.closePath();
+  	ctx.fill();
+  
+  	// Fill
+  	ctx.fillStyle = FILL_COLOUR;
+  	ctx.beginPath();
+  	ctx.moveTo(19.9,16.6);
+  	ctx.bezierCurveTo(18.099999999999998,18.900000000000002,16.5,22.1,15.999999999999998,25.5);
+  	ctx.bezierCurveTo(15.899999999999999,26,15.399999999999999,26.2,14.999999999999998,25.9);
+  	ctx.bezierCurveTo(12.7,23.799999999999997,10.2,22.599999999999998,6.499999999999998,22.099999999999998);
+  	ctx.bezierCurveTo(6.099999999999998,21.999999999999996,5.899999999999999,21.599999999999998,6.099999999999998,21.299999999999997);
+  	ctx.bezierCurveTo(8.4,17,8.6,10.1,7.8,5);
+  	ctx.bezierCurveTo(10.5,9.2,14.899999999999999,14,19.6,15.7);
+  	ctx.bezierCurveTo(20,15.8,20.1,16.3,19.9,16.6);
+  	ctx.closePath();
+  	ctx.fill();
+  	ctx.restore();
+  };
+});
 require.register('primitives/snowflakePrimitive', function(module, exports, require) {
   var TWO_PI = Math.PI * 2  
-  	, FILL_COLOUR = '#6fc6e3';  
+  	, FILL_COLOUR = '#54BFE3';  
     
   exports.render = function(ctx, options) {  
   	// Stroke  
@@ -1124,52 +1183,52 @@ require.register('primitives/snowflakePrimitive', function(module, exports, requ
   	ctx.scale(options.scale, options.scale);  
   	ctx.fillStyle = options.bg;  
   	ctx.beginPath();  
-  	ctx.arc(10,3,9,0,TWO_PI,true);  
+  	ctx.arc(9,9,9,0,TWO_PI,true);  
   	ctx.closePath();  
   	ctx.fill();  
     
   	// Fill  
   	ctx.fillStyle = FILL_COLOUR;  
   	ctx.beginPath();  
-  	ctx.moveTo(15.95,2.844);  
-  	ctx.lineTo(13.056999999999999,5.743);  
-  	ctx.bezierCurveTo(12.676999999999998,5.5600000000000005,12.296999999999999,5.392,11.871999999999998,5.266);  
-  	ctx.bezierCurveTo(11.462999999999997,5.166,11.056999999999999,5.124,10.645999999999997,5.109);  
-  	ctx.lineTo(9.579,1.14);  
-  	ctx.bezierCurveTo(9.354,0.322,8.51,-0.171,7.692,0.055);  
-  	ctx.bezierCurveTo(6.875,0.265,6.369,1.1079999999999999,6.606,1.948);  
-  	ctx.lineTo(7.663,5.9079999999999995);  
-  	ctx.bezierCurveTo(6.953,6.353,6.356,6.955,5.91,7.668);  
-  	ctx.lineTo(1.948,6.62);  
-  	ctx.bezierCurveTo(1.126,6.395,0.271,6.888,0.062,7.694);  
-  	ctx.bezierCurveTo(-0.18,8.542,0.321,9.378,1.1520000000000001,9.603);  
-  	ctx.lineTo(5.109,10.658);  
-  	ctx.bezierCurveTo(5.137,11.503,5.355,12.341,5.744,13.081);  
-  	ctx.lineTo(2.85,15.977);  
-  	ctx.bezierCurveTo(2.245,16.568,2.257,17.544,2.864,18.153);  
-  	ctx.bezierCurveTo(3.468,18.756,4.441,18.773,5.038,18.153);  
-  	ctx.lineTo(7.931,15.248);  
-  	ctx.bezierCurveTo(8.298,15.463999999999999,8.687,15.638,9.100999999999999,15.745999999999999);  
-  	ctx.bezierCurveTo(9.531999999999998,15.841999999999999,9.931,15.892999999999999,10.338999999999999,15.892999999999999);  
-  	ctx.lineTo(11.402999999999999,19.863);  
-  	ctx.bezierCurveTo(11.621999999999998,20.681,12.480999999999998,21.168,13.299,20.948999999999998);  
-  	ctx.bezierCurveTo(14.129999999999999,20.723,14.607,19.892,14.381,19.061);  
-  	ctx.lineTo(13.325,15.1);  
-  	ctx.bezierCurveTo(14.043,14.66,14.641,14.047,15.072,13.329);  
-  	ctx.lineTo(19.054,14.398);  
-  	ctx.bezierCurveTo(19.871,14.603,20.729999999999997,14.115,20.947999999999997,13.298);  
-  	ctx.bezierCurveTo(21.166999999999998,12.468,20.680999999999997,11.623,19.850999999999996,11.408);  
-  	ctx.lineTo(15.880999999999995,10.338999999999999);  
-  	ctx.bezierCurveTo(15.851999999999995,9.493999999999998,15.640999999999995,8.675999999999998,15.245999999999995,7.929999999999999);  
-  	ctx.lineTo(18.139999999999993,5.041999999999999);  
-  	ctx.bezierCurveTo(18.743999999999993,4.433999999999999,18.743999999999993,3.446999999999999,18.152999999999995,2.843999999999999);  
-  	ctx.bezierCurveTo(17.535,2.252,16.543,2.252,15.95,2.844);  
+  	ctx.moveTo(6.2,6.9);  
+  	ctx.lineTo(7.300000000000001,10.7);  
+  	ctx.bezierCurveTo(7.000000000000001,10.899999999999999,6.700000000000001,11.2,6.4,11.5);  
+  	ctx.bezierCurveTo(6,11.7,5.8,12,5.6,12.4);  
+  	ctx.lineTo(1.7999999999999998,11.4);  
+  	ctx.bezierCurveTo(1,11.2,0.2,11.7,0,12.5);  
+  	ctx.bezierCurveTo(-0.2,13.3,0.3,14.1,1.1,14.3);  
+  	ctx.lineTo(4.9,15.3);  
+  	ctx.bezierCurveTo(4.9,16.1,5.2,16.900000000000002,5.5,17.6);  
+  	ctx.lineTo(2.8,20.400000000000002);  
+  	ctx.bezierCurveTo(2.1999999999999997,21.000000000000004,2.1999999999999997,21.900000000000002,2.8,22.500000000000004);  
+  	ctx.bezierCurveTo(3.4,23.100000000000005,4.3,23.100000000000005,4.9,22.500000000000004);  
+  	ctx.lineTo(7.6000000000000005,19.700000000000003);  
+  	ctx.bezierCurveTo(8.3,20.1,9.100000000000001,20.300000000000004,9.9,20.300000000000004);  
+  	ctx.lineTo(10.9,24.100000000000005);  
+  	ctx.bezierCurveTo(11.1,24.900000000000006,11.9,25.300000000000004,12.700000000000001,25.100000000000005);  
+  	ctx.bezierCurveTo(13.500000000000002,24.900000000000006,13.9,24.100000000000005,13.700000000000001,23.300000000000004);  
+  	ctx.lineTo(12.600000000000001,19.500000000000004);  
+  	ctx.bezierCurveTo(12.900000000000002,19.300000000000004,13.3,19.100000000000005,13.600000000000001,18.800000000000004);  
+  	ctx.bezierCurveTo(13.900000000000002,18.500000000000004,14.100000000000001,18.200000000000003,14.3,17.800000000000004);  
+  	ctx.lineTo(18.1,18.800000000000004);  
+  	ctx.bezierCurveTo(18.900000000000002,19.000000000000004,19.700000000000003,18.500000000000004,19.900000000000002,17.700000000000003);  
+  	ctx.bezierCurveTo(20.1,16.900000000000002,19.6,16.1,18.8,15.900000000000002);  
+  	ctx.lineTo(15,14.900000000000002);  
+  	ctx.bezierCurveTo(15,14.100000000000001,14.7,13.300000000000002,14.3,12.600000000000001);  
+  	ctx.lineTo(17,9.8);  
+  	ctx.bezierCurveTo(17.6,9.200000000000001,17.5,8.3,17,7.700000000000001);  
+  	ctx.bezierCurveTo(16.4,7.100000000000001,15.5,7.100000000000001,14.9,7.700000000000001);  
+  	ctx.lineTo(12.2,10.5);  
+  	ctx.bezierCurveTo(11.5,10.1,10.7,9.9,9.899999999999999,9.9);  
+  	ctx.lineTo(9,6.1);  
+  	ctx.bezierCurveTo(8.8,5.3,8,4.8999999999999995,7.2,5.1);  
+  	ctx.bezierCurveTo(6.5,5.3,6,6.1,6.2,6.9);  
   	ctx.closePath();  
-  	ctx.moveTo(13.086,11.215);  
-  	ctx.bezierCurveTo(12.719000000000001,12.651,11.227,13.511,9.790000000000001,13.114);  
-  	ctx.bezierCurveTo(8.347000000000001,12.734,7.496,11.241000000000001,7.876000000000001,9.802000000000001);  
-  	ctx.bezierCurveTo(8.256000000000002,8.350000000000001,9.734000000000002,7.505000000000001,11.183000000000002,7.887000000000001);  
-  	ctx.bezierCurveTo(12.622,8.282,13.487,9.761,13.086,11.215);  
+  	ctx.moveTo(11.8,13.2);  
+  	ctx.bezierCurveTo(12.8,14.2,12.8,15.799999999999999,11.8,16.8);  
+  	ctx.bezierCurveTo(10.8,17.8,9.200000000000001,17.8,8.200000000000001,16.8);  
+  	ctx.bezierCurveTo(7.200000000000001,15.8,7.200000000000001,14.200000000000001,8.200000000000001,13.200000000000001);  
+  	ctx.bezierCurveTo(9.2,12.2,10.8,12.2,11.8,13.2);  
   	ctx.closePath();  
   	ctx.fill();  
   	ctx.restore();  
@@ -1184,47 +1243,48 @@ require.register('primitives/fogPrimitive', function(module, exports, require) {
   	ctx.translate(options.x, options.y)  
   	ctx.scale(options.scale, options.scale);  
   	ctx.beginPath();  
-  	ctx.moveTo(87.188,40);  
-  	ctx.lineTo(2.812,40);  
-  	ctx.bezierCurveTo(1.264,40,0,41.123,0,42.5);  
-  	ctx.bezierCurveTo(0,43.877,1.264,45,2.812,45);  
-  	ctx.lineTo(87.187,45);  
-  	ctx.bezierCurveTo(88.736,45,90,43.877,90,42.5);  
-  	ctx.bezierCurveTo(90,41.123,88.736,40,87.188,40);  
+  	ctx.moveTo(82.3,42);  
+  	ctx.lineTo(2.7,42);  
+  	ctx.bezierCurveTo(1.2,42,0,42.9,0,44);  
+  	ctx.bezierCurveTo(0,45.1,1.2,46,2.7,46);  
+  	ctx.lineTo(82.4,46);  
+  	ctx.bezierCurveTo(83.9,46,85.10000000000001,45.1,85.10000000000001,44);  
+  	ctx.bezierCurveTo(85.10000000000001,42.9,83.8,42,82.3,42);  
   	ctx.closePath();  
   	ctx.fill();  
     
   	ctx.beginPath();  
-  	ctx.moveTo(82.143,50.001);  
-  	ctx.lineTo(7.857,50.001);  
-  	ctx.bezierCurveTo(6.283,50.001,5,51.123999999999995,5,52.501);  
-  	ctx.bezierCurveTo(5,53.878,6.2829999999999995,55.001,7.857,55.001);  
-  	ctx.lineTo(82.142,55.001);  
-  	ctx.bezierCurveTo(83.716,55.001,84.999,53.878,84.999,52.501);  
-  	ctx.bezierCurveTo(84.999,51.123999999999995,83.717,50.001,82.143,50.001);  
+  	ctx.moveTo(80.1,50);  
+  	ctx.lineTo(5.9,50);  
+  	ctx.bezierCurveTo(4.3,50,3,50.9,3,52);  
+  	ctx.bezierCurveTo(3,53.1,4.3,54,5.9,54);  
+  	ctx.lineTo(80.2,54);  
+  	ctx.bezierCurveTo(81.8,54,83.10000000000001,53.1,83.10000000000001,52);  
+  	ctx.bezierCurveTo(83,50.9,81.7,50,80.1,50);  
   	ctx.closePath();  
   	ctx.fill();  
     
   	ctx.beginPath();  
-  	ctx.moveTo(82.119,60);  
-  	ctx.lineTo(12.886,60);  
-  	ctx.bezierCurveTo(11.294,60,10,61.123,10,62.5);  
-  	ctx.bezierCurveTo(10,63.877,11.294,65,12.886,65);  
-  	ctx.lineTo(82.119,65);  
-  	ctx.bezierCurveTo(83.701,65,85,63.877,85,62.5);  
-  	ctx.bezierCurveTo(85,61.123,83.701,60,82.119,60);  
+  	ctx.moveTo(80.1,59);  
+  	ctx.lineTo(10.9,59);  
+  	ctx.bezierCurveTo(9.3,59,8,59.9,8,61);  
+  	ctx.bezierCurveTo(8,62.1,9.3,63,10.9,63);  
+  	ctx.lineTo(80.10000000000001,63);  
+  	ctx.bezierCurveTo(81.7,63,83.00000000000001,62.1,83.00000000000001,61);  
+  	ctx.bezierCurveTo(83.00000000000001,59.9,81.7,59,80.1,59);  
   	ctx.closePath();  
   	ctx.fill();  
     
   	ctx.beginPath();  
-  	ctx.moveTo(90,35);  
-  	ctx.bezierCurveTo(89.737,29.389,85.343,24.983,80.384,24.405);  
-  	ctx.bezierCurveTo(84.91,9.813,71.91,0.492,58.905,5.753);  
-  	ctx.bezierCurveTo(50.435,-5.3759999999999994,35.093,1.0940000000000003,33.486000000000004,12.818999999999999);  
-  	ctx.bezierCurveTo(26.297000000000004,10.350999999999999,18.668000000000006,15.014999999999999,18.668000000000006,23.360999999999997);  
-  	ctx.bezierCurveTo(11.364000000000006,20.507999999999996,5.874000000000006,26.203999999999997,5.291000000000006,30.261999999999997);  
-  	ctx.bezierCurveTo(2.426,30.699,0.722,32.645,0,35);  
-  	ctx.lineTo(90,35);  
+  	ctx.moveTo(51.2,0);  
+  	ctx.bezierCurveTo(42.1,-0.3,33.6,4.8,30.700000000000003,14.6);  
+  	ctx.bezierCurveTo(24.800000000000004,13.2,15.400000000000002,16.9,13.700000000000003,25);  
+  	ctx.bezierCurveTo(8.2,24.9,1.2,29,0.1,36);  
+  	ctx.bezierCurveTo(0,37,0.7,37.9,1.7,37.9);  
+  	ctx.lineTo(84,37.9);  
+  	ctx.bezierCurveTo(85,37.9,85.8,37.199999999999996,85.9,36.199999999999996);  
+  	ctx.bezierCurveTo(86.9,27.299999999999997,81.80000000000001,17.499999999999996,70.7,16.099999999999994);  
+  	ctx.bezierCurveTo(68.5,5.6,60.2,0.3,51.2,0);  
   	ctx.closePath();  
   	ctx.fill();  
   	ctx.restore();  
@@ -1257,13 +1317,16 @@ require.register('primitives/lightningPrimitive', function(module, exports, requ
   
 });
 require.register('WeatherSymbol', function(module, exports, require) {
-  var sun = require('./primitives/sunPrimitive')
-  	, moon = require('./primitives/moonPrimitive')
-  	, cloud = require('./primitives/cloudPrimitive')
-  	, raindrop = require('./primitives/raindropPrimitive')
-  	, snowflake = require('./primitives/snowflakePrimitive')
-  	, fog = require('./primitives/fogPrimitive')
-  	, lightning = require('./primitives/lightningPrimitive')
+  // Convert with http://www.professorcloud.com/svg-to-canvas/
+  
+  var sun = require('primitives/sunPrimitive')
+  	, moon = require('primitives/moonPrimitive')
+  	, cloud = require('primitives/cloudPrimitive')
+  	, raindrop = require('primitives/raindropPrimitive')
+  	, sleet = require('primitives/sleetPrimitive')
+  	, snowflake = require('primitives/snowflakePrimitive')
+  	, fog = require('primitives/fogPrimitive')
+  	, lightning = require('primitives/lightningPrimitive')
   
   	, DEFAULT_BG = '#ffffff'
   	, FORMULA = {
@@ -1271,20 +1334,20 @@ require.register('WeatherSymbol', function(module, exports, require) {
   			'01d': [
   				{
   					primitive: sun,
-  					x: 0,
-  					y: 0
+  					x: 6,
+  					y: 6
   				}
   			],
   			'02d': [
   				{
   					primitive: sun,
-  					x: 0,
-  					y: 0
+  					x: 6,
+  					y: 6
   				},
   				{
   					primitive: cloud,
-  					x: 5,
-  					y: 55,
+  					x: 8,
+  					y: 56,
   					scale: 0.6,
   					flip: true,
   					tint: 0.1
@@ -1293,163 +1356,173 @@ require.register('WeatherSymbol', function(module, exports, require) {
   			'03d': [
   				{
   					primitive: sun,
-  					x: 5,
-  					y: 5,
+  					x: 4,
+  					y: 7,
   					scale: 0.6
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
-  					tint: 0.15
+  					x: 7,
+  					y: 22,
+  					tint: 0.1
   				}
   			],
   			'05d': [
   				{
   					primitive: sun,
-  					x: 5,
-  					y: 5,
+  					x: 4,
+  					y: 7,
   					scale: 0.6
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 70,
-  					y: 74
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 52,
-  					y: 71
-  				}
-  			],
-  			'07d': [
-  				{
-  					primitive: sun,
-  					x: 5,
-  					y: 5,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 0,
-  					y: 25,
+  					x: 7,
+  					y: 22,
   					tint: 0.4
   				},
   				{
   					primitive: raindrop,
   					x: 61,
-  					y: 74
+  					y: 72
   				},
   				{
-  					primitive: snowflake,
-  					x: 33,
-  					y: 71
+  					primitive: raindrop,
+  					x: 45,
+  					y: 68
+  				}
+  			],
+  			'07d': [
+  				{
+  					primitive: sun,
+  					x: 4,
+  					y: 7,
+  					scale: 0.6
+  				},
+  				{
+  					primitive: cloud,
+  					x: 7,
+  					y: 22,
+  					tint: 0.4
+  				},
+  				{
+  					primitive: sleet,
+  					x: 52,
+  					y: 72
+  				},
+  				{
+  					primitive: sleet,
+  					x: 36,
+  					y: 68
   				}
   			],
   			'08d': [
   				{
   					primitive: sun,
-  					x: 5,
-  					y: 5,
+  					x: 4,
+  					y: 7,
   					scale: 0.6
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
+  					x: 7,
+  					y: 22,
   					tint: 0.4
   				},
   				{
   					primitive: snowflake,
   					x: 22,
-  					y: 74
+  					y: 71
   				},
   				{
   					primitive: snowflake,
-  					x: 43,
-  					y: 71
+  					x: 40,
+  					y: 69
   				}
   			],
   			'06d': [
   				{
   					primitive: sun,
-  					x: 5,
-  					y: 5,
+  					x: 4,
+  					y: 7,
   					scale: 0.6
   				},
   				{
   					primitive: lightning,
-  					x: 30,
+  					x: 25,
   					y: 75
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
+  					x: 7,
+  					y: 22,
   					tint: 0.4
   				},
   				{
   					primitive: raindrop,
-  					x: 63,
-  					y: 71
+  					x: 64,
+  					y: 72
+  				},
+  				{
+  					primitive: raindrop,
+  					x: 48,
+  					y: 68
   				}
   			],
   			'20d': [
   				{
   					primitive: sun,
-  					x: 5,
-  					y: 5,
+  					x: 4,
+  					y: 7,
   					scale: 0.6
   				},
   				{
   					primitive: lightning,
-  					x: 14,
+  					x: 17,
   					y: 75
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
+  					x: 7,
+  					y: 22,
   					tint: 0.4
   				},
   				{
-  					primitive: raindrop,
-  					x: 72,
-  					y: 74
+  					primitive: sleet,
+  					x: 56,
+  					y: 72
   				},
   				{
-  					primitive: snowflake,
-  					x: 44,
-  					y: 71
+  					primitive: sleet,
+  					x: 40,
+  					y: 68
   				}
   			],
   			'21d': [
   				{
   					primitive: sun,
-  					x: 5,
-  					y: 5,
+  					x: 4,
+  					y: 7,
   					scale: 0.6
   				},
   				{
   					primitive: lightning,
-  					x: 14,
+  					x: 10,
   					y: 75
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
+  					x: 7,
+  					y: 22,
   					tint: 0.4
   				},
   				{
   					primitive: snowflake,
-  					x: 44,
+  					x: 53,
+  					y: 69
+  				},
+  				{
+  					primitive: snowflake,
+  					x: 35,
   					y: 71
   				}
   			],
@@ -1458,22 +1531,22 @@ require.register('WeatherSymbol', function(module, exports, require) {
   			'01m': [
   				{
   					primitive: sun,
-  					x: 0,
-  					y: 30,
+  					x: 5,
+  					y: 32,
   					winter: true
   				}
   			],
   			'02m': [
   				{
   					primitive: sun,
-  					x: 0,
-  					y: 30,
+  					x: 5,
+  					y: 32,
   					winter: true
   				},
   				{
   					primitive: cloud,
-  					x: 5,
-  					y: 45,
+  					x: 8,
+  					y: 46,
   					scale: 0.6,
   					flip: true,
   					tint: 0.1
@@ -1482,170 +1555,180 @@ require.register('WeatherSymbol', function(module, exports, require) {
   			'03m': [
   				{
   					primitive: sun,
-  					x: 10,
-  					y: 14,
+  					x: 8,
+  					y: 20,
   					scale: 0.6,
   					winter: true
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
-  					tint: 0.15
+  					x: 7,
+  					y: 22,
+  					tint: 0.1
   				}
   			],
   			'05m': [
   				{
   					primitive: sun,
-  					x: 10,
-  					y: 14,
+  					x: 8,
+  					y: 20,
   					scale: 0.6,
   					winter: true
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 70,
-  					y: 74
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 52,
-  					y: 71
-  				}
-  			],
-  			'07m': [
-  				{
-  					primitive: sun,
-  					x: 10,
-  					y: 14,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: cloud,
-  					x: 0,
-  					y: 25,
+  					x: 7,
+  					y: 22,
   					tint: 0.4
   				},
   				{
   					primitive: raindrop,
   					x: 61,
-  					y: 74
+  					y: 72
   				},
   				{
-  					primitive: snowflake,
-  					x: 33,
-  					y: 71
+  					primitive: raindrop,
+  					x: 45,
+  					y: 68
+  				}
+  			],
+  			'07m': [
+  				{
+  					primitive: sun,
+  					x: 8,
+  					y: 20,
+  					scale: 0.6,
+  					winter: true
+  				},
+  				{
+  					primitive: cloud,
+  					x: 7,
+  					y: 22,
+  					tint: 0.4
+  				},
+  				{
+  					primitive: sleet,
+  					x: 52,
+  					y: 72
+  				},
+  				{
+  					primitive: sleet,
+  					x: 36,
+  					y: 68
   				}
   			],
   			'08m': [
   				{
   					primitive: sun,
-  					x: 10,
-  					y: 14,
+  					x: 8,
+  					y: 20,
   					scale: 0.6,
   					winter: true
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
+  					x: 7,
+  					y: 22,
   					tint: 0.4
   				},
   				{
   					primitive: snowflake,
   					x: 22,
-  					y: 74
+  					y: 71
   				},
   				{
   					primitive: snowflake,
-  					x: 43,
-  					y: 71
+  					x: 40,
+  					y: 69
   				}
   			],
   			'06m': [
   				{
   					primitive: sun,
-  					x: 10,
-  					y: 14,
+  					x: 8,
+  					y: 20,
   					scale: 0.6,
   					winter: true
   				},
   				{
   					primitive: lightning,
-  					x: 30,
+  					x: 25,
   					y: 75
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
+  					x: 7,
+  					y: 22,
   					tint: 0.4
   				},
   				{
   					primitive: raindrop,
-  					x: 63,
-  					y: 71
+  					x: 64,
+  					y: 72
+  				},
+  				{
+  					primitive: raindrop,
+  					x: 48,
+  					y: 68
   				}
   			],
   			'20m': [
   				{
   					primitive: sun,
-  					x: 10,
-  					y: 14,
+  					x: 8,
+  					y: 20,
   					scale: 0.6,
   					winter: true
   				},
   				{
   					primitive: lightning,
-  					x: 14,
+  					x: 17,
   					y: 75
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
+  					x: 7,
+  					y: 22,
   					tint: 0.4
   				},
   				{
-  					primitive: raindrop,
-  					x: 72,
-  					y: 74
+  					primitive: sleet,
+  					x: 56,
+  					y: 72
   				},
   				{
-  					primitive: snowflake,
-  					x: 44,
-  					y: 71
+  					primitive: sleet,
+  					x: 40,
+  					y: 68
   				}
   			],
   			'21m': [
   				{
   					primitive: sun,
-  					x: 10,
-  					y: 14,
+  					x: 8,
+  					y: 20,
   					scale: 0.6,
   					winter: true
   				},
   				{
   					primitive: lightning,
-  					x: 14,
+  					x: 10,
   					y: 75
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
+  					x: 7,
+  					y: 22,
   					tint: 0.4
   				},
   				{
   					primitive: snowflake,
-  					x: 44,
+  					x: 53,
+  					y: 69
+  				},
+  				{
+  					primitive: snowflake,
+  					x: 35,
   					y: 71
   				}
   			],
@@ -1666,8 +1749,8 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: cloud,
-  					x: 5,
-  					y: 55,
+  					x: 8,
+  					y: 56,
   					scale: 0.6,
   					flip: true,
   					tint: 0.1
@@ -1676,345 +1759,95 @@ require.register('WeatherSymbol', function(module, exports, require) {
   			'03n': [
   				{
   					primitive: moon,
-  					x: 15,
-  					y: 12,
+  					x: 18,
+  					y: 13,
   					scale: 0.6
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
-  					tint: 0.15
+  					x: 7,
+  					y: 22,
+  					tint: 0.1
   				}
   			],
   			'05n': [
   				{
   					primitive: moon,
-  					x: 15,
-  					y: 12,
+  					x: 18,
+  					y: 13,
   					scale: 0.6
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 70,
-  					y: 74
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 52,
-  					y: 71
-  				}
-  			],
-  			'07n': [
-  				{
-  					primitive: moon,
-  					x: 15,
-  					y: 12,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 0,
-  					y: 25,
+  					x: 7,
+  					y: 22,
   					tint: 0.4
   				},
   				{
   					primitive: raindrop,
   					x: 61,
-  					y: 74
+  					y: 72
   				},
   				{
-  					primitive: snowflake,
-  					x: 33,
-  					y: 71
+  					primitive: raindrop,
+  					x: 45,
+  					y: 68
+  				}
+  			],
+  			'07n': [
+  				{
+  					primitive: moon,
+  					x: 18,
+  					y: 13,
+  					scale: 0.6
+  				},
+  				{
+  					primitive: cloud,
+  					x: 7,
+  					y: 22,
+  					tint: 0.4
+  				},
+  				{
+  					primitive: sleet,
+  					x: 52,
+  					y: 72
+  				},
+  				{
+  					primitive: sleet,
+  					x: 36,
+  					y: 68
   				}
   			],
   			'08n': [
   				{
   					primitive: moon,
-  					x: 15,
-  					y: 12,
+  					x: 18,
+  					y: 13,
   					scale: 0.6
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
+  					x: 7,
+  					y: 22,
   					tint: 0.4
   				},
   				{
   					primitive: snowflake,
   					x: 22,
-  					y: 74
+  					y: 71
   				},
   				{
   					primitive: snowflake,
-  					x: 43,
-  					y: 71
+  					x: 40,
+  					y: 69
   				}
   			],
   			'06n': [
   				{
   					primitive: moon,
-  					x: 15,
-  					y: 12,
+  					x: 18,
+  					y: 13,
   					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 30,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 0,
-  					y: 25,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 63,
-  					y: 71
-  				}
-  			],
-  			'20n': [
-  				{
-  					primitive: moon,
-  					x: 15,
-  					y: 12,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 14,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 0,
-  					y: 25,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 72,
-  					y: 74
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 44,
-  					y: 71
-  				}
-  			],
-  			'21n': [
-  				{
-  					primitive: moon,
-  					x: 15,
-  					y: 12,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 14,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 0,
-  					y: 25,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 44,
-  					y: 71
-  				}
-  			],
-  
-  			// Cloud
-  			'15': [
-  				{
-  					primitive: fog,
-  					x: 5,
-  					y: 15,
-  					tint: 0.15
-  				}
-  			],
-  			'04': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 9,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.1
-  				},
-  				{
-  					primitive: cloud,
-  					x: 0,
-  					y: 25,
-  					tint: 0.15
-  				}
-  			],
-  			'09': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 9,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: cloud,
-  					x: 0,
-  					y: 25,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 70,
-  					y: 74
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 52,
-  					y: 71
-  				}
-  			],
-  			'10': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 9,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: cloud,
-  					x: 0,
-  					y: 25,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 77,
-  					y: 73
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 58,
-  					y: 73
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 39,
-  					y: 71
-  				}
-  			],
-  			'12': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 9,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: cloud,
-  					x: 0,
-  					y: 25,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 69,
-  					y: 74
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 20,
-  					y: 74
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 41,
-  					y: 71
-  				}
-  			],
-  			'13': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 9,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: cloud,
-  					x: 0,
-  					y: 25,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 54,
-  					y: 71
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 12,
-  					y: 73
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 33,
-  					y: 74
-  				}
-  			],
-  			'22': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 9,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: lightning,
-  					x: 30,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 0,
-  					y: 25,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 63,
-  					y: 71
-  				}
-  			],
-  			'11': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 9,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.4
   				},
   				{
   					primitive: lightning,
@@ -2023,75 +1856,340 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
+  					x: 7,
+  					y: 22,
+  					tint: 0.4
+  				},
+  				{
+  					primitive: raindrop,
+  					x: 64,
+  					y: 72
+  				},
+  				{
+  					primitive: raindrop,
+  					x: 48,
+  					y: 68
+  				}
+  			],
+  			'20n': [
+  				{
+  					primitive: moon,
+  					x: 18,
+  					y: 13,
+  					scale: 0.6
+  				},
+  				{
+  					primitive: lightning,
+  					x: 17,
+  					y: 75
+  				},
+  				{
+  					primitive: cloud,
+  					x: 7,
+  					y: 22,
+  					tint: 0.4
+  				},
+  				{
+  					primitive: sleet,
+  					x: 56,
+  					y: 72
+  				},
+  				{
+  					primitive: sleet,
+  					x: 40,
+  					y: 68
+  				}
+  			],
+  			'21n': [
+  				{
+  					primitive: moon,
+  					x: 18,
+  					y: 13,
+  					scale: 0.6
+  				},
+  				{
+  					primitive: lightning,
+  					x: 10,
+  					y: 75
+  				},
+  				{
+  					primitive: cloud,
+  					x: 7,
+  					y: 22,
+  					tint: 0.4
+  				},
+  				{
+  					primitive: snowflake,
+  					x: 53,
+  					y: 69
+  				},
+  				{
+  					primitive: snowflake,
+  					x: 35,
+  					y: 71
+  				}
+  			],
+  
+  			// Cloud
+  			'15': [
+  				{
+  					primitive: fog,
+  					x: 4,
+  					y: 18,
+  					tint: 0.15
+  				}
+  			],
+  			'04': [
+  				{
+  					primitive: cloud,
+  					x: 5,
+  					y: 10,
+  					scale: 0.8,
+  					flip: true,
+  					tint: 0.1
+  				},
+  				{
+  					primitive: cloud,
+  					x: 7,
+  					y: 22,
+  					tint: 0.15
+  				}
+  			],
+  			'09': [
+  				{
+  					primitive: cloud,
+  					x: 5,
+  					y: 10,
+  					scale: 0.8,
+  					flip: true,
+  					tint: 0.3
+  				},
+  				{
+  					primitive: cloud,
+  					x: 7,
+  					y: 22,
+  					tint: 0.4
+  				},
+  				{
+  					primitive: raindrop,
+  					x: 61,
+  					y: 72
+  				},
+  				{
+  					primitive: raindrop,
+  					x: 45,
+  					y: 68
+  				}
+  			],
+  			'10': [
+  				{
+  					primitive: cloud,
+  					x: 5,
+  					y: 10,
+  					scale: 0.8,
+  					flip: true,
+  					tint: 0.4
+  				},
+  				{
+  					primitive: cloud,
+  					x: 7,
+  					y: 22,
   					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 76,
-  					y: 74
+  					x: 71,
+  					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 58,
+  					x: 55,
+  					y: 72
+  				},
+  				{
+  					primitive: raindrop,
+  					x: 39,
+  					y: 68
+  				}
+  			],
+  			'12': [
+  				{
+  					primitive: cloud,
+  					x: 5,
+  					y: 10,
+  					scale: 0.8,
+  					flip: true,
+  					tint: 0.3
+  				},
+  				{
+  					primitive: cloud,
+  					x: 7,
+  					y: 22,
+  					tint: 0.4
+  				},
+  				{
+  					primitive: sleet,
+  					x: 52,
+  					y: 72
+  				},
+  				{
+  					primitive: sleet,
+  					x: 36,
+  					y: 68
+  				}
+  			],
+  			'13': [
+  				{
+  					primitive: cloud,
+  					x: 5,
+  					y: 10,
+  					scale: 0.8,
+  					flip: true,
+  					tint: 0.3
+  				},
+  				{
+  					primitive: cloud,
+  					x: 7,
+  					y: 22,
+  					tint: 0.4
+  				},
+  				{
+  					primitive: snowflake,
+  					x: 40,
+  					y: 69
+  				},
+  				{
+  					primitive: snowflake,
+  					x: 22,
   					y: 71
+  				}
+  			],
+  			'22': [
+  				{
+  					primitive: cloud,
+  					x: 5,
+  					y: 10,
+  					scale: 0.8,
+  					flip: true,
+  					tint: 0.3
+  				},
+  				{
+  					primitive: lightning,
+  					x: 25,
+  					y: 75
+  				},
+  				{
+  					primitive: cloud,
+  					x: 7,
+  					y: 22,
+  					tint: 0.4
+  				},
+  				{
+  					primitive: raindrop,
+  					x: 64,
+  					y: 72
+  				},
+  				{
+  					primitive: raindrop,
+  					x: 48,
+  					y: 68
+  				}
+  			],
+  			'11': [
+  				{
+  					primitive: cloud,
+  					x: 5,
+  					y: 10,
+  					scale: 0.8,
+  					flip: true,
+  					tint: 0.4
+  				},
+  				{
+  					primitive: lightning,
+  					x: 18,
+  					y: 75
+  				},
+  				{
+  					primitive: cloud,
+  					x: 7,
+  					y: 22,
+  					tint: 0.5
+  				},
+  				{
+  					primitive: raindrop,
+  					x: 73,
+  					y: 72
+  				},
+  				{
+  					primitive: raindrop,
+  					x: 57,
+  					y: 72
+  				},
+  				{
+  					primitive: raindrop,
+  					x: 41,
+  					y: 68
   				}
   			],
   			'23': [
   				{
   					primitive: cloud,
   					x: 5,
-  					y: 9,
+  					y: 10,
   					scale: 0.8,
   					flip: true,
   					tint: 0.3
   				},
   				{
   					primitive: lightning,
-  					x: 14,
+  					x: 17,
   					y: 75
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
+  					x: 7,
+  					y: 22,
   					tint: 0.4
   				},
   				{
-  					primitive: raindrop,
-  					x: 72,
-  					y: 74
+  					primitive: sleet,
+  					x: 56,
+  					y: 72
   				},
   				{
-  					primitive: snowflake,
-  					x: 44,
-  					y: 71
+  					primitive: sleet,
+  					x: 40,
+  					y: 68
   				}
   			],
   			'14': [
   				{
   					primitive: cloud,
   					x: 5,
-  					y: 9,
+  					y: 10,
   					scale: 0.8,
   					flip: true,
   					tint: 0.3
   				},
   				{
   					primitive: lightning,
-  					x: 14,
+  					x: 10,
   					y: 75
   				},
   				{
   					primitive: cloud,
-  					x: 0,
-  					y: 25,
+  					x: 7,
+  					y: 22,
   					tint: 0.4
   				},
   				{
   					primitive: snowflake,
-  					x: 44,
+  					x: 53,
+  					y: 69
+  				},
+  				{
+  					primitive: snowflake,
+  					x: 35,
   					y: 71
   				}
   			]
@@ -2134,8 +2232,10 @@ require.register('WeatherSymbol', function(module, exports, require) {
   		, h = canvas.offsetHeight
   		, scale = (w/100) * this.scale
   		, layer, options;
-  	canvas.width = w * this.scale;
-  	canvas.height = h * this.scale;
+  	if (w != 0) {
+  		canvas.width = w * this.scale;
+  		canvas.height = h * this.scale;
+  	}
   
   	if (formula) {
   		for (var i = 0, n = formula.length; i < n; i++) {
@@ -2166,9 +2266,9 @@ require.register('WeatherSymbol', function(module, exports, require) {
 });
 require.register('main', function(module, exports, require) {
   var dust = require('dust')
-  	, data = {"symbols":[{"title":"clear","variations":[{"id":"01d"},{"id":"01m"},{"id":"01n"}]},{"title":"fair","variations":[{"id":"02d"},{"id":"02m"},{"id":"02n"}]},{"title":"partly cloudy","variations":[{"id":"03d"},{"id":"03m"},{"id":"03n"}]},{"title":"cloudy","variations":[{"id":"04"}]},{"title":"rain showers","variations":[{"id":"05d"},{"id":"05m"},{"id":"05n"}]},{"title":"sleet showers","variations":[{"id":"07d"},{"id":"07m"},{"id":"07n"}]},{"title":"snow showers","variations":[{"id":"08d"},{"id":"08m"},{"id":"08n"}]},{"title":"rain","variations":[{"id":"09"}]},{"title":"heavy rain","variations":[{"id":"10"}]},{"title":"sleet","variations":[{"id":"12"}]},{"title":"snow","variations":[{"id":"13"}]},{"title":"fog","variations":[{"id":"15"}]},{"title":"rain showers with thunder","variations":[{"id":"06d"},{"id":"06m"},{"id":"06n"}]},{"title":"sleet showers with thunder","variations":[{"id":"20d"},{"id":"20m"},{"id":"20n"}]},{"title":"snow showers with thunder","variations":[{"id":"21d"},{"id":"21m"},{"id":"21n"}]},{"title":"rain with thunder","variations":[{"id":"22"}]},{"title":"heavy rain with thunder","variations":[{"id":"11"}]},{"title":"sleet with thunder","variations":[{"id":"23"}]},{"title":"snow with thunder","variations":[{"id":"14"}]}]}
-  	, template = require('./symbolGroup')
-  	, WeatherSymbol = require('./WeatherSymbol')
+  	, data = {"symbols":[{"title":"clear","variations":[{"id":"01d"},{"id":"01m"},{"id":"01n"}]},{"title":"fair","variations":[{"id":"02d"},{"id":"02m"},{"id":"02n"}]},{"title":"partly cloudy","variations":[{"id":"03d"},{"id":"03m"},{"id":"03n"}]},{"title":"cloudy","variations":[{"id":"04"}]},{"title":"light rain showers","variations":[{"id":"40d"},{"id":"40m"},{"id":"40n"}]},{"title":"rain showers","variations":[{"id":"05d"},{"id":"05m"},{"id":"05n"}]},{"title":"heavy rain showers","variations":[{"id":"41d"},{"id":"41m"},{"id":"41n"}]},{"title":"light sleet showers","variations":[{"id":"42d"},{"id":"42m"},{"id":"42n"}]},{"title":"sleet showers","variations":[{"id":"07d"},{"id":"07m"},{"id":"07n"}]},{"title":"heavy sleet showers","variations":[{"id":"43d"},{"id":"43m"},{"id":"43n"}]},{"title":"light snow showers","variations":[{"id":"44d"},{"id":"44m"},{"id":"44n"}]},{"title":"snow showers","variations":[{"id":"08d"},{"id":"08m"},{"id":"08n"}]},{"title":"heavy snow showers","variations":[{"id":"45d"},{"id":"45m"},{"id":"45n"}]},{"title":"light rain","variations":[{"id":"46"}]},{"title":"rain","variations":[{"id":"09"}]},{"title":"heavy rain","variations":[{"id":"10"}]},{"title":"light sleet","variations":[{"id":"47"}]},{"title":"sleet","variations":[{"id":"12"}]},{"title":"heavy sleet","variations":[{"id":"48"}]},{"title":"light snow","variations":[{"id":"49"}]},{"title":"snow","variations":[{"id":"13"}]},{"title":"heavy snow","variations":[{"id":"50"}]},{"title":"fog","variations":[{"id":"15"}]},{"title":"light rain showers with thunder","variations":[{"id":"24d"},{"id":"24m"},{"id":"24n"}]},{"title":"rain showers with thunder","variations":[{"id":"06d"},{"id":"06m"},{"id":"06n"}]},{"title":"heavy rain showers with thunder","variations":[{"id":"25d"},{"id":"25m"},{"id":"25n"}]},{"title":"light sleet showers with thunder","variations":[{"id":"26d"},{"id":"26m"},{"id":"26n"}]},{"title":"sleet showers with thunder","variations":[{"id":"20d"},{"id":"20m"},{"id":"20n"}]},{"title":"heavy sleet showers with thunder","variations":[{"id":"27d"},{"id":"27m"},{"id":"27n"}]},{"title":"light snow showers with thunder","variations":[{"id":"28d"},{"id":"28m"},{"id":"28n"}]},{"title":"snow showers with thunder","variations":[{"id":"21d"},{"id":"21m"},{"id":"21n"}]},{"title":"heavy snow showers with thunder","variations":[{"id":"29d"},{"id":"29m"},{"id":"29n"}]},{"title":"light rain with thunder","variations":[{"id":"30"}]},{"title":"rain with thunder","variations":[{"id":"22"}]},{"title":"heavy rain with thunder","variations":[{"id":"11"}]},{"title":"light sleet with thunder","variations":[{"id":"32"}]},{"title":"sleet with thunder","variations":[{"id":"23"}]},{"title":"heavy sleet with thunder","variations":[{"id":"32"}]},{"title":"light snow with thunder","variations":[{"id":"33"}]},{"title":"snow with thunder","variations":[{"id":"14"}]},{"title":"heavy snow with thunder","variations":[{"id":"34"}]}]}
+  	, template = require('symbolGroup')
+  	, WeatherSymbol = require('WeatherSymbol')
   	, symbol = new WeatherSymbol(1)
   	, el = document.getElementById('symbols');
   

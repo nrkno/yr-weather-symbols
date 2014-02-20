@@ -51,6 +51,20 @@
 			]
 		},
 		{
+			"title": "light rain showers",
+			"variations": [
+				{
+					"id": "40d"
+				},
+				{
+					"id": "40m"
+				},
+				{
+					"id": "40n"
+				}
+			]
+		},
+		{
 			"title": "rain showers",
 			"variations": [
 				{
@@ -61,6 +75,34 @@
 				},
 				{
 					"id": "05n"
+				}
+			]
+		},
+		{
+			"title": "heavy rain showers",
+			"variations": [
+				{
+					"id": "41d"
+				},
+				{
+					"id": "41m"
+				},
+				{
+					"id": "41n"
+				}
+			]
+		},
+		{
+			"title": "light sleet showers",
+			"variations": [
+				{
+					"id": "42d"
+				},
+				{
+					"id": "42m"
+				},
+				{
+					"id": "42n"
 				}
 			]
 		},
@@ -79,6 +121,34 @@
 			]
 		},
 		{
+			"title": "heavy sleet showers",
+			"variations": [
+				{
+					"id": "43d"
+				},
+				{
+					"id": "43m"
+				},
+				{
+					"id": "43n"
+				}
+			]
+		},
+		{
+			"title": "light snow showers",
+			"variations": [
+				{
+					"id": "44d"
+				},
+				{
+					"id": "44m"
+				},
+				{
+					"id": "44n"
+				}
+			]
+		},
+		{
 			"title": "snow showers",
 			"variations": [
 				{
@@ -89,6 +159,28 @@
 				},
 				{
 					"id": "08n"
+				}
+			]
+		},
+		{
+			"title": "heavy snow showers",
+			"variations": [
+				{
+					"id": "45d"
+				},
+				{
+					"id": "45m"
+				},
+				{
+					"id": "45n"
+				}
+			]
+		},
+		{
+			"title": "light rain",
+			"variations": [
+				{
+					"id": "46"
 				}
 			]
 		},
@@ -109,10 +201,34 @@
 			]
 		},
 		{
+			"title": "light sleet",
+			"variations": [
+				{
+					"id": "47"
+				}
+			]
+		},
+		{
 			"title": "sleet",
 			"variations": [
 				{
 					"id": "12"
+				}
+			]
+		},
+		{
+			"title": "heavy sleet",
+			"variations": [
+				{
+					"id": "48"
+				}
+			]
+		},
+		{
+			"title": "light snow",
+			"variations": [
+				{
+					"id": "49"
 				}
 			]
 		},
@@ -125,10 +241,32 @@
 			]
 		},
 		{
+			"title": "heavy snow",
+			"variations": [
+				{
+					"id": "50"
+				}
+			]
+		},
+		{
 			"title": "fog",
 			"variations": [
 				{
 					"id": "15"
+				}
+			]
+		},
+		{
+			"title": "light rain showers with thunder",
+			"variations": [
+				{
+					"id": "24d"
+				},
+				{
+					"id": "24m"
+				},
+				{
+					"id": "24n"
 				}
 			]
 		},
@@ -147,6 +285,34 @@
 			]
 		},
 		{
+			"title": "heavy rain showers with thunder",
+			"variations": [
+				{
+					"id": "25d"
+				},
+				{
+					"id": "25m"
+				},
+				{
+					"id": "25n"
+				}
+			]
+		},
+		{
+			"title": "light sleet showers with thunder",
+			"variations": [
+				{
+					"id": "26d"
+				},
+				{
+					"id": "26m"
+				},
+				{
+					"id": "26n"
+				}
+			]
+		},
+		{
 			"title": "sleet showers with thunder",
 			"variations": [
 				{
@@ -161,6 +327,34 @@
 			]
 		},
 		{
+			"title": "heavy sleet showers with thunder",
+			"variations": [
+				{
+					"id": "27d"
+				},
+				{
+					"id": "27m"
+				},
+				{
+					"id": "27n"
+				}
+			]
+		},
+		{
+			"title": "light snow showers with thunder",
+			"variations": [
+				{
+					"id": "28d"
+				},
+				{
+					"id": "28m"
+				},
+				{
+					"id": "28n"
+				}
+			]
+		},
+		{
 			"title": "snow showers with thunder",
 			"variations": [
 				{
@@ -171,6 +365,28 @@
 				},
 				{
 					"id": "21n"
+				}
+			]
+		},
+		{
+			"title": "heavy snow showers with thunder",
+			"variations": [
+				{
+					"id": "29d"
+				},
+				{
+					"id": "29m"
+				},
+				{
+					"id": "29n"
+				}
+			]
+		},
+		{
+			"title": "light rain with thunder",
+			"variations": [
+				{
+					"id": "30"
 				}
 			]
 		},
@@ -191,6 +407,14 @@
 			]
 		},
 		{
+			"title": "light sleet with thunder",
+			"variations": [
+				{
+					"id": "32"
+				}
+			]
+		},
+		{
 			"title": "sleet with thunder",
 			"variations": [
 				{
@@ -199,10 +423,34 @@
 			]
 		},
 		{
+			"title": "heavy sleet with thunder",
+			"variations": [
+				{
+					"id": "32"
+				}
+			]
+		},
+		{
+			"title": "light snow with thunder",
+			"variations": [
+				{
+					"id": "33"
+				}
+			]
+		},
+		{
 			"title": "snow with thunder",
 			"variations": [
 				{
 					"id": "14"
+				}
+			]
+		},
+		{
+			"title": "heavy snow with thunder",
+			"variations": [
+				{
+					"id": "34"
 				}
 			]
 		}

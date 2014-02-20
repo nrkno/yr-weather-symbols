@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1 Basic//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-basic.dtd">
+<svg version="1.1" baseProfile="basic" id="symbol" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	 x="0px" y="0px" viewBox="0 0 100 100" xml:space="preserve">
+<symbol  id="cloud3" viewBox="-2 -56 94 58">
+	<path style="fill:#B3B3B3;stroke:#FFFFFF;stroke-width:4;stroke-miterlimit:10;" d="M53.6,0C44,0.3,35.1-5,32.1-15.3
+		c-6.1,1.5-16-2.4-17.8-10.9C8.1-26,0-31.1,0-39.6C0-49,7-54,19.5-54h43.6c5.6,0,12.9,0.5,17.3,2.6c14.9,7.2,12.3,32.3-6.4,34.6
+		C71.7-5.9,63.1-0.3,53.6,0z"/>
+</symbol>
+<symbol  id="lightning" viewBox="0 -25 25 25">
+	<path style="fill:#C9AF16;" d="M10.4,0L4.2-12.2h8.3L0-25L25-8.1h-8.3L25,0H10.4z"/>
+</symbol>
+<symbol  id="sleet" viewBox="0 -26 20 26">
+	<path style="fill:#FFFFFF;" d="M18-9c0-5-4-9-9-9c-5,0-9,4-9,9c0,5,4,9,9,9C14,0,18-4,18-9z"/>
+	<path style="fill:#1EB9D8;" d="M19.9-16.6c-1.8-2.3-3.4-5.5-3.9-8.9c-0.1-0.5-0.6-0.7-1-0.4c-2.3,2.1-4.8,3.3-8.5,3.8
+		c-0.4,0.1-0.6,0.5-0.4,0.8C8.4-17,8.6-10.1,7.8-5c2.7-4.2,7.1-9,11.8-10.7C20-15.8,20.1-16.3,19.9-16.6z"/>
+</symbol>
+<symbol  id="sun-winter" viewBox="0 -53 90 89">
+	<g>
+		<defs>
+			<polygon id="SVGID_1_" points="90,-53 0,-53 0,-8 90,-8 			"/>
+		</defs>
+		<clipPath id="SVGID_2_">
+			<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+		</clipPath>
+		<path style="clip-path:url(#SVGID_2_);fill:#E88D15;" d="M64.4-16.1L87.6-10c2,0.5,2,3.3,0,3.9L64.4-0.1l12.2,20.8
+			c1,1.8-1,3.8-2.7,2.7L53.1,11.2L47,34.5c-0.5,2-3.3,2-3.9,0l-6.1-23.3L16.3,23.4c-1.8,1-3.8-1-2.7-2.7L25.8-0.1L2.5-6.1
+			c-2-0.5-2-3.3,0-3.9l23.3-6.1L13.6-36.8c-1-1.8,1-3.8,2.7-2.7l20.8,12.2l6.1-23.3c0.5-2,3.3-2,3.9,0l6.1,23.3l20.8-12.2
+			c1.8-1,3.8,1,2.7,2.7L64.4-16.1z"/>
+		<path style="clip-path:url(#SVGID_2_);fill:#FABA2F;stroke:#FFFFFF;stroke-width:4;stroke-miterlimit:10;" d="M67.6-8.1
+			c0-12.4-10.1-22.5-22.5-22.5c-12.4,0-22.5,10.1-22.5,22.5c0,12.4,10.1,22.5,22.5,22.5C57.5,14.4,67.6,4.4,67.6-8.1z"/>
+	</g>
+	<path style="fill:#4D4D4D;" d="M2.5,0h85.1C88.9,0,90-0.9,90-2v0c0-1.1-1.1-2-2.5-2H2.5C1.1-4,0-3.1,0-2v0C0-0.9,1.1,0,2.5,0z"/>
+</symbol>
+<use xlink:href="#sun-winter"  width="90" height="89" y="-53" transform="matrix(0.6 0 0 -0.6 8 19)" style="overflow:visible;"/>
+<use xlink:href="#lightning"  width="25" height="25" y="-25" transform="matrix(1 0 0 -1 23 75)" style="overflow:visible;"/>
+<use xlink:href="#cloud3"  width="94" height="58" x="-2" y="-56" transform="matrix(1 0 0 -1 8 23)" style="overflow:visible;"/>
+<use xlink:href="#sleet"  width="20" height="26" id="XMLID_7_" y="-26" transform="matrix(1 0 0 -1 46 68)" style="overflow:visible;"/>
+</svg>

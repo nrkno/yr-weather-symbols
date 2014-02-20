@@ -1,38 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
-	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
-	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
-	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
-	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
-	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
-	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
-	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
-	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
-]>
-<svg version="1.1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
-	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
-<metadata>
-	<sfw  xmlns="&ns_sfw;">
-		<slices></slices>
-		<sliceSourceBounds  x="0" y="-430" bottomLeftOrigin="true" width="1642.504" height="430"></sliceSourceBounds>
-	</sfw>
-</metadata>
-<g id="overcast">
-	<path id="cloud_51_" fill="#E6E6E6" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10" d="M77.498,49
-		C81.514,49,85,45.488,85,41.84c0-3.689-1.785-6.75-5.551-8.152c-1.299-4.338-5.25-7.338-10.299-7.488
-		c-1.1-5.549-8.15-8.861-13.1-7.461c-2.182-7.75-15-14.102-23.451-5.9c-12.35-3.4-21.018,4.296-19.686,15.994
-		C8.032,30.233,5,34.521,5,39.537C5,44.573,9.516,49,14.558,49H77.498z"/>
-	<path id="cloud_50_" fill="#D9D9D9" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M9.377,75
-		C4.357,75,0,70.609,0,66.051c0-4.613,2.231-8.439,6.938-10.191c1.625-5.422,6.562-9.172,12.875-9.359
-		C21.188,39.562,30,35.422,36.188,37.172c2.727-9.688,18.748-17.625,29.312-7.375c15.438-4.25,26.272,5.37,24.607,19.992
-		C96.21,51.542,100,56.901,100,63.172C100,69.466,94.355,75,88.054,75H9.377z"/>
-</g>
-<g id="night">
-</g>
-<g id="winter_day">
-</g>
-<g id="day_15_">
-</g>
+<!-- Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1 Basic//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-basic.dtd">
+<svg version="1.1" baseProfile="basic" id="symbol" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	 x="0px" y="0px" viewBox="0 0 100 100" xml:space="preserve">
+<symbol  id="cloud1" viewBox="-2 -56 94 58">
+	<path style="fill:#E6E6E6;stroke:#FFFFFF;stroke-width:4;stroke-miterlimit:10;" d="M53.6,0C44,0.3,35.1-5,32.1-15.3
+		c-6.1,1.5-16-2.4-17.8-10.9C8.1-26,0-31.1,0-39.6C0-49,7-54,19.5-54h43.6c5.6,0,12.9,0.5,17.3,2.6c14.9,7.2,12.3,32.3-6.4,34.6
+		C71.7-5.9,63.1-0.3,53.6,0z"/>
+</symbol>
+<symbol  id="cloud2" viewBox="-2 -56 94 58">
+	<path style="fill:#D9D9D9;stroke:#FFFFFF;stroke-width:4;stroke-miterlimit:10;" d="M53.6,0C44,0.3,35.1-5,32.1-15.3
+		c-6.1,1.5-16-2.4-17.8-10.9C8.1-26,0-31.1,0-39.6C0-49,7-54,19.5-54h43.6c5.6,0,12.9,0.5,17.3,2.6c14.9,7.2,12.3,32.3-6.4,34.6
+		C71.7-5.9,63.1-0.3,53.6,0z"/>
+</symbol>
+<use xlink:href="#cloud1"  width="94" height="58" id="XMLID_8_" x="-2" y="-56" transform="matrix(-0.8 0 0 -0.8 80 10)" style="overflow:visible;"/>
+<use xlink:href="#cloud2"  width="94" height="58" id="XMLID_18_" x="-2" y="-56" transform="matrix(1 0 0 -1 8 23)" style="overflow:visible;"/>
 </svg>
