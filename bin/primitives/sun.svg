@@ -1,26 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
-	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
-	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
-	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
-	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
-	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
-	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
-	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
-	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
-]>
-<svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
-	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
-<metadata>
-	<sfw  xmlns="&ns_sfw;">
-		<slices></slices>
-		<sliceSourceBounds  y="-185" x="-2.5" bottomLeftOrigin="true" height="225" width="782.5"></sliceSourceBounds>
-	</sfw>
-</metadata>
-<polygon points="69.284,57.986 100,50 69.284,42.014 85.358,14.645 57.986,30.719 50,0 42.013,30.719 14.645,14.645 30.718,42.014 
-	0,50 30.718,57.986 14.645,85.358 42.013,69.284 50,100 57.986,69.284 85.358,85.358 "/>
-<path stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M72.5,50c0,12.427-10.073,22.5-22.5,22.5
-	c-12.423,0-22.5-10.073-22.5-22.5c0-12.423,10.077-22.5,22.5-22.5C62.427,27.5,72.5,37.577,72.5,50z"/>
+<!-- Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1 Basic//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-basic.dtd">
+<svg version="1.1" baseProfile="basic" id="Layer_1"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100"
+	 xml:space="preserve">
+<path d="M64.3,53l23.3-6.1c2-0.5,2-3.3,0-3.9L64.3,37l12.2-20.8c1-1.8-1-3.8-2.7-2.7L53,25.7L46.9,2.4c-0.5-2-3.3-2-3.9,0L37,25.7
+	L16.3,13.5c-1.8-1-3.8,1-2.7,2.7L25.7,37L2.4,43.1c-2,0.5-2,3.3,0,3.9L25.7,53L13.5,73.7c-1,1.8,1,3.8,2.7,2.7L37,64.3l6.1,23.3
+	c0.5,2,3.3,2,3.9,0L53,64.3l20.8,12.2c1.8,1,3.8-1,2.7-2.7L64.3,53z"/>
+<path style="stroke:#FFFFFF;stroke-width:4;stroke-miterlimit:10;" d="M67.5,45c0,12.4-10.1,22.5-22.5,22.5
+	c-12.4,0-22.5-10.1-22.5-22.5c0-12.4,10.1-22.5,22.5-22.5C57.4,22.5,67.5,32.6,67.5,45z"/>
 </svg>

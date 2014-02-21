@@ -1,7 +1,10 @@
+// Convert with http://www.professorcloud.com/svg-to-canvas/
+
 var sun = require('./primitives/sunPrimitive')
 	, moon = require('./primitives/moonPrimitive')
 	, cloud = require('./primitives/cloudPrimitive')
 	, raindrop = require('./primitives/raindropPrimitive')
+	, sleet = require('./primitives/sleetPrimitive')
 	, snowflake = require('./primitives/snowflakePrimitive')
 	, fog = require('./primitives/fogPrimitive')
 	, lightning = require('./primitives/lightningPrimitive')
@@ -12,20 +15,20 @@ var sun = require('./primitives/sunPrimitive')
 			'01d': [
 				{
 					primitive: sun,
-					x: 0,
-					y: 0
+					x: 6,
+					y: 6
 				}
 			],
 			'02d': [
 				{
 					primitive: sun,
-					x: 0,
-					y: 0
+					x: 6,
+					y: 6
 				},
 				{
 					primitive: cloud,
-					x: 5,
-					y: 55,
+					x: 8,
+					y: 56,
 					scale: 0.6,
 					flip: true,
 					tint: 0.1
@@ -34,135 +37,453 @@ var sun = require('./primitives/sunPrimitive')
 			'03d': [
 				{
 					primitive: sun,
-					x: 5,
-					y: 5,
+					x: 4,
+					y: 7,
 					scale: 0.6
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
-					tint: 0.15
+					x: 7,
+					y: 22,
+					tint: 0.1
+				}
+			],
+			'40d': [
+				{
+					primitive: sun,
+					x: 4,
+					y: 7,
+					scale: 0.6
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: raindrop,
+					x: 48,
+					y: 68
 				}
 			],
 			'05d': [
 				{
 					primitive: sun,
-					x: 5,
-					y: 5,
+					x: 4,
+					y: 7,
 					scale: 0.6
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
 					tint: 0.4
 				},
 				{
 					primitive: raindrop,
-					x: 70,
-					y: 74
+					x: 55,
+					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 52,
-					y: 71
+					x: 39,
+					y: 68
+				}
+			],
+			'41d': [
+				{
+					primitive: sun,
+					x: 4,
+					y: 7,
+					scale: 0.6
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: raindrop,
+					x: 65,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 49,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 33,
+					y: 68
+				}
+			],
+			'42d': [
+				{
+					primitive: sun,
+					x: 4,
+					y: 7,
+					scale: 0.6
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: sleet,
+					x: 45,
+					y: 68
 				}
 			],
 			'07d': [
 				{
 					primitive: sun,
-					x: 5,
-					y: 5,
+					x: 4,
+					y: 7,
 					scale: 0.6
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
 					tint: 0.4
 				},
 				{
-					primitive: raindrop,
-					x: 61,
-					y: 74
+					primitive: sleet,
+					x: 55,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 39,
+					y: 68
+				}
+			],
+			'43d': [
+				{
+					primitive: sun,
+					x: 4,
+					y: 7,
+					scale: 0.6
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: sleet,
+					x: 67,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 50,
+					y: 68
+				},
+				{
+					primitive: sleet,
+					x: 33,
+					y: 68
+				}
+			],
+			'44d': [
+				{
+					primitive: sun,
+					x: 4,
+					y: 7,
+					scale: 0.6
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
 				},
 				{
 					primitive: snowflake,
-					x: 33,
-					y: 71
+					x: 43,
+					y: 69
 				}
 			],
 			'08d': [
 				{
 					primitive: sun,
-					x: 5,
-					y: 5,
+					x: 4,
+					y: 7,
 					scale: 0.6
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
 					tint: 0.4
 				},
 				{
 					primitive: snowflake,
-					x: 22,
-					y: 74
+					x: 54,
+					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 43,
+					x: 36,
 					y: 71
+				}
+			],
+			'45d': [
+				{
+					primitive: sun,
+					x: 4,
+					y: 7,
+					scale: 0.6
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: snowflake,
+					x: 63,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 44,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 26,
+					y: 71
+				}
+			],
+			'24d': [
+				{
+					primitive: sun,
+					x: 4,
+					y: 7,
+					scale: 0.6
+				},
+				{
+					primitive: lightning,
+					x: 27,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: raindrop,
+					x: 51,
+					y: 68
 				}
 			],
 			'06d': [
 				{
 					primitive: sun,
-					x: 5,
-					y: 5,
+					x: 4,
+					y: 7,
 					scale: 0.6
 				},
 				{
 					primitive: lightning,
-					x: 30,
+					x: 21,
 					y: 75
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
 					tint: 0.4
 				},
 				{
 					primitive: raindrop,
-					x: 63,
-					y: 71
+					x: 60,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 44,
+					y: 68
+				}
+			],
+			'25d': [
+				{
+					primitive: sun,
+					x: 4,
+					y: 7,
+					scale: 0.6
+				},
+				{
+					primitive: lightning,
+					x: 14,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: raindrop,
+					x: 69,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 53,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 37,
+					y: 68
+				}
+			],
+			'26d': [
+				{
+					primitive: sun,
+					x: 4,
+					y: 7,
+					scale: 0.6
+				},
+				{
+					primitive: lightning,
+					x: 25,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: sleet,
+					x: 48,
+					y: 68
 				}
 			],
 			'20d': [
 				{
 					primitive: sun,
-					x: 5,
-					y: 5,
+					x: 4,
+					y: 7,
 					scale: 0.6
 				},
 				{
 					primitive: lightning,
-					x: 14,
+					x: 19,
 					y: 75
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
 					tint: 0.4
 				},
 				{
-					primitive: raindrop,
-					x: 72,
-					y: 74
+					primitive: sleet,
+					x: 58,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 42,
+					y: 68
+				}
+			],
+			'27d': [
+				{
+					primitive: sun,
+					x: 4,
+					y: 7,
+					scale: 0.6
+				},
+				{
+					primitive: lightning,
+					x: 15,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: sleet,
+					x: 71,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 55,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 38,
+					y: 68
+				}
+			],
+			'28d': [
+				{
+					primitive: sun,
+					x: 4,
+					y: 7,
+					scale: 0.6
+				},
+				{
+					primitive: lightning,
+					x: 23,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: snowflake,
+					x: 49,
+					y: 69
+				}
+			],
+			'21d': [
+				{
+					primitive: sun,
+					x: 4,
+					y: 7,
+					scale: 0.6
+				},
+				{
+					primitive: lightning,
+					x: 19,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.4
+				},
+				{
+					primitive: snowflake,
+					x: 62,
+					y: 69
 				},
 				{
 					primitive: snowflake,
@@ -170,27 +491,37 @@ var sun = require('./primitives/sunPrimitive')
 					y: 71
 				}
 			],
-			'21d': [
+			'29d': [
 				{
 					primitive: sun,
-					x: 5,
-					y: 5,
+					x: 4,
+					y: 7,
 					scale: 0.6
 				},
 				{
 					primitive: lightning,
-					x: 14,
+					x: 8,
 					y: 75
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
-					tint: 0.4
+					x: 7,
+					y: 22,
+					tint: 0.5
 				},
 				{
 					primitive: snowflake,
-					x: 44,
+					x: 70,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 51,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 33,
 					y: 71
 				}
 			],
@@ -199,22 +530,22 @@ var sun = require('./primitives/sunPrimitive')
 			'01m': [
 				{
 					primitive: sun,
-					x: 0,
-					y: 30,
+					x: 5,
+					y: 32,
 					winter: true
 				}
 			],
 			'02m': [
 				{
 					primitive: sun,
-					x: 0,
-					y: 30,
+					x: 5,
+					y: 32,
 					winter: true
 				},
 				{
 					primitive: cloud,
-					x: 5,
-					y: 45,
+					x: 8,
+					y: 46,
 					scale: 0.6,
 					flip: true,
 					tint: 0.1
@@ -223,141 +554,471 @@ var sun = require('./primitives/sunPrimitive')
 			'03m': [
 				{
 					primitive: sun,
-					x: 10,
-					y: 14,
+					x: 8,
+					y: 20,
 					scale: 0.6,
 					winter: true
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
-					tint: 0.15
+					x: 7,
+					y: 22,
+					tint: 0.1
+				}
+			],
+			'40m': [
+				{
+					primitive: sun,
+					x: 8,
+					y: 20,
+					scale: 0.6,
+					winter: true
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: raindrop,
+					x: 48,
+					y: 68
 				}
 			],
 			'05m': [
 				{
 					primitive: sun,
-					x: 10,
-					y: 14,
+					x: 8,
+					y: 20,
 					scale: 0.6,
 					winter: true
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
 					tint: 0.4
 				},
 				{
 					primitive: raindrop,
-					x: 70,
-					y: 74
+					x: 55,
+					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 52,
-					y: 71
+					x: 39,
+					y: 68
+				}
+			],
+			'41m': [
+				{
+					primitive: sun,
+					x: 8,
+					y: 20,
+					scale: 0.6,
+					winter: true
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: raindrop,
+					x: 65,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 49,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 33,
+					y: 68
+				}
+			],
+			'42m': [
+				{
+					primitive: sun,
+					x: 8,
+					y: 20,
+					scale: 0.6,
+					winter: true
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: sleet,
+					x: 45,
+					y: 68
 				}
 			],
 			'07m': [
 				{
 					primitive: sun,
-					x: 10,
-					y: 14,
+					x: 8,
+					y: 20,
 					scale: 0.6,
 					winter: true
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
 					tint: 0.4
 				},
 				{
-					primitive: raindrop,
-					x: 61,
-					y: 74
+					primitive: sleet,
+					x: 55,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 39,
+					y: 68
+				}
+			],
+			'43m': [
+				{
+					primitive: sun,
+					x: 8,
+					y: 20,
+					scale: 0.6,
+					winter: true
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: sleet,
+					x: 67,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 50,
+					y: 68
+				},
+				{
+					primitive: sleet,
+					x: 33,
+					y: 68
+				}
+			],
+			'44m': [
+				{
+					primitive: sun,
+					x: 8,
+					y: 20,
+					scale: 0.6,
+					winter: true
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
 				},
 				{
 					primitive: snowflake,
-					x: 33,
-					y: 71
+					x: 43,
+					y: 69
 				}
 			],
 			'08m': [
 				{
 					primitive: sun,
-					x: 10,
-					y: 14,
+					x: 8,
+					y: 20,
 					scale: 0.6,
 					winter: true
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
 					tint: 0.4
 				},
 				{
 					primitive: snowflake,
-					x: 22,
-					y: 74
+					x: 54,
+					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 43,
+					x: 36,
 					y: 71
+				}
+			],
+			'45m': [
+				{
+					primitive: sun,
+					x: 8,
+					y: 20,
+					scale: 0.6,
+					winter: true
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: snowflake,
+					x: 63,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 44,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 26,
+					y: 71
+				}
+			],
+			'24m': [
+				{
+					primitive: sun,
+					x: 8,
+					y: 20,
+					scale: 0.6,
+					winter: true
+				},
+				{
+					primitive: lightning,
+					x: 27,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: raindrop,
+					x: 51,
+					y: 68
 				}
 			],
 			'06m': [
 				{
 					primitive: sun,
-					x: 10,
-					y: 14,
+					x: 8,
+					y: 20,
 					scale: 0.6,
 					winter: true
 				},
 				{
 					primitive: lightning,
-					x: 30,
+					x: 21,
 					y: 75
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
 					tint: 0.4
 				},
 				{
 					primitive: raindrop,
-					x: 63,
-					y: 71
+					x: 60,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 44,
+					y: 68
+				}
+			],
+			'25m': [
+				{
+					primitive: sun,
+					x: 8,
+					y: 20,
+					scale: 0.6,
+					winter: true
+				},
+				{
+					primitive: lightning,
+					x: 14,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: raindrop,
+					x: 69,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 53,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 37,
+					y: 68
+				}
+			],
+			'26m': [
+				{
+					primitive: sun,
+					x: 8,
+					y: 20,
+					scale: 0.6,
+					winter: true
+				},
+				{
+					primitive: lightning,
+					x: 25,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: sleet,
+					x: 48,
+					y: 68
 				}
 			],
 			'20m': [
 				{
 					primitive: sun,
-					x: 10,
-					y: 14,
+					x: 8,
+					y: 20,
 					scale: 0.6,
 					winter: true
 				},
 				{
 					primitive: lightning,
-					x: 14,
+					x: 19,
 					y: 75
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
 					tint: 0.4
 				},
 				{
-					primitive: raindrop,
-					x: 72,
-					y: 74
+					primitive: sleet,
+					x: 58,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 42,
+					y: 68
+				}
+			],
+			'27m': [
+				{
+					primitive: sun,
+					x: 8,
+					y: 20,
+					scale: 0.6,
+					winter: true
+				},
+				{
+					primitive: lightning,
+					x: 15,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: sleet,
+					x: 71,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 55,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 38,
+					y: 68
+				}
+			],
+			'28m': [
+				{
+					primitive: sun,
+					x: 8,
+					y: 20,
+					scale: 0.6,
+					winter: true
+				},
+				{
+					primitive: lightning,
+					x: 23,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: snowflake,
+					x: 49,
+					y: 69
+				}
+			],
+			'21m': [
+				{
+					primitive: sun,
+					x: 8,
+					y: 20,
+					scale: 0.6,
+					winter: true
+				},
+				{
+					primitive: lightning,
+					x: 19,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.4
+				},
+				{
+					primitive: snowflake,
+					x: 62,
+					y: 69
 				},
 				{
 					primitive: snowflake,
@@ -365,28 +1026,38 @@ var sun = require('./primitives/sunPrimitive')
 					y: 71
 				}
 			],
-			'21m': [
+			'29m': [
 				{
 					primitive: sun,
-					x: 10,
-					y: 14,
+					x: 8,
+					y: 20,
 					scale: 0.6,
 					winter: true
 				},
 				{
 					primitive: lightning,
-					x: 14,
+					x: 8,
 					y: 75
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
-					tint: 0.4
+					x: 7,
+					y: 22,
+					tint: 0.5
 				},
 				{
 					primitive: snowflake,
-					x: 44,
+					x: 70,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 51,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 33,
 					y: 71
 				}
 			],
@@ -407,8 +1078,8 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: cloud,
-					x: 5,
-					y: 55,
+					x: 8,
+					y: 56,
 					scale: 0.6,
 					flip: true,
 					tint: 0.1
@@ -417,118 +1088,291 @@ var sun = require('./primitives/sunPrimitive')
 			'03n': [
 				{
 					primitive: moon,
-					x: 15,
-					y: 12,
+					x: 18,
+					y: 13,
 					scale: 0.6
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
-					tint: 0.15
+					x: 7,
+					y: 22,
+					tint: 0.1
+				}
+			],
+			'40n': [
+				{
+					primitive: moon,
+					x: 18,
+					y: 13,
+					scale: 0.6
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: raindrop,
+					x: 48,
+					y: 68
 				}
 			],
 			'05n': [
 				{
 					primitive: moon,
-					x: 15,
-					y: 12,
+					x: 18,
+					y: 13,
 					scale: 0.6
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
 					tint: 0.4
 				},
 				{
 					primitive: raindrop,
-					x: 70,
-					y: 74
+					x: 55,
+					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 52,
-					y: 71
+					x: 39,
+					y: 68
+				}
+			],
+			'41n': [
+				{
+					primitive: moon,
+					x: 18,
+					y: 13,
+					scale: 0.6
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: raindrop,
+					x: 65,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 49,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 33,
+					y: 68
+				}
+			],
+			'42n': [
+				{
+					primitive: moon,
+					x: 18,
+					y: 13,
+					scale: 0.6
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: sleet,
+					x: 45,
+					y: 68
 				}
 			],
 			'07n': [
 				{
 					primitive: moon,
-					x: 15,
-					y: 12,
+					x: 18,
+					y: 13,
 					scale: 0.6
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
 					tint: 0.4
 				},
 				{
-					primitive: raindrop,
-					x: 61,
-					y: 74
+					primitive: sleet,
+					x: 55,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 39,
+					y: 68
+				}
+			],
+			'43n': [
+				{
+					primitive: moon,
+					x: 18,
+					y: 13,
+					scale: 0.6
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: sleet,
+					x: 67,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 50,
+					y: 68
+				},
+				{
+					primitive: sleet,
+					x: 33,
+					y: 68
+				}
+			],
+			'44n': [
+				{
+					primitive: moon,
+					x: 18,
+					y: 13,
+					scale: 0.6
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
 				},
 				{
 					primitive: snowflake,
-					x: 33,
-					y: 71
+					x: 43,
+					y: 69
 				}
 			],
 			'08n': [
 				{
 					primitive: moon,
-					x: 15,
-					y: 12,
+					x: 18,
+					y: 13,
 					scale: 0.6
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
 					tint: 0.4
 				},
 				{
 					primitive: snowflake,
-					x: 22,
-					y: 74
+					x: 54,
+					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 43,
+					x: 36,
 					y: 71
+				}
+			],
+			'45n': [
+				{
+					primitive: moon,
+					x: 18,
+					y: 13,
+					scale: 0.6
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: snowflake,
+					x: 63,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 44,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 26,
+					y: 71
+				}
+			],
+			'24n': [
+				{
+					primitive: moon,
+					x: 18,
+					y: 13,
+					scale: 0.6
+				},
+				{
+					primitive: lightning,
+					x: 27,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: raindrop,
+					x: 51,
+					y: 68
 				}
 			],
 			'06n': [
 				{
 					primitive: moon,
-					x: 15,
-					y: 12,
+					x: 18,
+					y: 13,
 					scale: 0.6
 				},
 				{
 					primitive: lightning,
-					x: 30,
+					x: 21,
 					y: 75
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
 					tint: 0.4
 				},
 				{
 					primitive: raindrop,
-					x: 63,
-					y: 71
+					x: 60,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 44,
+					y: 68
 				}
 			],
-			'20n': [
+			'25n': [
 				{
 					primitive: moon,
-					x: 15,
-					y: 12,
+					x: 18,
+					y: 13,
 					scale: 0.6
 				},
 				{
@@ -538,224 +1382,32 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
-					tint: 0.4
-				},
-				{
-					primitive: raindrop,
-					x: 72,
-					y: 74
-				},
-				{
-					primitive: snowflake,
-					x: 44,
-					y: 71
-				}
-			],
-			'21n': [
-				{
-					primitive: moon,
-					x: 15,
-					y: 12,
-					scale: 0.6
-				},
-				{
-					primitive: lightning,
-					x: 14,
-					y: 75
-				},
-				{
-					primitive: cloud,
-					x: 0,
-					y: 25,
-					tint: 0.4
-				},
-				{
-					primitive: snowflake,
-					x: 44,
-					y: 71
-				}
-			],
-
-			// Cloud
-			'15': [
-				{
-					primitive: fog,
-					x: 5,
-					y: 15,
-					tint: 0.15
-				}
-			],
-			'04': [
-				{
-					primitive: cloud,
-					x: 5,
-					y: 9,
-					scale: 0.8,
-					flip: true,
-					tint: 0.1
-				},
-				{
-					primitive: cloud,
-					x: 0,
-					y: 25,
-					tint: 0.15
-				}
-			],
-			'09': [
-				{
-					primitive: cloud,
-					x: 5,
-					y: 9,
-					scale: 0.8,
-					flip: true,
-					tint: 0.3
-				},
-				{
-					primitive: cloud,
-					x: 0,
-					y: 25,
-					tint: 0.4
-				},
-				{
-					primitive: raindrop,
-					x: 70,
-					y: 74
-				},
-				{
-					primitive: raindrop,
-					x: 52,
-					y: 71
-				}
-			],
-			'10': [
-				{
-					primitive: cloud,
-					x: 5,
-					y: 9,
-					scale: 0.8,
-					flip: true,
-					tint: 0.4
-				},
-				{
-					primitive: cloud,
-					x: 0,
-					y: 25,
-					tint: 0.5
-				},
-				{
-					primitive: raindrop,
-					x: 77,
-					y: 73
-				},
-				{
-					primitive: raindrop,
-					x: 58,
-					y: 73
-				},
-				{
-					primitive: raindrop,
-					x: 39,
-					y: 71
-				}
-			],
-			'12': [
-				{
-					primitive: cloud,
-					x: 5,
-					y: 9,
-					scale: 0.8,
-					flip: true,
-					tint: 0.4
-				},
-				{
-					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
 					tint: 0.5
 				},
 				{
 					primitive: raindrop,
 					x: 69,
-					y: 74
-				},
-				{
-					primitive: snowflake,
-					x: 20,
-					y: 74
-				},
-				{
-					primitive: snowflake,
-					x: 41,
-					y: 71
-				}
-			],
-			'13': [
-				{
-					primitive: cloud,
-					x: 5,
-					y: 9,
-					scale: 0.8,
-					flip: true,
-					tint: 0.4
-				},
-				{
-					primitive: cloud,
-					x: 0,
-					y: 25,
-					tint: 0.5
-				},
-				{
-					primitive: snowflake,
-					x: 54,
-					y: 71
-				},
-				{
-					primitive: snowflake,
-					x: 12,
-					y: 73
-				},
-				{
-					primitive: snowflake,
-					x: 33,
-					y: 74
-				}
-			],
-			'22': [
-				{
-					primitive: cloud,
-					x: 5,
-					y: 9,
-					scale: 0.8,
-					flip: true,
-					tint: 0.3
-				},
-				{
-					primitive: lightning,
-					x: 30,
-					y: 75
-				},
-				{
-					primitive: cloud,
-					x: 0,
-					y: 25,
-					tint: 0.4
+					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 63,
-					y: 71
+					x: 53,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 37,
+					y: 68
 				}
 			],
-			'11': [
+			'26n': [
 				{
-					primitive: cloud,
-					x: 5,
-					y: 9,
-					scale: 0.8,
-					flip: true,
-					tint: 0.4
+					primitive: moon,
+					x: 18,
+					y: 13,
+					scale: 0.6
 				},
 				{
 					primitive: lightning,
@@ -764,45 +1416,662 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: sleet,
+					x: 48,
+					y: 68
+				}
+			],
+			'20n': [
+				{
+					primitive: moon,
+					x: 18,
+					y: 13,
+					scale: 0.6
+				},
+				{
+					primitive: lightning,
+					x: 19,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.4
+				},
+				{
+					primitive: sleet,
+					x: 58,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 42,
+					y: 68
+				}
+			],
+			'27n': [
+				{
+					primitive: moon,
+					x: 18,
+					y: 13,
+					scale: 0.6
+				},
+				{
+					primitive: lightning,
+					x: 15,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: sleet,
+					x: 71,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 55,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 38,
+					y: 68
+				}
+			],
+			'28n': [
+				{
+					primitive: moon,
+					x: 18,
+					y: 13,
+					scale: 0.6
+				},
+				{
+					primitive: lightning,
+					x: 23,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: snowflake,
+					x: 49,
+					y: 69
+				}
+			],
+			'21n': [
+				{
+					primitive: moon,
+					x: 18,
+					y: 13,
+					scale: 0.6
+				},
+				{
+					primitive: lightning,
+					x: 19,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.4
+				},
+				{
+					primitive: snowflake,
+					x: 62,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 44,
+					y: 71
+				}
+			],
+			'29n': [
+				{
+					primitive: moon,
+					x: 18,
+					y: 13,
+					scale: 0.6
+				},
+				{
+					primitive: lightning,
+					x: 8,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: snowflake,
+					x: 70,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 51,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 33,
+					y: 71
+				}
+			],
+
+			// Cloud
+			'15': [
+				{
+					primitive: fog,
+					x: 4,
+					y: 18,
+					tint: 0.15
+				}
+			],
+			'04': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.1
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.15
+				}
+			],
+			'46': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.15
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: raindrop,
+					x: 48,
+					y: 68
+				}
+			],
+			'09': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.3
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.4
+				},
+				{
+					primitive: raindrop,
+					x: 55,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 39,
+					y: 68
+				}
+			],
+			'10': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.4
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
 					tint: 0.5
 				},
 				{
 					primitive: raindrop,
-					x: 76,
-					y: 74
+					x: 65,
+					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 58,
+					x: 49,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 33,
+					y: 68
+				}
+			],
+			'47': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.15
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: sleet,
+					x: 45,
+					y: 68
+				}
+			],
+			'12': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.3
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.4
+				},
+				{
+					primitive: sleet,
+					x: 55,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 39,
+					y: 68
+				}
+			],
+			'48': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.4
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: sleet,
+					x: 67,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 50,
+					y: 68
+				},
+				{
+					primitive: sleet,
+					x: 33,
+					y: 68
+				}
+			],
+			'49': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.15
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: snowflake,
+					x: 43,
+					y: 69
+				}
+			],
+			'13': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.3
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.4
+				},
+				{
+					primitive: snowflake,
+					x: 54,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 36,
 					y: 71
+				}
+			],
+			'50': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.4
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: snowflake,
+					x: 63,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 44,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 26,
+					y: 71
+				}
+			],
+			'30': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.15
+				},
+				{
+					primitive: lightning,
+					x: 27,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: raindrop,
+					x: 51,
+					y: 68
+				}
+			],
+			'22': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.3
+				},
+				{
+					primitive: lightning,
+					x: 21,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.4
+				},
+				{
+					primitive: raindrop,
+					x: 60,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 44,
+					y: 68
+				}
+			],
+			'11': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.4
+				},
+				{
+					primitive: lightning,
+					x: 14,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: raindrop,
+					x: 69,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 53,
+					y: 72
+				},
+				{
+					primitive: raindrop,
+					x: 37,
+					y: 68
+				}
+			],
+			'31': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.15
+				},
+				{
+					primitive: lightning,
+					x: 25,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: sleet,
+					x: 48,
+					y: 68
 				}
 			],
 			'23': [
 				{
 					primitive: cloud,
 					x: 5,
-					y: 9,
+					y: 10,
 					scale: 0.8,
 					flip: true,
 					tint: 0.3
 				},
 				{
 					primitive: lightning,
-					x: 14,
+					x: 19,
 					y: 75
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
+					x: 7,
+					y: 22,
 					tint: 0.4
 				},
 				{
-					primitive: raindrop,
-					x: 72,
-					y: 74
+					primitive: sleet,
+					x: 58,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 42,
+					y: 68
+				}
+			],
+			'32': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.4
+				},
+				{
+					primitive: lightning,
+					x: 15,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.5
+				},
+				{
+					primitive: sleet,
+					x: 71,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 55,
+					y: 72
+				},
+				{
+					primitive: sleet,
+					x: 38,
+					y: 68
+				}
+			],
+			'33': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.15
+				},
+				{
+					primitive: lightning,
+					x: 23,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.3
+				},
+				{
+					primitive: snowflake,
+					x: 49,
+					y: 69
+				}
+			],
+			'14': [
+				{
+					primitive: cloud,
+					x: 5,
+					y: 10,
+					scale: 0.8,
+					flip: true,
+					tint: 0.3
+				},
+				{
+					primitive: lightning,
+					x: 19,
+					y: 75
+				},
+				{
+					primitive: cloud,
+					x: 7,
+					y: 22,
+					tint: 0.4
+				},
+				{
+					primitive: snowflake,
+					x: 62,
+					y: 69
 				},
 				{
 					primitive: snowflake,
@@ -810,29 +2079,39 @@ var sun = require('./primitives/sunPrimitive')
 					y: 71
 				}
 			],
-			'14': [
+			'34': [
 				{
 					primitive: cloud,
 					x: 5,
-					y: 9,
+					y: 10,
 					scale: 0.8,
 					flip: true,
-					tint: 0.3
+					tint: 0.4
 				},
 				{
 					primitive: lightning,
-					x: 14,
+					x: 8,
 					y: 75
 				},
 				{
 					primitive: cloud,
-					x: 0,
-					y: 25,
-					tint: 0.4
+					x: 7,
+					y: 22,
+					tint: 0.5
 				},
 				{
 					primitive: snowflake,
-					x: 44,
+					x: 70,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 51,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 33,
 					y: 71
 				}
 			]

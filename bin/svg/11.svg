@@ -1,49 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
-	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
-	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
-	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
-	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
-	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
-	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
-	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
-	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
-]>
-<svg version="1.1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
-	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
-<metadata>
-	<sfw  xmlns="&ns_sfw;">
-		<slices></slices>
-		<sliceSourceBounds  x="0" y="-430" bottomLeftOrigin="true" width="1642.504" height="430"></sliceSourceBounds>
-	</sfw>
-</metadata>
-<g id="overcast">
-	<path fill="#C9AF16" d="M35.413,75l-6.25,12.484h8.325L25,100l25.001-16.68h-8.338L49.995,75H35.413z"/>
-	<path id="cloud_63_" fill="#999999" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10" d="M77.498,49
-		C81.514,49,85,45.488,85,41.84c0-3.689-1.785-6.75-5.551-8.152c-1.299-4.338-5.25-7.338-10.299-7.488
-		c-1.1-5.549-8.15-8.861-13.1-7.461c-2.182-7.75-15-14.102-23.451-5.9c-12.35-3.4-21.018,4.296-19.686,15.994
-		C8.032,30.233,5,34.521,5,39.537C5,44.573,9.516,49,14.558,49H77.498z"/>
-	<path id="cloud_62_" fill="#808080" stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" d="M9.377,75
-		C4.357,75,0,70.609,0,66.051c0-4.613,2.231-8.439,6.938-10.191c1.625-5.422,6.562-9.172,12.875-9.359
-		C21.188,39.562,30,35.422,36.188,37.172c2.727-9.688,18.748-17.625,29.312-7.375c15.438-4.25,26.272,5.37,24.607,19.992
-		C96.21,51.542,100,56.901,100,63.172C100,69.466,94.355,75,88.054,75H9.377z"/>
-	<g>
-		<path fill="#FFFFFF" d="M85,77c0,4.969-4.031,9-9.001,9C71.031,86,67,81.969,67,77s4.031-9,8.999-9C80.969,68,85,72.031,85,77z"/>
-		<path fill="#1362B1" d="M91,87.368C91,91.586,87.634,95,83.502,95C79.355,95,76,91.586,76,87.368C76,84.986,76,74,76,74
-			C82.853,80.748,91,80.447,91,87.368z"/>
-	</g>
-	<g>
-		<path fill="#FFFFFF" d="M67,74c0,4.969-4.031,9-9.001,9C53.031,83,49,78.969,49,74s4.031-9,8.999-9C62.969,65,67,69.031,67,74z"/>
-		<path fill="#1362B1" d="M73,84.368C73,88.586,69.634,92,65.502,92C61.355,92,58,88.586,58,84.368C58,81.986,58,71,58,71
-			C64.853,77.748,73,77.447,73,84.368z"/>
-	</g>
-</g>
-<g id="night">
-</g>
-<g id="winter_day">
-</g>
-<g id="day_15_">
-</g>
+<!-- Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1 Basic//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-basic.dtd">
+<svg version="1.1" baseProfile="basic" id="symbol" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+	 x="0px" y="0px" viewBox="0 0 100 100" xml:space="preserve">
+<symbol  id="cloud4" viewBox="-2 -56 94 58">
+	<path style="fill:#999999;stroke:#FFFFFF;stroke-width:4;stroke-miterlimit:10;" d="M53.6,0C44,0.3,35.1-5,32.1-15.3
+		c-6.1,1.5-16-2.4-17.8-10.9C8.1-26,0-31.1,0-39.6C0-49,7-54,19.5-54h43.6c5.6,0,12.9,0.5,17.3,2.6c14.9,7.2,12.3,32.3-6.4,34.6
+		C71.7-5.9,63.1-0.3,53.6,0z"/>
+</symbol>
+<symbol  id="cloud5" viewBox="-2 -56 94 58">
+	<path style="fill:#808080;stroke:#FFFFFF;stroke-width:4;stroke-miterlimit:10;" d="M53.6,0C44,0.3,35.1-5,32.1-15.3
+		c-6.1,1.5-16-2.4-17.8-10.9C8.1-26,0-31.1,0-39.6C0-49,7-54,19.5-54h43.6c5.6,0,12.9,0.5,17.3,2.6c14.9,7.2,12.3,32.3-6.4,34.6
+		C71.7-5.9,63.1-0.3,53.6,0z"/>
+</symbol>
+<symbol  id="lightning" viewBox="0 -25 25 25">
+	<path style="fill:#C9AF16;" d="M10.4,0L4.2-12.2h8.3L0-25L25-8.1h-8.3L25,0H10.4z"/>
+</symbol>
+<symbol  id="raindrop" viewBox="0 -23 20 23">
+	<path style="fill:#FFFFFF;" d="M18-9c0-5-4-9-9-9c-5,0-9,4-9,9c0,5,4,9,9,9C14,0,18-4,18-9z"/>
+	<path style="fill:#1671CC;" d="M20-16.8c0-3.4-2.7-6.2-6-6.2c-3.3,0-6,2.8-6,6.2C8-14.9,8-6,8-6C13.5-11.5,20-11.2,20-16.8z"/>
+</symbol>
+<use xlink:href="#lightning"  width="25" height="25" y="-25" transform="matrix(1 0 0 -1 14 75)" style="overflow:visible;"/>
+<use xlink:href="#cloud4"  width="94" height="58" x="-2" y="-56" transform="matrix(-0.8 0 0 -0.8 80 10)" style="overflow:visible;"/>
+<use xlink:href="#cloud5"  width="94" height="58" x="-2" y="-56" transform="matrix(1 0 0 -1 7.9996 23)" style="overflow:visible;"/>
+<use xlink:href="#raindrop"  width="20" height="23" id="XMLID_40_" y="-23" transform="matrix(1 0 0 -1 69 72)" style="overflow:visible;"/>
+<use xlink:href="#raindrop"  width="20" height="23" y="-23" transform="matrix(1 0 0 -1 53 72)" style="overflow:visible;"/>
+<use xlink:href="#raindrop"  width="20" height="23" y="-23" transform="matrix(1 0 0 -1 37 68)" style="overflow:visible;"/>
 </svg>

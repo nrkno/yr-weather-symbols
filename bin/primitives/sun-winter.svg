@@ -1,38 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
-	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
-	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
-	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
-	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
-	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
-	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
-	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
-	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
-]>
-<svg version="1.1" id="Layer_1" xmlns:x="&ns_extend;" xmlns:i="&ns_ai;" xmlns:graph="&ns_graphs;"
-	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="100px" height="100px"
-	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
-<metadata>
-	<sfw  xmlns="&ns_sfw;">
-		<slices></slices>
-		<sliceSourceBounds  y="-185" x="-2.5" bottomLeftOrigin="true" height="225" width="782.5"></sliceSourceBounds>
-	</sfw>
-</metadata>
-<g id="day-winter">
-	<g>
-		<defs>
-			<rect id="SVGID_1_" y="10" width="100" height="50"/>
-		</defs>
-		<clipPath id="SVGID_2_">
-			<use xlink:href="#SVGID_1_"  overflow="visible"/>
-		</clipPath>
-		<g clip-path="url(#SVGID_2_)">
-			<polygon points="69.284,17.986 100,10 69.284,2.014 85.358,-25.355 57.986,-9.281 50,-40 42.014,-9.281 14.645,-25.355 
-				30.719,2.014 0,10 30.719,17.986 14.645,45.358 42.014,29.284 50,60 57.986,29.284 85.358,45.358 			"/>
-			<circle stroke="#FFFFFF" stroke-width="5" stroke-miterlimit="10" cx="50" cy="10" r="22.5"/>
-		</g>
-	</g>
-	<rect width="100" height="5"/>
+<!-- Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1 Basic//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-basic.dtd">
+<svg version="1.1" baseProfile="basic" id="Layer_1"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100"
+	 xml:space="preserve">
+<g>
+	<defs>
+		<rect id="SVGID_1_" y="8" width="90" height="45"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+	</clipPath>
+	<path style="clip-path:url(#SVGID_2_);" d="M64.4,16.1L87.6,10c2-0.5,2-3.3,0-3.9L64.4,0.1l12.2-20.8c1-1.8-1-3.8-2.7-2.7
+		L53.1-11.2L47-34.5c-0.5-2-3.3-2-3.9,0l-6.1,23.3L16.3-23.4c-1.8-1-3.8,1-2.7,2.7L25.8,0.1L2.5,6.1c-2,0.5-2,3.3,0,3.9l23.3,6.1
+		L13.6,36.8c-1,1.8,1,3.8,2.7,2.7l20.8-12.2l6.1,23.3c0.5,2,3.3,2,3.9,0l6.1-23.3l20.8,12.2c1.8,1,3.8-1,2.7-2.7L64.4,16.1z"/>
+	<path style="clip-path:url(#SVGID_2_);stroke:#FFFFFF;stroke-width:4;stroke-miterlimit:10;" d="M67.6,8.1
+		c0,12.4-10.1,22.5-22.5,22.5c-12.4,0-22.5-10.1-22.5-22.5c0-12.4,10.1-22.5,22.5-22.5C57.5-14.4,67.6-4.4,67.6,8.1z"/>
 </g>
+<path d="M2.5,0h85.1C88.9,0,90,0.9,90,2v0c0,1.1-1.1,2-2.5,2H2.5C1.1,4,0,3.1,0,2v0C0,0.9,1.1,0,2.5,0z"/>
 </svg>

@@ -25,7 +25,7 @@
             "boilerplate": true,
             "bootstrap": true,
             "alias": {
-              "dust": "./node_modules/dustjs-linkedin/dist/dust-core-2.2.3.js"
+              "dust": "./node_modules/dustjs-linkedin/dist/dust-core.js"
             }
           }
         ]
