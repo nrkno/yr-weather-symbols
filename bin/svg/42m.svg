@@ -32,5 +32,5 @@
 </symbol>
 <use xlink:href="#sun-winter"  width="90" height="89" y="-53" transform="matrix(0.6 0 0 -0.6 8 19)" style="overflow:visible;"/>
 <use xlink:href="#cloud3"  width="94" height="58" x="-2" y="-56" transform="matrix(1 0 0 -1 8 23)" style="overflow:visible;"/>
-<use xlink:href="#sleet"  width="20" height="26" id="XMLID_75_" y="-26" transform="matrix(1 0 0 -1 42 68)" style="overflow:visible;"/>
+<use xlink:href="#sleet"  width="20" height="26" id="XMLID_75_" y="-26" transform="matrix(1 0 0 -1 45 68)" style="overflow:visible;"/>
 </svg>

@@ -20,6 +20,6 @@
 </symbol>
 <use xlink:href="#cloud3"  width="94" height="58" x="-2" y="-56" transform="matrix(-0.8 0 0 -0.8 80 10)" style="overflow:visible;"/>
 <use xlink:href="#cloud4"  width="94" height="58" x="-2" y="-56" transform="matrix(1 0 0 -1 8 23)" style="overflow:visible;"/>
-<use xlink:href="#sleet"  width="20" height="26" y="-26" transform="matrix(1 0 0 -1 52 72)" style="overflow:visible;"/>
-<use xlink:href="#sleet"  width="20" height="26" y="-26" transform="matrix(1 0 0 -1 36 68)" style="overflow:visible;"/>
+<use xlink:href="#sleet"  width="20" height="26" y="-26" transform="matrix(1 0 0 -1 55 72)" style="overflow:visible;"/>
+<use xlink:href="#sleet"  width="20" height="26" y="-26" transform="matrix(1 0 0 -1 39 68)" style="overflow:visible;"/>
 </svg>

@@ -59,11 +59,11 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: raindrop,
-					x: 45,
+					x: 48,
 					y: 68
 				}
 			],
@@ -82,12 +82,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: raindrop,
-					x: 61,
+					x: 55,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 45,
+					x: 39,
 					y: 68
 				}
 			],
@@ -102,21 +102,21 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: raindrop,
-					x: 71,
+					x: 65,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 61,
+					x: 49,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 45,
+					x: 33,
 					y: 68
 				}
 			],
@@ -131,11 +131,11 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: sleet,
-					x: 36,
+					x: 45,
 					y: 68
 				}
 			],
@@ -154,12 +154,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: sleet,
-					x: 52,
+					x: 55,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 36,
+					x: 39,
 					y: 68
 				}
 			],
@@ -174,21 +174,21 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: sleet,
-					x: 42,
+					x: 67,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 52,
-					y: 72
+					x: 50,
+					y: 68
 				},
 				{
 					primitive: sleet,
-					x: 36,
+					x: 33,
 					y: 68
 				}
 			],
@@ -203,12 +203,12 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: snowflake,
-					x: 22,
-					y: 71
+					x: 43,
+					y: 69
 				}
 			],
 			'08d': [
@@ -226,13 +226,13 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: snowflake,
-					x: 22,
-					y: 71
+					x: 54,
+					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 40,
-					y: 69
+					x: 36,
+					y: 71
 				}
 			],
 			'45d': [
@@ -246,22 +246,22 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: snowflake,
-					x: 12,
-					y: 71
-				},
-				{
-					primitive: snowflake,
-					x: 22,
-					y: 71
-				},
-				{
-					primitive: snowflake,
-					x: 40,
+					x: 63,
 					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 44,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 26,
+					y: 71
 				}
 			],
 			'24d': [
@@ -273,18 +273,18 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 25,
+					x: 27,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: raindrop,
-					x: 48,
+					x: 51,
 					y: 68
 				}
 			],
@@ -297,7 +297,7 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 25,
+					x: 21,
 					y: 75
 				},
 				{
@@ -308,12 +308,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: raindrop,
-					x: 64,
+					x: 60,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 48,
+					x: 44,
 					y: 68
 				}
 			],
@@ -326,28 +326,28 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 25,
+					x: 14,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: raindrop,
-					x: 84,
+					x: 69,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 64,
+					x: 53,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 48,
+					x: 37,
 					y: 68
 				}
 			],
@@ -360,18 +360,18 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 17,
+					x: 25,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: sleet,
-					x: 40,
+					x: 48,
 					y: 68
 				}
 			],
@@ -384,7 +384,7 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 17,
+					x: 19,
 					y: 75
 				},
 				{
@@ -395,12 +395,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: sleet,
-					x: 56,
+					x: 58,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 40,
+					x: 42,
 					y: 68
 				}
 			],
@@ -413,28 +413,28 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 17,
+					x: 15,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: sleet,
-					x: 76,
+					x: 71,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 56,
+					x: 55,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 40,
+					x: 38,
 					y: 68
 				}
 			],
@@ -447,19 +447,19 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 10,
+					x: 23,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: snowflake,
-					x: 35,
-					y: 71
+					x: 49,
+					y: 69
 				}
 			],
 			'21d': [
@@ -471,7 +471,7 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 10,
+					x: 19,
 					y: 75
 				},
 				{
@@ -482,12 +482,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: snowflake,
-					x: 53,
+					x: 62,
 					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 35,
+					x: 44,
 					y: 71
 				}
 			],
@@ -500,28 +500,28 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 10,
+					x: 8,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: snowflake,
-					x: 73,
+					x: 70,
 					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 53,
+					x: 51,
 					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 35,
+					x: 33,
 					y: 71
 				}
 			],
@@ -578,11 +578,11 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: raindrop,
-					x: 45,
+					x: 48,
 					y: 68
 				}
 			],
@@ -602,12 +602,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: raindrop,
-					x: 61,
+					x: 55,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 45,
+					x: 39,
 					y: 68
 				}
 			],
@@ -623,21 +623,21 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: raindrop,
-					x: 71,
+					x: 65,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 61,
+					x: 49,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 45,
+					x: 33,
 					y: 68
 				}
 			],
@@ -653,11 +653,11 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: sleet,
-					x: 36,
+					x: 45,
 					y: 68
 				}
 			],
@@ -677,12 +677,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: sleet,
-					x: 52,
+					x: 55,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 36,
+					x: 39,
 					y: 68
 				}
 			],
@@ -698,21 +698,21 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: sleet,
-					x: 42,
+					x: 67,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 52,
-					y: 72
+					x: 50,
+					y: 68
 				},
 				{
 					primitive: sleet,
-					x: 36,
+					x: 33,
 					y: 68
 				}
 			],
@@ -728,12 +728,12 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: snowflake,
-					x: 22,
-					y: 71
+					x: 43,
+					y: 69
 				}
 			],
 			'08m': [
@@ -752,13 +752,13 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: snowflake,
-					x: 22,
-					y: 71
+					x: 54,
+					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 40,
-					y: 69
+					x: 36,
+					y: 71
 				}
 			],
 			'45m': [
@@ -773,22 +773,22 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: snowflake,
-					x: 12,
-					y: 71
-				},
-				{
-					primitive: snowflake,
-					x: 22,
-					y: 71
-				},
-				{
-					primitive: snowflake,
-					x: 40,
+					x: 63,
 					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 44,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 26,
+					y: 71
 				}
 			],
 			'24m': [
@@ -801,18 +801,18 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 25,
+					x: 27,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: raindrop,
-					x: 48,
+					x: 51,
 					y: 68
 				}
 			],
@@ -826,7 +826,7 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 25,
+					x: 21,
 					y: 75
 				},
 				{
@@ -837,12 +837,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: raindrop,
-					x: 64,
+					x: 60,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 48,
+					x: 44,
 					y: 68
 				}
 			],
@@ -856,28 +856,28 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 25,
+					x: 14,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: raindrop,
-					x: 84,
+					x: 69,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 64,
+					x: 53,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 48,
+					x: 37,
 					y: 68
 				}
 			],
@@ -891,18 +891,18 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 17,
+					x: 25,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: sleet,
-					x: 40,
+					x: 48,
 					y: 68
 				}
 			],
@@ -916,7 +916,7 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 17,
+					x: 19,
 					y: 75
 				},
 				{
@@ -927,12 +927,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: sleet,
-					x: 56,
+					x: 58,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 40,
+					x: 42,
 					y: 68
 				}
 			],
@@ -946,28 +946,28 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 17,
+					x: 15,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: sleet,
-					x: 76,
+					x: 71,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 56,
+					x: 55,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 40,
+					x: 38,
 					y: 68
 				}
 			],
@@ -981,19 +981,19 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 10,
+					x: 23,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: snowflake,
-					x: 35,
-					y: 71
+					x: 49,
+					y: 69
 				}
 			],
 			'21m': [
@@ -1006,7 +1006,7 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 10,
+					x: 19,
 					y: 75
 				},
 				{
@@ -1017,12 +1017,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: snowflake,
-					x: 53,
+					x: 62,
 					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 35,
+					x: 44,
 					y: 71
 				}
 			],
@@ -1036,28 +1036,28 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 10,
+					x: 8,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: snowflake,
-					x: 73,
+					x: 70,
 					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 53,
+					x: 51,
 					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 35,
+					x: 33,
 					y: 71
 				}
 			],
@@ -1110,11 +1110,11 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: raindrop,
-					x: 45,
+					x: 48,
 					y: 68
 				}
 			],
@@ -1133,12 +1133,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: raindrop,
-					x: 61,
+					x: 55,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 45,
+					x: 39,
 					y: 68
 				}
 			],
@@ -1153,21 +1153,21 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: raindrop,
-					x: 71,
+					x: 65,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 61,
+					x: 49,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 45,
+					x: 33,
 					y: 68
 				}
 			],
@@ -1182,11 +1182,11 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: sleet,
-					x: 36,
+					x: 45,
 					y: 68
 				}
 			],
@@ -1205,12 +1205,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: sleet,
-					x: 52,
+					x: 55,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 36,
+					x: 39,
 					y: 68
 				}
 			],
@@ -1225,21 +1225,21 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: sleet,
-					x: 42,
+					x: 67,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 52,
-					y: 72
+					x: 50,
+					y: 68
 				},
 				{
 					primitive: sleet,
-					x: 36,
+					x: 33,
 					y: 68
 				}
 			],
@@ -1254,12 +1254,12 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: snowflake,
-					x: 22,
-					y: 71
+					x: 43,
+					y: 69
 				}
 			],
 			'08n': [
@@ -1277,13 +1277,13 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: snowflake,
-					x: 22,
-					y: 71
+					x: 54,
+					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 40,
-					y: 69
+					x: 36,
+					y: 71
 				}
 			],
 			'45n': [
@@ -1297,22 +1297,22 @@ var sun = require('./primitives/sunPrimitive')
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: snowflake,
-					x: 12,
-					y: 71
-				},
-				{
-					primitive: snowflake,
-					x: 22,
-					y: 71
-				},
-				{
-					primitive: snowflake,
-					x: 40,
+					x: 63,
 					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 44,
+					y: 69
+				},
+				{
+					primitive: snowflake,
+					x: 26,
+					y: 71
 				}
 			],
 			'24n': [
@@ -1324,18 +1324,18 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 25,
+					x: 27,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: raindrop,
-					x: 48,
+					x: 51,
 					y: 68
 				}
 			],
@@ -1348,7 +1348,7 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 25,
+					x: 21,
 					y: 75
 				},
 				{
@@ -1359,12 +1359,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: raindrop,
-					x: 64,
+					x: 60,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 48,
+					x: 44,
 					y: 68
 				}
 			],
@@ -1377,28 +1377,28 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 25,
+					x: 14,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: raindrop,
-					x: 84,
+					x: 69,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 64,
+					x: 53,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 48,
+					x: 37,
 					y: 68
 				}
 			],
@@ -1411,18 +1411,18 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 17,
+					x: 25,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: sleet,
-					x: 40,
+					x: 48,
 					y: 68
 				}
 			],
@@ -1435,7 +1435,7 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 17,
+					x: 19,
 					y: 75
 				},
 				{
@@ -1446,12 +1446,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: sleet,
-					x: 56,
+					x: 58,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 40,
+					x: 42,
 					y: 68
 				}
 			],
@@ -1464,28 +1464,28 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 17,
+					x: 15,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: sleet,
-					x: 76,
+					x: 71,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 56,
+					x: 55,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 40,
+					x: 38,
 					y: 68
 				}
 			],
@@ -1498,19 +1498,19 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 10,
+					x: 23,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: snowflake,
-					x: 35,
-					y: 71
+					x: 49,
+					y: 69
 				}
 			],
 			'21n': [
@@ -1522,7 +1522,7 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 10,
+					x: 19,
 					y: 75
 				},
 				{
@@ -1533,12 +1533,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: snowflake,
-					x: 53,
+					x: 62,
 					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 35,
+					x: 44,
 					y: 71
 				}
 			],
@@ -1551,28 +1551,28 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 10,
+					x: 8,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: snowflake,
-					x: 73,
+					x: 70,
 					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 53,
+					x: 51,
 					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 35,
+					x: 33,
 					y: 71
 				}
 			],
@@ -1609,7 +1609,7 @@ var sun = require('./primitives/sunPrimitive')
 					y: 10,
 					scale: 0.8,
 					flip: true,
-					tint: 0.2
+					tint: 0.15
 				},
 				{
 					primitive: cloud,
@@ -1619,7 +1619,7 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: raindrop,
-					x: 45,
+					x: 48,
 					y: 68
 				}
 			],
@@ -1640,12 +1640,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: raindrop,
-					x: 61,
+					x: 55,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 45,
+					x: 39,
 					y: 68
 				}
 			],
@@ -1666,17 +1666,17 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: raindrop,
-					x: 71,
+					x: 65,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 55,
+					x: 49,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 39,
+					x: 33,
 					y: 68
 				}
 			],
@@ -1687,7 +1687,7 @@ var sun = require('./primitives/sunPrimitive')
 					y: 10,
 					scale: 0.8,
 					flip: true,
-					tint: 0.2
+					tint: 0.15
 				},
 				{
 					primitive: cloud,
@@ -1697,7 +1697,7 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: sleet,
-					x: 36,
+					x: 45,
 					y: 68
 				}
 			],
@@ -1718,12 +1718,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: sleet,
-					x: 52,
+					x: 55,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 36,
+					x: 39,
 					y: 68
 				}
 			],
@@ -1744,17 +1744,17 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: sleet,
-					x: 72,
+					x: 67,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 52,
-					y: 72
+					x: 50,
+					y: 68
 				},
 				{
 					primitive: sleet,
-					x: 36,
+					x: 33,
 					y: 68
 				}
 			],
@@ -1765,7 +1765,7 @@ var sun = require('./primitives/sunPrimitive')
 					y: 10,
 					scale: 0.8,
 					flip: true,
-					tint: 0.2
+					tint: 0.15
 				},
 				{
 					primitive: cloud,
@@ -1775,8 +1775,8 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: snowflake,
-					x: 22,
-					y: 71
+					x: 43,
+					y: 69
 				}
 			],
 			'13': [
@@ -1796,12 +1796,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: snowflake,
-					x: 40,
+					x: 54,
 					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 22,
+					x: 36,
 					y: 71
 				}
 			],
@@ -1822,17 +1822,17 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: snowflake,
-					x: 60,
+					x: 63,
 					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 40,
+					x: 44,
 					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 22,
+					x: 26,
 					y: 71
 				}
 			],
@@ -1843,22 +1843,22 @@ var sun = require('./primitives/sunPrimitive')
 					y: 10,
 					scale: 0.8,
 					flip: true,
-					tint: 0.3
+					tint: 0.15
 				},
 				{
 					primitive: lightning,
-					x: 25,
+					x: 27,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: raindrop,
-					x: 48,
+					x: 51,
 					y: 68
 				}
 			],
@@ -1873,7 +1873,7 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 25,
+					x: 21,
 					y: 75
 				},
 				{
@@ -1884,12 +1884,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: raindrop,
-					x: 64,
+					x: 60,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 48,
+					x: 44,
 					y: 68
 				}
 			],
@@ -1904,7 +1904,7 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 18,
+					x: 14,
 					y: 75
 				},
 				{
@@ -1915,17 +1915,17 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: raindrop,
-					x: 73,
+					x: 69,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 57,
+					x: 53,
 					y: 72
 				},
 				{
 					primitive: raindrop,
-					x: 41,
+					x: 37,
 					y: 68
 				}
 			],
@@ -1936,22 +1936,22 @@ var sun = require('./primitives/sunPrimitive')
 					y: 10,
 					scale: 0.8,
 					flip: true,
-					tint: 0.3
+					tint: 0.15
 				},
 				{
 					primitive: lightning,
-					x: 17,
+					x: 25,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: sleet,
-					x: 40,
+					x: 48,
 					y: 68
 				}
 			],
@@ -1966,7 +1966,7 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 17,
+					x: 19,
 					y: 75
 				},
 				{
@@ -1977,12 +1977,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: sleet,
-					x: 56,
+					x: 58,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 40,
+					x: 42,
 					y: 68
 				}
 			],
@@ -1993,32 +1993,32 @@ var sun = require('./primitives/sunPrimitive')
 					y: 10,
 					scale: 0.8,
 					flip: true,
-					tint: 0.3
+					tint: 0.4
 				},
 				{
 					primitive: lightning,
-					x: 17,
+					x: 15,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: sleet,
-					x: 66,
+					x: 71,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 56,
+					x: 55,
 					y: 72
 				},
 				{
 					primitive: sleet,
-					x: 40,
+					x: 38,
 					y: 68
 				}
 			],
@@ -2029,23 +2029,23 @@ var sun = require('./primitives/sunPrimitive')
 					y: 10,
 					scale: 0.8,
 					flip: true,
-					tint: 0.3
+					tint: 0.15
 				},
 				{
 					primitive: lightning,
-					x: 10,
+					x: 23,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.3
 				},
 				{
 					primitive: snowflake,
-					x: 35,
-					y: 71
+					x: 49,
+					y: 69
 				}
 			],
 			'14': [
@@ -2059,7 +2059,7 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: lightning,
-					x: 10,
+					x: 19,
 					y: 75
 				},
 				{
@@ -2070,12 +2070,12 @@ var sun = require('./primitives/sunPrimitive')
 				},
 				{
 					primitive: snowflake,
-					x: 53,
+					x: 62,
 					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 35,
+					x: 44,
 					y: 71
 				}
 			],
@@ -2086,32 +2086,32 @@ var sun = require('./primitives/sunPrimitive')
 					y: 10,
 					scale: 0.8,
 					flip: true,
-					tint: 0.3
+					tint: 0.4
 				},
 				{
 					primitive: lightning,
-					x: 10,
+					x: 8,
 					y: 75
 				},
 				{
 					primitive: cloud,
 					x: 7,
 					y: 22,
-					tint: 0.4
+					tint: 0.5
 				},
 				{
 					primitive: snowflake,
-					x: 73,
+					x: 70,
 					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 53,
+					x: 51,
 					y: 69
 				},
 				{
 					primitive: snowflake,
-					x: 35,
+					x: 33,
 					y: 71
 				}
 			]

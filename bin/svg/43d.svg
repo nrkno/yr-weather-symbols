@@ -22,7 +22,7 @@
 </symbol>
 <use xlink:href="#sun"  width="88.1" height="88.1" x="0" y="-88.1" transform="matrix(0.6 0 0 -0.6 4 7)" style="overflow:visible;"/>
 <use xlink:href="#cloud5"  width="94" height="58" id="XMLID_22_" x="-2" y="-56" transform="matrix(1 0 0 -1 8 23)" style="overflow:visible;"/>
-<use xlink:href="#sleet"  width="20" height="26" y="-26" transform="matrix(1 0 0 -1 63 72)" style="overflow:visible;"/>
-<use xlink:href="#sleet"  width="20" height="26" y="-26" transform="matrix(1 0 0 -1 47 68)" style="overflow:visible;"/>
-<use xlink:href="#sleet"  width="20" height="26" y="-26" transform="matrix(1 0 0 -1 30 68)" style="overflow:visible;"/>
+<use xlink:href="#sleet"  width="20" height="26" y="-26" transform="matrix(1 0 0 -1 66 72)" style="overflow:visible;"/>
+<use xlink:href="#sleet"  width="20" height="26" y="-26" transform="matrix(1 0 0 -1 50 68)" style="overflow:visible;"/>
+<use xlink:href="#sleet"  width="20" height="26" y="-26" transform="matrix(1 0 0 -1 33 68)" style="overflow:visible;"/>
 </svg>

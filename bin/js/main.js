@@ -1265,13 +1265,13 @@ require.register('primitives/fogPrimitive', function(module, exports, require) {
   	ctx.fill();  
     
   	ctx.beginPath();  
-  	ctx.moveTo(80.1,59);  
-  	ctx.lineTo(10.9,59);  
-  	ctx.bezierCurveTo(9.3,59,8,59.9,8,61);  
-  	ctx.bezierCurveTo(8,62.1,9.3,63,10.9,63);  
-  	ctx.lineTo(80.10000000000001,63);  
-  	ctx.bezierCurveTo(81.7,63,83.00000000000001,62.1,83.00000000000001,61);  
-  	ctx.bezierCurveTo(83.00000000000001,59.9,81.7,59,80.1,59);  
+  	ctx.moveTo(80.1,58);  
+  	ctx.lineTo(10.9,58);  
+  	ctx.bezierCurveTo(9.3,58,8,58.9,8,60);  
+  	ctx.bezierCurveTo(8,61.1,9.3,62,10.9,62);  
+  	ctx.lineTo(80.10000000000001,62);  
+  	ctx.bezierCurveTo(81.7,62,83.00000000000001,61.1,83.00000000000001,60);  
+  	ctx.bezierCurveTo(83.00000000000001,58.9,81.7,58,80.1,58);  
   	ctx.closePath();  
   	ctx.fill();  
     
@@ -1378,11 +1378,11 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: raindrop,
-  					x: 45,
+  					x: 48,
   					y: 68
   				}
   			],
@@ -1401,12 +1401,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: raindrop,
-  					x: 61,
+  					x: 55,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 45,
+  					x: 39,
   					y: 68
   				}
   			],
@@ -1421,21 +1421,21 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 71,
+  					x: 65,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 61,
+  					x: 49,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 45,
+  					x: 33,
   					y: 68
   				}
   			],
@@ -1450,11 +1450,11 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: sleet,
-  					x: 36,
+  					x: 45,
   					y: 68
   				}
   			],
@@ -1473,12 +1473,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: sleet,
-  					x: 52,
+  					x: 55,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 36,
+  					x: 39,
   					y: 68
   				}
   			],
@@ -1493,21 +1493,21 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: sleet,
-  					x: 42,
+  					x: 67,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 52,
-  					y: 72
+  					x: 50,
+  					y: 68
   				},
   				{
   					primitive: sleet,
-  					x: 36,
+  					x: 33,
   					y: 68
   				}
   			],
@@ -1522,12 +1522,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: snowflake,
-  					x: 22,
-  					y: 71
+  					x: 43,
+  					y: 69
   				}
   			],
   			'08d': [
@@ -1545,13 +1545,13 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: snowflake,
-  					x: 22,
-  					y: 71
+  					x: 54,
+  					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 40,
-  					y: 69
+  					x: 36,
+  					y: 71
   				}
   			],
   			'45d': [
@@ -1565,22 +1565,22 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: snowflake,
-  					x: 12,
-  					y: 71
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 22,
-  					y: 71
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 40,
+  					x: 63,
   					y: 69
+  				},
+  				{
+  					primitive: snowflake,
+  					x: 44,
+  					y: 69
+  				},
+  				{
+  					primitive: snowflake,
+  					x: 26,
+  					y: 71
   				}
   			],
   			'24d': [
@@ -1592,18 +1592,18 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 25,
+  					x: 27,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: raindrop,
-  					x: 48,
+  					x: 51,
   					y: 68
   				}
   			],
@@ -1616,7 +1616,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 25,
+  					x: 21,
   					y: 75
   				},
   				{
@@ -1627,12 +1627,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: raindrop,
-  					x: 64,
+  					x: 60,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 48,
+  					x: 44,
   					y: 68
   				}
   			],
@@ -1645,28 +1645,28 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 25,
+  					x: 14,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 84,
+  					x: 69,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 64,
+  					x: 53,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 48,
+  					x: 37,
   					y: 68
   				}
   			],
@@ -1679,18 +1679,18 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 17,
+  					x: 25,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: sleet,
-  					x: 40,
+  					x: 48,
   					y: 68
   				}
   			],
@@ -1703,7 +1703,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 17,
+  					x: 19,
   					y: 75
   				},
   				{
@@ -1714,12 +1714,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: sleet,
-  					x: 56,
+  					x: 58,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 40,
+  					x: 42,
   					y: 68
   				}
   			],
@@ -1732,28 +1732,28 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 17,
+  					x: 15,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: sleet,
-  					x: 76,
+  					x: 71,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 56,
+  					x: 55,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 40,
+  					x: 38,
   					y: 68
   				}
   			],
@@ -1766,19 +1766,19 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 10,
+  					x: 23,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: snowflake,
-  					x: 35,
-  					y: 71
+  					x: 49,
+  					y: 69
   				}
   			],
   			'21d': [
@@ -1790,7 +1790,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 10,
+  					x: 19,
   					y: 75
   				},
   				{
@@ -1801,12 +1801,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: snowflake,
-  					x: 53,
+  					x: 62,
   					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 35,
+  					x: 44,
   					y: 71
   				}
   			],
@@ -1819,28 +1819,28 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 10,
+  					x: 8,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: snowflake,
-  					x: 73,
+  					x: 70,
   					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 53,
+  					x: 51,
   					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 35,
+  					x: 33,
   					y: 71
   				}
   			],
@@ -1897,11 +1897,11 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: raindrop,
-  					x: 45,
+  					x: 48,
   					y: 68
   				}
   			],
@@ -1921,12 +1921,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: raindrop,
-  					x: 61,
+  					x: 55,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 45,
+  					x: 39,
   					y: 68
   				}
   			],
@@ -1942,21 +1942,21 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 71,
+  					x: 65,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 61,
+  					x: 49,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 45,
+  					x: 33,
   					y: 68
   				}
   			],
@@ -1972,11 +1972,11 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: sleet,
-  					x: 36,
+  					x: 45,
   					y: 68
   				}
   			],
@@ -1996,12 +1996,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: sleet,
-  					x: 52,
+  					x: 55,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 36,
+  					x: 39,
   					y: 68
   				}
   			],
@@ -2017,21 +2017,21 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: sleet,
-  					x: 42,
+  					x: 67,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 52,
-  					y: 72
+  					x: 50,
+  					y: 68
   				},
   				{
   					primitive: sleet,
-  					x: 36,
+  					x: 33,
   					y: 68
   				}
   			],
@@ -2047,12 +2047,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: snowflake,
-  					x: 22,
-  					y: 71
+  					x: 43,
+  					y: 69
   				}
   			],
   			'08m': [
@@ -2071,13 +2071,13 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: snowflake,
-  					x: 22,
-  					y: 71
+  					x: 54,
+  					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 40,
-  					y: 69
+  					x: 36,
+  					y: 71
   				}
   			],
   			'45m': [
@@ -2092,22 +2092,22 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: snowflake,
-  					x: 12,
-  					y: 71
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 22,
-  					y: 71
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 40,
+  					x: 63,
   					y: 69
+  				},
+  				{
+  					primitive: snowflake,
+  					x: 44,
+  					y: 69
+  				},
+  				{
+  					primitive: snowflake,
+  					x: 26,
+  					y: 71
   				}
   			],
   			'24m': [
@@ -2120,18 +2120,18 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 25,
+  					x: 27,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: raindrop,
-  					x: 48,
+  					x: 51,
   					y: 68
   				}
   			],
@@ -2145,7 +2145,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 25,
+  					x: 21,
   					y: 75
   				},
   				{
@@ -2156,12 +2156,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: raindrop,
-  					x: 64,
+  					x: 60,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 48,
+  					x: 44,
   					y: 68
   				}
   			],
@@ -2175,28 +2175,28 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 25,
+  					x: 14,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 84,
+  					x: 69,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 64,
+  					x: 53,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 48,
+  					x: 37,
   					y: 68
   				}
   			],
@@ -2210,18 +2210,18 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 17,
+  					x: 25,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: sleet,
-  					x: 40,
+  					x: 48,
   					y: 68
   				}
   			],
@@ -2235,7 +2235,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 17,
+  					x: 19,
   					y: 75
   				},
   				{
@@ -2246,12 +2246,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: sleet,
-  					x: 56,
+  					x: 58,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 40,
+  					x: 42,
   					y: 68
   				}
   			],
@@ -2265,28 +2265,28 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 17,
+  					x: 15,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: sleet,
-  					x: 76,
+  					x: 71,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 56,
+  					x: 55,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 40,
+  					x: 38,
   					y: 68
   				}
   			],
@@ -2300,19 +2300,19 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 10,
+  					x: 23,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: snowflake,
-  					x: 35,
-  					y: 71
+  					x: 49,
+  					y: 69
   				}
   			],
   			'21m': [
@@ -2325,7 +2325,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 10,
+  					x: 19,
   					y: 75
   				},
   				{
@@ -2336,12 +2336,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: snowflake,
-  					x: 53,
+  					x: 62,
   					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 35,
+  					x: 44,
   					y: 71
   				}
   			],
@@ -2355,28 +2355,28 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 10,
+  					x: 8,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: snowflake,
-  					x: 73,
+  					x: 70,
   					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 53,
+  					x: 51,
   					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 35,
+  					x: 33,
   					y: 71
   				}
   			],
@@ -2429,11 +2429,11 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: raindrop,
-  					x: 45,
+  					x: 48,
   					y: 68
   				}
   			],
@@ -2452,12 +2452,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: raindrop,
-  					x: 61,
+  					x: 55,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 45,
+  					x: 39,
   					y: 68
   				}
   			],
@@ -2472,21 +2472,21 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 71,
+  					x: 65,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 61,
+  					x: 49,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 45,
+  					x: 33,
   					y: 68
   				}
   			],
@@ -2501,11 +2501,11 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: sleet,
-  					x: 36,
+  					x: 45,
   					y: 68
   				}
   			],
@@ -2524,12 +2524,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: sleet,
-  					x: 52,
+  					x: 55,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 36,
+  					x: 39,
   					y: 68
   				}
   			],
@@ -2544,21 +2544,21 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: sleet,
-  					x: 42,
+  					x: 67,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 52,
-  					y: 72
+  					x: 50,
+  					y: 68
   				},
   				{
   					primitive: sleet,
-  					x: 36,
+  					x: 33,
   					y: 68
   				}
   			],
@@ -2573,12 +2573,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: snowflake,
-  					x: 22,
-  					y: 71
+  					x: 43,
+  					y: 69
   				}
   			],
   			'08n': [
@@ -2596,13 +2596,13 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: snowflake,
-  					x: 22,
-  					y: 71
+  					x: 54,
+  					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 40,
-  					y: 69
+  					x: 36,
+  					y: 71
   				}
   			],
   			'45n': [
@@ -2616,22 +2616,22 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: snowflake,
-  					x: 12,
-  					y: 71
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 22,
-  					y: 71
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 40,
+  					x: 63,
   					y: 69
+  				},
+  				{
+  					primitive: snowflake,
+  					x: 44,
+  					y: 69
+  				},
+  				{
+  					primitive: snowflake,
+  					x: 26,
+  					y: 71
   				}
   			],
   			'24n': [
@@ -2643,18 +2643,18 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 25,
+  					x: 27,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: raindrop,
-  					x: 48,
+  					x: 51,
   					y: 68
   				}
   			],
@@ -2667,7 +2667,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 25,
+  					x: 21,
   					y: 75
   				},
   				{
@@ -2678,12 +2678,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: raindrop,
-  					x: 64,
+  					x: 60,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 48,
+  					x: 44,
   					y: 68
   				}
   			],
@@ -2696,28 +2696,28 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 25,
+  					x: 14,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: raindrop,
-  					x: 84,
+  					x: 69,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 64,
+  					x: 53,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 48,
+  					x: 37,
   					y: 68
   				}
   			],
@@ -2730,18 +2730,18 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 17,
+  					x: 25,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: sleet,
-  					x: 40,
+  					x: 48,
   					y: 68
   				}
   			],
@@ -2754,7 +2754,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 17,
+  					x: 19,
   					y: 75
   				},
   				{
@@ -2765,12 +2765,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: sleet,
-  					x: 56,
+  					x: 58,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 40,
+  					x: 42,
   					y: 68
   				}
   			],
@@ -2783,28 +2783,28 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 17,
+  					x: 15,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: sleet,
-  					x: 76,
+  					x: 71,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 56,
+  					x: 55,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 40,
+  					x: 38,
   					y: 68
   				}
   			],
@@ -2817,19 +2817,19 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 10,
+  					x: 23,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: snowflake,
-  					x: 35,
-  					y: 71
+  					x: 49,
+  					y: 69
   				}
   			],
   			'21n': [
@@ -2841,7 +2841,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 10,
+  					x: 19,
   					y: 75
   				},
   				{
@@ -2852,12 +2852,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: snowflake,
-  					x: 53,
+  					x: 62,
   					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 35,
+  					x: 44,
   					y: 71
   				}
   			],
@@ -2870,28 +2870,28 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 10,
+  					x: 8,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: snowflake,
-  					x: 73,
+  					x: 70,
   					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 53,
+  					x: 51,
   					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 35,
+  					x: 33,
   					y: 71
   				}
   			],
@@ -2928,7 +2928,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					y: 10,
   					scale: 0.8,
   					flip: true,
-  					tint: 0.2
+  					tint: 0.15
   				},
   				{
   					primitive: cloud,
@@ -2938,7 +2938,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: raindrop,
-  					x: 45,
+  					x: 48,
   					y: 68
   				}
   			],
@@ -2959,12 +2959,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: raindrop,
-  					x: 61,
+  					x: 55,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 45,
+  					x: 39,
   					y: 68
   				}
   			],
@@ -2985,17 +2985,17 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: raindrop,
-  					x: 71,
+  					x: 65,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 55,
+  					x: 49,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 39,
+  					x: 33,
   					y: 68
   				}
   			],
@@ -3006,7 +3006,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					y: 10,
   					scale: 0.8,
   					flip: true,
-  					tint: 0.2
+  					tint: 0.15
   				},
   				{
   					primitive: cloud,
@@ -3016,7 +3016,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: sleet,
-  					x: 36,
+  					x: 45,
   					y: 68
   				}
   			],
@@ -3037,12 +3037,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: sleet,
-  					x: 52,
+  					x: 55,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 36,
+  					x: 39,
   					y: 68
   				}
   			],
@@ -3063,17 +3063,17 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: sleet,
-  					x: 72,
+  					x: 67,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 52,
-  					y: 72
+  					x: 50,
+  					y: 68
   				},
   				{
   					primitive: sleet,
-  					x: 36,
+  					x: 33,
   					y: 68
   				}
   			],
@@ -3084,7 +3084,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					y: 10,
   					scale: 0.8,
   					flip: true,
-  					tint: 0.2
+  					tint: 0.15
   				},
   				{
   					primitive: cloud,
@@ -3094,8 +3094,8 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: snowflake,
-  					x: 22,
-  					y: 71
+  					x: 43,
+  					y: 69
   				}
   			],
   			'13': [
@@ -3115,12 +3115,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: snowflake,
-  					x: 40,
+  					x: 54,
   					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 22,
+  					x: 36,
   					y: 71
   				}
   			],
@@ -3141,17 +3141,17 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: snowflake,
-  					x: 60,
+  					x: 63,
   					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 40,
+  					x: 44,
   					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 22,
+  					x: 26,
   					y: 71
   				}
   			],
@@ -3162,22 +3162,22 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					y: 10,
   					scale: 0.8,
   					flip: true,
-  					tint: 0.3
+  					tint: 0.15
   				},
   				{
   					primitive: lightning,
-  					x: 25,
+  					x: 27,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: raindrop,
-  					x: 48,
+  					x: 51,
   					y: 68
   				}
   			],
@@ -3192,7 +3192,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 25,
+  					x: 21,
   					y: 75
   				},
   				{
@@ -3203,12 +3203,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: raindrop,
-  					x: 64,
+  					x: 60,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 48,
+  					x: 44,
   					y: 68
   				}
   			],
@@ -3223,7 +3223,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 18,
+  					x: 14,
   					y: 75
   				},
   				{
@@ -3234,17 +3234,17 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: raindrop,
-  					x: 73,
+  					x: 69,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 57,
+  					x: 53,
   					y: 72
   				},
   				{
   					primitive: raindrop,
-  					x: 41,
+  					x: 37,
   					y: 68
   				}
   			],
@@ -3255,22 +3255,22 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					y: 10,
   					scale: 0.8,
   					flip: true,
-  					tint: 0.3
+  					tint: 0.15
   				},
   				{
   					primitive: lightning,
-  					x: 17,
+  					x: 25,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: sleet,
-  					x: 40,
+  					x: 48,
   					y: 68
   				}
   			],
@@ -3285,7 +3285,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 17,
+  					x: 19,
   					y: 75
   				},
   				{
@@ -3296,12 +3296,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: sleet,
-  					x: 56,
+  					x: 58,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 40,
+  					x: 42,
   					y: 68
   				}
   			],
@@ -3312,32 +3312,32 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					y: 10,
   					scale: 0.8,
   					flip: true,
-  					tint: 0.3
+  					tint: 0.4
   				},
   				{
   					primitive: lightning,
-  					x: 17,
+  					x: 15,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: sleet,
-  					x: 66,
+  					x: 71,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 56,
+  					x: 55,
   					y: 72
   				},
   				{
   					primitive: sleet,
-  					x: 40,
+  					x: 38,
   					y: 68
   				}
   			],
@@ -3348,23 +3348,23 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					y: 10,
   					scale: 0.8,
   					flip: true,
-  					tint: 0.3
+  					tint: 0.15
   				},
   				{
   					primitive: lightning,
-  					x: 10,
+  					x: 23,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.3
   				},
   				{
   					primitive: snowflake,
-  					x: 35,
-  					y: 71
+  					x: 49,
+  					y: 69
   				}
   			],
   			'14': [
@@ -3378,7 +3378,7 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: lightning,
-  					x: 10,
+  					x: 19,
   					y: 75
   				},
   				{
@@ -3389,12 +3389,12 @@ require.register('WeatherSymbol', function(module, exports, require) {
   				},
   				{
   					primitive: snowflake,
-  					x: 53,
+  					x: 62,
   					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 35,
+  					x: 44,
   					y: 71
   				}
   			],
@@ -3405,32 +3405,32 @@ require.register('WeatherSymbol', function(module, exports, require) {
   					y: 10,
   					scale: 0.8,
   					flip: true,
-  					tint: 0.3
+  					tint: 0.4
   				},
   				{
   					primitive: lightning,
-  					x: 10,
+  					x: 8,
   					y: 75
   				},
   				{
   					primitive: cloud,
   					x: 7,
   					y: 22,
-  					tint: 0.4
+  					tint: 0.5
   				},
   				{
   					primitive: snowflake,
-  					x: 73,
+  					x: 70,
   					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 53,
+  					x: 51,
   					y: 69
   				},
   				{
   					primitive: snowflake,
-  					x: 35,
+  					x: 33,
   					y: 71
   				}
   			]

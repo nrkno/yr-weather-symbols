@@ -28,13 +28,13 @@ exports.render = function(ctx, options) {
 	ctx.fill();
 
 	ctx.beginPath();
-	ctx.moveTo(80.1,59);
-	ctx.lineTo(10.9,59);
-	ctx.bezierCurveTo(9.3,59,8,59.9,8,61);
-	ctx.bezierCurveTo(8,62.1,9.3,63,10.9,63);
-	ctx.lineTo(80.10000000000001,63);
-	ctx.bezierCurveTo(81.7,63,83.00000000000001,62.1,83.00000000000001,61);
-	ctx.bezierCurveTo(83.00000000000001,59.9,81.7,59,80.1,59);
+	ctx.moveTo(80.1,58);
+	ctx.lineTo(10.9,58);
+	ctx.bezierCurveTo(9.3,58,8,58.9,8,60);
+	ctx.bezierCurveTo(8,61.1,9.3,62,10.9,62);
+	ctx.lineTo(80.10000000000001,62);
+	ctx.bezierCurveTo(81.7,62,83.00000000000001,61.1,83.00000000000001,60);
+	ctx.bezierCurveTo(83.00000000000001,58.9,81.7,58,80.1,58);
 	ctx.closePath();
 	ctx.fill();
 

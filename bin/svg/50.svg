@@ -24,7 +24,7 @@
 </symbol>
 <use xlink:href="#cloud4"  width="94" height="58" x="-2" y="-56" transform="matrix(-0.8 0 0 -0.8 80 10)" style="overflow:visible;"/>
 <use xlink:href="#cloud5"  width="94" height="58" id="XMLID_70_" x="-2" y="-56" transform="matrix(1 0 0 -1 8 23)" style="overflow:visible;"/>
-<use xlink:href="#snowflake"  width="20" height="25" y="-25" transform="matrix(1 0 0 -1 54 69)" style="overflow:visible;"/>
-<use xlink:href="#snowflake"  width="20" height="25" y="-25" transform="matrix(1 0 0 -1 35 69)" style="overflow:visible;"/>
-<use xlink:href="#snowflake"  width="20" height="25" y="-25" transform="matrix(1 0 0 -1 17 71)" style="overflow:visible;"/>
+<use xlink:href="#snowflake"  width="20" height="25" x="0" y="-25" transform="matrix(1 0 0 -1 63 69)" style="overflow:visible;"/>
+<use xlink:href="#snowflake"  width="20" height="25" x="0" y="-25" transform="matrix(1 0 0 -1 44 69)" style="overflow:visible;"/>
+<use xlink:href="#snowflake"  width="20" height="25" x="0" y="-25" transform="matrix(1 0 0 -1 26 71)" style="overflow:visible;"/>
 </svg>

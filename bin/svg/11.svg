@@ -20,10 +20,10 @@
 	<path style="fill:#FFFFFF;" d="M18-9c0-5-4-9-9-9c-5,0-9,4-9,9c0,5,4,9,9,9C14,0,18-4,18-9z"/>
 	<path style="fill:#1671CC;" d="M20-16.8c0-3.4-2.7-6.2-6-6.2c-3.3,0-6,2.8-6,6.2C8-14.9,8-6,8-6C13.5-11.5,20-11.2,20-16.8z"/>
 </symbol>
-<use xlink:href="#lightning"  width="25" height="25" y="-25" transform="matrix(1 0 0 -1 18 75)" style="overflow:visible;"/>
+<use xlink:href="#lightning"  width="25" height="25" y="-25" transform="matrix(1 0 0 -1 14 75)" style="overflow:visible;"/>
 <use xlink:href="#cloud4"  width="94" height="58" x="-2" y="-56" transform="matrix(-0.8 0 0 -0.8 80 10)" style="overflow:visible;"/>
 <use xlink:href="#cloud5"  width="94" height="58" x="-2" y="-56" transform="matrix(1 0 0 -1 7.9996 23)" style="overflow:visible;"/>
-<use xlink:href="#raindrop"  width="20" height="23" id="XMLID_40_" y="-23" transform="matrix(1 0 0 -1 73 72)" style="overflow:visible;"/>
-<use xlink:href="#raindrop"  width="20" height="23" y="-23" transform="matrix(1 0 0 -1 57 72)" style="overflow:visible;"/>
-<use xlink:href="#raindrop"  width="20" height="23" y="-23" transform="matrix(1 0 0 -1 41 68)" style="overflow:visible;"/>
+<use xlink:href="#raindrop"  width="20" height="23" id="XMLID_40_" y="-23" transform="matrix(1 0 0 -1 69 72)" style="overflow:visible;"/>
+<use xlink:href="#raindrop"  width="20" height="23" y="-23" transform="matrix(1 0 0 -1 53 72)" style="overflow:visible;"/>
+<use xlink:href="#raindrop"  width="20" height="23" y="-23" transform="matrix(1 0 0 -1 37 68)" style="overflow:visible;"/>
 </svg>

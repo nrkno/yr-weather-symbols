@@ -20,7 +20,7 @@
 	<path style="fill:#1671CC;" d="M20-16.8c0-3.4-2.7-6.2-6-6.2c-3.3,0-6,2.8-6,6.2C8-14.9,8-6,8-6C13.5-11.5,20-11.2,20-16.8z"/>
 </symbol>
 <use xlink:href="#moon"  width="52.4" height="60" y="-60" transform="matrix(0.6667 0 0 -0.6667 18 13)" style="overflow:visible;"/>
-<use xlink:href="#lightning"  width="25" height="25" y="-25" transform="matrix(1 0 0 -1 31 75)" style="overflow:visible;"/>
+<use xlink:href="#lightning"  width="25" height="25" y="-25" transform="matrix(1 0 0 -1 27 75)" style="overflow:visible;"/>
 <use xlink:href="#cloud3"  width="94" height="58" id="XMLID_72_" x="-2" y="-56" transform="matrix(1 0 0 -1 8 23)" style="overflow:visible;"/>
-<use xlink:href="#raindrop"  width="20" height="23" y="-23" transform="matrix(1 0 0 -1 55 68)" style="overflow:visible;"/>
+<use xlink:href="#raindrop"  width="20" height="23" y="-23" transform="matrix(1 0 0 -1 51 68)" style="overflow:visible;"/>
 </svg>

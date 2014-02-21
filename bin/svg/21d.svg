@@ -28,8 +28,8 @@
 		c-12.4,0-22.5,10.1-22.5,22.5c0,12.4,10.1,22.5,22.5,22.5C56.5-21.6,66.6-31.6,66.6-44.1z"/>
 </symbol>
 <use xlink:href="#sun"  width="88.1" height="88.1" x="0" y="-88.1" transform="matrix(0.6 0 0 -0.6 4 7)" style="overflow:visible;"/>
-<use xlink:href="#lightning"  width="25" height="25" y="-25" transform="matrix(1 0 0 -1 10 75)" style="overflow:visible;"/>
+<use xlink:href="#lightning"  width="25" height="25" y="-25" transform="matrix(1 0 0 -1 19 75)" style="overflow:visible;"/>
 <use xlink:href="#cloud4"  width="94" height="58" x="-2" y="-56" transform="matrix(1 0 0 -1 8 23)" style="overflow:visible;"/>
-<use xlink:href="#snowflake"  width="20" height="25" y="-25" transform="matrix(1 0 0 -1 53 69)" style="overflow:visible;"/>
-<use xlink:href="#snowflake"  width="20" height="25" id="XMLID_50_" y="-25" transform="matrix(1 0 0 -1 35 71)" style="overflow:visible;"/>
+<use xlink:href="#snowflake"  width="20" height="25" x="0" y="-25" transform="matrix(1 0 0 -1 62 69)" style="overflow:visible;"/>
+<use xlink:href="#snowflake"  width="20" height="25" id="XMLID_50_" x="0" y="-25" transform="matrix(1 0 0 -1 44 71)" style="overflow:visible;"/>
 </svg>

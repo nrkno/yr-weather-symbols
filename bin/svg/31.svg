@@ -21,8 +21,8 @@
 	<path style="fill:#1EB9D8;" d="M19.9-16.6c-1.8-2.3-3.4-5.5-3.9-8.9c-0.1-0.5-0.6-0.7-1-0.4c-2.3,2.1-4.8,3.3-8.5,3.8
 		c-0.4,0.1-0.6,0.5-0.4,0.8C8.4-17,8.6-10.1,7.8-5c2.7-4.2,7.1-9,11.8-10.7C20-15.8,20.1-16.3,19.9-16.6z"/>
 </symbol>
-<use xlink:href="#lightning"  width="25" height="25" y="-25" transform="matrix(1 0 0 -1 23 75)" style="overflow:visible;"/>
+<use xlink:href="#lightning"  width="25" height="25" y="-25" transform="matrix(1 0 0 -1 25 75)" style="overflow:visible;"/>
 <use xlink:href="#cloud2"  width="94" height="58" x="-2" y="-56" transform="matrix(-0.8 0 0 -0.8 80 10)" style="overflow:visible;"/>
 <use xlink:href="#cloud3"  width="94" height="58" x="-2" y="-56" transform="matrix(1 0 0 -1 8 23)" style="overflow:visible;"/>
-<use xlink:href="#sleet"  width="20" height="26" id="XMLID_9_" y="-26" transform="matrix(1 0 0 -1 46 68)" style="overflow:visible;"/>
+<use xlink:href="#sleet"  width="20" height="26" id="XMLID_9_" y="-26" transform="matrix(1 0 0 -1 48 68)" style="overflow:visible;"/>
 </svg>
