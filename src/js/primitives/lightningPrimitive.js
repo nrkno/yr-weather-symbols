@@ -1,4 +1,5 @@
-var FILL_COLOUR = '#c9af16';
+var svg = require('../svg')
+	, FILL_COLOUR = '#c9af16';
 
 /**
  * Render
@@ -20,7 +21,18 @@ exports.render = function (element, options) {
  * @returns {String}
  */
 function renderSVG (element, options) {
-
+	svg.appendChild(element, 'use', {
+		'xlink:href': '#lightning',
+		x: '0',
+		y: '0',
+		width: '100',
+		height: '100',
+		transform: 'translate('
+			+ options.x
+			+ ','
+			+ options.y
+			+ ')'
+	});
 }
 
 /**

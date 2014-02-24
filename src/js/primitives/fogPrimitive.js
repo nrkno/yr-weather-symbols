@@ -1,3 +1,5 @@
+var svg = require('../svg');
+
 /**
  * Render
  * @param {DOMElement} element
@@ -18,7 +20,18 @@ exports.render = function (element, options) {
  * @returns {String}
  */
 function renderSVG (element, options) {
-
+	svg.appendChild(element, 'use', {
+		'xlink:href': '#fog',
+		x: '0',
+		y: '0',
+		width: '100',
+		height: '100',
+		transform: 'translate('
+			+ options.x
+			+ ','
+			+ options.y
+			+ ')'
+	});
 }
 
 /**

@@ -1,4 +1,5 @@
-var TWO_PI = Math.PI * 2
+var svg = require('../svg')
+	, TWO_PI = Math.PI * 2
 	, FILL_COLOUR = '#afc1c9'
 	, WIDTH = 60;
 
@@ -22,7 +23,20 @@ exports.render = function (element, options) {
  * @returns {String}
  */
 function renderSVG (element, options) {
-
+	svg.appendChild(element, 'use', {
+		'xlink:href': '#moon',
+		x: '0',
+		y: '0',
+		width: '100',
+		height: '100',
+		transform: 'translate('
+			+ options.x
+			+ ','
+			+ options.y
+			+ ') scale('
+			+ options.scale
+			+ ')'
+	});
 }
 
 /**

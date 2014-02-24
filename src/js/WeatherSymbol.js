@@ -1,6 +1,7 @@
 // Convert with http://www.professorcloud.com/svg-to-element/
 
-var primitives = {
+var svg = require('./svg')
+	, primitives = {
 			sun: require('./primitives/sunPrimitive'),
 			moon: require('./primitives/moonPrimitive'),
 			cloud: require('./primitives/cloudPrimitive'),
@@ -31,13 +32,12 @@ module.exports = function (container, options) {
 		, w = container.offsetWidth
 		, h = container.offsetHeight
 		, scale = options.scale || 1
-		, tScale = (w/100) * scale
+		, tScale = (type == CANVAS) ? (w/100) * scale : 1
 		, bg = getStyle(container, 'background-color') || DEFAULT_BG
 		, f = formula[id]
 		, layer, opts;
 
 	if (type == SVG || type == CANVAS) {
-
 		if (type == CANVAS) {
 			if (w != 0) {
 				element.width = w * scale;
@@ -62,7 +62,7 @@ module.exports = function (container, options) {
 					bg: bg
 				};
 
-				element.innerHTML += primitives[layer.primitive].render(element, opts);
+				primitives[layer.primitive].render(element, opts);
 			}
 		}
 	}
@@ -75,12 +75,15 @@ function getStyle (element, prop) {
 }
 
 function createElement (type) {
-	var el = document.createElement(type);
+	var el;
 
 	if (type == SVG) {
+		el = document.createElementNS(svg.NS, type);
 		el.setAttribute('x', '0px');
 		el.setAttribute('y', '0px');
 		el.setAttribute('viewBox', '0 0 100 100');
+	} else {
+		el = document.createElement(type);
 	}
 
 	return el;

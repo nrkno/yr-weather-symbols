@@ -2,15 +2,15 @@
 	"01d": [
 		{
 			"primitive": "sun",
-			"x": 6,
-			"y": 6
+			"x": 5,
+			"y": 5
 		}
 	],
 	"02d": [
 		{
 			"primitive": "sun",
-			"x": 6,
-			"y": 6
+			"x": 5,
+			"y": 5
 		},
 		{
 			"primitive": "cloud",

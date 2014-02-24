@@ -1,4 +1,4 @@
-var appendTo = require('../utils').appendToSVG
+var svg = require('../svg')
 
 	, TWO_PI = Math.PI * 2
 	, RAY_COLOUR = '#e88d15'
@@ -26,15 +26,20 @@ exports.render = function (element, options) {
  * @returns {String}
  */
 function renderSVG (element, options) {
-	// return '<use xlink:href="#sun" x="0" y="0" width="100" height="100"></use>';
-	// return appendTo(element, 'use', {
-	// 	'xlink:href': '#sun',
-	// 	x: '0',
-	// 	y: '0',
-	// 	width: '100',
-	// 	height: '100'
-	// });
-	return '';
+	svg.appendChild(element, 'use', {
+		'xlink:href': options.winter ? '#sunWinter' : '#sun',
+		x: '0',
+		y: '0',
+		width: '100',
+		height: '100',
+		transform: 'translate('
+			+ options.x
+			+ ','
+			+ options.y
+			+ ') scale('
+			+ options.scale
+			+ ')'
+	});
 }
 
 /**
@@ -157,6 +162,4 @@ function renderCanvas (element, options) {
 		ctx.stroke();
 	}
 	ctx.restore();
-
-	return '';
 }

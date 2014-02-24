@@ -1,4 +1,5 @@
-var STROKE_WIDTH = 4
+var svg = require('../svg')
+	, STROKE_WIDTH = 4
 	, WIDTH = 100;
 
 /**
@@ -21,7 +22,30 @@ exports.render = function (element, options) {
  * @returns {String}
  */
 function renderSVG (element, options) {
-
+	svg.appendChild(element, 'use', {
+		'xlink:href': '#cloud',
+		x: '0',
+		y: '0',
+		width: '100',
+		height: '100',
+		transform: options.flip
+			? 'translate('
+				+ ((WIDTH * options.scale) + options.x)
+				+ ','
+				+ options.y
+				+ ') scale('
+				+ (-1 * options.scale)
+				+ ', '
+				+ options.scale
+				+ ')'
+			: 'translate('
+				+ options.x
+				+ ','
+				+ options.y
+				+ ') scale('
+				+ options.scale
+				+ ')'
+	});
 }
 
 /**
