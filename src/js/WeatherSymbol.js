@@ -11,7 +11,7 @@ var svg = require('./svg')
 			fog: require('./primitives/fogPrimitive'),
 			lightning: require('./primitives/lightningPrimitive')
 		}
-	, formula = require('./weatherSymbols.json')
+	, formula = require('../../resources/weatherSymbols.json')
 
 	, DEFAULT_BG = '#ffffff'
 	, SVG = 'svg'

@@ -9,7 +9,7 @@
   },
   "scripts": {
   },
-  "main": "index.js",
+  "main": "src/js/weatherSymbol",
   "repository": "https://github.com/YR/yr-weather-symbols.git",
   "private": true,
   "buddy": {
