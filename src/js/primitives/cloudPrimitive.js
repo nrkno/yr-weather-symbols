@@ -1,8 +1,37 @@
 var STROKE_WIDTH = 4
 	, WIDTH = 100;
 
-exports.render = function(ctx, options) {
-	var tint = Math.floor(255 * (1-options.tint));
+/**
+ * Render
+ * @param {DOMElement} element
+ * @param {Object} options
+ */
+exports.render = function (element, options) {
+	if (options.type == 'svg') {
+		return renderSVG(element, options);
+	} else {
+		return renderCanvas(element, options);
+	}
+};
+
+/**
+ * Render svg version
+ * @param {DOMElement} element
+ * @param {Object} options
+ * @returns {String}
+ */
+function renderSVG (element, options) {
+
+}
+
+/**
+ * Render canvas version
+ * @param {DOMElement} element
+ * @param {Object} options
+ */
+function renderCanvas (element, options) {
+	var ctx = element.getContext('2d')
+		, tint = Math.floor(255 * (1-options.tint));
 
 	ctx.save();
 	if (options.flip) {
@@ -31,4 +60,4 @@ exports.render = function(ctx, options) {
 	ctx.fill();
 	ctx.stroke();
 	ctx.restore();
-};
+}

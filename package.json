@@ -36,8 +36,8 @@
         ],
         "targets": [
           {
-            "input": "src/html/index.html",
-            "output": "index.html"
+            "input": "src/html/",
+            "output": "."
           }
         ]
       }

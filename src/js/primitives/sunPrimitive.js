@@ -1,10 +1,50 @@
-var TWO_PI = Math.PI * 2
+var appendTo = require('../utils').appendToSVG
+
+	, TWO_PI = Math.PI * 2
 	, RAY_COLOUR = '#e88d15'
 	, HORIZON_COLOUR = '#4d4d4d'
 	, CENTER_COLOUR = '#faba2f'
 	, STROKE_WIDTH = 4;
 
-exports.render = function(ctx, options) {
+/**
+ * Render
+ * @param {DOMElement} element
+ * @param {Object} options
+ */
+exports.render = function (element, options) {
+	if (options.type == 'svg') {
+		return renderSVG(element, options);
+	} else {
+		return renderCanvas(element, options);
+	}
+};
+
+/**
+ * Render svg version
+ * @param {DOMElement} element
+ * @param {Object} options
+ * @returns {String}
+ */
+function renderSVG (element, options) {
+	// return '<use xlink:href="#sun" x="0" y="0" width="100" height="100"></use>';
+	// return appendTo(element, 'use', {
+	// 	'xlink:href': '#sun',
+	// 	x: '0',
+	// 	y: '0',
+	// 	width: '100',
+	// 	height: '100'
+	// });
+	return '';
+}
+
+/**
+ * Render canvas version
+ * @param {DOMElement} element
+ * @param {Object} options
+ */
+function renderCanvas (element, options) {
+	var ctx = element.getContext('2d');
+
 	ctx.save();
 	ctx.translate(options.x, options.y);
 	ctx.scale(options.scale, options.scale);
@@ -117,4 +157,6 @@ exports.render = function(ctx, options) {
 		ctx.stroke();
 	}
 	ctx.restore();
-};
+
+	return '';
+}

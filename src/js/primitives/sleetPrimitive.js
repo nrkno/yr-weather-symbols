@@ -1,7 +1,37 @@
 var TWO_PI = Math.PI * 2
 	, FILL_COLOUR = '#1EB9D8';
 
-exports.render = function(ctx, options) {
+/**
+ * Render
+ * @param {DOMElement} element
+ * @param {Object} options
+ */
+exports.render = function (element, options) {
+	if (options.type == 'svg') {
+		return renderSVG(element, options);
+	} else {
+		return renderCanvas(element, options);
+	}
+}
+
+/**
+ * Render svg version
+ * @param {DOMElement} element
+ * @param {Object} options
+ * @returns {String}
+ */
+function renderSVG (element, options) {
+
+}
+
+/**
+ * Render canvas version
+ * @param {DOMElement} element
+ * @param {Object} options
+ */
+function renderCanvas (element, options) {
+	var ctx = element.getContext('2d');
+
 	// Stroke
 	ctx.save();
 	ctx.fillStyle = options.bg;

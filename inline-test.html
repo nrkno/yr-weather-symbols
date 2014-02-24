@@ -1,82 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>YR symbols</title>
-	<style >
-		section, header, footer {display: block;}
-		* {
-			-moz-box-sizing: border-box;
-			-webkit-box-sizing: border-box;
-			box-sizing: border-box;
-			margin: 0;
-			padding: 0;
-		}
-		body {
-			line-height: 1;
-			font-size: 100%;
-			padding: 0 30px;
-			/*background-color: #eee;*/
-			color: #243640;
-			font-family: Avenir, 'Gill Sans', 'Gill Sans MT', Roboto, Calibri, sans-serif;
-			font-weight: 100;
-			font-variant: normal;
-			-webkit-font-smoothing: antialiased;
-		}
-		header {
-			margin-top: 20px;
-		}
-		h1,
-		h2,
-		h3 {
-			font-weight: 100;
-		}
-		h1 {
-			background-color: #fff;
-			font-size: 30px;
-		}
-		h2 {
-			font-size: 20px;
-			text-transform: uppercase;
-			border-bottom: 1px solid rgba(33,33,66,0.2);
-			margin-bottom: 20px;
-			padding-top: 20px;
-			background-color: #fff;
-		}
-		figure {
-			position: relative;
-			display: inline-block;
-			text-align: center;
-			margin: 0 20px;
-		}
-		figcaption {
-			position: absolute;
-			font-size: 10px;
-			width: 100%;
-		}
+	<title>inline svg test</title>
+	<style type="text/css">
 		.symbol {
-			width: 100%;
-			height: 100%;
-			background-color: white;
-		}
-		#viewport {
-			width: 801px;
-			margin: 0 auto;
-		}
-		.symbol-group {
-			margin-bottom: 40px;
-		}
-		.id {
-			text-transform: lowercase;
-			font-style: italic;
-		}
-		.s128 {
-			width: 130px;
-			height: 130px;
-		}
-		.s128 div {
 			width: 128px;
 			height: 128px;
+			border: 1px solid grey;
 		}
 		.sun-centre,
 		.cloud {
@@ -117,7 +48,7 @@
 	</style>
 </head>
 <body>
-	<svg id="symbolDefs" x="0px" y="0px" width="0" height="0" viewBox="0 0 100 100">
+	<svg x="0px" y="0px" width="0" height="0" viewBox="0 0 100 100">
 		<symbol id="sun">
 			<path class="sun-ray" d="M64.3,53l23.3-6.1c2-0.5,2-3.3,0-3.9L64.3,37l12.2-20.8c1-1.8-1-3.8-2.7-2.7L53,25.7L46.9,2.4c-0.5-2-3.3-2-3.9,0L37,25.7 L16.3,13.5c-1.8-1-3.8,1-2.7,2.7L25.7,37L2.4,43.1c-2,0.5-2,3.3,0,3.9L25.7,53L13.5,73.7c-1,1.8,1,3.8,2.7,2.7L37,64.3l6.1,23.3 c0.5,2,3.3,2,3.9,0L53,64.3l20.8,12.2c1.8,1,3.8-1,2.7-2.7L64.3,53z"/>
 			<path class="sun-centre" d="M67.5,45c0,12.4-10.1,22.5-22.5,22.5c-12.4,0-22.5-10.1-22.5-22.5c0-12.4,10.1-22.5,22.5-22.5 C57.4,22.5,67.5,32.6,67.5,45z"/>
@@ -157,16 +88,34 @@
 			<path class="lightning" d="M10.4,0L4.2,12.5h8.3L0,25L25,8.3h-8.3L25,0H10.4z"/>
 		</symbol>
 	</svg>
-	<div id="viewport">
-		<section>
-			<header>
-				<h1>YR weather symbols</h1>
-			</header>
-			<div id="symbols">
-			</div>
-		</section>
-	</div>
 
-	<script src="bin/js/main.js"></script>
+	<svg class="symbol" x="0px" y="0px" viewBox="0 0 100 100">
+		<use xlink:href="#sun" x="0" y="0" width="100" height="100"></use>
+	</svg>
+	<svg class="symbol" x="0px" y="0px" viewBox="0 0 100 100">
+		<use xlink:href="#sunWinter" x="0" y="0" width="100" height="100"></use>
+	</svg>
+	<svg class="symbol" x="0px" y="0px" viewBox="0 0 100 100">
+		<use xlink:href="#moon" x="0" y="0" width="100" height="100"></use>
+	</svg>
+	<svg class="symbol" x="0px" y="0px" viewBox="0 0 100 100">
+		<use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use>
+	</svg>
+	<svg class="symbol" x="0px" y="0px" viewBox="0 0 100 100">
+		<use xlink:href="#fog" x="0" y="0" width="100" height="100"></use>
+	</svg>
+	<svg class="symbol" x="0px" y="0px" viewBox="0 0 100 100">
+		<use xlink:href="#raindrop" x="0" y="0" width="100" height="100"></use>
+	</svg>
+	<svg class="symbol" x="0px" y="0px" viewBox="0 0 100 100">
+		<use xlink:href="#sleet" x="0" y="0" width="100" height="100"></use>
+	</svg>
+	<svg class="symbol" x="0px" y="0px" viewBox="0 0 100 100">
+		<use xlink:href="#snowflake" x="0" y="0" width="100" height="100"></use>
+	</svg>
+	<svg class="symbol" x="0px" y="0px" viewBox="0 0 100 100">
+		<use xlink:href="#lightning" x="0" y="0" width="100" height="100"></use>
+	</svg>
+
 </body>
 </html>

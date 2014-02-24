@@ -926,16 +926,93 @@ require.register('dust', function(module, exports, require) {
 });
 require.register('symbolGroup', function(module, exports, require) {
   var dust = window.dust || require('dust');
-  module.exports = (function(){dust.register("symbolGroup",body_0);function body_0(chk,ctx){return chk.section(ctx._get(false, ["symbols"]),ctx,{"block":body_1},null);}function body_1(chk,ctx){return chk.write("<h2>").reference(ctx._get(false, ["title"]),ctx,"h").write("</h2>").section(ctx._get(false, ["variations"]),ctx,{"block":body_2},null);}function body_2(chk,ctx){return chk.write("<section class=\"symbol-group\"><h3>#").reference(ctx._get(false, ["id"]),ctx,"h").write("</h3><figure class=\"s128\"><img src=\"./bin/svg/").reference(ctx._get(false, ["id"]),ctx,"h").write(".svg\"><figcaption>svg@128px</figcaption></figure><figure class=\"s64\"><img src=\"./bin/svg/").reference(ctx._get(false, ["id"]),ctx,"h").write(".svg\"><figcaption>svg@64px</figcaption></figure><figure class=\"s32\"><img src=\"./bin/svg/").reference(ctx._get(false, ["id"]),ctx,"h").write(".svg\"><figcaption>svg@32px</figcaption></figure><figure class=\"s128\"><canvas class=\"symbol\" data-id=\"").reference(ctx._get(false, ["id"]),ctx,"h").write("\"></canvas><figcaption>canvas@128px</figcaption></figure><figure class=\"s64\"><canvas class=\"symbol\" data-id=\"").reference(ctx._get(false, ["id"]),ctx,"h").write("\"></canvas><figcaption>canvas@64px</figcaption></figure><figure class=\"s32\"><canvas class=\"symbol\" data-id=\"").reference(ctx._get(false, ["id"]),ctx,"h").write("\"></canvas><figcaption>canvas@32px</figcaption></figure></section>");}return body_0;})();
+  module.exports = (function(){dust.register("symbolGroup",body_0);function body_0(chk,ctx){return chk.section(ctx._get(false, ["symbols"]),ctx,{"block":body_1},null);}function body_1(chk,ctx){return chk.write("<h2>").reference(ctx._get(false, ["title"]),ctx,"h").write("</h2>").section(ctx._get(false, ["variations"]),ctx,{"block":body_2},null);}function body_2(chk,ctx){return chk.write("<section class=\"symbol-group\"><h3>#").reference(ctx._get(false, ["id"]),ctx,"h").write("</h3><figure class=\"s128 svg\"><div class=\"symbol\" data-id=\"").reference(ctx._get(false, ["id"]),ctx,"h").write("\"></div><figcaption>svg@128px</figcaption></figure><figure class=\"s128 canvas\"><div class=\"symbol\" data-id=\"").reference(ctx._get(false, ["id"]),ctx,"h").write("\"></div><figcaption>canvas@128px</figcaption></figure><figure class=\"s128 img\"><div class=\"symbol\" data-id=\"").reference(ctx._get(false, ["id"]),ctx,"h").write("\"></div><figcaption>img@128px</figcaption></figure></section>");}return body_0;})();
+});
+require.register('utils', function(module, exports, require) {
+  exports.appendToSVG = function (node, name, attrs, text) {
+  	var ns = exports.appendToSVG.ns
+  		, svg = node
+  		, doc = node.ownerDocument
+  		, p;
+  
+  	// Cache namespaces
+  	if (!ns) {
+  		while (svg && svg.tagName!='svg') {
+  			svg = svg.parentNode;
+  		}
+  		ns = exports.appendToSVG.ns = {
+  			svg: svg.namespaceURI
+  		};
+  		for (var a = svg.attributes, i = a.length; i--;) {
+  			if (a[i].namespaceURI) ns[a[i].localName] = a[i].nodeValue;
+  		}
+  	}
+  
+  	var el = doc.createElementNS(ns.svg, name);
+  	for (var attr in attrs) {
+  		if (!attrs.hasOwnProperty(attr)) continue;
+  		if (!(p = attr.split(':'))[1]) {
+  			el.setAttribute(attr, attrs[attr]);
+  		} else {
+  			el.setAttributeNS(ns[p[0]] || null, p[1], attrs[attr]);
+  		}
+  	}
+  
+  	if (text) {
+  		el.appendChild(doc.createTextNode(text));
+  	}
+  
+  	return node.appendChild(el);
+  };
 });
 require.register('primitives/sunPrimitive', function(module, exports, require) {
-  var TWO_PI = Math.PI * 2  
+  var appendTo = require('utils').appendToSVG  
+    
+  	, TWO_PI = Math.PI * 2  
   	, RAY_COLOUR = '#e88d15'  
   	, HORIZON_COLOUR = '#4d4d4d'  
   	, CENTER_COLOUR = '#faba2f'  
   	, STROKE_WIDTH = 4;  
     
-  exports.render = function(ctx, options) {  
+  /**  
+   * Render  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   */  
+  exports.render = function (element, options) {  
+  	if (options.type == 'svg') {  
+  		return renderSVG(element, options);  
+  	} else {  
+  		return renderCanvas(element, options);  
+  	}  
+  };  
+    
+  /**  
+   * Render svg version  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   * @returns {String}  
+   */  
+  function renderSVG (element, options) {  
+  	// return '<use xlink:href="#sun" x="0" y="0" width="100" height="100"></use>';  
+  	// return appendTo(element, 'use', {  
+  	// 	'xlink:href': '#sun',  
+  	// 	x: '0',  
+  	// 	y: '0',  
+  	// 	width: '100',  
+  	// 	height: '100'  
+  	// });  
+  	return '';  
+  }  
+    
+  /**  
+   * Render canvas version  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   */  
+  function renderCanvas (element, options) {  
+  	var ctx = element.getContext('2d');  
+    
   	ctx.save();  
   	ctx.translate(options.x, options.y);  
   	ctx.scale(options.scale, options.scale);  
@@ -1048,14 +1125,46 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   		ctx.stroke();  
   	}  
   	ctx.restore();  
-  };
+    
+  	return '';  
+  }
 });
 require.register('primitives/moonPrimitive', function(module, exports, require) {
   var TWO_PI = Math.PI * 2  
   	, FILL_COLOUR = '#afc1c9'  
   	, WIDTH = 60;  
     
-  exports.render = function(ctx, options) {  
+  /**  
+   * Render  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   */  
+  exports.render = function (element, options) {  
+  	if (options.type == 'svg') {  
+  		return renderSVG(element, options);  
+  	} else {  
+  		return renderCanvas(element, options);  
+  	}  
+  };  
+    
+  /**  
+   * Render svg version  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   * @returns {String}  
+   */  
+  function renderSVG (element, options) {  
+    
+  }  
+    
+  /**  
+   * Render canvas version  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   */  
+  function renderCanvas (element, options) {  
+  	var ctx = element.getContext('2d');  
+    
   	ctx.save();  
     
   	ctx.translate(options.x, options.y)  
@@ -1072,14 +1181,43 @@ require.register('primitives/moonPrimitive', function(module, exports, require) 
   	ctx.closePath();  
   	ctx.fill();  
   	ctx.restore();  
-  };
+  }
 });
 require.register('primitives/cloudPrimitive', function(module, exports, require) {
   var STROKE_WIDTH = 4  
   	, WIDTH = 100;  
     
-  exports.render = function(ctx, options) {  
-  	var tint = Math.floor(255 * (1-options.tint));  
+  /**  
+   * Render  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   */  
+  exports.render = function (element, options) {  
+  	if (options.type == 'svg') {  
+  		return renderSVG(element, options);  
+  	} else {  
+  		return renderCanvas(element, options);  
+  	}  
+  };  
+    
+  /**  
+   * Render svg version  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   * @returns {String}  
+   */  
+  function renderSVG (element, options) {  
+    
+  }  
+    
+  /**  
+   * Render canvas version  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   */  
+  function renderCanvas (element, options) {  
+  	var ctx = element.getContext('2d')  
+  		, tint = Math.floor(255 * (1-options.tint));  
     
   	ctx.save();  
   	if (options.flip) {  
@@ -1108,13 +1246,43 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
   	ctx.fill();  
   	ctx.stroke();  
   	ctx.restore();  
-  };
+  }
 });
 require.register('primitives/raindropPrimitive', function(module, exports, require) {
   var TWO_PI = Math.PI * 2  
   	, FILL_COLOUR = '#1671CC';  
     
-  exports.render = function(ctx, options) {  
+  /**  
+   * Render  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   */  
+  exports.render = function (element, options) {  
+  	if (options.type == 'svg') {  
+  		return renderSVG(element, options);  
+  	} else {  
+  		return renderCanvas(element, options);  
+  	}  
+  };  
+    
+  /**  
+   * Render svg version  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   * @returns {String}  
+   */  
+  function renderSVG (element, options) {  
+    
+  }  
+    
+  /**  
+   * Render canvas version  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   */  
+  function renderCanvas (element, options) {  
+  	var ctx = element.getContext('2d');  
+    
   	// Stroke  
   	ctx.save();  
   	ctx.fillStyle = options.bg;  
@@ -1137,13 +1305,43 @@ require.register('primitives/raindropPrimitive', function(module, exports, requi
   	ctx.closePath();  
   	ctx.fill();  
   	ctx.restore();  
-  };
+  }
 });
 require.register('primitives/sleetPrimitive', function(module, exports, require) {
   var TWO_PI = Math.PI * 2
   	, FILL_COLOUR = '#1EB9D8';
   
-  exports.render = function(ctx, options) {
+  /**
+   * Render
+   * @param {DOMElement} element
+   * @param {Object} options
+   */
+  exports.render = function (element, options) {
+  	if (options.type == 'svg') {
+  		return renderSVG(element, options);
+  	} else {
+  		return renderCanvas(element, options);
+  	}
+  }
+  
+  /**
+   * Render svg version
+   * @param {DOMElement} element
+   * @param {Object} options
+   * @returns {String}
+   */
+  function renderSVG (element, options) {
+  
+  }
+  
+  /**
+   * Render canvas version
+   * @param {DOMElement} element
+   * @param {Object} options
+   */
+  function renderCanvas (element, options) {
+  	var ctx = element.getContext('2d');
+  
   	// Stroke
   	ctx.save();
   	ctx.fillStyle = options.bg;
@@ -1175,7 +1373,37 @@ require.register('primitives/snowflakePrimitive', function(module, exports, requ
   var TWO_PI = Math.PI * 2  
   	, FILL_COLOUR = '#54BFE3';  
     
-  exports.render = function(ctx, options) {  
+  /**  
+   * Render  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   */  
+  exports.render = function (element, options) {  
+  	if (options.type == 'svg') {  
+  		return renderSVG(element, options);  
+  	} else {  
+  		return renderCanvas(element, options);  
+  	}  
+  };  
+    
+  /**  
+   * Render svg version  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   * @returns {String}  
+   */  
+  function renderSVG (element, options) {  
+    
+  }  
+    
+  /**  
+   * Render canvas version  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   */  
+  function renderCanvas (element, options) {  
+  	var ctx = element.getContext('2d');  
+    
   	// Stroke  
   	ctx.save();  
   	ctx.fillStyle = options.bg;  
@@ -1232,11 +1460,40 @@ require.register('primitives/snowflakePrimitive', function(module, exports, requ
   	ctx.closePath();  
   	ctx.fill();  
   	ctx.restore();  
-  };
+  }
 });
 require.register('primitives/fogPrimitive', function(module, exports, require) {
-  exports.render = function(ctx, options) {  
-  	var tint = Math.floor(255 * (1-options.tint));  
+  /**  
+   * Render  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   */  
+  exports.render = function (element, options) {  
+  	if (options.type == 'svg') {  
+  		return renderSVG(element, options);  
+  	} else {  
+  		return renderCanvas(element, options);  
+  	}  
+  };  
+    
+  /**  
+   * Render svg version  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   * @returns {String}  
+   */  
+  function renderSVG (element, options) {  
+    
+  }  
+    
+  /**  
+   * Render canvas version  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   */  
+  function renderCanvas (element, options) {  
+  	var ctx = element.getContext('2d')  
+  		, tint = Math.floor(255 * (1-options.tint));  
     
   	ctx.save();  
   	ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
@@ -1288,13 +1545,43 @@ require.register('primitives/fogPrimitive', function(module, exports, require) {
   	ctx.closePath();  
   	ctx.fill();  
   	ctx.restore();  
-  };  
+  }  
   
 });
 require.register('primitives/lightningPrimitive', function(module, exports, require) {
   var FILL_COLOUR = '#c9af16';  
     
-  exports.render = function(ctx, options) {  
+  /**  
+   * Render  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   */  
+  exports.render = function (element, options) {  
+  	if (options.type == 'svg') {  
+  		return renderSVG(element, options);  
+  	} else {  
+  		return renderCanvas(element, options);  
+  	}  
+  };  
+    
+  /**  
+   * Render svg version  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   * @returns {String}  
+   */  
+  function renderSVG (element, options) {  
+    
+  }  
+    
+  /**  
+   * Render canvas version  
+   * @param {DOMElement} element  
+   * @param {Object} options  
+   */  
+  function renderCanvas (element, options) {  
+  	var ctx = element.getContext('2d');  
+    
   	// Fill  
   	ctx.save();  
   	ctx.translate(options.x, options.y)  
@@ -1313,2205 +1600,105 @@ require.register('primitives/lightningPrimitive', function(module, exports, requ
   	ctx.closePath();  
   	ctx.fill();  
   	ctx.restore();  
-  };  
+  }  
   
 });
-require.register('WeatherSymbol', function(module, exports, require) {
-  // Convert with http://www.professorcloud.com/svg-to-canvas/
+require.register('weatherSymbol', function(module, exports, require) {
+  // Convert with http://www.professorcloud.com/svg-to-element/
   
-  var sun = require('primitives/sunPrimitive')
-  	, moon = require('primitives/moonPrimitive')
-  	, cloud = require('primitives/cloudPrimitive')
-  	, raindrop = require('primitives/raindropPrimitive')
-  	, sleet = require('primitives/sleetPrimitive')
-  	, snowflake = require('primitives/snowflakePrimitive')
-  	, fog = require('primitives/fogPrimitive')
-  	, lightning = require('primitives/lightningPrimitive')
+  var primitives = {
+  			sun: require('primitives/sunPrimitive'),
+  			moon: require('primitives/moonPrimitive'),
+  			cloud: require('primitives/cloudPrimitive'),
+  			raindrop: require('primitives/raindropPrimitive'),
+  			sleet: require('primitives/sleetPrimitive'),
+  			snowflake: require('primitives/snowflakePrimitive'),
+  			fog: require('primitives/fogPrimitive'),
+  			lightning: require('primitives/lightningPrimitive')
+  		}
+  	, formula = {"10":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":65,"y":72},{"primitive":"raindrop","x":49,"y":72},{"primitive":"raindrop","x":33,"y":68}],"11":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"lightning","x":14,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":69,"y":72},{"primitive":"raindrop","x":53,"y":72},{"primitive":"raindrop","x":37,"y":68}],"12":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":39,"y":68}],"13":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":54,"y":69},{"primitive":"snowflake","x":36,"y":71}],"14":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":62,"y":69},{"primitive":"snowflake","x":44,"y":71}],"15":[{"primitive":"fog","x":4,"y":18,"tint":0.15}],"22":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"lightning","x":21,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":60,"y":72},{"primitive":"raindrop","x":44,"y":68}],"23":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":58,"y":72},{"primitive":"sleet","x":42,"y":68}],"30":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"lightning","x":27,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":51,"y":68}],"31":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"lightning","x":25,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":48,"y":68}],"32":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"lightning","x":15,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":71,"y":72},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":38,"y":68}],"33":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"lightning","x":23,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":49,"y":69}],"34":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"lightning","x":8,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":70,"y":69},{"primitive":"snowflake","x":51,"y":69},{"primitive":"snowflake","x":33,"y":71}],"46":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":48,"y":68}],"47":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":45,"y":68}],"48":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":67,"y":72},{"primitive":"sleet","x":50,"y":68},{"primitive":"sleet","x":33,"y":68}],"49":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":43,"y":69}],"50":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":63,"y":69},{"primitive":"snowflake","x":44,"y":69},{"primitive":"snowflake","x":26,"y":71}],"01d":[{"primitive":"sun","x":6,"y":6}],"02d":[{"primitive":"sun","x":6,"y":6},{"primitive":"cloud","x":8,"y":56,"scale":0.6,"flip":true,"tint":0.1}],"03d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.1}],"40d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":48,"y":68}],"05d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":55,"y":72},{"primitive":"raindrop","x":39,"y":68}],"41d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":65,"y":72},{"primitive":"raindrop","x":49,"y":72},{"primitive":"raindrop","x":33,"y":68}],"42d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":45,"y":68}],"07d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":39,"y":68}],"43d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":67,"y":72},{"primitive":"sleet","x":50,"y":68},{"primitive":"sleet","x":33,"y":68}],"44d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":43,"y":69}],"08d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":54,"y":69},{"primitive":"snowflake","x":36,"y":71}],"45d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":63,"y":69},{"primitive":"snowflake","x":44,"y":69},{"primitive":"snowflake","x":26,"y":71}],"24d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":27,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":51,"y":68}],"06d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":21,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":60,"y":72},{"primitive":"raindrop","x":44,"y":68}],"25d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":14,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":69,"y":72},{"primitive":"raindrop","x":53,"y":72},{"primitive":"raindrop","x":37,"y":68}],"26d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":25,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":48,"y":68}],"20d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":58,"y":72},{"primitive":"sleet","x":42,"y":68}],"27d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":15,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":71,"y":72},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":38,"y":68}],"28d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":23,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":49,"y":69}],"21d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":62,"y":69},{"primitive":"snowflake","x":44,"y":71}],"29d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":8,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":70,"y":69},{"primitive":"snowflake","x":51,"y":69},{"primitive":"snowflake","x":33,"y":71}],"01m":[{"primitive":"sun","x":5,"y":32,"winter":true}],"02m":[{"primitive":"sun","x":5,"y":32,"winter":true},{"primitive":"cloud","x":8,"y":46,"scale":0.6,"flip":true,"tint":0.1}],"03m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.1}],"40m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":48,"y":68}],"05m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":55,"y":72},{"primitive":"raindrop","x":39,"y":68}],"41m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":65,"y":72},{"primitive":"raindrop","x":49,"y":72},{"primitive":"raindrop","x":33,"y":68}],"42m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":45,"y":68}],"07m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":39,"y":68}],"43m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":67,"y":72},{"primitive":"sleet","x":50,"y":68},{"primitive":"sleet","x":33,"y":68}],"44m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":43,"y":69}],"08m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":54,"y":69},{"primitive":"snowflake","x":36,"y":71}],"45m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":63,"y":69},{"primitive":"snowflake","x":44,"y":69},{"primitive":"snowflake","x":26,"y":71}],"24m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":27,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":51,"y":68}],"06m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":21,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":60,"y":72},{"primitive":"raindrop","x":44,"y":68}],"25m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":14,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":69,"y":72},{"primitive":"raindrop","x":53,"y":72},{"primitive":"raindrop","x":37,"y":68}],"26m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":25,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":48,"y":68}],"20m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":58,"y":72},{"primitive":"sleet","x":42,"y":68}],"27m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":15,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":71,"y":72},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":38,"y":68}],"28m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":23,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":49,"y":69}],"21m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":62,"y":69},{"primitive":"snowflake","x":44,"y":71}],"29m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":8,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":70,"y":69},{"primitive":"snowflake","x":51,"y":69},{"primitive":"snowflake","x":33,"y":71}],"01n":[{"primitive":"moon","x":20,"y":20}],"02n":[{"primitive":"moon","x":20,"y":20},{"primitive":"cloud","x":8,"y":56,"scale":0.6,"flip":true,"tint":0.1}],"03n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.1}],"40n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":48,"y":68}],"05n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":55,"y":72},{"primitive":"raindrop","x":39,"y":68}],"41n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":65,"y":72},{"primitive":"raindrop","x":49,"y":72},{"primitive":"raindrop","x":33,"y":68}],"42n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":45,"y":68}],"07n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":39,"y":68}],"43n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":67,"y":72},{"primitive":"sleet","x":50,"y":68},{"primitive":"sleet","x":33,"y":68}],"44n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":43,"y":69}],"08n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":54,"y":69},{"primitive":"snowflake","x":36,"y":71}],"45n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":63,"y":69},{"primitive":"snowflake","x":44,"y":69},{"primitive":"snowflake","x":26,"y":71}],"24n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":27,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":51,"y":68}],"06n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":21,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":60,"y":72},{"primitive":"raindrop","x":44,"y":68}],"25n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":14,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":69,"y":72},{"primitive":"raindrop","x":53,"y":72},{"primitive":"raindrop","x":37,"y":68}],"26n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":25,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":48,"y":68}],"20n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":58,"y":72},{"primitive":"sleet","x":42,"y":68}],"27n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":15,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":71,"y":72},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":38,"y":68}],"28n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":23,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":49,"y":69}],"21n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":62,"y":69},{"primitive":"snowflake","x":44,"y":71}],"29n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":8,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":70,"y":69},{"primitive":"snowflake","x":51,"y":69},{"primitive":"snowflake","x":33,"y":71}],"04":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.1},{"primitive":"cloud","x":7,"y":22,"tint":0.15}],"09":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":55,"y":72},{"primitive":"raindrop","x":39,"y":68}]}
   
   	, DEFAULT_BG = '#ffffff'
-  	, FORMULA = {
-  			// Sun
-  			'01d': [
-  				{
-  					primitive: sun,
-  					x: 6,
-  					y: 6
-  				}
-  			],
-  			'02d': [
-  				{
-  					primitive: sun,
-  					x: 6,
-  					y: 6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 8,
-  					y: 56,
-  					scale: 0.6,
-  					flip: true,
-  					tint: 0.1
-  				}
-  			],
-  			'03d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.1
-  				}
-  			],
-  			'40d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 48,
-  					y: 68
-  				}
-  			],
-  			'05d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 55,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 39,
-  					y: 68
-  				}
-  			],
-  			'41d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 65,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 49,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 33,
-  					y: 68
-  				}
-  			],
-  			'42d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: sleet,
-  					x: 45,
-  					y: 68
-  				}
-  			],
-  			'07d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: sleet,
-  					x: 55,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 39,
-  					y: 68
-  				}
-  			],
-  			'43d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: sleet,
-  					x: 67,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 50,
-  					y: 68
-  				},
-  				{
-  					primitive: sleet,
-  					x: 33,
-  					y: 68
-  				}
-  			],
-  			'44d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 43,
-  					y: 69
-  				}
-  			],
-  			'08d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 54,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 36,
-  					y: 71
-  				}
-  			],
-  			'45d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 63,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 44,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 26,
-  					y: 71
-  				}
-  			],
-  			'24d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 27,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 51,
-  					y: 68
-  				}
-  			],
-  			'06d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 21,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 60,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 44,
-  					y: 68
-  				}
-  			],
-  			'25d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 14,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 69,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 53,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 37,
-  					y: 68
-  				}
-  			],
-  			'26d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 25,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: sleet,
-  					x: 48,
-  					y: 68
-  				}
-  			],
-  			'20d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 19,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: sleet,
-  					x: 58,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 42,
-  					y: 68
-  				}
-  			],
-  			'27d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 15,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: sleet,
-  					x: 71,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 55,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 38,
-  					y: 68
-  				}
-  			],
-  			'28d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 23,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 49,
-  					y: 69
-  				}
-  			],
-  			'21d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 19,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 62,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 44,
-  					y: 71
-  				}
-  			],
-  			'29d': [
-  				{
-  					primitive: sun,
-  					x: 4,
-  					y: 7,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 8,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 70,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 51,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 33,
-  					y: 71
-  				}
-  			],
+  	, SVG = 'svg'
+  	, CANVAS = 'canvas'
+  	, IMG = 'img';
   
-  			// Winter sun
-  			'01m': [
-  				{
-  					primitive: sun,
-  					x: 5,
-  					y: 32,
-  					winter: true
-  				}
-  			],
-  			'02m': [
-  				{
-  					primitive: sun,
-  					x: 5,
-  					y: 32,
-  					winter: true
-  				},
-  				{
-  					primitive: cloud,
-  					x: 8,
-  					y: 46,
-  					scale: 0.6,
-  					flip: true,
-  					tint: 0.1
-  				}
-  			],
-  			'03m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.1
-  				}
-  			],
-  			'40m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 48,
-  					y: 68
-  				}
-  			],
-  			'05m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 55,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 39,
-  					y: 68
-  				}
-  			],
-  			'41m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 65,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 49,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 33,
-  					y: 68
-  				}
-  			],
-  			'42m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: sleet,
-  					x: 45,
-  					y: 68
-  				}
-  			],
-  			'07m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: sleet,
-  					x: 55,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 39,
-  					y: 68
-  				}
-  			],
-  			'43m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: sleet,
-  					x: 67,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 50,
-  					y: 68
-  				},
-  				{
-  					primitive: sleet,
-  					x: 33,
-  					y: 68
-  				}
-  			],
-  			'44m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 43,
-  					y: 69
-  				}
-  			],
-  			'08m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 54,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 36,
-  					y: 71
-  				}
-  			],
-  			'45m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 63,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 44,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 26,
-  					y: 71
-  				}
-  			],
-  			'24m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: lightning,
-  					x: 27,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 51,
-  					y: 68
-  				}
-  			],
-  			'06m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: lightning,
-  					x: 21,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 60,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 44,
-  					y: 68
-  				}
-  			],
-  			'25m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: lightning,
-  					x: 14,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 69,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 53,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 37,
-  					y: 68
-  				}
-  			],
-  			'26m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: lightning,
-  					x: 25,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: sleet,
-  					x: 48,
-  					y: 68
-  				}
-  			],
-  			'20m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: lightning,
-  					x: 19,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: sleet,
-  					x: 58,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 42,
-  					y: 68
-  				}
-  			],
-  			'27m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: lightning,
-  					x: 15,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: sleet,
-  					x: 71,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 55,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 38,
-  					y: 68
-  				}
-  			],
-  			'28m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: lightning,
-  					x: 23,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 49,
-  					y: 69
-  				}
-  			],
-  			'21m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: lightning,
-  					x: 19,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 62,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 44,
-  					y: 71
-  				}
-  			],
-  			'29m': [
-  				{
-  					primitive: sun,
-  					x: 8,
-  					y: 20,
-  					scale: 0.6,
-  					winter: true
-  				},
-  				{
-  					primitive: lightning,
-  					x: 8,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 70,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 51,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 33,
-  					y: 71
-  				}
-  			],
+  module.exports = function (container, options) {
+  	if (!container) return;
   
-  			// Moon
-  			'01n': [
-  				{
-  					primitive: moon,
-  					x: 20,
-  					y: 20
-  				}
-  			],
-  			'02n': [
-  				{
-  					primitive: moon,
-  					x: 20,
-  					y: 20
-  				},
-  				{
-  					primitive: cloud,
-  					x: 8,
-  					y: 56,
-  					scale: 0.6,
-  					flip: true,
-  					tint: 0.1
-  				}
-  			],
-  			'03n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.1
-  				}
-  			],
-  			'40n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 48,
-  					y: 68
-  				}
-  			],
-  			'05n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 55,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 39,
-  					y: 68
-  				}
-  			],
-  			'41n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 65,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 49,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 33,
-  					y: 68
-  				}
-  			],
-  			'42n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: sleet,
-  					x: 45,
-  					y: 68
-  				}
-  			],
-  			'07n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: sleet,
-  					x: 55,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 39,
-  					y: 68
-  				}
-  			],
-  			'43n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: sleet,
-  					x: 67,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 50,
-  					y: 68
-  				},
-  				{
-  					primitive: sleet,
-  					x: 33,
-  					y: 68
-  				}
-  			],
-  			'44n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 43,
-  					y: 69
-  				}
-  			],
-  			'08n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 54,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 36,
-  					y: 71
-  				}
-  			],
-  			'45n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 63,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 44,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 26,
-  					y: 71
-  				}
-  			],
-  			'24n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 27,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 51,
-  					y: 68
-  				}
-  			],
-  			'06n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 21,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 60,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 44,
-  					y: 68
-  				}
-  			],
-  			'25n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 14,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 69,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 53,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 37,
-  					y: 68
-  				}
-  			],
-  			'26n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 25,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: sleet,
-  					x: 48,
-  					y: 68
-  				}
-  			],
-  			'20n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 19,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: sleet,
-  					x: 58,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 42,
-  					y: 68
-  				}
-  			],
-  			'27n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 15,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: sleet,
-  					x: 71,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 55,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 38,
-  					y: 68
-  				}
-  			],
-  			'28n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 23,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 49,
-  					y: 69
-  				}
-  			],
-  			'21n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 19,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 62,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 44,
-  					y: 71
-  				}
-  			],
-  			'29n': [
-  				{
-  					primitive: moon,
-  					x: 18,
-  					y: 13,
-  					scale: 0.6
-  				},
-  				{
-  					primitive: lightning,
-  					x: 8,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 70,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 51,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 33,
-  					y: 71
-  				}
-  			],
+  	options = options || {};
+  	var type = options.svg
+  				? SVG
+  				: (options.canvas
+  					? CANVAS
+  					: IMG)
+  		, element = createElement(type)
+  		, id = container.getAttribute('data-id').split('.')[0]
+  		, w = container.offsetWidth
+  		, h = container.offsetHeight
+  		, scale = options.scale || 1
+  		, tScale = (w/100) * scale
+  		, bg = getStyle(container, 'background-color') || DEFAULT_BG
+  		, f = formula[id]
+  		, layer, opts;
   
-  			// Cloud
-  			'15': [
-  				{
-  					primitive: fog,
-  					x: 4,
-  					y: 18,
-  					tint: 0.15
-  				}
-  			],
-  			'04': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.1
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.15
-  				}
-  			],
-  			'46': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.15
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 48,
-  					y: 68
-  				}
-  			],
-  			'09': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 55,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 39,
-  					y: 68
-  				}
-  			],
-  			'10': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 65,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 49,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 33,
-  					y: 68
-  				}
-  			],
-  			'47': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.15
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: sleet,
-  					x: 45,
-  					y: 68
-  				}
-  			],
-  			'12': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: sleet,
-  					x: 55,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 39,
-  					y: 68
-  				}
-  			],
-  			'48': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: sleet,
-  					x: 67,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 50,
-  					y: 68
-  				},
-  				{
-  					primitive: sleet,
-  					x: 33,
-  					y: 68
-  				}
-  			],
-  			'49': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.15
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 43,
-  					y: 69
-  				}
-  			],
-  			'13': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 54,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 36,
-  					y: 71
-  				}
-  			],
-  			'50': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 63,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 44,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 26,
-  					y: 71
-  				}
-  			],
-  			'30': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.15
-  				},
-  				{
-  					primitive: lightning,
-  					x: 27,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 51,
-  					y: 68
-  				}
-  			],
-  			'22': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: lightning,
-  					x: 21,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 60,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 44,
-  					y: 68
-  				}
-  			],
-  			'11': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: lightning,
-  					x: 14,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 69,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 53,
-  					y: 72
-  				},
-  				{
-  					primitive: raindrop,
-  					x: 37,
-  					y: 68
-  				}
-  			],
-  			'31': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.15
-  				},
-  				{
-  					primitive: lightning,
-  					x: 25,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: sleet,
-  					x: 48,
-  					y: 68
-  				}
-  			],
-  			'23': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: lightning,
-  					x: 19,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: sleet,
-  					x: 58,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 42,
-  					y: 68
-  				}
-  			],
-  			'32': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: lightning,
-  					x: 15,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: sleet,
-  					x: 71,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 55,
-  					y: 72
-  				},
-  				{
-  					primitive: sleet,
-  					x: 38,
-  					y: 68
-  				}
-  			],
-  			'33': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.15
-  				},
-  				{
-  					primitive: lightning,
-  					x: 23,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 49,
-  					y: 69
-  				}
-  			],
-  			'14': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.3
-  				},
-  				{
-  					primitive: lightning,
-  					x: 19,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 62,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 44,
-  					y: 71
-  				}
-  			],
-  			'34': [
-  				{
-  					primitive: cloud,
-  					x: 5,
-  					y: 10,
-  					scale: 0.8,
-  					flip: true,
-  					tint: 0.4
-  				},
-  				{
-  					primitive: lightning,
-  					x: 8,
-  					y: 75
-  				},
-  				{
-  					primitive: cloud,
-  					x: 7,
-  					y: 22,
-  					tint: 0.5
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 70,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 51,
-  					y: 69
-  				},
-  				{
-  					primitive: snowflake,
-  					x: 33,
-  					y: 71
-  				}
-  			]
-  		};
+  	if (type == SVG || type == CANVAS) {
   
-  module.exports = WeatherSymbol;
+  		if (type == CANVAS) {
+  			if (w != 0) {
+  				element.width = w * scale;
+  				element.height = h * scale;
+  			}
+  		}
   
-  /**
-   * Constructor
-   */
-  function WeatherSymbol (scale, canvas) {
-  	this.scale = scale || 1;
-  	this.canvas;
-  	this.bg;
+  		if (f) {
+  			for (var i = 0, n = f.length; i < n; i++) {
+  				layer = f[i];
+  				opts = {
+  					type: type,
+  					x: Math.round(layer.x * tScale),
+  					y: Math.round(layer.y * tScale),
+  					scale: (layer.scale || 1) * tScale,
+  					small: layer.small,
+  					flip: layer.flip,
+  					tint: layer.tint,
+  					winter: layer.winter,
+  					width: w * scale,
+  					height: h * scale,
+  					bg: bg
+  				};
   
-  	if (canvas) {
-  		this.canvas = canvas;
-  		this.bg = this.getBG(canvas);
-  	}
-  }
-  
-  /**
-   * Draw symbol into 'canvas'
-   * Takes data from 'data-' attributes
-   * @param {CanvasElement} canvas
-   */
-  WeatherSymbol.prototype.draw = function(canvas) {
-  	canvas = this.canvas || canvas;
-  	if (!canvas) return;
-  
-  	var bg = this.getBG(canvas)
-  		, ctx = canvas.getContext('2d')
-  		, attr = canvas.getAttribute('data-id').split('.')
-  		, id = attr[0]
-  		, phase = (attr.length > 1)
-  			? parseInt(attr[1],10) + 1
-  			: 0
-  		, formula = FORMULA[id]
-  		, w = canvas.offsetWidth
-  		, h = canvas.offsetHeight
-  		, scale = (w/100) * this.scale
-  		, layer, options;
-  	if (w != 0) {
-  		canvas.width = w * this.scale;
-  		canvas.height = h * this.scale;
-  	}
-  
-  	if (formula) {
-  		for (var i = 0, n = formula.length; i < n; i++) {
-  			layer = formula[i];
-  			options = {
-  				x: Math.round(layer.x * scale),
-  				y: Math.round(layer.y * scale),
-  				scale: (layer.scale || 1) * scale,
-  				small: layer.small,
-  				flip: layer.flip,
-  				tint: layer.tint,
-  				winter: layer.winter,
-  				phase: phase,
-  				width: w * this.scale,
-  				height: h * this.scale,
-  				bg: bg
-  			};
-  			layer.primitive.render(ctx, options);
+  				element.innerHTML += primitives[layer.primitive].render(element, opts);
+  			}
   		}
   	}
+  
+  	container.appendChild(element);
   };
   
-  WeatherSymbol.prototype.getBG = function (canvas) {
-  	return this.bg
-  		|| window.getComputedStyle(canvas).getPropertyValue('background-color');
-  };
+  function getStyle (element, prop) {
+  	return window.getComputedStyle(element).getPropertyValue(prop);
+  }
   
+  function createElement (type) {
+  	var el = document.createElement(type);
+  
+  	if (type == SVG) {
+  		el.setAttribute('x', '0px');
+  		el.setAttribute('y', '0px');
+  		el.setAttribute('viewBox', '0 0 100 100');
+  	}
+  
+  	return el;
+  }
 });
 require.register('main', function(module, exports, require) {
   var dust = require('dust')
   	, data = {"symbols":[{"title":"clear","variations":[{"id":"01d"},{"id":"01m"},{"id":"01n"}]},{"title":"fair","variations":[{"id":"02d"},{"id":"02m"},{"id":"02n"}]},{"title":"partly cloudy","variations":[{"id":"03d"},{"id":"03m"},{"id":"03n"}]},{"title":"cloudy","variations":[{"id":"04"}]},{"title":"light rain showers","variations":[{"id":"40d"},{"id":"40m"},{"id":"40n"}]},{"title":"rain showers","variations":[{"id":"05d"},{"id":"05m"},{"id":"05n"}]},{"title":"heavy rain showers","variations":[{"id":"41d"},{"id":"41m"},{"id":"41n"}]},{"title":"light sleet showers","variations":[{"id":"42d"},{"id":"42m"},{"id":"42n"}]},{"title":"sleet showers","variations":[{"id":"07d"},{"id":"07m"},{"id":"07n"}]},{"title":"heavy sleet showers","variations":[{"id":"43d"},{"id":"43m"},{"id":"43n"}]},{"title":"light snow showers","variations":[{"id":"44d"},{"id":"44m"},{"id":"44n"}]},{"title":"snow showers","variations":[{"id":"08d"},{"id":"08m"},{"id":"08n"}]},{"title":"heavy snow showers","variations":[{"id":"45d"},{"id":"45m"},{"id":"45n"}]},{"title":"light rain","variations":[{"id":"46"}]},{"title":"rain","variations":[{"id":"09"}]},{"title":"heavy rain","variations":[{"id":"10"}]},{"title":"light sleet","variations":[{"id":"47"}]},{"title":"sleet","variations":[{"id":"12"}]},{"title":"heavy sleet","variations":[{"id":"48"}]},{"title":"light snow","variations":[{"id":"49"}]},{"title":"snow","variations":[{"id":"13"}]},{"title":"heavy snow","variations":[{"id":"50"}]},{"title":"fog","variations":[{"id":"15"}]},{"title":"light rain showers with thunder","variations":[{"id":"24d"},{"id":"24m"},{"id":"24n"}]},{"title":"rain showers with thunder","variations":[{"id":"06d"},{"id":"06m"},{"id":"06n"}]},{"title":"heavy rain showers with thunder","variations":[{"id":"25d"},{"id":"25m"},{"id":"25n"}]},{"title":"light sleet showers with thunder","variations":[{"id":"26d"},{"id":"26m"},{"id":"26n"}]},{"title":"sleet showers with thunder","variations":[{"id":"20d"},{"id":"20m"},{"id":"20n"}]},{"title":"heavy sleet showers with thunder","variations":[{"id":"27d"},{"id":"27m"},{"id":"27n"}]},{"title":"light snow showers with thunder","variations":[{"id":"28d"},{"id":"28m"},{"id":"28n"}]},{"title":"snow showers with thunder","variations":[{"id":"21d"},{"id":"21m"},{"id":"21n"}]},{"title":"heavy snow showers with thunder","variations":[{"id":"29d"},{"id":"29m"},{"id":"29n"}]},{"title":"light rain with thunder","variations":[{"id":"30"}]},{"title":"rain with thunder","variations":[{"id":"22"}]},{"title":"heavy rain with thunder","variations":[{"id":"11"}]},{"title":"light sleet with thunder","variations":[{"id":"31"}]},{"title":"sleet with thunder","variations":[{"id":"23"}]},{"title":"heavy sleet with thunder","variations":[{"id":"32"}]},{"title":"light snow with thunder","variations":[{"id":"33"}]},{"title":"snow with thunder","variations":[{"id":"14"}]},{"title":"heavy snow with thunder","variations":[{"id":"34"}]}]}
   	, template = require('symbolGroup')
-  	, WeatherSymbol = require('WeatherSymbol')
-  	, symbol = new WeatherSymbol(1)
-  	, el = document.getElementById('symbols');
+  	, weatherSymbol = require('weatherSymbol')
+  	, el = document.getElementById('symbols')
+  	, slice = Array.prototype.slice;
   
   // Render template
   dust.render('symbolGroup', data, function(err, html) {
@@ -3522,9 +1709,21 @@ require.register('main', function(module, exports, require) {
   	}
   });
   
-  
   // Draw canvas symbols
-  Array.prototype.slice.call(document.querySelectorAll('.symbol'))
-  	.forEach(symbol.draw, symbol);
+  slice.call(document.querySelectorAll('figure'))
+  	.forEach(function (el) {
+  		var symbol = el.querySelector('.symbol')
+  			, options = {};
+  
+  		if (el.classList.contains('svg')) {
+  			options.svg = true;
+  		} else if (el.classList.contains('canvas')) {
+  			options.canvas = true;
+  		} else if (el.classList.contains('img')) {
+  			options.img = true;
+  		}
+  
+  		weatherSymbol(symbol, options);
+  	});
 });
 require('main');

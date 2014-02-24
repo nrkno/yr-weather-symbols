@@ -3,29 +3,17 @@
 {#variations}
 <section class="symbol-group">
 	<h3>#{id}</h3>
-	<figure class="s128">
-		<img src="./bin/svg/{id}.svg">
+	<figure class="s128 svg">
+		<div class="symbol" data-id="{id}"></div>
 		<figcaption>svg@128px</figcaption>
 	</figure>
-	<figure class="s64">
-		<img src="./bin/svg/{id}.svg">
-		<figcaption>svg@64px</figcaption>
-	</figure>
-	<figure class="s32">
-		<img src="./bin/svg/{id}.svg">
-		<figcaption>svg@32px</figcaption>
-	</figure>
-	<figure class="s128">
-		<canvas class="symbol" data-id="{id}"></canvas>
+	<figure class="s128 canvas">
+		<div class="symbol" data-id="{id}"></div>
 		<figcaption>canvas@128px</figcaption>
 	</figure>
-	<figure class="s64">
-		<canvas class="symbol" data-id="{id}"></canvas>
-		<figcaption>canvas@64px</figcaption>
-	</figure>
-	<figure class="s32">
-		<canvas class="symbol" data-id="{id}"></canvas>
-		<figcaption>canvas@32px</figcaption>
+	<figure class="s128 img">
+		<div class="symbol" data-id="{id}"></div>
+		<figcaption>img@128px</figcaption>
 	</figure>
 </section>
 {/variations}

@@ -1,9 +1,9 @@
 var dust = require('dust')
 	, data = require('../symbols.json')
 	, template = require('./symbolGroup')
-	, WeatherSymbol = require('./WeatherSymbol')
-	, symbol = new WeatherSymbol(1)
-	, el = document.getElementById('symbols');
+	, weatherSymbol = require('./weatherSymbol')
+	, el = document.getElementById('symbols')
+	, slice = Array.prototype.slice;
 
 // Render template
 dust.render('symbolGroup', data, function(err, html) {
@@ -14,7 +14,19 @@ dust.render('symbolGroup', data, function(err, html) {
 	}
 });
 
-
 // Draw canvas symbols
-Array.prototype.slice.call(document.querySelectorAll('.symbol'))
-	.forEach(symbol.draw, symbol);
+slice.call(document.querySelectorAll('figure'))
+	.forEach(function (el) {
+		var symbol = el.querySelector('.symbol')
+			, options = {};
+
+		if (el.classList.contains('svg')) {
+			options.svg = true;
+		} else if (el.classList.contains('canvas')) {
+			options.canvas = true;
+		} else if (el.classList.contains('img')) {
+			options.img = true;
+		}
+
+		weatherSymbol(symbol, options);
+	});
