@@ -27,9 +27,6 @@
 		.moon {
 			fill: #afc1c9;
 		}
-		.cloud {
-			fill: black;
-		}
 		.fog {
 			fill: #D9D9D9;
 		}
@@ -45,10 +42,28 @@
 		.lightning {
 			fill: #c9af16;
 		}
+		.cloud-10 {
+			fill: #e5e5e5;
+		}
+		.cloud-15 {
+			fill: #d9d9d9;
+		}
+		.cloud-30 {
+			fill: #b3b3b3;
+		}
+		.cloud-40 {
+			fill: #999999;
+		}
+		.cloud-50 {
+			fill: #808080;
+		}
 	</style>
 </head>
 <body>
 	<svg x="0px" y="0px" width="0" height="0" viewBox="0 0 100 100">
+		<defs>
+			<path id="cloud" class="cloud" d="M55.6,2C46,1.7,37.1,7,34.1,17.3c-6.1-1.5-16,2.4-17.8,10.9C10.1,28,2,33.1,2,41.6C2,51,9,56,21.5,56h43.6 c5.6,0,12.9-0.5,17.3-2.6c14.9-7.2,12.3-32.3-6.4-34.6C73.7,7.9,65.1,2.3,55.6,2z"/>
+		</defs>
 		<symbol id="sun">
 			<path class="sun-ray" d="M64.3,53l23.3-6.1c2-0.5,2-3.3,0-3.9L64.3,37l12.2-20.8c1-1.8-1-3.8-2.7-2.7L53,25.7L46.9,2.4c-0.5-2-3.3-2-3.9,0L37,25.7 L16.3,13.5c-1.8-1-3.8,1-2.7,2.7L25.7,37L2.4,43.1c-2,0.5-2,3.3,0,3.9L25.7,53L13.5,73.7c-1,1.8,1,3.8,2.7,2.7L37,64.3l6.1,23.3 c0.5,2,3.3,2,3.9,0L53,64.3l20.8,12.2c1.8,1,3.8-1,2.7-2.7L64.3,53z"/>
 			<path class="sun-centre" d="M67.5,45c0,12.4-10.1,22.5-22.5,22.5c-12.4,0-22.5-10.1-22.5-22.5c0-12.4,10.1-22.5,22.5-22.5 C57.4,22.5,67.5,32.6,67.5,45z"/>
@@ -63,8 +78,20 @@
 		<symbol id="moon">
 			<path class="moon" d="M23,20c0-7.7,2.9-14.7,7.6-20c-0.2,0-0.4,0-0.6,0C13.4,0,0,13.4,0,30s13.4,30,30,30c8.9,0,16.9-3.9,22.4-10 C36.1,49.6,23,36.4,23,20z"/>
 		</symbol>
-		<symbol id="cloud">
-			<path class="cloud" d="M55.6,2C46,1.7,37.1,7,34.1,17.3c-6.1-1.5-16,2.4-17.8,10.9C10.1,28,2,33.1,2,41.6C2,51,9,56,21.5,56h43.6 c5.6,0,12.9-0.5,17.3-2.6c14.9-7.2,12.3-32.3-6.4-34.6C73.7,7.9,65.1,2.3,55.6,2z"/>
+		<symbol id="cloud-10" class="cloud-10">
+			<use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use>
+		</symbol>
+		<symbol id="cloud-15" class="cloud-15">
+			<use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use>
+		</symbol>
+		<symbol id="cloud-30" class="cloud-30">
+			<use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use>
+		</symbol>
+		<symbol id="cloud-40" class="cloud-40">
+			<use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use>
+		</symbol>
+		<symbol id="cloud-50" class="cloud-50">
+			<use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use>
 		</symbol>
 		<symbol id="fog">
 			<path class="fog" d="M82.3,42H2.7C1.2,42,0,42.9,0,44s1.2,2,2.7,2h79.7c1.5,0,2.7-0.9,2.7-2S83.8,42,82.3,42z"/>
@@ -99,7 +126,7 @@
 		<use xlink:href="#moon" x="0" y="0" width="100" height="100"></use>
 	</svg>
 	<svg class="symbol" x="0px" y="0px" viewBox="0 0 100 100">
-		<use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use>
+		<use xlink:href="#cloud-10" x="0" y="0" width="100" height="100"></use>
 	</svg>
 	<svg class="symbol" x="0px" y="0px" viewBox="0 0 100 100">
 		<use xlink:href="#fog" x="0" y="0" width="100" height="100"></use>

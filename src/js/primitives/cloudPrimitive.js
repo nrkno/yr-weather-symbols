@@ -23,7 +23,7 @@ exports.render = function (element, options) {
  */
 function renderSVG (element, options) {
 	svg.appendChild(element, 'use', {
-		'xlink:href': '#cloud',
+		'xlink:href': '#cloud-' + options.tint * 100,
 		x: '0',
 		y: '0',
 		width: '100',
