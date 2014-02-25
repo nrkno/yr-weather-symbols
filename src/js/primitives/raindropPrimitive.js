@@ -1,6 +1,8 @@
 var svg = require('../svg')
+	, style = require('style')
+
 	, TWO_PI = Math.PI * 2
-	, FILL_COLOUR = '#1671CC';
+	, FILL_COLOUR = style.getDocumentStyle('.raindrop', 'fill') || '#1671CC';
 
 /**
  * Render

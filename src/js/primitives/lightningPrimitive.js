@@ -1,5 +1,7 @@
 var svg = require('../svg')
-	, FILL_COLOUR = '#c9af16';
+	, style = require('style')
+
+	, FILL_COLOUR = style.getDocumentStyle('.lightning', 'fill') || '#c9af16';
 
 /**
  * Render

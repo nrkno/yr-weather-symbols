@@ -1,7 +1,11 @@
+window.global = window;
+
 var dust = require('dust')
 	, data = require('../symbols.json')
 	, template = require('./symbolGroup')
 	, weatherSymbol = require('./weatherSymbol')
+	, classList = require('classlist')
+	, forEach = require('lodash.foreach')
 	, el = document.getElementById('symbols')
 	, slice = Array.prototype.slice;
 
@@ -15,18 +19,17 @@ dust.render('symbolGroup', data, function(err, html) {
 });
 
 // Draw canvas symbols
-slice.call(document.querySelectorAll('figure'))
-	.forEach(function (el) {
-		var symbol = el.querySelector('.symbol')
-			, options = {};
+forEach(document.querySelectorAll('figure'), function (el) {
+	var symbol = el.querySelector('.symbol')
+		, options = {};
 
-		if (el.classList.contains('svg')) {
-			options.svg = true;
-		} else if (el.classList.contains('canvas')) {
-			options.canvas = true;
-		} else if (el.classList.contains('img')) {
-			options.img = true;
-		}
+	if (classList.hasClass(el, 'svg')) {
+		options.svg = true;
+	} else if (classList.hasClass(el, 'canvas')) {
+		options.canvas = true;
+	} else if (classList.hasClass(el, 'img')) {
+		options.img = true;
+	}
 
-		weatherSymbol(symbol, options);
-	});
+	weatherSymbol(symbol, options);
+});

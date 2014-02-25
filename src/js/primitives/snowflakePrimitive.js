@@ -1,6 +1,8 @@
 var svg = require('../svg')
+	, style = require('style')
+
 	, TWO_PI = Math.PI * 2
-	, FILL_COLOUR = '#54BFE3';
+	, FILL_COLOUR = style.getDocumentStyle('.snowflake', 'fill') || '#54BFE3';
 
 /**
  * Render

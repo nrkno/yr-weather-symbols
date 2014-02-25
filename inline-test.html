@@ -21,9 +21,6 @@
 		.sun-centre {
 			fill: #faba2f;
 		}
-		.sun-winter {
-			clip-path: url(#sunWinterMask);
-		}
 		.moon {
 			fill: #afc1c9;
 		}
@@ -63,17 +60,17 @@
 	<svg x="0px" y="0px" width="0" height="0" viewBox="0 0 100 100">
 		<defs>
 			<path id="cloud" class="cloud" d="M55.6,2C46,1.7,37.1,7,34.1,17.3c-6.1-1.5-16,2.4-17.8,10.9C10.1,28,2,33.1,2,41.6C2,51,9,56,21.5,56h43.6 c5.6,0,12.9-0.5,17.3-2.6c14.9-7.2,12.3-32.3-6.4-34.6C73.7,7.9,65.1,2.3,55.6,2z"/>
+			<clipPath id="sunWinterMask">
+				<rect y="45" width="90" height="45" />`
+			</clipPath>
 		</defs>
 		<symbol id="sun">
 			<path class="sun-ray" d="M64.3,53l23.3-6.1c2-0.5,2-3.3,0-3.9L64.3,37l12.2-20.8c1-1.8-1-3.8-2.7-2.7L53,25.7L46.9,2.4c-0.5-2-3.3-2-3.9,0L37,25.7 L16.3,13.5c-1.8-1-3.8,1-2.7,2.7L25.7,37L2.4,43.1c-2,0.5-2,3.3,0,3.9L25.7,53L13.5,73.7c-1,1.8,1,3.8,2.7,2.7L37,64.3l6.1,23.3 c0.5,2,3.3,2,3.9,0L53,64.3l20.8,12.2c1.8,1,3.8-1,2.7-2.7L64.3,53z"/>
 			<path class="sun-centre" d="M67.5,45c0,12.4-10.1,22.5-22.5,22.5c-12.4,0-22.5-10.1-22.5-22.5c0-12.4,10.1-22.5,22.5-22.5 C57.4,22.5,67.5,32.6,67.5,45z"/>
 		</symbol>
 		<symbol id="sunWinter">
-			<clipPath id="sunWinterMask">
-				<rect y="45" width="90" height="45" />
-			</clipPath>
-			<use class="sun-winter" xlink:href="#sun" x="0" y="-37" width="100" height="100"></use>
 			<path d="M2.5,0h85.1C88.9,0,90,0.9,90,2v0c0,1.1-1.1,2-2.5,2H2.5C1.1,4,0,3.1,0,2v0C0,0.9,1.1,0,2.5,0z"/>
+			<use class="sun-winter" style="clip-path:url(#sunWinterMask);" xlink:href="#sun" x="0" y="-37" width="100" height="100"></use>
 		</symbol>
 		<symbol id="moon">
 			<path class="moon" d="M23,20c0-7.7,2.9-14.7,7.6-20c-0.2,0-0.4,0-0.6,0C13.4,0,0,13.4,0,30s13.4,30,30,30c8.9,0,16.9-3.9,22.4-10 C36.1,49.6,23,36.4,23,20z"/>
@@ -143,6 +140,6 @@
 	<svg class="symbol" x="0px" y="0px" viewBox="0 0 100 100">
 		<use xlink:href="#lightning" x="0" y="0" width="100" height="100"></use>
 	</svg>
-
+	<script src="http://localhost:35729/livereload.js"></script>
 </body>
-</html>
+</html>`

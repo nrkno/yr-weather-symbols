@@ -1,6 +1,8 @@
 var svg = require('../svg')
+	, style = require('style')
+
 	, TWO_PI = Math.PI * 2
-	, FILL_COLOUR = '#1EB9D8';
+	, FILL_COLOUR = style.getDocumentStyle('.sleet', 'fill') || '#1EB9D8';
 
 /**
  * Render

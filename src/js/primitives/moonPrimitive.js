@@ -1,7 +1,8 @@
 var svg = require('../svg')
+	, style = require('style')
+
 	, TWO_PI = Math.PI * 2
-	, FILL_COLOUR = '#afc1c9'
-	, WIDTH = 60;
+	, FILL_COLOUR = style.getDocumentStyle('.moon', 'fill') || '#afc1c9';
 
 /**
  * Render

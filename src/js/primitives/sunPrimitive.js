@@ -1,9 +1,10 @@
 var svg = require('../svg')
+	, style = require('style')
 
 	, TWO_PI = Math.PI * 2
-	, RAY_COLOUR = '#e88d15'
-	, HORIZON_COLOUR = '#4d4d4d'
-	, CENTER_COLOUR = '#faba2f'
+	, RAY_COLOUR = style.getDocumentStyle('.sun-ray', 'fill') || '#e88d15'
+	, CENTER_COLOUR = style.getDocumentStyle('.sun-centre', 'fill') ||'#faba2f'
+	, HORIZON_COLOUR = style.getDocumentStyle('.sun-winter-horizon', 'fill') || '#4d4d4d'
 	, STROKE_WIDTH = 4;
 
 /**
