@@ -1,13 +1,27 @@
 var casper = require('casper').create()
-	, destination = casper.cli.get(0);
+	, ids
 
-if (!destination) casper.echo('Destination missing').exit();
+	, DEST = './bin/images/';
 
 casper.start('index.html', function () {
-
+	ids = this.evaluate(function () {
+		return Array.prototype.slice.call(__utils__.findAll('canvas')).map(function (el) {
+			var id = el.parentElement.getAttribute('data-id');
+			el.id = 'c-' + id;
+			return id;
+		});
+	});
 });
 
-casper.run();
+casper.run(function () {
+	ids.forEach(function (id) {
+		casper.echo(id);
+		casper.captureSelector(DEST + id + '.png', '#c-' + id);
+	});
+
+	this.exit();
+});
+
 
 /*
 // TODO: compress?
