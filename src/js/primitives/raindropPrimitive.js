@@ -40,10 +40,13 @@ TRaindropPrimitive = Trait({
 		ctx.translate(options.x, options.y)
 		ctx.scale(options.scale, options.scale);
 		ctx.fillStyle = options.bg;
+		ctx.save();
+		ctx.globalCompositeOperation = 'destination-out';
 		ctx.beginPath();
 		ctx.arc(9,9,9,0,this.TWO_PI,true);
 		ctx.closePath();
 		ctx.fill();
+		ctx.restore();
 
 		// Fill
 		ctx.fillStyle = FILL_COLOUR;
