@@ -2,10 +2,12 @@
   "name": "yr-weather-symbols",
   "version": "0.5.0",
   "dependencies": {
+    "trait": "git://github.com/YR/trait"
   },
   "devDependencies": {
     "dustjs-linkedin": "*",
     "classlist": "git://github.com/YR/classlist",
+    "style": "git://github.com/YR/style",
     "style": "git://github.com/YR/style",
     "lodash.foreach": "^2.4.0",
     "buddy": "~1.0.0"

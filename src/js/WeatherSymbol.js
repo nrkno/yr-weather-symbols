@@ -1,4 +1,4 @@
-// Convert with http://www.professorcloud.com/svg-to-element/
+// Convert with http://www.professorcloud.com/svg-to-canvas/
 
 var svg = require('./svg')
 	, primitives = {
@@ -18,6 +18,7 @@ var svg = require('./svg')
 	, CANVAS = 'canvas'
 	, IMG = 'img';
 
+
 module.exports = function (container, options) {
 	if (!container) return;
 
@@ -33,7 +34,8 @@ module.exports = function (container, options) {
 		, h = container.offsetHeight
 		, scale = options.scale || 1
 		, tScale = (type == CANVAS) ? (w/100) * scale : 1
-		, bg = getStyle(container, 'background-color') || DEFAULT_BG
+		, bgContainer = getStyle(container, 'background-color')
+		, bg = bgContainer && bgContainer !== 'rgba(0, 0, 0, 0)' ? bgContainer : DEFAULT_BG
 		, f = formula[id]
 		, layer, opts;
 

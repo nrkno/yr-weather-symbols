@@ -3108,6 +3108,12 @@ require.register('style', function(module, exports, require) {
   	return parseNumber(getStyle(element, property), property);
   }
   
+  /**
+   * Retrieve the 'property' for matching 'selector' rule in all document stylesheets
+   * @param {String} selector
+   * @param {String} property
+   * @returns {String}
+   */
   function getDocumentStyle (selector, property) {
   	var styleSheets = document.styleSheets
   		, sheet, rules, rule;
@@ -3253,758 +3259,1545 @@ require.register('style', function(module, exports, require) {
   }
   
 });
+require.register('lodash.foreach', function(module, exports, require) {
+  /**
+   * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
+   * Build: `lodash modularize modern exports="npm" -o ./npm/`
+   * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
+   * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
+   * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+   * Available under MIT license <http://lodash.com/license>
+   */
+  var baseCreateCallback = require('lodash._basecreatecallback'),
+      forOwn = require('lodash.forown');
+  
+  /**
+   * Iterates over elements of a collection, executing the callback for each
+   * element. The callback is bound to `thisArg` and invoked with three arguments;
+   * (value, index|key, collection). Callbacks may exit iteration early by
+   * explicitly returning `false`.
+   *
+   * Note: As with other "Collections" methods, objects with a `length` property
+   * are iterated like arrays. To avoid this behavior `_.forIn` or `_.forOwn`
+   * may be used for object iteration.
+   *
+   * @static
+   * @memberOf _
+   * @alias each
+   * @category Collections
+   * @param {Array|Object|string} collection The collection to iterate over.
+   * @param {Function} [callback=identity] The function called per iteration.
+   * @param {*} [thisArg] The `this` binding of `callback`.
+   * @returns {Array|Object|string} Returns `collection`.
+   * @example
+   *
+   * _([1, 2, 3]).forEach(function(num) { console.log(num); }).join(',');
+   * // => logs each number and returns '1,2,3'
+   *
+   * _.forEach({ 'one': 1, 'two': 2, 'three': 3 }, function(num) { console.log(num); });
+   * // => logs each number and returns the object (property order is not guaranteed across environments)
+   */
+  function forEach(collection, callback, thisArg) {
+    var index = -1,
+        length = collection ? collection.length : 0;
+  
+    callback = callback && typeof thisArg == 'undefined' ? callback : baseCreateCallback(callback, thisArg, 3);
+    if (typeof length == 'number') {
+      while (++index < length) {
+        if (callback(collection[index], index, collection) === false) {
+          break;
+        }
+      }
+    } else {
+      forOwn(collection, callback);
+    }
+    return collection;
+  }
+  
+  module.exports = forEach;
+  
+});
+require.register('trait', function(module, exports, require) {
+  var forEach = require('lodash.foreach')
+  	, bind = require('lodash.bind')
+  	, keys = require('lodash.keys')
+  	, owns = bind(Function.prototype.call, Object.prototype.hasOwnProperty);
+  
+  /* Feature tests */
+  var SUPPORTS_ACCESSORS = (function () {
+  	try {
+  		var test = {};
+  		Object.defineProperty(test, 'x', {
+  			get: function() {
+  				return 1;
+  			}
+  		});
+  		return test.x === 1;
+  	} catch (err) {
+  		return false;
+  	}
+  })();
+  // IE8 implements Obejct.defineProperty and Object.getOwnPropertyDescriptor
+  // only for DOM objects.
+  var SUPPORTS_GET_OWN_PROP_DESCRIPTOR = (function () {
+  	try {
+  		if (Object.getOwnPropertyDescriptor) {
+  			var test = {x: 1};
+  			return !!Object.getOwnPropertyDescriptor(test, 'x');
+  		}
+  	} catch (err) {}
+  	return false;
+  })();
+  var SUPPORTS_DEFINE_PROP = (function () {
+  	try {
+  		if (Object.defineProperty) {
+  			var test = {};
+  			Object.defineProperty(test, 'x', {value: 1});
+  			return test.x === 1;
+  		}
+  	} catch (err) {}
+  	return false;
+  })();
+  
+  /* ES3 fallbacks */
+  var freeze = Object.freeze
+  	|| function (obj) { return obj; };
+  var getPrototypeOf = Object.getPrototypeOf
+  	|| function (obj) { return Object.prototype; };
+  var getOwnPropertyNames = Object.getOwnPropertyNames
+  	|| function (obj) {
+  			var props = [];
+  			for (var p in obj) {
+  				if (hasOwnProperty(obj, p)) props.push(p);
+  			}
+  			return props;
+  		};
+  var getOwnPropertyDescriptor = SUPPORTS_GET_OWN_PROP_DESCRIPTOR
+  	? Object.getOwnPropertyDescriptor
+  	: function (obj, name) {
+  			return {
+  				value: obj[name],
+  				enumerable: true,
+  				writable: true,
+  				configurable: true
+  			};
+  		};
+  var defineProperty = SUPPORTS_DEFINE_PROP
+  	? Object.defineProperty
+  	: function (obj, name, pd) {
+  			obj[name] = pd.value;
+  		};
+  var defineProperties = Object.defineProperties
+  	|| function (obj, propMap) {
+  			for (var name in propMap) {
+  				if (hasOwnProperty(obj, name)) {
+  					defineProperty(obj, name, propMap[name]);
+  				}
+  			}
+  		};
+  var objectCreate = Object.create
+  	|| function (proto, propMap) {
+  			var self;
+  			function dummy() {};
+  			dummy.prototype = proto || Object.prototype;
+  			self = new dummy();
+  			if (propMap) defineProperties(self, propMap);
+  			return self;
+  		};
+  var getOwnProperties = Object.getOwnProperties
+  	|| function (obj) {
+  			var map = {};
+  			forEach(getOwnPropertyNames(obj), function (name) {
+  				map[name] = getOwnPropertyDescriptor(obj, name);
+  			});
+  			return map;
+  		};
+  
+  // Polyfill
+  if (!Object.create) Object.create = objectCreate;
+  if (!Object.getOwnPropertyNames) Object.getOwnPropertyNames = getOwnPropertyNames;
+  if (!Object.getOwnProperties) Object.getOwnProperties = getOwnProperties;
+  if (!Object.getPrototypeOf) Object.getPrototypeOf = getPrototypeOf;
+  
+  
+  /**
+   * Whether or not given property descriptors are equivalent. They are
+   * equivalent either if both are marked as 'conflict' or 'required' property
+   * or if all the properties of descriptors are equal.
+   * @param {Object} actual
+   * @param {Object} expected
+   * @returns {Boolean}
+   */
+  function equivalentDescriptors (actual, expected) {
+  	return (actual.conflict && expected.conflict) ||
+  		(actual.required && expected.required) ||
+  		equalDescriptors(actual, expected);
+  }
+  
+  /**
+   * Whether or not given property descriptors define equal properties.
+   * @param {Object} actual
+   * @param {Object} expected
+   * @returns {Boolean}
+   */
+  function equalDescriptors (actual, expected) {
+  	return actual.get === expected.get &&
+  		actual.set === expected.set &&
+  		actual.value === expected.value &&
+  		!!actual.enumerable === !!expected.enumerable &&
+  		!!actual.configurable === !!expected.configurable &&
+  		!!actual.writable === !!expected.writable;
+  }
+  
+  // Utilities that throw exceptions for properties that are marked
+  // as 'required' or 'conflict' properties.
+  function throwConflictPropertyError (name) {
+  	throw new Error('Remaining conflicting property: ' + name);
+  }
+  function throwRequiredPropertyError (name) {
+  	throw new Error('Missing required property: ' + name);
+  }
+  
+  /**
+   * Generates custom **required** property descriptor. Descriptor contains
+   * non-standard property `required` that is equal to `true`.
+   * @param {String} name
+   *    property name to generate descriptor for.
+   * @returns {Object}
+   *    custom property descriptor
+   */
+  function RequiredPropertyDescriptor (name) {
+  	// Creating function by binding first argument to a property `name` on the
+  	// `throwConflictPropertyError` function. Created function is used as a
+  	// getter & setter of the created property descriptor. This way we ensure
+  	// that we throw exception late (on property access) if object with
+  	// `required` property was instantiated using built-in `Object.create`.
+  	var accessor = bind(throwRequiredPropertyError, null, name);
+  	if (SUPPORTS_ACCESSORS) {
+  		return {
+  			get: accessor,
+  			set: accessor,
+  			required: true
+  		}
+  	} else {
+  		return {
+  			value: accessor,
+  			required: true
+  		}
+  	}
+  }
+  
+  /**
+   * Generates custom **conflicting** property descriptor. Descriptor contains
+   * non-standard property `conflict` that is equal to `true`.
+   * @param {String} name
+   *    property name to generate descriptor for.
+   * @returns {Object}
+   *    custom property descriptor
+   */
+  function ConflictPropertyDescriptor (name) {
+  	// For details see `RequiredPropertyDescriptor` since idea is same.
+  	var accessor = bind(throwConflictPropertyError, null, name);
+  	if (SUPPORTS_ACCESSORS) {
+  		return {
+  			get: accessor,
+  			set: accessor,
+  			conflict: true
+  		}
+  	} else {
+  		return {
+  			value: accessor,
+  			conflict: true
+  		}
+  	}
+  }
+  
+  /**
+   * Tests if property is marked as `required` property.
+   */
+  function isRequiredProperty (object, name) {
+  	return !!object[name].required;
+  }
+  
+  /**
+   * Tests if property is marked as `conflict` property.
+   */
+  function isConflictProperty (object, name) {
+  	return !!object[name].conflict;
+  }
+  
+  /**
+   * Function tests whether or not method of the `source` object with a given
+   * `name` is inherited from `Object.prototype`.
+   */
+  function isBuiltInMethod (name, source) {
+  	var target = Object.prototype[name];
+  
+  	// If methods are equal then we know it's `true`.
+  	return target == source
+  		// If `source` object comes form a different sandbox `==` will evaluate
+  		// to `false`, in that case we check if functions names and sources match.
+  		|| (String(target) === String(source) && target.name === source.name);
+  }
+  
+  /**
+   * Function overrides `toString` and `constructor` methods of a given `target`
+   * object with a same-named methods of a given `source` if methods of `target`
+   * object are inherited / copied from `Object.prototype`.
+   * @see create
+   */
+  function overrideBuiltInMethods (target, source) {
+  	if (isBuiltInMethod('toString', target.toString)) {
+  		defineProperty(target, 'toString',  {
+  			value: source.toString,
+  			configurable: true,
+  			enumerable: false
+  		});
+  	}
+  
+  	if (isBuiltInMethod('constructor', target.constructor)) {
+  		defineProperty(target, 'constructor', {
+  			value: source.constructor,
+  			configurable: true,
+  			enumerable: false
+  		});
+  	}
+  }
+  
+  /**
+   * Composes new trait with the same own properties as the original trait,
+   * except that all property names appearing in the first argument are replaced
+   * by 'required' property descriptors.
+   * @param {String[]} keys
+   *    Array of strings property names.
+   * @param {Object} trait
+   *    A trait some properties of which should be excluded.
+   * @returns {Object}
+   * @example
+   *    var newTrait = exclude(['name', ...], trait)
+   */
+  function exclude (names, trait) {
+  	var map = {};
+  
+  	forEach(keys(trait), function(name) {
+  
+  		// If property is not excluded (the array of names does not contain it),
+  		// or it is a 'required' property, copy it to the property descriptor `map`
+  		// that will be used for creation of resulting trait.
+  		if (!~names.indexOf(name) || isRequiredProperty(trait, name)) {
+  			map[name] = { value: trait[name], enumerable: true };
+  
+  		// For all the `names` in the exclude name array we create required
+  		// property descriptors and copy them to the `map`.
+  		} else {
+  			map[name] = { value: RequiredPropertyDescriptor(name), enumerable: true };
+  		}
+  	});
+  
+  	return Object.create(Trait.prototype, map);
+  }
+  
+  /**
+   * Composes new instance of `Trait` with a properties of a given `trait`,
+   * except that all properties whose name is an own property of `renames` will
+   * be renamed to `renames[name]` and a `'required'` property for name will be
+   * added instead.
+   *
+   * For each renamed property, a required property is generated. If
+   * the `renames` map two properties to the same name, a conflict is generated.
+   * If the `renames` map a property to an existing unrenamed property, a
+   * conflict is generated.
+   *
+   * @param {Object} renames
+   *    An object whose own properties serve as a mapping from old names to new
+   *    names.
+   * @param {Object} trait
+   *    A new trait with renamed properties.
+   * @returns {Object}
+   * @example
+   *
+   *    // Return trait with `bar` property equal to `trait.foo` and with
+   *    // `foo` and `baz` 'required' properties.
+   *    var renamedTrait = rename({ foo: 'bar', baz: null }), trait);
+   *
+   *    // t1 and t2 are equivalent traits
+   *    var t1 = rename({a: 'b'}, t);
+   *    var t2 = compose(exclude(['a'], t), { a: { required: true }, b: t[a] });
+   */
+  function rename (renames, trait) {
+  	var map = {};
+  
+  	// Loop over all the properties of the given `trait` and copy them to a
+  	// property descriptor `map` that will be used for creation of resulting
+  	// trait. Also renaming properties in the `map` as specified by `renames`.
+  	forEach(keys(trait), function(name) {
+  		var alias;
+  
+  		// If the property is in the `renames` map, and it isn't a 'required'
+  		// property (which should never need to be aliased because 'required'
+  		// properties never conflict), then we must try to rename it.
+  		if (owns(renames, name) && !isRequiredProperty(trait, name)) {
+  			alias = renames[name];
+  
+  			// If the `map` already has the `alias`, and it isn't a 'required'
+  			// property, that means the `alias` conflicts with an existing name for a
+  			// provided trait (that can happen if >=2 properties are aliased to the
+  			// same name). In this case we mark it as a conflicting property.
+  			// Otherwise, everything is fine, and we copy property with an `alias`
+  			// name.
+  			if (owns(map, alias) && !map[alias].value.required) {
+  				map[alias] = {
+  					value: ConflictPropertyDescriptor(alias),
+  					enumerable: true
+  				};
+  			} else {
+  				map[alias] = {
+  					value: trait[name],
+  					enumerable: true
+  				};
+  			}
+  
+  			// Regardless of whether or not the rename was successful, we check to
+  			// see if the original `name` exists in the map (such a property
+  			// could exist if previous another property was aliased to this `name`).
+  			// If it isn't, we mark it as 'required', to make sure the caller
+  			// provides another value for the old name, to which methods of the trait
+  			// might continue to reference.
+  			if (!owns(map, name)) {
+  				map[name] = {
+  					value: RequiredPropertyDescriptor(name),
+  					enumerable: true
+  				};
+  			}
+  
+  		// Otherwise, either the property isn't in the `renames` map (thus the
+  		// caller is not trying to rename it) or it is a 'required' property.
+  		// Either way, we don't have to alias the property, we just have to copy it
+  		// to the map.
+  		} else {
+  			// The property isn't in the map yet, so we copy it over.
+  			if (!owns(map, name)) {
+  				map[name] = { value: trait[name], enumerable: true };
+  
+  			// The property is already in the map (that means another property was
+  			// aliased with this `name`, which creates a conflict if the property is
+  			// not marked as 'required'), so we have to mark it as a 'conflict'
+  			// property.
+  			} else if (!isRequiredProperty(trait, name)) {
+  				map[name] = {
+  					value: ConflictPropertyDescriptor(name),
+  					enumerable: true
+  				};
+  			}
+  		}
+  	});
+  
+  	return Object.create(Trait.prototype, map);
+  }
+  
+  /**
+   * Composes new resolved trait, with all the same properties as the original
+   * `trait`, except that all properties whose name is an own property of
+   * `resolutions` will be renamed to `resolutions[name]`.
+   *
+   * If `resolutions[name]` is `null`, the value is mapped to a property
+   * descriptor that is marked as a 'required' property.
+   */
+  function resolve (resolutions, trait) {
+  	var renames = {}
+  		, exclusions = [];
+  
+  	// Go through each mapping in `resolutions` object and distribute it either
+  	// to `renames` or `exclusions`.
+  	forEach(keys(resolutions), function(name) {
+  
+  		// If `resolutions[name]` is a truthy value then it's a mapping old -> new
+  		// so we copy it to `renames` map.
+  		if (resolutions[name]) {
+  			renames[name] = resolutions[name];
+  
+  		// Otherwise it's not a mapping but an exclusion instead in which case we
+  		// add it to the `exclusions` array.
+  		} else {
+  			exclusions.push(name);
+  		}
+  	});
+  
+  	// First `exclude` **then** `rename` and order is important since
+  	// `exclude` and `rename` are not associative.
+  	return rename(renames, exclude(exclusions, trait));
+  }
+  
+  /**
+   * Create a Trait (a custom property descriptor map) that represents the given
+   * `object`'s own properties. Property descriptor map is a 'custom', because it
+   * inherits from `Trait.prototype` and it's property descriptors may contain
+   * two attributes that is not part of the ES5 specification:
+   *
+   *  - 'required' (this property must be provided by another trait
+   *    before an instance of this trait can be created)
+   *  - 'conflict' (when the trait is composed with another trait,
+   *    a unique value for this property is provided by two or more traits)
+   *
+   * Data properties bound to the `Trait.required` singleton exported by
+   * this module will be marked as 'required' properties.
+   *
+   * @param {Object} object
+   *    Map of properties to compose trait from.
+   * @returns {Trait}
+   *    Trait / Property descriptor map containing all the own properties of the
+   *    given argument.
+   */
+  function trait (object) {
+  	var trait = object
+  		, map;
+  
+  	if (!(object instanceof Trait)) {
+  		// If passed `object` is not already an instance of `Trait` we create
+  		// a property descriptor `map` containing descriptors of own properties of
+  		// a given `object`. `map` is used to create a `Trait` instance after all
+  		// properties are mapped. Please note that we can't create trait and then
+  		// just copy properties into it since that will fails for inherited
+  		// 'read-only' properties.
+  		map = {};
+  
+  		// Each own property of a given `object` is mapped to a data property, who's
+  		// value is a property descriptor.
+  		forEach(keys(object), function (name) {
+  
+  			// If property of an `object` is equal to a `Trait.required`, it means
+  			// that it was marked as 'required' property, in which case we map it
+  			// to 'required' property.
+  			if (Trait.required == getOwnPropertyDescriptor(object, name).value) {
+  				map[name] = {
+  					value: RequiredPropertyDescriptor(name),
+  					enumerable: true
+  				};
+  
+  			// Otherwise property is mapped to it's property descriptor.
+  			} else {
+  				map[name] = {
+  					value: getOwnPropertyDescriptor(object, name),
+  					enumerable: true
+  				};
+  			}
+  		});
+  
+  		trait = Object.create(Trait.prototype, map);
+  	}
+  
+  	return trait;
+  }
+  
+  /**
+   * Compose a property descriptor map that inherits from `Trait.prototype` and
+   * contains property descriptors for all the own properties of the passed
+   * traits.
+   *
+   * If two or more traits have own properties with the same name, the returned
+   * trait will contain a 'conflict' property for that name. Composition is a
+   * commutative and associative operation, and the order of its arguments is
+   * irrelevant.
+   */
+  function compose () {
+  	// Create a new property descriptor `map` to which all own properties of the
+  	// passed traits are copied. This map will be used to create a `Trait`
+  	// instance that will be result of this composition.
+  	var map = {};
+  
+  	// Properties of each passed trait are copied to the composition.
+  	forEach(arguments, function(trait) {
+  		// Copying each property of the given trait.
+  		forEach(keys(trait), function(name) {
+  			// If `map` already owns a property with the `name` and it is not marked 'required'.
+  			if (owns(map, name) && !map[name].value.required) {
+  
+  				// If source trait's property with the `name` is marked as 'required'
+  				// we do nothing, as requirement was already resolved by a property in
+  				// the `map` (because it already contains non-required property with
+  				// that `name`). But if properties are just different, we have a name
+  				// clash and we substitute it with a property that is marked 'conflict'.
+  				if (!isRequiredProperty(trait, name) && !equivalentDescriptors(map[name].value, trait[name])) {
+  					map[name] = {
+  						value: ConflictPropertyDescriptor(name),
+  						enumerable: true
+  					};
+  				}
+  
+  			// Otherwise, the `map` does not have an own property with the `name`, or
+  			// it is marked 'required'. Either way trait's property is copied to the
+  			// map (If property of the `map` is marked 'required' it is going to be
+  			// resolved by the property that is being copied).
+  			} else {
+  				map[name] = { value: trait[name], enumerable: true };
+  			}
+  		});
+  	});
+  
+  	return Object.create(Trait.prototype, map);
+  }
+  
+  /**
+   *  `defineProperties` is like `Object.defineProperties`, except that it
+   *  ensures that:
+   *    - An exception is thrown if any property in a given `properties` map
+   *      is marked as 'required' property and same named property is not
+   *      found in a given `prototype`.
+   *    - An exception is thrown if any property in a given `properties` map
+   *      is marked as 'conflict' property.
+   * @param {Object} object
+   *    Object to define properties on.
+   * @param {Object} properties
+   *    Properties descriptor map.
+   * @returns {Object}
+   *    `object` that was passed as a first argument.
+   */
+  function verifiedDefineProperties (object, properties) {
+  
+  	// Create a map into which we will copy each verified property from the given
+  	// `properties` description map. We use it to verify that none of the
+  	// provided properties is marked as a 'conflict' property and that all
+  	// 'required' properties are resolved by a property of an `object`, so we
+  	// can throw an exception before mutating object if that isn't the case.
+  	var verifiedProperties = {};
+  
+  	// Coping each property from a given `properties` descriptor map to a
+  	// verified map of property descriptors.
+  	forEach(keys(properties), function(name) {
+  
+  		// If property is marked as 'required' property and we don't have a same
+  		// named property in a given `object` we throw an exception. If `object`
+  		// has same named property just skip this property since required property
+  		// is was inherited and there for requirement was satisfied.
+  		if (isRequiredProperty(properties, name)) {
+  			if (!(name in object)) {
+  				throwRequiredPropertyError(name);
+  			}
+  
+  		// If property is marked as 'conflict' property we throw an exception.
+  		} else if (isConflictProperty(properties, name)) {
+  			throwConflictPropertyError(name);
+  
+  		// If property is not marked neither as 'required' nor 'conflict' property
+  		// we copy it to verified properties map.
+  		} else {
+  			verifiedProperties[name] = properties[name];
+  		}
+  	});
+  
+  	// If no exceptions were thrown yet, we know that our verified property
+  	// descriptor map has no properties marked as 'conflict' or 'required',
+  	// so we just delegate to the built-in `Object.defineProperties`.
+  	return defineProperties(object, verifiedProperties);
+  }
+  
+  /**
+   *  `create` is like `Object.create`, except that it ensures that:
+   *    - An exception is thrown if any property in a given `properties` map
+   *      is marked as 'required' property and same named property is not
+   *      found in a given `prototype`.
+   *    - An exception is thrown if any property in a given `properties` map
+   *      is marked as 'conflict' property.
+   * @param {Object} prototype
+   *    prototype of the composed object
+   * @param {Object} properties
+   *    Properties descriptor map.
+   * @returns {Object}
+   *    An object that inherits form a given `prototype` and implements all the
+   *    properties defined by a given `properties` descriptor map.
+   */
+  function create (prototype, properties) {
+  
+  	// Creating an instance of the given `prototype`.
+  	var object = Object.create(prototype);
+  
+  	// Overriding `toString`, `constructor` methods if they are just inherited
+  	// from `Object.prototype` with a same named methods of the `Trait.prototype`
+  	// that will have more relevant behavior.
+  	overrideBuiltInMethods(object, Trait.prototype);
+  
+  	// Trying to define given `properties` on the `object`. We use our custom
+  	// `defineProperties` function instead of build-in `Object.defineProperties`
+  	// that behaves exactly the same, except that it will throw if any
+  	// property in the given `properties` descriptor is marked as 'required' or
+  	// 'conflict' property.
+  	return verifiedDefineProperties(object, properties);
+  }
+  
+  /**
+   * Composes new trait. If two or more traits have own properties with the
+   * same name, the new trait will contain a 'conflict' property for that name.
+   * 'compose' is a commutative and associative operation, and the order of its
+   * arguments is not significant.
+   *
+   * **Note:** Use `Trait.compose` instead of calling this function with more
+   * than one argument. The multiple-argument functionality is strictly for
+   * backward compatibility.
+   *
+   * @params {Object} trait
+   *    Takes traits as an arguments
+   * @returns {Object}
+   *    New trait containing the combined own properties of all the traits.
+   * @example
+   *    var newTrait = compose(trait_1, trait_2, ..., trait_N)
+   */
+  function Trait (trait1, trait2) {
+  
+  	// If the function was called with one argument, the argument should be
+  	// an object whose properties are mapped to property descriptors on a new
+  	// instance of Trait, so we delegate to the trait function.
+  	// If the function was called with more than one argument, those arguments
+  	// should be instances of Trait or plain property descriptor maps
+  	// whose properties should be mixed into a new instance of Trait,
+  	// so we delegate to the compose function.
+  
+  	return trait2 === undefined
+  		? trait(trait1)
+  		: compose.apply(null, arguments);
+  }
+  
+  freeze(defineProperties(Trait.prototype, {
+  	toString: {
+  		value: function toString() {
+  			return '[object ' + this.constructor.name + ']';
+  		}
+  	},
+  
+  	/**
+  	 * `create` is like `Object.create`, except that it ensures that:
+  	 *    - An exception is thrown if this trait defines a property that is
+  	 *      marked as required property and same named property is not
+  	 *      found in a given `prototype`.
+  	 *    - An exception is thrown if this trait contains property that is
+  	 *      marked as 'conflict' property.
+  	 * @param {Object}
+  	 *    prototype of the compared object
+  	 * @returns {Object}
+  	 *    An object with all of the properties described by the trait.
+  	 */
+  	create: {
+  		value: function createTrait(prototype) {
+  			return create(undefined === prototype
+  				? Object.prototype
+  				: prototype,
+  			this);
+  		},
+  		enumerable: true
+  	},
+  
+  	/**
+  	 * Composes a new resolved trait, with all the same properties as the original
+  	 * trait, except that all properties whose name is an own property of
+  	 * `resolutions` will be renamed to the value of `resolutions[name]`. If
+  	 * `resolutions[name]` is `null`, the property is marked as 'required'.
+  	 * @param {Object} resolutions
+  	 *   An object whose own properties serve as a mapping from old names to new
+  	 *   names, or to `null` if the property should be excluded.
+  	 * @returns {Object}
+  	 *   New trait with the same own properties as the original trait but renamed.
+  	 */
+  	resolve: {
+  		value: function resolveTrait(resolutions) {
+  			return resolve(resolutions, this);
+  		},
+  		enumerable: true
+  	}
+  }));
+  
+  /**
+   * @see compose
+   */
+  Trait.compose = freeze(compose);
+  freeze(compose.prototype);
+  
+  /**
+   * Constant singleton, representing placeholder for required properties.
+   * @type {Object}
+   */
+  Trait.required = freeze(Object.create(Object.prototype, {
+  	toString: {
+  		value: freeze(function toString() {
+  			return '<Trait.required>';
+  		})
+  	}
+  }));
+  freeze(Trait.required.toString.prototype);
+  
+  module.exports = freeze(Trait);
+});
+require.register('primitives/TPrimitive', function(module, exports, require) {
+  var Trait = require('trait');
+  
+  module.exports = Trait({
+  	TWO_PI: Math.PI * 2,
+  	STROKE_WIDTH: 4,
+  	WIDTH: 100,
+  
+  	/**
+  	 * Render primitive in 'element'
+  	 * @param {DOMElement} element
+  	 * @param {Object} options
+  	 */
+  	render: function (element, options) {
+  		if (options.type == 'svg') {
+  			return this.renderSVG(element, options);
+  		} else {
+  			return this.renderCanvas(element, options);
+  		}
+  	},
+  
+  	getLayerMask: function (options) {
+  
+  	},
+  
+  	/**
+  	 * Retrieve attribute object for <use>
+  	 * @param {String} link
+  	 * @param {String} transform
+  	 */
+  	getUseAttributes: function (link, transform) {
+  		return {
+  			'xlink:href': link,
+  			x: '0',
+  			y: '0',
+  			width: '100',
+  			height: '100',
+  			transform: transform
+  		}
+  	},
+  
+  	renderSVG: Trait.required,
+  	renderCanvas: Trait.required
+  });
+  
+});
 require.register('primitives/sunPrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, style = require('style')  
+  	, Trait = require('trait')  
+  	, TPrimitive = require('primitives/TPrimitive')  
     
-  	, TWO_PI = Math.PI * 2  
   	, RAY_COLOUR = style.getDocumentStyle('.sun-ray', 'fill') || '#e88d15'  
   	, CENTER_COLOUR = style.getDocumentStyle('.sun-centre', 'fill') ||'#faba2f'  
   	, HORIZON_COLOUR = style.getDocumentStyle('.sun-winter-horizon', 'fill') || '#4d4d4d'  
-  	, STROKE_WIDTH = 4;  
     
-  /**  
-   * Render  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   */  
-  exports.render = function (element, options) {  
-  	if (options.type == 'svg') {  
-  		return renderSVG(element, options);  
-  	} else {  
-  		return renderCanvas(element, options);  
-  	}  
-  };  
+  	, TSunPrimitive;  
     
-  /**  
-   * Render svg version  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   * @returns {String}  
-   */  
-  function renderSVG (element, options) {  
-  	svg.appendChild(element, 'use', {  
-  		'xlink:href': options.winter ? '#sunWinter' : '#sun',  
-  		x: '0',  
-  		y: '0',  
-  		width: '100',  
-  		height: '100',  
-  		transform: 'translate('  
-  			+ options.x  
-  			+ ','  
-  			+ options.y  
-  			+ ') scale('  
-  			+ options.scale  
-  			+ ')'  
-  	});  
-  }  
-    
-  /**  
-   * Render canvas version  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   */  
-  function renderCanvas (element, options) {  
-  	var ctx = element.getContext('2d');  
-    
-  	ctx.save();  
-  	ctx.translate(options.x, options.y);  
-  	ctx.scale(options.scale, options.scale);  
-  	ctx.strokeStyle = options.bg;  
-  	ctx.lineWidth = STROKE_WIDTH;  
-    
-  	if (options.winter) {  
-  		// Horizon  
-  		ctx.fillStyle = HORIZON_COLOUR;  
-  		ctx.beginPath();  
-  		ctx.moveTo(2.5,0);  
-  		ctx.lineTo(87.6,0);  
-  		ctx.bezierCurveTo(88.9,0,90,0.9,90,2);  
-  		ctx.lineTo(90,2);  
-  		ctx.bezierCurveTo(90,3.1,88.9,4,87.5,4);  
-  		ctx.lineTo(2.5,4);  
-  		ctx.bezierCurveTo(1.1,4,0,3.1,0,2);  
-  		ctx.lineTo(0,2);  
-  		ctx.bezierCurveTo(0,0.9,1.1,0,2.5,0);  
-  		ctx.fill();  
-  		ctx.closePath();  
-    
-  		// Mask  
-  		ctx.beginPath()  
-  		ctx.moveTo(0,8);  
-  		ctx.lineTo(100,8);  
-  		ctx.lineTo(100,100);  
-  		ctx.lineTo(0,100);  
-  		ctx.lineTo(0,8);  
-  		ctx.closePath();  
-  		ctx.clip();  
-    
-  		// Rays  
-  		ctx.fillStyle = RAY_COLOUR;  
-  		ctx.beginPath();  
-  		ctx.moveTo(64.4,16.1);  
-  		ctx.lineTo(87.6,10);  
-  		ctx.bezierCurveTo(89.6,9.5,89.6,6.7,87.6,6.1);  
-  		ctx.lineTo(64.4,0.1);  
-  		ctx.lineTo(76.60000000000001,-20.7);  
-  		ctx.bezierCurveTo(77.60000000000001,-22.5,75.60000000000001,-24.5,73.9,-23.4);  
-  		ctx.lineTo(53.1,-11.2);  
-  		ctx.lineTo(47,-34.5);  
-  		ctx.bezierCurveTo(46.5,-36.5,43.7,-36.5,43.1,-34.5);  
-  		ctx.lineTo(37,-11.2);  
-  		ctx.lineTo(16.3,-23.4);  
-  		ctx.bezierCurveTo(14.5,-24.4,12.5,-22.4,13.600000000000001,-20.7);  
-  		ctx.lineTo(25.8,0.1);  
-  		ctx.lineTo(2.5,6.1);  
-  		ctx.bezierCurveTo(0.5,6.6,0.5,9.399999999999999,2.5,10);  
-  		ctx.lineTo(25.8,16.1);  
-  		ctx.lineTo(13.6,36.8);  
-  		ctx.bezierCurveTo(12.6,38.599999999999994,14.6,40.599999999999994,16.3,39.5);  
-  		ctx.lineTo(37.1,27.3);  
-  		ctx.lineTo(43.2,50.6);  
-  		ctx.bezierCurveTo(43.7,52.6,46.5,52.6,47.1,50.6);  
-  		ctx.lineTo(53.2,27.3);  
-  		ctx.lineTo(74,39.5);  
-  		ctx.bezierCurveTo(75.8,40.5,77.8,38.5,76.7,36.8);  
-  		ctx.lineTo(64.4,16.1);  
-  		ctx.closePath();  
-  		ctx.fill();  
-    
-  		// Center fill  
-  		ctx.fillStyle = CENTER_COLOUR;  
-  		ctx.beginPath();  
-  		ctx.arc(45,8,22.5,0,TWO_PI,true);  
-  		ctx.closePath();  
-  		ctx.fill();  
-  		ctx.stroke();  
-    
-  	} else {  
-  		// Rays  
-  		ctx.fillStyle = RAY_COLOUR;  
-  		ctx.beginPath();  
-  		ctx.moveTo(64.3,53);  
-  		ctx.lineTo(87.6,46.9);  
-  		ctx.bezierCurveTo(89.6,46.4,89.6,43.6,87.6,43);  
-  		ctx.lineTo(64.3,37);  
-  		ctx.lineTo(76.5,16.2);  
-  		ctx.bezierCurveTo(77.5,14.399999999999999,75.5,12.399999999999999,73.8,13.5);  
-  		ctx.lineTo(53,25.7);  
-  		ctx.lineTo(46.9,2.4);  
-  		ctx.bezierCurveTo(46.4,0.3999999999999999,43.6,0.3999999999999999,43,2.4);  
-  		ctx.lineTo(37,25.7);  
-  		ctx.lineTo(16.3,13.5);  
-  		ctx.bezierCurveTo(14.5,12.5,12.5,14.5,13.600000000000001,16.2);  
-  		ctx.lineTo(25.7,37);  
-  		ctx.lineTo(2.4,43.1);  
-  		ctx.bezierCurveTo(0.3999999999999999,43.6,0.3999999999999999,46.4,2.4,47);  
-  		ctx.lineTo(25.7,53);  
-  		ctx.lineTo(13.5,73.7);  
-  		ctx.bezierCurveTo(12.5,75.5,14.5,77.5,16.2,76.4);  
-  		ctx.lineTo(37,64.3);  
-  		ctx.lineTo(43.1,87.6);  
-  		ctx.bezierCurveTo(43.6,89.6,46.4,89.6,47,87.6);  
-  		ctx.lineTo(53,64.3);  
-  		ctx.lineTo(73.8,76.5);  
-  		ctx.bezierCurveTo(75.6,77.5,77.6,75.5,76.5,73.8);  
-  		ctx.lineTo(64.3,53);  
-  		ctx.closePath();  
-  		ctx.fill();  
-    
-  		// Center fill  
-  		ctx.fillStyle = CENTER_COLOUR;  
-  		ctx.beginPath();  
-  		ctx.arc(45,45,22.5,0,TWO_PI,true);  
-  		ctx.closePath();  
-  		ctx.fill();  
-  		ctx.stroke();  
-  	}  
-  	ctx.restore();  
-  }
-});
-require.register('primitives/moonPrimitive', function(module, exports, require) {
-  var svg = require('svg')  
-  	, style = require('style')  
-    
-  	, TWO_PI = Math.PI * 2  
-  	, FILL_COLOUR = style.getDocumentStyle('.moon', 'fill') || '#afc1c9';  
-    
-  /**  
-   * Render  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   */  
-  exports.render = function (element, options) {  
-  	if (options.type == 'svg') {  
-  		return renderSVG(element, options);  
-  	} else {  
-  		return renderCanvas(element, options);  
-  	}  
-  };  
-    
-  /**  
-   * Render svg version  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   * @returns {String}  
-   */  
-  function renderSVG (element, options) {  
-  	svg.appendChild(element, 'use', {  
-  		'xlink:href': '#moon',  
-  		x: '0',  
-  		y: '0',  
-  		width: '100',  
-  		height: '100',  
-  		transform: 'translate('  
-  			+ options.x  
-  			+ ','  
-  			+ options.y  
-  			+ ') scale('  
-  			+ options.scale  
-  			+ ')'  
-  	});  
-  }  
-    
-  /**  
-   * Render canvas version  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   */  
-  function renderCanvas (element, options) {  
-  	var ctx = element.getContext('2d');  
-    
-  	ctx.save();  
-    
-  	ctx.translate(options.x, options.y)  
-  	ctx.scale(options.scale, options.scale);  
-  	ctx.fillStyle = FILL_COLOUR;  
-  	ctx.beginPath();  
-  	ctx.moveTo(23,20);  
-  	ctx.bezierCurveTo(23,12.322,25.887999999999998,5.321999999999999,30.631,0.015999999999998238);  
-  	ctx.bezierCurveTo(30.421,0.012,30.212,0,30,0);  
-  	ctx.bezierCurveTo(13.432,0,0,13.432,0,30);  
-  	ctx.bezierCurveTo(0,46.568,13.432,60,30,60);  
-  	ctx.bezierCurveTo(38.891,60,46.875,56.129,52.369,49.984);  
-  	ctx.bezierCurveTo(36.093,49.646,23,36.356,23,20);  
-  	ctx.closePath();  
-  	ctx.fill();  
-  	ctx.restore();  
-  }
-});
-require.register('primitives/cloudPrimitive', function(module, exports, require) {
-  var svg = require('svg')  
-  	, STROKE_WIDTH = 4  
-  	, WIDTH = 100;  
-    
-  /**  
-   * Render  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   */  
-  exports.render = function (element, options) {  
-  	if (options.type == 'svg') {  
-  		return renderSVG(element, options);  
-  	} else {  
-  		return renderCanvas(element, options);  
-  	}  
-  };  
-    
-  /**  
-   * Render svg version  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   * @returns {String}  
-   */  
-  function renderSVG (element, options) {  
-  	svg.appendChild(element, 'use', {  
-  		'xlink:href': '#cloud-' + options.tint * 100,  
-  		x: '0',  
-  		y: '0',  
-  		width: '100',  
-  		height: '100',  
-  		transform: options.flip  
-  			? 'translate('  
-  				+ ((WIDTH * options.scale) + options.x)  
-  				+ ','  
-  				+ options.y  
-  				+ ') scale('  
-  				+ (-1 * options.scale)  
-  				+ ', '  
-  				+ options.scale  
-  				+ ')'  
-  			: 'translate('  
+  TSunPrimitive = Trait({  
+  	/**  
+  	 * Render svg version  
+  	 * @param {DOMElement} element  
+  	 * @param {Object} options  
+  	 * @returns {String}  
+  	 */  
+  	renderSVG: function (element, options) {  
+  		svg.appendChild(element, 'use', this.getUseAttributes(  
+  			options.winter ? '#sunWinter' : '#sun',  
+  			'translate('  
   				+ options.x  
   				+ ','  
   				+ options.y  
   				+ ') scale('  
   				+ options.scale  
   				+ ')'  
-  	});  
-  }  
+  			)  
+  		);  
+  	},  
     
-  /**  
-   * Render canvas version  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   */  
-  function renderCanvas (element, options) {  
-  	var ctx = element.getContext('2d')  
-  		, tint = Math.floor(255 * (1-options.tint));  
+  	/**  
+  	 * Render canvas version  
+  	 * @param {DOMElement} element  
+  	 * @param {Object} options  
+  	 */  
+  	renderCanvas: function (element, options) {  
+  		var ctx = element.getContext('2d');  
     
-  	ctx.save();  
-  	if (options.flip) {  
-  		ctx.translate((WIDTH * options.scale) + options.x, options.y)  
-  		ctx.scale(-1 * options.scale, options.scale);  
-  	} else {  
+  		ctx.save();  
+  		ctx.translate(options.x, options.y);  
+  		ctx.scale(options.scale, options.scale);  
+  		ctx.strokeStyle = options.bg;  
+  		ctx.lineWidth = this.STROKE_WIDTH;  
+    
+  		if (options.winter) {  
+  			// Horizon  
+  			ctx.fillStyle = HORIZON_COLOUR;  
+  			ctx.beginPath();  
+  			ctx.moveTo(2.5,0);  
+  			ctx.lineTo(87.6,0);  
+  			ctx.bezierCurveTo(88.9,0,90,0.9,90,2);  
+  			ctx.lineTo(90,2);  
+  			ctx.bezierCurveTo(90,3.1,88.9,4,87.5,4);  
+  			ctx.lineTo(2.5,4);  
+  			ctx.bezierCurveTo(1.1,4,0,3.1,0,2);  
+  			ctx.lineTo(0,2);  
+  			ctx.bezierCurveTo(0,0.9,1.1,0,2.5,0);  
+  			ctx.fill();  
+  			ctx.closePath();  
+    
+  			// Mask  
+  			ctx.beginPath()  
+  			ctx.moveTo(0,8);  
+  			ctx.lineTo(100,8);  
+  			ctx.lineTo(100,100);  
+  			ctx.lineTo(0,100);  
+  			ctx.lineTo(0,8);  
+  			ctx.closePath();  
+  			ctx.clip();  
+    
+  			// Rays  
+  			ctx.fillStyle = RAY_COLOUR;  
+  			ctx.beginPath();  
+  			ctx.moveTo(45.1,32.6);  
+  			ctx.bezierCurveTo(42.7,32.6,40.4,32.300000000000004,38.2,31.6);  
+  			ctx.lineTo(43.2,50.7);  
+  			ctx.bezierCurveTo(43.7,52.7,46.5,52.7,47.1,50.7);  
+  			ctx.lineTo(52.1,31.6);  
+  			ctx.bezierCurveTo(49.8,32.2,47.5,32.6,45.1,32.6);  
+  			ctx.moveTo(66.6,19.8);  
+  			ctx.bezierCurveTo(64.39999999999999,23.9,60.99999999999999,27.3,56.89999999999999,29.5);  
+  			ctx.lineTo(73.89999999999999,39.5);  
+  			ctx.bezierCurveTo(75.69999999999999,40.5,77.69999999999999,38.5,76.6,36.8);  
+  			ctx.lineTo(66.6,19.8);  
+  			ctx.moveTo(23.6,19.8);  
+  			ctx.lineTo(13.600000000000001,36.8);  
+  			ctx.bezierCurveTo(12.600000000000001,38.599999999999994,14.600000000000001,40.599999999999994,16.3,39.5);  
+  			ctx.lineTo(33.3,29.5);  
+  			ctx.bezierCurveTo(29.2,27.3,25.8,23.9,23.6,19.8);  
+  			ctx.moveTo(20.6,8.1);  
+  			ctx.bezierCurveTo(20.6,5.699999999999999,20.900000000000002,3.3999999999999995,21.6,1.1999999999999993);  
+  			ctx.lineTo(2.5,6.199999999999999);  
+  			ctx.bezierCurveTo(0.5,6.699999999999999,0.5,9.5,2.5,10.1);  
+  			ctx.lineTo(21.6,15.1);  
+  			ctx.bezierCurveTo(20.9,12.8,20.6,10.5,20.6,8.1);  
+  			ctx.moveTo(87.6,6.1);  
+  			ctx.lineTo(68.5,1.0999999999999996);  
+  			ctx.bezierCurveTo(69.1,3.3,69.5,5.6,69.5,8);  
+  			ctx.bezierCurveTo(69.5,10.4,69.2,12.7,68.5,14.9);  
+  			ctx.lineTo(87.6,9.9);  
+  			ctx.bezierCurveTo(89.6,9.5,89.6,6.7,87.6,6.1);  
+  			ctx.closePath();  
+  			ctx.fill();  
+    
+  			// Center fill  
+  			ctx.fillStyle = CENTER_COLOUR;  
+  			ctx.beginPath();  
+  			ctx.arc(45,8,20.5,0,this.TWO_PI,true);  
+  			ctx.closePath();  
+  			ctx.fill();  
+    
+  		} else {  
+  			// Rays  
+  			ctx.fillStyle = RAY_COLOUR;  
+  			ctx.beginPath();  
+  			ctx.moveTo(23.5,33.2);  
+  			ctx.bezierCurveTo(25.7,29.1,29.1,25.700000000000003,33.2,23.500000000000004);  
+  			ctx.lineTo(16.200000000000003,13.500000000000004);  
+  			ctx.bezierCurveTo(14.400000000000002,12.500000000000004,12.400000000000002,14.500000000000004,13.500000000000004,16.200000000000003);  
+  			ctx.lineTo(23.5,33.2);  
+  			ctx.moveTo(45,20.5);  
+  			ctx.bezierCurveTo(47.4,20.5,49.7,20.8,51.9,21.5);  
+  			ctx.lineTo(46.9,2.3999999999999986);  
+  			ctx.bezierCurveTo(46.4,0.3999999999999986,43.6,0.3999999999999986,43,2.3999999999999986);  
+  			ctx.lineTo(38,21.5);  
+  			ctx.bezierCurveTo(40.3,20.8,42.6,20.5,45,20.5);  
+  			ctx.moveTo(87.6,43.1);  
+  			ctx.lineTo(68.5,38.1);  
+  			ctx.bezierCurveTo(69.1,40.300000000000004,69.5,42.6,69.5,45);  
+  			ctx.bezierCurveTo(69.5,47.4,69.2,49.7,68.5,51.9);  
+  			ctx.lineTo(87.6,46.9);  
+  			ctx.bezierCurveTo(89.6,46.4,89.6,43.6,87.6,43.1);  
+  			ctx.moveTo(20.5,45);  
+  			ctx.bezierCurveTo(20.5,42.6,20.8,40.3,21.5,38.1);  
+  			ctx.lineTo(2.3999999999999986,43.1);  
+  			ctx.bezierCurveTo(0.3999999999999986,43.6,0.3999999999999986,46.4,2.3999999999999986,47);  
+  			ctx.lineTo(21.5,52);  
+  			ctx.bezierCurveTo(20.8,49.7,20.5,47.4,20.5,45);  
+  			ctx.moveTo(66.5,33.2);  
+  			ctx.lineTo(76.5,16.200000000000003);  
+  			ctx.bezierCurveTo(77.5,14.400000000000002,75.5,12.400000000000002,73.8,13.500000000000004);  
+  			ctx.lineTo(56.8,23.500000000000004);  
+  			ctx.bezierCurveTo(60.9,25.8,64.2,29.1,66.5,33.2);  
+  			ctx.moveTo(23.5,56.8);  
+  			ctx.lineTo(13.5,73.8);  
+  			ctx.bezierCurveTo(12.5,75.6,14.5,77.6,16.2,76.5);  
+  			ctx.lineTo(33.2,66.5);  
+  			ctx.bezierCurveTo(29.1,64.2,25.8,60.9,23.5,56.8);  
+  			ctx.moveTo(66.5,56.8);  
+  			ctx.bezierCurveTo(64.3,60.9,60.9,64.3,56.8,66.5);  
+  			ctx.lineTo(73.8,76.5);  
+  			ctx.bezierCurveTo(75.6,77.5,77.6,75.5,76.5,73.8);  
+  			ctx.lineTo(66.5,56.8);  
+  			ctx.moveTo(45,69.5);  
+  			ctx.bezierCurveTo(42.6,69.5,40.3,69.2,38.1,68.5);  
+  			ctx.lineTo(43.1,87.6);  
+  			ctx.bezierCurveTo(43.6,89.6,46.4,89.6,47,87.6);  
+  			ctx.lineTo(52,68.5);  
+  			ctx.bezierCurveTo(49.7,69.2,47.4,69.5,45,69.5);  
+  			ctx.closePath();  
+  			ctx.fill();  
+    
+  			// Center fill  
+  			ctx.fillStyle = CENTER_COLOUR;  
+  			ctx.beginPath();  
+  			ctx.arc(45,45,20.5,0,this.TWO_PI,true);  
+  			ctx.closePath();  
+  			ctx.fill();  
+  		}  
+  		ctx.restore();  
+  	}  
+  });  
+    
+  module.exports = Trait.compose(  
+  	TPrimitive,  
+  	TSunPrimitive  
+  ).create();  
+  
+});
+require.register('primitives/moonPrimitive', function(module, exports, require) {
+  var svg = require('svg')  
+  	, style = require('style')  
+  	, Trait = require('trait')  
+  	, TPrimitive = require('primitives/TPrimitive')  
+    
+  	, FILL_COLOUR = style.getDocumentStyle('.moon', 'fill') || '#afc1c9'  
+    
+  	, TMoonPrimitive;  
+    
+  TMoonPrimitive = Trait({  
+  	/**  
+  	 * Render svg version  
+  	 * @param {DOMElement} element  
+  	 * @param {Object} options  
+  	 * @returns {String}  
+  	 */  
+  	renderSVG: function (element, options) {  
+  		svg.appendChild(element, 'use', this.getUseAttributes(  
+  			'#moon',  
+  			'translate('  
+  				+ options.x  
+  				+ ','  
+  				+ options.y  
+  				+ ') scale('  
+  				+ options.scale  
+  				+ ')'  
+  			)  
+  		);  
+  	},  
+    
+  	/**  
+  	 * Render canvas version  
+  	 * @param {DOMElement} element  
+  	 * @param {Object} options  
+  	 */  
+  	renderCanvas: function (element, options) {  
+  		var ctx = element.getContext('2d');  
+    
+  		ctx.save();  
+    
   		ctx.translate(options.x, options.y)  
   		ctx.scale(options.scale, options.scale);  
+  		ctx.fillStyle = FILL_COLOUR;  
+  		ctx.beginPath();  
+  		ctx.moveTo(23,20);  
+  		ctx.bezierCurveTo(23,12.322,25.887999999999998,5.321999999999999,30.631,0.015999999999998238);  
+  		ctx.bezierCurveTo(30.421,0.012,30.212,0,30,0);  
+  		ctx.bezierCurveTo(13.432,0,0,13.432,0,30);  
+  		ctx.bezierCurveTo(0,46.568,13.432,60,30,60);  
+  		ctx.bezierCurveTo(38.891,60,46.875,56.129,52.369,49.984);  
+  		ctx.bezierCurveTo(36.093,49.646,23,36.356,23,20);  
+  		ctx.closePath();  
+  		ctx.fill();  
+  		ctx.restore();  
   	}  
+  });  
     
-  	// Fill  
-  	ctx.strokeStyle = options.bg;  
-  	ctx.lineWidth = STROKE_WIDTH;  
-  	ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
-  	ctx.beginPath();  
-  	ctx.moveTo(55.6,2);  
-  	ctx.bezierCurveTo(46,1.7,37.1,7,34.1,17.3);  
-  	ctx.bezierCurveTo(28,15.8,18.1,19.7,16.3,28.200000000000003);  
-  	ctx.bezierCurveTo(10.1,28,2,33.1,2,41.6);  
-  	ctx.bezierCurveTo(2,51,9,56,21.5,56);  
-  	ctx.lineTo(65.1,56);  
-  	ctx.bezierCurveTo(70.69999999999999,56,78,55.5,82.39999999999999,53.4);  
-  	ctx.bezierCurveTo(97.3,46.199999999999996,94.69999999999999,21.1,75.99999999999999,18.799999999999997);  
-  	ctx.bezierCurveTo(73.7,7.9,65.1,2.3,55.6,2);  
-  	ctx.closePath();  
-  	ctx.fill();  
-  	ctx.stroke();  
-  	ctx.restore();  
-  }
+  module.exports = Trait.compose(  
+  	TPrimitive,  
+  	TMoonPrimitive  
+  ).create();  
+  
+});
+require.register('primitives/cloudPrimitive', function(module, exports, require) {
+  var svg = require('svg')  
+  	, Trait = require('trait')  
+  	, TPrimitive = require('primitives/TPrimitive')  
+    
+  	, TCloudPrimitive;  
+    
+  TCloudPrimitive = Trait({  
+  	/**  
+  	 * Render svg version  
+  	 * @param {DOMElement} element  
+  	 * @param {Object} options  
+  	 * @returns {String}  
+  	 */  
+  	renderSVG: function (element, options) {  
+  		svg.appendChild(element, 'use', this.getUseAttributes(  
+  			'#cloud-' + options.tint * 100,  
+  			options.flip  
+  				? 'translate('  
+  					+ ((this.WIDTH * options.scale) + options.x)  
+  					+ ','  
+  					+ options.y  
+  					+ ') scale('  
+  					+ (-1 * options.scale)  
+  					+ ', '  
+  					+ options.scale  
+  					+ ')'  
+  				: 'translate('  
+  					+ options.x  
+  					+ ','  
+  					+ options.y  
+  					+ ') scale('  
+  					+ options.scale  
+  					+ ')'  
+  			)  
+  		);  
+  	},  
+    
+  	/**  
+  	 * Render canvas version  
+  	 * @param {DOMElement} element  
+  	 * @param {Object} options  
+  	 */  
+  	renderCanvas: function (element, options) {  
+  		var ctx = element.getContext('2d')  
+  			, tint = Math.floor(255 * (1-options.tint));  
+    
+  		ctx.save();  
+  		if (options.flip) {  
+  			ctx.translate((this.WIDTH * options.scale) + options.x, options.y)  
+  			ctx.scale(-1 * options.scale, options.scale);  
+  		} else {  
+  			ctx.translate(options.x, options.y)  
+  			ctx.scale(options.scale, options.scale);  
+  		}  
+    
+  		// Fill  
+  		ctx.strokeStyle = options.bg;  
+  		ctx.lineWidth = this.STROKE_WIDTH;  
+  		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
+  		ctx.beginPath();  
+  		ctx.moveTo(55.6,2);  
+  		ctx.bezierCurveTo(46,1.7,37.1,7,34.1,17.3);  
+  		ctx.bezierCurveTo(28,15.8,18.1,19.7,16.3,28.200000000000003);  
+  		ctx.bezierCurveTo(10.1,28,2,33.1,2,41.6);  
+  		ctx.bezierCurveTo(2,51,9,56,21.5,56);  
+  		ctx.lineTo(65.1,56);  
+  		ctx.bezierCurveTo(70.69999999999999,56,78,55.5,82.39999999999999,53.4);  
+  		ctx.bezierCurveTo(97.3,46.199999999999996,94.69999999999999,21.1,75.99999999999999,18.799999999999997);  
+  		ctx.bezierCurveTo(73.7,7.9,65.1,2.3,55.6,2);  
+  		ctx.closePath();  
+  		ctx.fill();  
+  		ctx.stroke();  
+  		ctx.restore();  
+  	}  
+  });  
+    
+  module.exports = Trait.compose(  
+  	TPrimitive,  
+  	TCloudPrimitive  
+  ).create();
 });
 require.register('primitives/raindropPrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, style = require('style')  
+  	, Trait = require('trait')  
+  	, TPrimitive = require('primitives/TPrimitive')  
     
-  	, TWO_PI = Math.PI * 2  
-  	, FILL_COLOUR = style.getDocumentStyle('.raindrop', 'fill') || '#1671CC';  
+  	, FILL_COLOUR = style.getDocumentStyle('.raindrop', 'fill') || '#1671CC'  
     
-  /**  
-   * Render  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   */  
-  exports.render = function (element, options) {  
-  	if (options.type == 'svg') {  
-  		return renderSVG(element, options);  
-  	} else {  
-  		return renderCanvas(element, options);  
+  	, TRaindropPrimitive;  
+    
+  TRaindropPrimitive = Trait({  
+  	/**  
+  	 * Render svg version  
+  	 * @param {DOMElement} element  
+  	 * @param {Object} options  
+  	 * @returns {String}  
+  	 */  
+  	renderSVG: function (element, options) {  
+  		svg.appendChild(element, 'use', this.getUseAttributes(  
+  			'#raindrop',  
+  			'translate('  
+  				+ options.x  
+  				+ ','  
+  				+ options.y  
+  				+ ')'  
+  			)  
+  		);  
+  	},  
+    
+  	/**  
+  	 * Render canvas version  
+  	 * @param {DOMElement} element  
+  	 * @param {Object} options  
+  	 */  
+  	renderCanvas: function (element, options) {  
+  		var ctx = element.getContext('2d');  
+    
+  		// Stroke  
+  		ctx.save();  
+  		ctx.fillStyle = options.bg;  
+  		ctx.translate(options.x, options.y)  
+  		ctx.scale(options.scale, options.scale);  
+  		ctx.fillStyle = options.bg;  
+  		ctx.beginPath();  
+  		ctx.arc(9,9,9,0,this.TWO_PI,true);  
+  		ctx.closePath();  
+  		ctx.fill();  
+    
+  		// Fill  
+  		ctx.fillStyle = FILL_COLOUR;  
+  		ctx.beginPath();  
+  		ctx.moveTo(20,16.8);  
+  		ctx.bezierCurveTo(20,20.2,17.3,23,14,23);  
+  		ctx.bezierCurveTo(10.7,23,8,20.2,8,16.8);  
+  		ctx.bezierCurveTo(8,14.9,8,6,8,6);  
+  		ctx.bezierCurveTo(13.5,11.5,20,11.2,20,16.8);  
+  		ctx.closePath();  
+  		ctx.fill();  
+  		ctx.restore();  
   	}  
-  };  
+  });  
     
-  /**  
-   * Render svg version  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   * @returns {String}  
-   */  
-  function renderSVG (element, options) {  
-  	svg.appendChild(element, 'use', {  
-  		'xlink:href': '#raindrop',  
-  		x: '0',  
-  		y: '0',  
-  		width: '100',  
-  		height: '100',  
-  		transform: 'translate('  
-  			+ options.x  
-  			+ ','  
-  			+ options.y  
-  			+ ')'  
-  	});  
-  }  
-    
-  /**  
-   * Render canvas version  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   */  
-  function renderCanvas (element, options) {  
-  	var ctx = element.getContext('2d');  
-    
-  	// Stroke  
-  	ctx.save();  
-  	ctx.fillStyle = options.bg;  
-  	ctx.translate(options.x, options.y)  
-  	ctx.scale(options.scale, options.scale);  
-  	ctx.fillStyle = options.bg;  
-  	ctx.beginPath();  
-  	ctx.arc(9,9,9,0,TWO_PI,true);  
-  	ctx.closePath();  
-  	ctx.fill();  
-    
-  	// Fill  
-  	ctx.fillStyle = FILL_COLOUR;  
-  	ctx.beginPath();  
-  	ctx.moveTo(20,16.8);  
-  	ctx.bezierCurveTo(20,20.2,17.3,23,14,23);  
-  	ctx.bezierCurveTo(10.7,23,8,20.2,8,16.8);  
-  	ctx.bezierCurveTo(8,14.9,8,6,8,6);  
-  	ctx.bezierCurveTo(13.5,11.5,20,11.2,20,16.8);  
-  	ctx.closePath();  
-  	ctx.fill();  
-  	ctx.restore();  
-  }
+  module.exports = Trait.compose(  
+  	TPrimitive,  
+  	TRaindropPrimitive  
+  ).create();  
+  
 });
 require.register('primitives/sleetPrimitive', function(module, exports, require) {
   var svg = require('svg')
   	, style = require('style')
+  	, Trait = require('trait')
+  	, TPrimitive = require('primitives/TPrimitive')
   
-  	, TWO_PI = Math.PI * 2
-  	, FILL_COLOUR = style.getDocumentStyle('.sleet', 'fill') || '#1EB9D8';
+  	, FILL_COLOUR = style.getDocumentStyle('.sleet', 'fill') || '#1EB9D8'
   
-  /**
-   * Render
-   * @param {DOMElement} element
-   * @param {Object} options
-   */
-  exports.render = function (element, options) {
-  	if (options.type == 'svg') {
-  		return renderSVG(element, options);
-  	} else {
-  		return renderCanvas(element, options);
+  	, TSleetPrimitive;
+  
+  TSleetPrimitive = Trait({
+  	/**
+  	 * Render svg version
+  	 * @param {DOMElement} element
+  	 * @param {Object} options
+  	 * @returns {String}
+  	 */
+  	renderSVG: function (element, options) {
+  		svg.appendChild(element, 'use', this.getUseAttributes(
+  			'#sleet',
+  			'translate('
+  				+ options.x
+  				+ ','
+  				+ options.y
+  				+ ')'
+  			)
+  		);
+  	},
+  
+  	/**
+  	 * Render canvas version
+  	 * @param {DOMElement} element
+  	 * @param {Object} options
+  	 */
+  	renderCanvas: function (element, options) {
+  		var ctx = element.getContext('2d');
+  
+  		// Stroke
+  		ctx.save();
+  		ctx.fillStyle = options.bg;
+  		ctx.translate(options.x, options.y)
+  		ctx.scale(options.scale, options.scale);
+  		ctx.fillStyle = options.bg;
+  		ctx.beginPath();
+  		ctx.arc(9,9,9,0,this.TWO_PI,true);
+  		ctx.closePath();
+  		ctx.fill();
+  
+  		// Fill
+  		ctx.fillStyle = FILL_COLOUR;
+  		ctx.beginPath();
+  		ctx.moveTo(19.9,16.6);
+  		ctx.bezierCurveTo(18.099999999999998,18.900000000000002,16.5,22.1,15.999999999999998,25.5);
+  		ctx.bezierCurveTo(15.899999999999999,26,15.399999999999999,26.2,14.999999999999998,25.9);
+  		ctx.bezierCurveTo(12.7,23.799999999999997,10.2,22.599999999999998,6.499999999999998,22.099999999999998);
+  		ctx.bezierCurveTo(6.099999999999998,21.999999999999996,5.899999999999999,21.599999999999998,6.099999999999998,21.299999999999997);
+  		ctx.bezierCurveTo(8.4,17,8.6,10.1,7.8,5);
+  		ctx.bezierCurveTo(10.5,9.2,14.899999999999999,14,19.6,15.7);
+  		ctx.bezierCurveTo(20,15.8,20.1,16.3,19.9,16.6);
+  		ctx.closePath();
+  		ctx.fill();
+  		ctx.restore();
   	}
-  }
+  });
   
-  /**
-   * Render svg version
-   * @param {DOMElement} element
-   * @param {Object} options
-   * @returns {String}
-   */
-  function renderSVG (element, options) {
-  	svg.appendChild(element, 'use', {
-  		'xlink:href': '#sleet',
-  		x: '0',
-  		y: '0',
-  		width: '100',
-  		height: '100',
-  		transform: 'translate('
-  			+ options.x
-  			+ ','
-  			+ options.y
-  			+ ')'
-  	});
-  }
+  module.exports = Trait.compose(
+  	TPrimitive,
+  	TSleetPrimitive
+  ).create();
   
-  /**
-   * Render canvas version
-   * @param {DOMElement} element
-   * @param {Object} options
-   */
-  function renderCanvas (element, options) {
-  	var ctx = element.getContext('2d');
-  
-  	// Stroke
-  	ctx.save();
-  	ctx.fillStyle = options.bg;
-  	ctx.translate(options.x, options.y)
-  	ctx.scale(options.scale, options.scale);
-  	ctx.fillStyle = options.bg;
-  	ctx.beginPath();
-  	ctx.arc(9,9,9,0,TWO_PI,true);
-  	ctx.closePath();
-  	ctx.fill();
-  
-  	// Fill
-  	ctx.fillStyle = FILL_COLOUR;
-  	ctx.beginPath();
-  	ctx.moveTo(19.9,16.6);
-  	ctx.bezierCurveTo(18.099999999999998,18.900000000000002,16.5,22.1,15.999999999999998,25.5);
-  	ctx.bezierCurveTo(15.899999999999999,26,15.399999999999999,26.2,14.999999999999998,25.9);
-  	ctx.bezierCurveTo(12.7,23.799999999999997,10.2,22.599999999999998,6.499999999999998,22.099999999999998);
-  	ctx.bezierCurveTo(6.099999999999998,21.999999999999996,5.899999999999999,21.599999999999998,6.099999999999998,21.299999999999997);
-  	ctx.bezierCurveTo(8.4,17,8.6,10.1,7.8,5);
-  	ctx.bezierCurveTo(10.5,9.2,14.899999999999999,14,19.6,15.7);
-  	ctx.bezierCurveTo(20,15.8,20.1,16.3,19.9,16.6);
-  	ctx.closePath();
-  	ctx.fill();
-  	ctx.restore();
-  };
 });
 require.register('primitives/snowflakePrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, style = require('style')  
+  	, Trait = require('trait')  
+  	, TPrimitive = require('primitives/TPrimitive')  
     
-  	, TWO_PI = Math.PI * 2  
-  	, FILL_COLOUR = style.getDocumentStyle('.snowflake', 'fill') || '#54BFE3';  
+  	, FILL_COLOUR = style.getDocumentStyle('.snowflake', 'fill') || '#54BFE3'  
     
-  /**  
-   * Render  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   */  
-  exports.render = function (element, options) {  
-  	if (options.type == 'svg') {  
-  		return renderSVG(element, options);  
-  	} else {  
-  		return renderCanvas(element, options);  
+  	, TSnowflakePrimitive;  
+    
+  TSnowflakePrimitive = Trait({  
+  	/**  
+  	 * Render svg version  
+  	 * @param {DOMElement} element  
+  	 * @param {Object} options  
+  	 * @returns {String}  
+  	 */  
+  	renderSVG: function (element, options) {  
+  		svg.appendChild(element, 'use', this.getUseAttributes(  
+  			'#snowflake',  
+  			'translate('  
+  				+ options.x  
+  				+ ','  
+  				+ options.y  
+  				+ ')'  
+  			)  
+  		);  
+  	},  
+    
+  	/**  
+  	 * Render canvas version  
+  	 * @param {DOMElement} element  
+  	 * @param {Object} options  
+  	 */  
+  	renderCanvas: function (element, options) {  
+  		var ctx = element.getContext('2d');  
+    
+  		// Stroke  
+  		ctx.save();  
+  		ctx.fillStyle = options.bg;  
+  		ctx.translate(options.x, options.y)  
+  		ctx.scale(options.scale, options.scale);  
+  		ctx.fillStyle = options.bg;  
+  		ctx.beginPath();  
+  		ctx.arc(9,9,9,0,this.TWO_PI,true);  
+  		ctx.closePath();  
+  		ctx.fill();  
+    
+  		// Fill  
+  		ctx.fillStyle = FILL_COLOUR;  
+  		ctx.beginPath();  
+  		ctx.moveTo(6.2,6.9);  
+  		ctx.lineTo(7.300000000000001,10.7);  
+  		ctx.bezierCurveTo(7.000000000000001,10.899999999999999,6.700000000000001,11.2,6.4,11.5);  
+  		ctx.bezierCurveTo(6,11.7,5.8,12,5.6,12.4);  
+  		ctx.lineTo(1.7999999999999998,11.4);  
+  		ctx.bezierCurveTo(1,11.2,0.2,11.7,0,12.5);  
+  		ctx.bezierCurveTo(-0.2,13.3,0.3,14.1,1.1,14.3);  
+  		ctx.lineTo(4.9,15.3);  
+  		ctx.bezierCurveTo(4.9,16.1,5.2,16.900000000000002,5.5,17.6);  
+  		ctx.lineTo(2.8,20.400000000000002);  
+  		ctx.bezierCurveTo(2.1999999999999997,21.000000000000004,2.1999999999999997,21.900000000000002,2.8,22.500000000000004);  
+  		ctx.bezierCurveTo(3.4,23.100000000000005,4.3,23.100000000000005,4.9,22.500000000000004);  
+  		ctx.lineTo(7.6000000000000005,19.700000000000003);  
+  		ctx.bezierCurveTo(8.3,20.1,9.100000000000001,20.300000000000004,9.9,20.300000000000004);  
+  		ctx.lineTo(10.9,24.100000000000005);  
+  		ctx.bezierCurveTo(11.1,24.900000000000006,11.9,25.300000000000004,12.700000000000001,25.100000000000005);  
+  		ctx.bezierCurveTo(13.500000000000002,24.900000000000006,13.9,24.100000000000005,13.700000000000001,23.300000000000004);  
+  		ctx.lineTo(12.600000000000001,19.500000000000004);  
+  		ctx.bezierCurveTo(12.900000000000002,19.300000000000004,13.3,19.100000000000005,13.600000000000001,18.800000000000004);  
+  		ctx.bezierCurveTo(13.900000000000002,18.500000000000004,14.100000000000001,18.200000000000003,14.3,17.800000000000004);  
+  		ctx.lineTo(18.1,18.800000000000004);  
+  		ctx.bezierCurveTo(18.900000000000002,19.000000000000004,19.700000000000003,18.500000000000004,19.900000000000002,17.700000000000003);  
+  		ctx.bezierCurveTo(20.1,16.900000000000002,19.6,16.1,18.8,15.900000000000002);  
+  		ctx.lineTo(15,14.900000000000002);  
+  		ctx.bezierCurveTo(15,14.100000000000001,14.7,13.300000000000002,14.3,12.600000000000001);  
+  		ctx.lineTo(17,9.8);  
+  		ctx.bezierCurveTo(17.6,9.200000000000001,17.5,8.3,17,7.700000000000001);  
+  		ctx.bezierCurveTo(16.4,7.100000000000001,15.5,7.100000000000001,14.9,7.700000000000001);  
+  		ctx.lineTo(12.2,10.5);  
+  		ctx.bezierCurveTo(11.5,10.1,10.7,9.9,9.899999999999999,9.9);  
+  		ctx.lineTo(9,6.1);  
+  		ctx.bezierCurveTo(8.8,5.3,8,4.8999999999999995,7.2,5.1);  
+  		ctx.bezierCurveTo(6.5,5.3,6,6.1,6.2,6.9);  
+  		ctx.closePath();  
+  		ctx.moveTo(11.8,13.2);  
+  		ctx.bezierCurveTo(12.8,14.2,12.8,15.799999999999999,11.8,16.8);  
+  		ctx.bezierCurveTo(10.8,17.8,9.200000000000001,17.8,8.200000000000001,16.8);  
+  		ctx.bezierCurveTo(7.200000000000001,15.8,7.200000000000001,14.200000000000001,8.200000000000001,13.200000000000001);  
+  		ctx.bezierCurveTo(9.2,12.2,10.8,12.2,11.8,13.2);  
+  		ctx.closePath();  
+  		ctx.fill();  
+  		ctx.restore();  
   	}  
-  };  
+  });  
     
-  /**  
-   * Render svg version  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   * @returns {String}  
-   */  
-  function renderSVG (element, options) {  
-  	svg.appendChild(element, 'use', {  
-  		'xlink:href': '#snowflake',  
-  		x: '0',  
-  		y: '0',  
-  		width: '100',  
-  		height: '100',  
-  		transform: 'translate('  
-  			+ options.x  
-  			+ ','  
-  			+ options.y  
-  			+ ')'  
-  	});  
-  }  
-    
-  /**  
-   * Render canvas version  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   */  
-  function renderCanvas (element, options) {  
-  	var ctx = element.getContext('2d');  
-    
-  	// Stroke  
-  	ctx.save();  
-  	ctx.fillStyle = options.bg;  
-  	ctx.translate(options.x, options.y)  
-  	ctx.scale(options.scale, options.scale);  
-  	ctx.fillStyle = options.bg;  
-  	ctx.beginPath();  
-  	ctx.arc(9,9,9,0,TWO_PI,true);  
-  	ctx.closePath();  
-  	ctx.fill();  
-    
-  	// Fill  
-  	ctx.fillStyle = FILL_COLOUR;  
-  	ctx.beginPath();  
-  	ctx.moveTo(6.2,6.9);  
-  	ctx.lineTo(7.300000000000001,10.7);  
-  	ctx.bezierCurveTo(7.000000000000001,10.899999999999999,6.700000000000001,11.2,6.4,11.5);  
-  	ctx.bezierCurveTo(6,11.7,5.8,12,5.6,12.4);  
-  	ctx.lineTo(1.7999999999999998,11.4);  
-  	ctx.bezierCurveTo(1,11.2,0.2,11.7,0,12.5);  
-  	ctx.bezierCurveTo(-0.2,13.3,0.3,14.1,1.1,14.3);  
-  	ctx.lineTo(4.9,15.3);  
-  	ctx.bezierCurveTo(4.9,16.1,5.2,16.900000000000002,5.5,17.6);  
-  	ctx.lineTo(2.8,20.400000000000002);  
-  	ctx.bezierCurveTo(2.1999999999999997,21.000000000000004,2.1999999999999997,21.900000000000002,2.8,22.500000000000004);  
-  	ctx.bezierCurveTo(3.4,23.100000000000005,4.3,23.100000000000005,4.9,22.500000000000004);  
-  	ctx.lineTo(7.6000000000000005,19.700000000000003);  
-  	ctx.bezierCurveTo(8.3,20.1,9.100000000000001,20.300000000000004,9.9,20.300000000000004);  
-  	ctx.lineTo(10.9,24.100000000000005);  
-  	ctx.bezierCurveTo(11.1,24.900000000000006,11.9,25.300000000000004,12.700000000000001,25.100000000000005);  
-  	ctx.bezierCurveTo(13.500000000000002,24.900000000000006,13.9,24.100000000000005,13.700000000000001,23.300000000000004);  
-  	ctx.lineTo(12.600000000000001,19.500000000000004);  
-  	ctx.bezierCurveTo(12.900000000000002,19.300000000000004,13.3,19.100000000000005,13.600000000000001,18.800000000000004);  
-  	ctx.bezierCurveTo(13.900000000000002,18.500000000000004,14.100000000000001,18.200000000000003,14.3,17.800000000000004);  
-  	ctx.lineTo(18.1,18.800000000000004);  
-  	ctx.bezierCurveTo(18.900000000000002,19.000000000000004,19.700000000000003,18.500000000000004,19.900000000000002,17.700000000000003);  
-  	ctx.bezierCurveTo(20.1,16.900000000000002,19.6,16.1,18.8,15.900000000000002);  
-  	ctx.lineTo(15,14.900000000000002);  
-  	ctx.bezierCurveTo(15,14.100000000000001,14.7,13.300000000000002,14.3,12.600000000000001);  
-  	ctx.lineTo(17,9.8);  
-  	ctx.bezierCurveTo(17.6,9.200000000000001,17.5,8.3,17,7.700000000000001);  
-  	ctx.bezierCurveTo(16.4,7.100000000000001,15.5,7.100000000000001,14.9,7.700000000000001);  
-  	ctx.lineTo(12.2,10.5);  
-  	ctx.bezierCurveTo(11.5,10.1,10.7,9.9,9.899999999999999,9.9);  
-  	ctx.lineTo(9,6.1);  
-  	ctx.bezierCurveTo(8.8,5.3,8,4.8999999999999995,7.2,5.1);  
-  	ctx.bezierCurveTo(6.5,5.3,6,6.1,6.2,6.9);  
-  	ctx.closePath();  
-  	ctx.moveTo(11.8,13.2);  
-  	ctx.bezierCurveTo(12.8,14.2,12.8,15.799999999999999,11.8,16.8);  
-  	ctx.bezierCurveTo(10.8,17.8,9.200000000000001,17.8,8.200000000000001,16.8);  
-  	ctx.bezierCurveTo(7.200000000000001,15.8,7.200000000000001,14.200000000000001,8.200000000000001,13.200000000000001);  
-  	ctx.bezierCurveTo(9.2,12.2,10.8,12.2,11.8,13.2);  
-  	ctx.closePath();  
-  	ctx.fill();  
-  	ctx.restore();  
-  }
+  module.exports = Trait.compose(  
+  	TPrimitive,  
+  	TSnowflakePrimitive  
+  ).create();  
+  
 });
 require.register('primitives/fogPrimitive', function(module, exports, require) {
-  var svg = require('svg');  
+  var svg = require('svg')  
+  	, Trait = require('trait')  
+  	, TPrimitive = require('primitives/TPrimitive')  
     
-  /**  
-   * Render  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   */  
-  exports.render = function (element, options) {  
-  	if (options.type == 'svg') {  
-  		return renderSVG(element, options);  
-  	} else {  
-  		return renderCanvas(element, options);  
+  	, TFogPrimitive;  
+    
+  TFogPrimitive = Trait({  
+  	/**  
+  	 * Render svg version  
+  	 * @param {DOMElement} element  
+  	 * @param {Object} options  
+  	 * @returns {String}  
+  	 */  
+  	renderSVG: function (element, options) {  
+  		svg.appendChild(element, 'use', this.getUseAttributes(  
+  			'#fog',  
+  			'translate('  
+  				+ options.x  
+  				+ ','  
+  				+ options.y  
+  				+ ')'  
+  			)  
+  		);  
+  	},  
+    
+  	/**  
+  	 * Render canvas version  
+  	 * @param {DOMElement} element  
+  	 * @param {Object} options  
+  	 */  
+  	renderCanvas: function (element, options) {  
+  		var ctx = element.getContext('2d')  
+  			, tint = Math.floor(255 * (1-options.tint));  
+    
+  		ctx.save();  
+  		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
+  		ctx.translate(options.x, options.y)  
+  		ctx.scale(options.scale, options.scale);  
+  		ctx.beginPath();  
+  		ctx.moveTo(82.3,42);  
+  		ctx.lineTo(2.7,42);  
+  		ctx.bezierCurveTo(1.2,42,0,42.9,0,44);  
+  		ctx.bezierCurveTo(0,45.1,1.2,46,2.7,46);  
+  		ctx.lineTo(82.4,46);  
+  		ctx.bezierCurveTo(83.9,46,85.10000000000001,45.1,85.10000000000001,44);  
+  		ctx.bezierCurveTo(85.10000000000001,42.9,83.8,42,82.3,42);  
+  		ctx.closePath();  
+  		ctx.fill();  
+    
+  		ctx.beginPath();  
+  		ctx.moveTo(80.1,50);  
+  		ctx.lineTo(5.9,50);  
+  		ctx.bezierCurveTo(4.3,50,3,50.9,3,52);  
+  		ctx.bezierCurveTo(3,53.1,4.3,54,5.9,54);  
+  		ctx.lineTo(80.2,54);  
+  		ctx.bezierCurveTo(81.8,54,83.10000000000001,53.1,83.10000000000001,52);  
+  		ctx.bezierCurveTo(83,50.9,81.7,50,80.1,50);  
+  		ctx.closePath();  
+  		ctx.fill();  
+    
+  		ctx.beginPath();  
+  		ctx.moveTo(80.1,58);  
+  		ctx.lineTo(10.9,58);  
+  		ctx.bezierCurveTo(9.3,58,8,58.9,8,60);  
+  		ctx.bezierCurveTo(8,61.1,9.3,62,10.9,62);  
+  		ctx.lineTo(80.10000000000001,62);  
+  		ctx.bezierCurveTo(81.7,62,83.00000000000001,61.1,83.00000000000001,60);  
+  		ctx.bezierCurveTo(83.00000000000001,58.9,81.7,58,80.1,58);  
+  		ctx.closePath();  
+  		ctx.fill();  
+    
+  		ctx.beginPath();  
+  		ctx.moveTo(51.2,0);  
+  		ctx.bezierCurveTo(42.1,-0.3,33.6,4.8,30.700000000000003,14.6);  
+  		ctx.bezierCurveTo(24.800000000000004,13.2,15.400000000000002,16.9,13.700000000000003,25);  
+  		ctx.bezierCurveTo(8.2,24.9,1.2,29,0.1,36);  
+  		ctx.bezierCurveTo(0,37,0.7,37.9,1.7,37.9);  
+  		ctx.lineTo(84,37.9);  
+  		ctx.bezierCurveTo(85,37.9,85.8,37.199999999999996,85.9,36.199999999999996);  
+  		ctx.bezierCurveTo(86.9,27.299999999999997,81.80000000000001,17.499999999999996,70.7,16.099999999999994);  
+  		ctx.bezierCurveTo(68.5,5.6,60.2,0.3,51.2,0);  
+  		ctx.closePath();  
+  		ctx.fill();  
+  		ctx.restore();  
   	}  
-  };  
+  });  
     
-  /**  
-   * Render svg version  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   * @returns {String}  
-   */  
-  function renderSVG (element, options) {  
-  	svg.appendChild(element, 'use', {  
-  		'xlink:href': '#fog',  
-  		x: '0',  
-  		y: '0',  
-  		width: '100',  
-  		height: '100',  
-  		transform: 'translate('  
-  			+ options.x  
-  			+ ','  
-  			+ options.y  
-  			+ ')'  
-  	});  
-  }  
-    
-  /**  
-   * Render canvas version  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   */  
-  function renderCanvas (element, options) {  
-  	var ctx = element.getContext('2d')  
-  		, tint = Math.floor(255 * (1-options.tint));  
-    
-  	ctx.save();  
-  	ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
-  	ctx.translate(options.x, options.y)  
-  	ctx.scale(options.scale, options.scale);  
-  	ctx.beginPath();  
-  	ctx.moveTo(82.3,42);  
-  	ctx.lineTo(2.7,42);  
-  	ctx.bezierCurveTo(1.2,42,0,42.9,0,44);  
-  	ctx.bezierCurveTo(0,45.1,1.2,46,2.7,46);  
-  	ctx.lineTo(82.4,46);  
-  	ctx.bezierCurveTo(83.9,46,85.10000000000001,45.1,85.10000000000001,44);  
-  	ctx.bezierCurveTo(85.10000000000001,42.9,83.8,42,82.3,42);  
-  	ctx.closePath();  
-  	ctx.fill();  
-    
-  	ctx.beginPath();  
-  	ctx.moveTo(80.1,50);  
-  	ctx.lineTo(5.9,50);  
-  	ctx.bezierCurveTo(4.3,50,3,50.9,3,52);  
-  	ctx.bezierCurveTo(3,53.1,4.3,54,5.9,54);  
-  	ctx.lineTo(80.2,54);  
-  	ctx.bezierCurveTo(81.8,54,83.10000000000001,53.1,83.10000000000001,52);  
-  	ctx.bezierCurveTo(83,50.9,81.7,50,80.1,50);  
-  	ctx.closePath();  
-  	ctx.fill();  
-    
-  	ctx.beginPath();  
-  	ctx.moveTo(80.1,58);  
-  	ctx.lineTo(10.9,58);  
-  	ctx.bezierCurveTo(9.3,58,8,58.9,8,60);  
-  	ctx.bezierCurveTo(8,61.1,9.3,62,10.9,62);  
-  	ctx.lineTo(80.10000000000001,62);  
-  	ctx.bezierCurveTo(81.7,62,83.00000000000001,61.1,83.00000000000001,60);  
-  	ctx.bezierCurveTo(83.00000000000001,58.9,81.7,58,80.1,58);  
-  	ctx.closePath();  
-  	ctx.fill();  
-    
-  	ctx.beginPath();  
-  	ctx.moveTo(51.2,0);  
-  	ctx.bezierCurveTo(42.1,-0.3,33.6,4.8,30.700000000000003,14.6);  
-  	ctx.bezierCurveTo(24.800000000000004,13.2,15.400000000000002,16.9,13.700000000000003,25);  
-  	ctx.bezierCurveTo(8.2,24.9,1.2,29,0.1,36);  
-  	ctx.bezierCurveTo(0,37,0.7,37.9,1.7,37.9);  
-  	ctx.lineTo(84,37.9);  
-  	ctx.bezierCurveTo(85,37.9,85.8,37.199999999999996,85.9,36.199999999999996);  
-  	ctx.bezierCurveTo(86.9,27.299999999999997,81.80000000000001,17.499999999999996,70.7,16.099999999999994);  
-  	ctx.bezierCurveTo(68.5,5.6,60.2,0.3,51.2,0);  
-  	ctx.closePath();  
-  	ctx.fill();  
-  	ctx.restore();  
-  }  
-  
+  module.exports = Trait.compose(  
+  	TPrimitive,  
+  	TFogPrimitive  
+  ).create();
 });
 require.register('primitives/lightningPrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, style = require('style')  
+  	, Trait = require('trait')  
+  	, TPrimitive = require('primitives/TPrimitive')  
     
-  	, FILL_COLOUR = style.getDocumentStyle('.lightning', 'fill') || '#c9af16';  
+  	, FILL_COLOUR = style.getDocumentStyle('.lightning', 'fill') || '#c9af16'  
     
-  /**  
-   * Render  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   */  
-  exports.render = function (element, options) {  
-  	if (options.type == 'svg') {  
-  		return renderSVG(element, options);  
-  	} else {  
-  		return renderCanvas(element, options);  
+  	, TLightningPrimitive;  
+    
+  TLightningPrimitive = Trait({  
+  	/**  
+  	 * Render svg version  
+  	 * @param {DOMElement} element  
+  	 * @param {Object} options  
+  	 * @returns {String}  
+  	 */  
+  	renderSVG: function (element, options) {  
+  		svg.appendChild(element, 'use', this.getUseAttributes(  
+  			'#lightning',  
+  			'translate('  
+  				+ options.x  
+  				+ ','  
+  				+ options.y  
+  				+ ')'  
+  			)  
+  		);  
+  	},  
+    
+  	/**  
+  	 * Render canvas version  
+  	 * @param {DOMElement} element  
+  	 * @param {Object} options  
+  	 */  
+  	renderCanvas: function (element, options) {  
+  		var ctx = element.getContext('2d');  
+    
+  		// Fill  
+  		ctx.save();  
+  		ctx.translate(options.x, options.y)  
+  		ctx.scale(options.scale, options.scale);  
+    
+  		ctx.fillStyle = FILL_COLOUR;  
+  		ctx.beginPath();  
+  		ctx.moveTo(10.413,0);  
+  		ctx.lineTo(4.163,12.484);  
+  		ctx.lineTo(12.488,12.484);  
+  		ctx.lineTo(0,25);  
+  		ctx.lineTo(25.001,8.32);  
+  		ctx.lineTo(16.663000000000004,8.32);  
+  		ctx.lineTo(24.995,0);  
+  		ctx.lineTo(10.413,0);  
+  		ctx.closePath();  
+  		ctx.fill();  
+  		ctx.restore();  
   	}  
-  };  
+  });  
     
-  /**  
-   * Render svg version  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   * @returns {String}  
-   */  
-  function renderSVG (element, options) {  
-  	svg.appendChild(element, 'use', {  
-  		'xlink:href': '#lightning',  
-  		x: '0',  
-  		y: '0',  
-  		width: '100',  
-  		height: '100',  
-  		transform: 'translate('  
-  			+ options.x  
-  			+ ','  
-  			+ options.y  
-  			+ ')'  
-  	});  
-  }  
-    
-  /**  
-   * Render canvas version  
-   * @param {DOMElement} element  
-   * @param {Object} options  
-   */  
-  function renderCanvas (element, options) {  
-  	var ctx = element.getContext('2d');  
-    
-  	// Fill  
-  	ctx.save();  
-  	ctx.translate(options.x, options.y)  
-  	ctx.scale(options.scale, options.scale);  
-    
-  	ctx.fillStyle = FILL_COLOUR;  
-  	ctx.beginPath();  
-  	ctx.moveTo(10.413,0);  
-  	ctx.lineTo(4.163,12.484);  
-  	ctx.lineTo(12.488,12.484);  
-  	ctx.lineTo(0,25);  
-  	ctx.lineTo(25.001,8.32);  
-  	ctx.lineTo(16.663000000000004,8.32);  
-  	ctx.lineTo(24.995,0);  
-  	ctx.lineTo(10.413,0);  
-  	ctx.closePath();  
-  	ctx.fill();  
-  	ctx.restore();  
-  }  
-  
+  module.exports = Trait.compose(  
+  	TPrimitive,  
+  	TLightningPrimitive  
+  ).create();
 });
 require.register('weatherSymbol', function(module, exports, require) {
-  // Convert with http://www.professorcloud.com/svg-to-element/
+  // Convert with http://www.professorcloud.com/svg-to-canvas/
   
   var svg = require('svg')
   	, primitives = {
@@ -4024,6 +4817,7 @@ require.register('weatherSymbol', function(module, exports, require) {
   	, CANVAS = 'canvas'
   	, IMG = 'img';
   
+  
   module.exports = function (container, options) {
   	if (!container) return;
   
@@ -4039,7 +4833,8 @@ require.register('weatherSymbol', function(module, exports, require) {
   		, h = container.offsetHeight
   		, scale = options.scale || 1
   		, tScale = (type == CANVAS) ? (w/100) * scale : 1
-  		, bg = getStyle(container, 'background-color') || DEFAULT_BG
+  		, bgContainer = getStyle(container, 'background-color')
+  		, bg = bgContainer && bgContainer !== 'rgba(0, 0, 0, 0)' ? bgContainer : DEFAULT_BG
   		, f = formula[id]
   		, layer, opts;
   
@@ -4378,64 +5173,6 @@ require.register('classlist', function(module, exports, require) {
   		exports.removeClass(element, clas);
   	}), duration);
   };
-  
-});
-require.register('lodash.foreach', function(module, exports, require) {
-  /**
-   * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
-   * Build: `lodash modularize modern exports="npm" -o ./npm/`
-   * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
-   * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
-   * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-   * Available under MIT license <http://lodash.com/license>
-   */
-  var baseCreateCallback = require('lodash._basecreatecallback'),
-      forOwn = require('lodash.forown');
-  
-  /**
-   * Iterates over elements of a collection, executing the callback for each
-   * element. The callback is bound to `thisArg` and invoked with three arguments;
-   * (value, index|key, collection). Callbacks may exit iteration early by
-   * explicitly returning `false`.
-   *
-   * Note: As with other "Collections" methods, objects with a `length` property
-   * are iterated like arrays. To avoid this behavior `_.forIn` or `_.forOwn`
-   * may be used for object iteration.
-   *
-   * @static
-   * @memberOf _
-   * @alias each
-   * @category Collections
-   * @param {Array|Object|string} collection The collection to iterate over.
-   * @param {Function} [callback=identity] The function called per iteration.
-   * @param {*} [thisArg] The `this` binding of `callback`.
-   * @returns {Array|Object|string} Returns `collection`.
-   * @example
-   *
-   * _([1, 2, 3]).forEach(function(num) { console.log(num); }).join(',');
-   * // => logs each number and returns '1,2,3'
-   *
-   * _.forEach({ 'one': 1, 'two': 2, 'three': 3 }, function(num) { console.log(num); });
-   * // => logs each number and returns the object (property order is not guaranteed across environments)
-   */
-  function forEach(collection, callback, thisArg) {
-    var index = -1,
-        length = collection ? collection.length : 0;
-  
-    callback = callback && typeof thisArg == 'undefined' ? callback : baseCreateCallback(callback, thisArg, 3);
-    if (typeof length == 'number') {
-      while (++index < length) {
-        if (callback(collection[index], index, collection) === false) {
-          break;
-        }
-      }
-    } else {
-      forOwn(collection, callback);
-    }
-    return collection;
-  }
-  
-  module.exports = forEach;
   
 });
 require.register('main', function(module, exports, require) {

@@ -6,11 +6,8 @@
 	stroke: #f5f5f5;
 	fill: #f5f5f5;
 }
+.bg,
 .sun-centre,
-.cloud {
-	stroke-width: 4;
-	stroke-miterlimit: 10;
-}
 .sun-ray,
 .sun-winter-horizon,
 .moon,
@@ -47,6 +44,10 @@
 }
 .lightning {
 	fill: #c9af16;
+}
+.cloud {
+	stroke-width: 4;
+	stroke-miterlimit: 10;
 }
 .cloud-10 {
 	fill: #e5e5e5;

@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1 Basic//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11-basic.dtd">
-<svg version="1.1" baseProfile="basic" id="symbol" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-	 x="0px" y="0px" viewBox="0 0 100 100" xml:space="preserve">
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="symbol" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
 <symbol  id="cloud5" viewBox="-2 -56 94 58">
-	<path style="fill:#808080;stroke:#FFFFFF;stroke-width:4;stroke-miterlimit:10;" d="M53.6,0C44,0.3,35.1-5,32.1-15.3
+	<path fill="#808080" stroke="#FFFFFF" stroke-width="4" stroke-miterlimit="10" d="M53.6,0C44,0.3,35.1-5,32.1-15.3
 		c-6.1,1.5-16-2.4-17.8-10.9C8.1-26,0-31.1,0-39.6C0-49,7-54,19.5-54h43.6c5.6,0,12.9,0.5,17.3,2.6c14.9,7.2,12.3,32.3-6.4,34.6
 		C71.7-5.9,63.1-0.3,53.6,0z"/>
 </symbol>
 <symbol  id="moon" viewBox="0 -60 52.4 60">
-	<path style="fill:#AFC1C9;" d="M23-20c0,7.7,2.9,14.7,7.6,20c-0.2,0-0.4,0-0.6,0C13.4,0,0-13.4,0-30s13.4-30,30-30
-		c8.9,0,16.9,3.9,22.4,10C36.1-49.6,23-36.4,23-20z"/>
+	<path fill="#AFC1C9" d="M23-20c0,7.7,2.9,14.7,7.6,20c-0.2,0-0.4,0-0.6,0C13.4,0,0-13.4,0-30s13.4-30,30-30c8.9,0,16.9,3.9,22.4,10
+		C36.1-49.6,23-36.4,23-20z"/>
 </symbol>
 <symbol  id="raindrop" viewBox="0 -23 20 23">
-	<path style="fill:#FFFFFF;" d="M18-9c0-5-4-9-9-9c-5,0-9,4-9,9c0,5,4,9,9,9C14,0,18-4,18-9z"/>
-	<path style="fill:#1671CC;" d="M20-16.8c0-3.4-2.7-6.2-6-6.2c-3.3,0-6,2.8-6,6.2C8-14.9,8-6,8-6C13.5-11.5,20-11.2,20-16.8z"/>
+	<path fill="#FFFFFF" d="M18-9c0-5-4-9-9-9c-5,0-9,4-9,9c0,5,4,9,9,9C14,0,18-4,18-9z"/>
+	<path fill="#1671CC" d="M20-16.8c0-3.4-2.7-6.2-6-6.2c-3.3,0-6,2.8-6,6.2C8-14.9,8-6,8-6C13.5-11.5,20-11.2,20-16.8z"/>
 </symbol>
-<use xlink:href="#moon"  width="52.4" height="60" y="-60" transform="matrix(0.6667 0 0 -0.6667 18 13)" style="overflow:visible;"/>
-<use xlink:href="#cloud5"  width="94" height="58" id="XMLID_63_" x="-2" y="-56" transform="matrix(1 0 0 -1 8 23)" style="overflow:visible;"/>
-<use xlink:href="#raindrop"  width="20" height="23" id="XMLID_20_" y="-23" transform="matrix(1 0 0 -1 65 72)" style="overflow:visible;"/>
-<use xlink:href="#raindrop"  width="20" height="23" y="-23" transform="matrix(1 0 0 -1 49 72)" style="overflow:visible;"/>
-<use xlink:href="#raindrop"  width="20" height="23" y="-23" transform="matrix(1 0 0 -1 33 68)" style="overflow:visible;"/>
+<use xlink:href="#moon"  width="52.4" height="60" y="-60" transform="matrix(0.6667 0 0 -0.6667 18 13)" overflow="visible"/>
+<use xlink:href="#cloud5"  width="94" height="58" id="XMLID_63_" x="-2" y="-56" transform="matrix(1 0 0 -1 8 23)" overflow="visible"/>
+<use xlink:href="#raindrop"  width="20" height="23" id="XMLID_20_" y="-23" transform="matrix(1 0 0 -1 65 72)" overflow="visible"/>
+<use xlink:href="#raindrop"  width="20" height="23" y="-23" transform="matrix(1 0 0 -1 49 72)" overflow="visible"/>
+<use xlink:href="#raindrop"  width="20" height="23" y="-23" transform="matrix(1 0 0 -1 33 68)" overflow="visible"/>
 </svg>
