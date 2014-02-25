@@ -39,7 +39,6 @@ TRaindropPrimitive = Trait({
 		ctx.fillStyle = options.bg;
 		ctx.translate(options.x, options.y)
 		ctx.scale(options.scale, options.scale);
-		ctx.fillStyle = options.bg;
 		ctx.save();
 		ctx.globalCompositeOperation = 'destination-out';
 		ctx.beginPath();
