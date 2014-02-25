@@ -1,0 +1,65 @@
+.background-day {
+	fill: #ffffff;
+	stroke: #ffffff;
+}
+.background-night {
+	stroke: #f5f5f5;
+	fill: #f5f5f5;
+}
+.sun-centre,
+.cloud {
+	stroke-width: 4;
+	stroke-miterlimit: 10;
+}
+.sun-ray,
+.sun-winter-horizon,
+.moon,
+.fog,
+.raindrop,
+.sleet,
+.snowflake,
+.lightning {
+	stroke-width: 0;
+}
+.sun-ray {
+	fill: #e88d15;
+}
+.sun-centre {
+	fill: #faba2f;
+}
+.sun-winter-horizon {
+	fill: #4d4d4d;
+}
+.moon {
+	fill: #afc1c9;
+}
+.fog {
+	fill: #D9D9D9;
+}
+.raindrop {
+	fill: #1671CC;
+}
+.sleet {
+	fill: #1EB9D8;
+}
+.snowflake {
+	fill: #54BFE3;
+}
+.lightning {
+	fill: #c9af16;
+}
+.cloud-10 {
+	fill: #e5e5e5;
+}
+.cloud-15 {
+	fill: #d9d9d9;
+}
+.cloud-30 {
+	fill: #b3b3b3;
+}
+.cloud-40 {
+	fill: #999999;
+}
+.cloud-50 {
+	fill: #808080;
+}

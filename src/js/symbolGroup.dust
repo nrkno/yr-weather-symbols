@@ -4,7 +4,7 @@
 <section class="symbol-group">
 	<h3>#{id}</h3>
 	<figure class="s128 svg">
-		<div class="symbol" data-id="{id}"></div>
+		<div class="symbol background-day" data-id="{id}"></div>
 		<figcaption>svg@128px</figcaption>
 	</figure>
 	<figure class="s128 canvas">
