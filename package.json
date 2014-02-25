@@ -13,7 +13,7 @@
     "casperjs": "~1.1.0-beta3"
   },
   "scripts": {
-    "convert": "casperjs convert.js bin/images"
+    "convert": "casperjs convert.js"
   },
   "main": "src/js/weatherSymbol",
   "repository": "https://github.com/YR/yr-weather-symbols.git",
