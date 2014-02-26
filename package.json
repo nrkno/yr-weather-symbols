@@ -9,11 +9,11 @@
     "classlist": "git://github.com/YR/classlist",
     "style": "git://github.com/YR/style",
     "lodash.foreach": "^2.4.0",
-    "buddy": "~1.0.0",
-    "casperjs": "~1.1.0-beta3"
+    "buddy": "^1.0.0",
+    "casperjs": "^1.1.0-beta3"
   },
   "scripts": {
-    "convert": "casperjs convert.js"
+    "convert": "mkdir temp && casperjs src/convert.js temp && pngcrush -d dist/png temp/* && rm -Rf temp && cd dist && zip -r png.zip png "
   },
   "main": "src/js/weatherSymbol",
   "repository": "https://github.com/YR/yr-weather-symbols.git",
@@ -26,8 +26,8 @@
         ],
         "targets": [
           {
-            "input": "src/js/main.js",
-            "output": "bin/js/main.js",
+            "input": "src/js/index.js",
+            "output": "index.js",
             "boilerplate": true,
             "bootstrap": true,
             "alias": {
