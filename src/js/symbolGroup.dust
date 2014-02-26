@@ -5,15 +5,15 @@
 	<h3>#{id}</h3>
 	<figure class="s100 svg">
 		<div class="symbol background-day" data-id="{id}"></div>
-		<figcaption>svg@128px</figcaption>
+		<figcaption>svg@100px</figcaption>
 	</figure>
 	<figure class="s100 canvas">
 		<div class="symbol" data-id="{id}"></div>
-		<figcaption>canvas@128px</figcaption>
+		<figcaption>canvas@100px</figcaption>
 	</figure>
 	<figure class="s100 img">
 		<div class="symbol" data-id="{id}"></div>
-		<figcaption>img@128px</figcaption>
+		<figcaption>img@100px</figcaption>
 	</figure>
 </section>
 {/variations}

@@ -67,6 +67,9 @@ module.exports = function (container, options) {
 				primitives[layer.primitive].render(element, opts);
 			}
 		}
+	// Load images
+	} else {
+		element.src = options.imagePath + id + '.png';
 	}
 
 	container.appendChild(element);
