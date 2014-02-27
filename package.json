@@ -10,10 +10,16 @@
     "style": "git://github.com/YR/style",
     "lodash.foreach": "^2.4.0",
     "buddy": "^1.0.0",
-    "casperjs": "^1.1.0-beta3"
+    "casperjs": "^1.1.0-beta3",
+    "mocha": "*",
+    "expect.js": "*",
+    "mocha-sauce": "git://github.com/pbakaus/mocha-sauce.git",
+    "term-canvas": "*"
   },
   "scripts": {
-    "convert": "mkdir temp && casperjs src/convert.js temp && pngcrush -d dist/png temp/* && rm -Rf temp && cd dist && zip -r png.zip png "
+    "convert": "mkdir temp && casperjs src/convert.js temp && pngcrush -d dist/png temp/* && rm -Rf temp && cd dist && zip -r png.zip png ",
+    "test": "buddy build && mocha-phantomjs test/test-runner.html",
+    "sauce": "node test/sauce.js"
   },
   "main": "src/js/weatherSymbol",
   "repository": "https://github.com/YR/yr-weather-symbols.git",
@@ -33,6 +39,12 @@
             "alias": {
               "dust": "./node_modules/dustjs-linkedin/dist/dust-core.js"
             }
+          },
+          {
+            "input": "src/js/weatherSymbol.js",
+            "output": "test/weatherSymbol.js",
+            "boilerplate": true,
+            "bootstrap": true
           }
         ]
       },

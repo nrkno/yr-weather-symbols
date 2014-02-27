@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>symbols - tests</title>
+	<link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+</head>
+<body>
+	<div id="mocha"></div>
+	<script src="../node_modules/mocha/mocha.js"></script>
+	<script src="../node_modules/expect.js/index.js"></script>
+	<script>
+		mocha.ui('bdd');
+		mocha.reporter('html');
+	</script>
+	<script src="weatherSymbol.js"></script>
+	<script src="symbols-test.js"></script>
+	<script src="../node_modules/mocha-sauce/client.js"></script>
+	<script>
+		mochaSaucePlease();
+	</script>
+</body>
+</html>
