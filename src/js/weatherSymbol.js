@@ -64,7 +64,7 @@ module.exports = function (container, options) {
 		, id = options.id || container.getAttribute('data-id')
 		, w = container.offsetWidth
 		, h = container.offsetHeight
-		, scale = options.scale || 1
+		, scale = backingRatio
 		, tScale = (type == CANVAS) ? (w/100) * scale : 1
 		, bgContainer = getStyle(container, 'background-color')
 		, bg = bgContainer && bgContainer !== 'rgba(0, 0, 0, 0)' ? bgContainer : DEFAULT_BG
