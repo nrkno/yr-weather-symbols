@@ -26,11 +26,11 @@ forEach(document.querySelectorAll('figure'), function (el) {
 		};
 
 	if (classList.hasClass(el, 'svg')) {
-		options.svg = true;
+		options.type = 'svg';
 	} else if (classList.hasClass(el, 'canvas')) {
-		options.canvas = true;
+		options.type = 'canvas';
 	} else if (classList.hasClass(el, 'img')) {
-		options.img = true;
+		options.type = 'img';
 	}
 
 	weatherSymbol(symbol, options);
