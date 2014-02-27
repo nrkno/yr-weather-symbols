@@ -48,7 +48,8 @@ module.exports = function (container, options) {
 		, f = formula[id]
 		, layer, opts;
 
-	// Quit if no id or container is not empty when child matches type and 'replace' not set
+	// Quit if no id or container is not empty
+	// and element matches type and 'replace' not set
 	if (!id
 		|| !options.replace
 			&& container.firstChild
@@ -94,9 +95,6 @@ module.exports = function (container, options) {
 		element.src = (options.imagePath || '') + id + '.png';
 	}
 
-	// Clear container
-	// TODO: check if it's already got appropriate content (ie bootstrap)
-	container.innerHTML = '';
 	container.appendChild(element);
 };
 
