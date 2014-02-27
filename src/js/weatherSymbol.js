@@ -114,6 +114,9 @@ module.exports = function (container, options) {
 		element.src = (options.imagePath || '') + id + '.png';
 	}
 
+	// Clear container
+	// TODO: check if it's already got appropriate content (ie bootstrap)
+	container.innerHTML = '';
 	container.appendChild(element);
 };
 
