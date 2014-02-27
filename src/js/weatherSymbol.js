@@ -55,6 +55,12 @@ if (hasSVG && !document.getElementById('symbolDefs')) {
 	el.innerHTML = DEFS;
 	document.body.insertBefore(el.firstChild, document.body.firstChild);
 }
+
+/**
+ * Render symbol in 'container' with 'options'
+ * @param {DOMElement} container
+ * @param {Object} options
+ */
 module.exports = function (container, options) {
 	if (!container) return;
 
@@ -67,11 +73,14 @@ module.exports = function (container, options) {
 		, scale = backingRatio
 		, tScale = (type == CANVAS) ? (w/100) * scale : 1
 		, bgContainer = getStyle(container, 'background-color')
-		, bg = bgContainer && bgContainer !== 'rgba(0, 0, 0, 0)' ? bgContainer : DEFAULT_BG
+		, bg = (bgContainer && bgContainer !== 'rgba(0, 0, 0, 0)') ? bgContainer : DEFAULT_BG
 		, f = formula[id]
 		, layer, opts;
 
-	if (type == SVG || type == CANVAS) {
+	if (!id) return;
+
+	// Render svg or canvas
+	if (type != IMG) {
 		if (type == CANVAS) {
 			if (w != 0) {
 				element.width = w * scale;
@@ -80,6 +89,7 @@ module.exports = function (container, options) {
 		}
 
 		if (f) {
+			// Render layers
 			for (var i = 0, n = f.length; i < n; i++) {
 				layer = f[i];
 				opts = {
@@ -101,7 +111,7 @@ module.exports = function (container, options) {
 		}
 	// Load images
 	} else {
-		element.src = options.imagePath + id + '.png';
+		element.src = (options.imagePath || '') + id + '.png';
 	}
 
 	container.appendChild(element);
@@ -118,10 +128,22 @@ function getDefaultType () {
 			? 'canvas'
 			: 'img');
 }
+
+/**
+ * Retrieve the computed style 'prop' for 'element'
+ * @param {DOMElement} element
+ * @param {String} prop
+ * @returns {String}
+ */
 function getStyle (element, prop) {
 	return window.getComputedStyle(element).getPropertyValue(prop);
 }
 
+/**
+ * Create element based on 'type'
+ * @param {String} type
+ * @returns {DOMElement}
+ */
 function createElement (type) {
 	var el;
 
