@@ -4028,7 +4028,16 @@ require.register('weatherSymbol', function(module, exports, require) {
   		, f = formula[id]
   		, layer, opts;
   
-  	if (!id) return;
+  	// Quit if no id or container is not empty when child matches type and 'replace' not set
+  	if (!id
+  		|| !options.replace
+  			&& container.firstChild
+  			&& container.firstChild.nodeName.toLowerCase() == type) {
+  				return;
+  	// Clear
+  	} else {
+  		container.innerHTML = '';
+  	}
   
   	// Render svg or canvas
   	if (type != IMG) {
