@@ -10,7 +10,7 @@ Static versions of the symbols are available in both [png](https://github.com/YR
 
 ## Usage
 
-Dynamic versions of the symbols are also available. Drawing the symbols on the client saves in bandwidth and reduces the total number of connections, as well as opening up the possiblilty for animation and other effects. This also makes it possible to automatically choose the best format for the platform (svg > canvas > img) when rendering:
+Dynamic versions of the symbols are also available. Drawing the symbols on the client saves in bandwidth and reduces the total number of browser requests, as well as opening up the possiblilty for animation and other effects. This also makes it possible to automatically choose the best format for the platform (svg > canvas > img) when rendering:
 
 ```html
 <section>
