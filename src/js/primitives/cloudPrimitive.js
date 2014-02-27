@@ -12,26 +12,10 @@ TCloudPrimitive = Trait({
 	 * @returns {String}
 	 */
 	renderSVG: function (element, options) {
-		svg.appendChild(element, 'use', this.getUseAttributes(
-			'#cloud-' + options.tint * 100,
-			options.flip
-				? 'translate('
-					+ ((this.WIDTH * options.scale) + options.x)
-					+ ','
-					+ options.y
-					+ ') scale('
-					+ (-1 * options.scale)
-					+ ', '
-					+ options.scale
-					+ ')'
-				: 'translate('
-					+ options.x
-					+ ','
-					+ options.y
-					+ ') scale('
-					+ options.scale
-					+ ')'
-			)
+		svg.appendChild(
+			element,
+			'use',
+			this.getUseAttributes('#cloud-' + options.tint * 100, options)
 		);
 	},
 

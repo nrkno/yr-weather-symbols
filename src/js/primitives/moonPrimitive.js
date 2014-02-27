@@ -15,16 +15,10 @@ TMoonPrimitive = Trait({
 	 * @returns {String}
 	 */
 	renderSVG: function (element, options) {
-		svg.appendChild(element, 'use', this.getUseAttributes(
-			'#moon',
-			'translate('
-				+ options.x
-				+ ','
-				+ options.y
-				+ ') scale('
-				+ options.scale
-				+ ')'
-			)
+		svg.appendChild(
+			element,
+			'use',
+			this.getUseAttributes('#moon', options)
 		);
 	},
 

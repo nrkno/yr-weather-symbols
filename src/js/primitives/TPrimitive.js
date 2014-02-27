@@ -18,23 +18,35 @@ module.exports = Trait({
 		}
 	},
 
-	getLayerMask: function (options) {
-
-	},
-
 	/**
 	 * Retrieve attribute object for <use>
 	 * @param {String} link
-	 * @param {String} transform
+	 * @param {Object} options
 	 */
-	getUseAttributes: function (link, transform) {
+	getUseAttributes: function (link, options) {
 		return {
 			'xlink:href': link,
 			x: '0',
 			y: '0',
 			width: '100',
 			height: '100',
-			transform: transform
+			transform: options.flip
+				? 'translate('
+					+ ((this.WIDTH * options.scale) + options.x)
+					+ ','
+					+ options.y
+					+ ') scale('
+					+ (-1 * options.scale)
+					+ ', '
+					+ options.scale
+					+ ')'
+				: 'translate('
+					+ options.x
+					+ ','
+					+ options.y
+					+ ') scale('
+					+ options.scale
+					+ ')'
 		}
 	},
 

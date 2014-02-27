@@ -15,14 +15,10 @@ TSnowflakePrimitive = Trait({
 	 * @returns {String}
 	 */
 	renderSVG: function (element, options) {
-		svg.appendChild(element, 'use', this.getUseAttributes(
-			'#snowflake',
-			'translate('
-				+ options.x
-				+ ','
-				+ options.y
-				+ ')'
-			)
+		svg.appendChild(
+			element,
+			'use',
+			this.getUseAttributes('#snowflake', options)
 		);
 	},
 
