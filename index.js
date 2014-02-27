@@ -4854,7 +4854,7 @@ require.register('weatherSymbol', function(module, exports, require) {
   					? CANVAS
   					: IMG)
   		, element = createElement(type)
-  		, id = container.getAttribute('data-id').split('.')[0]
+  		, id = options.id || container.getAttribute('data-id')
   		, w = container.offsetWidth
   		, h = container.offsetHeight
   		, scale = options.scale || 1
