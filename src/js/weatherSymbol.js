@@ -59,11 +59,7 @@ module.exports = function (container, options) {
 	if (!container) return;
 
 	options = options || {};
-	var type = options.svg
-				? SVG
-				: (options.canvas
-					? CANVAS
-					: IMG)
+	var type = options.type || getDefaultType()
 		, element = createElement(type)
 		, id = options.id || container.getAttribute('data-id')
 		, w = container.offsetWidth
@@ -111,6 +107,17 @@ module.exports = function (container, options) {
 	container.appendChild(element);
 };
 
+/**
+ * Retrieve the default type based on platform capabilities
+ * @returns {String}
+ */
+function getDefaultType () {
+	return hasSVG
+		? 'svg'
+		: (hasCanvas
+			? 'canvas'
+			: 'img');
+}
 function getStyle (element, prop) {
 	return window.getComputedStyle(element).getPropertyValue(prop);
 }
