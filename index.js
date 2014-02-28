@@ -4861,7 +4861,7 @@ require.register('weatherSymbol', function(module, exports, require) {
   	if (!container) return;
   
   	options = options || {};
-  	var type = options.type || getDefaultType()
+  	var type = (options.type && validateType(options.type)) || getDefaultType()
   		, element = createElement(type)
   		, id = options.id || container.getAttribute('data-id')
   		, w = container.offsetWidth
@@ -4873,7 +4873,8 @@ require.register('weatherSymbol', function(module, exports, require) {
   		, f = formula[id]
   		, layer, opts;
   
-  	// Quit if no id or container is not empty when child matches type and 'replace' not set
+  	// Quit if no id or container is not empty
+  	// and element matches type and 'replace' not set
   	if (!id
   		|| !options.replace
   			&& container.firstChild
@@ -4919,10 +4920,7 @@ require.register('weatherSymbol', function(module, exports, require) {
   		element.src = (options.imagePath || '') + id + '.png';
   	}
   
-  	// Clear container
-  	// TODO: check if it's already got appropriate content (ie bootstrap)
-  	container.innerHTML = '';
-  	container.appendChild(element);
+  	return container.appendChild(element);
   };
   
   /**
@@ -4931,10 +4929,25 @@ require.register('weatherSymbol', function(module, exports, require) {
    */
   function getDefaultType () {
   	return capabilities.hasSVG
-  		? 'svg'
+  		? SVG
   		: (capabilities.hasCanvas
-  			? 'canvas'
-  			: 'img');
+  			? CANVAS
+  			: IMG);
+  }
+  
+  /**
+   * Validate if 'type' works on platform
+   * @param {String} type
+   * @returns {String}
+   */
+  function validateType (type) {
+  	if (type == IMG) {
+  		return type;
+  	} else {
+  		return capabilities[(type == CANVAS) ? 'hasCanvas' : 'hasSVG']
+  			? type
+  			: getDefaultType();
+  	}
   }
   
   /**

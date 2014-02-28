@@ -36,7 +36,7 @@ module.exports = function (container, options) {
 	if (!container) return;
 
 	options = options || {};
-	var type = options.type || getDefaultType()
+	var type = (options.type && validateType(options.type)) || getDefaultType()
 		, element = createElement(type)
 		, id = options.id || container.getAttribute('data-id')
 		, w = container.offsetWidth
@@ -52,8 +52,8 @@ module.exports = function (container, options) {
 	// and element matches type and 'replace' not set
 	if (!id
 		|| !options.replace
-			&& container.firstChild
-			&& container.firstChild.nodeName.toLowerCase() == type) {
+			&& container.children.length
+			&& container.children[0].nodeName.toLowerCase() == type) {
 				return;
 	// Clear
 	} else {
@@ -95,7 +95,7 @@ module.exports = function (container, options) {
 		element.src = (options.imagePath || '') + id + '.png';
 	}
 
-	container.appendChild(element);
+	return container.appendChild(element);
 };
 
 /**
@@ -104,10 +104,25 @@ module.exports = function (container, options) {
  */
 function getDefaultType () {
 	return capabilities.hasSVG
-		? 'svg'
+		? SVG
 		: (capabilities.hasCanvas
-			? 'canvas'
-			: 'img');
+			? CANVAS
+			: IMG);
+}
+
+/**
+ * Validate if 'type' works on platform
+ * @param {String} type
+ * @returns {String}
+ */
+function validateType (type) {
+	if (type == IMG) {
+		return type;
+	} else {
+		return capabilities[(type == CANVAS) ? 'hasCanvas' : 'hasSVG']
+			? type
+			: getDefaultType();
+	}
 }
 
 /**
