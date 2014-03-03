@@ -54,54 +54,49 @@ TSunPrimitive = Trait({
 			ctx.fill();
 			ctx.closePath();
 
-			// Mask
-			ctx.beginPath()
-			ctx.moveTo(0,8);
-			ctx.lineTo(100,8);
-			ctx.lineTo(100,100);
-			ctx.lineTo(0,100);
-			ctx.lineTo(0,8);
-			ctx.closePath();
-			ctx.clip();
-
 			// Rays
 			ctx.fillStyle = RAY_COLOUR;
 			ctx.beginPath();
+			ctx.moveTo(23.6,19.8);
+			ctx.lineTo(13.600000000000001,36.8);
+			ctx.bezierCurveTo(12.600000000000001,38.599999999999994,14.600000000000001,40.599999999999994,16.3,39.5);
+			ctx.lineTo(33.3,29.5);
+			ctx.bezierCurveTo(29.2,27.3,25.8,23.9,23.6,19.8);
+			ctx.moveTo(66.6,19.8);
+			ctx.bezierCurveTo(64.39999999999999,23.9,60.99999999999999,27.3,56.89999999999999,29.5);
+			ctx.lineTo(73.89999999999999,39.5);
+			ctx.bezierCurveTo(75.69999999999999,40.5,77.69999999999999,38.5,76.6,36.8);
+			ctx.lineTo(66.6,19.8);
 			ctx.moveTo(45.1,32.6);
 			ctx.bezierCurveTo(42.7,32.6,40.4,32.300000000000004,38.2,31.6);
 			ctx.lineTo(43.2,50.7);
 			ctx.bezierCurveTo(43.7,52.7,46.5,52.7,47.1,50.7);
 			ctx.lineTo(52.1,31.6);
 			ctx.bezierCurveTo(49.8,32.2,47.5,32.6,45.1,32.6);
-			ctx.moveTo(66.6,19.8);
-			ctx.bezierCurveTo(64.39999999999999,23.9,60.99999999999999,27.3,56.89999999999999,29.5);
-			ctx.lineTo(73.89999999999999,39.5);
-			ctx.bezierCurveTo(75.69999999999999,40.5,77.69999999999999,38.5,76.6,36.8);
-			ctx.lineTo(66.6,19.8);
-			ctx.moveTo(23.6,19.8);
-			ctx.lineTo(13.600000000000001,36.8);
-			ctx.bezierCurveTo(12.600000000000001,38.599999999999994,14.600000000000001,40.599999999999994,16.3,39.5);
-			ctx.lineTo(33.3,29.5);
-			ctx.bezierCurveTo(29.2,27.3,25.8,23.9,23.6,19.8);
-			ctx.moveTo(20.6,8.1);
-			ctx.bezierCurveTo(20.6,5.699999999999999,20.900000000000002,3.3999999999999995,21.6,1.1999999999999993);
-			ctx.lineTo(2.5,6.199999999999999);
-			ctx.bezierCurveTo(0.5,6.699999999999999,0.5,9.5,2.5,10.1);
-			ctx.lineTo(21.6,15.1);
-			ctx.bezierCurveTo(20.9,12.8,20.6,10.5,20.6,8.1);
-			ctx.moveTo(87.6,6.1);
-			ctx.lineTo(68.5,1.0999999999999996);
-			ctx.bezierCurveTo(69.1,3.3,69.5,5.6,69.5,8);
-			ctx.bezierCurveTo(69.5,10.4,69.2,12.7,68.5,14.9);
-			ctx.lineTo(87.6,9.9);
-			ctx.bezierCurveTo(89.6,9.5,89.6,6.7,87.6,6.1);
+			ctx.moveTo(69.6,8);
+			ctx.bezierCurveTo(69.6,8,69.6,8,69.6,8);
+			ctx.bezierCurveTo(69.6,10.5,69.3,12.8,68.6,15);
+			ctx.lineTo(87.69999999999999,10);
+			ctx.bezierCurveTo(88.69999999999999,9.7,89.19999999999999,8.9,89.19999999999999,8);
+			ctx.lineTo(69.6,8);
+			ctx.moveTo(20.6,8);
+			ctx.lineTo(1,8);
+			ctx.bezierCurveTo(1,8.9,1.5,9.7,2.5,10);
+			ctx.lineTo(21.6,15);
+			ctx.bezierCurveTo(20.9,12.8,20.6,10.5,20.6,8);
+			ctx.bezierCurveTo(20.6,8,20.6,8,20.6,8);
 			ctx.closePath();
 			ctx.fill();
 
 			// Center fill
 			ctx.fillStyle = CENTER_COLOUR;
 			ctx.beginPath();
-			ctx.arc(45,8,20.5,0,this.TWO_PI,true);
+			ctx.moveTo(24.6,8);
+			ctx.bezierCurveTo(24.6,8,24.6,8,24.6,8);
+			ctx.bezierCurveTo(24.6,19.4,33.8,28.6,45.1,28.6);
+			ctx.bezierCurveTo(56.400000000000006,28.6,65.6,19.400000000000002,65.6,8.100000000000001);
+			ctx.bezierCurveTo(65.6,8.100000000000001,65.6,8.100000000000001,65.6,8.000000000000002);
+			ctx.lineTo(24.6,8.000000000000002);
 			ctx.closePath();
 			ctx.fill();
 
