@@ -1,6 +1,6 @@
 {
   "name": "yr-weather-symbols",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "dependencies": {
     "trait": "git://github.com/YR/trait"
   },
