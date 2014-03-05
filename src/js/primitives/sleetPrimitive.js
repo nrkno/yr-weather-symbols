@@ -1,9 +1,8 @@
 var svg = require('../utils/svg')
-	, style = require('style')
 	, Trait = require('trait')
 	, TPrimitive = require('./TPrimitive')
 
-	, FILL_COLOUR = style.getDocumentStyle('.sleet', 'fill') || '#1EB9D8'
+	, FILL_COLOUR = require('yr-colours').SLEET
 
 	, TSleetPrimitive;
 

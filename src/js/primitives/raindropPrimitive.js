@@ -1,9 +1,8 @@
 var svg = require('../utils/svg')
-	, style = require('style')
 	, Trait = require('trait')
 	, TPrimitive = require('./TPrimitive')
 
-	, FILL_COLOUR = style.getDocumentStyle('.raindrop', 'fill') || '#1671CC'
+	, FILL_COLOUR = require('yr-colours').RAIN
 
 	, TRaindropPrimitive;
 

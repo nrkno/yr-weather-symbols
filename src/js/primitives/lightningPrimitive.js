@@ -1,9 +1,8 @@
 var svg = require('../utils/svg')
-	, style = require('style')
 	, Trait = require('trait')
 	, TPrimitive = require('./TPrimitive')
 
-	, FILL_COLOUR = style.getDocumentStyle('.lightning', 'fill') || '#c9af16'
+	, FILL_COLOUR = require('yr-colours').LIGHTNING
 
 	, TLightningPrimitive;
 

@@ -1,9 +1,8 @@
 var svg = require('../utils/svg')
-	, style = require('style')
 	, Trait = require('trait')
 	, TPrimitive = require('./TPrimitive')
 
-	, FILL_COLOUR = style.getDocumentStyle('.moon', 'fill') || '#afc1c9'
+	, FILL_COLOUR = require('yr-colours').MOON
 
 	, TMoonPrimitive;
 

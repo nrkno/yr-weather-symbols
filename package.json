@@ -2,7 +2,8 @@
   "name": "yr-weather-symbols",
   "version": "0.8.3",
   "dependencies": {
-    "trait": "git://github.com/YR/trait"
+    "trait": "git://github.com/YR/trait",
+    "yr-colours": "git://github.com/YR/yr-colours"
   },
   "devDependencies": {
     "dustjs-linkedin": "*",

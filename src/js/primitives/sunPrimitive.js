@@ -1,11 +1,11 @@
 var svg = require('../utils/svg')
-	, style = require('style')
+	, colours = require('yr-colours')
 	, Trait = require('trait')
 	, TPrimitive = require('./TPrimitive')
 
-	, RAY_COLOUR = style.getDocumentStyle('.sun-ray', 'fill') || '#e88d15'
-	, CENTER_COLOUR = style.getDocumentStyle('.sun-centre', 'fill') ||'#faba2f'
-	, HORIZON_COLOUR = style.getDocumentStyle('.sun-winter-horizon', 'fill') || '#4d4d4d'
+	, RAY_COLOUR = colours.SUN_RAY
+	, CENTER_COLOUR = colours.SUN_CENTRE
+	, HORIZON_COLOUR = colours.SUN_HORIZON
 
 	, TSunPrimitive;
 
