@@ -148,7 +148,7 @@ require.register('yr-colours', function(module, exports, require) {
   	MOON: '#afc1c9',
   	RAIN: '#1671CC',
   	SLEET: '#1EB9D8',
-  	SNOW: '#54BFE3',
+  	SNOW: '#89DDF0',
   	LIGHTNING: '#c9af16',
   	WIND: '#565656',
   

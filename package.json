@@ -37,7 +37,7 @@
             "boilerplate": true,
             "bootstrap": true,
             "alias": {
-              "dust": "./node_modules/dustjs-linkedin/dist/dust-core.js"
+              "dust": "./node_modules/dustjs-linkedin/dist/dust-core-2.2.8.js"
             }
           },
           {
@@ -70,7 +70,7 @@
     "settings": {
       "server": {
         "directory": ".",
-        "port": 8000
+        "port": 8080
       }
     }
   }
