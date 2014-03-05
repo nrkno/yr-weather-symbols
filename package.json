@@ -24,13 +24,12 @@
   },
   "main": "src/js/weatherSymbol",
   "repository": "https://github.com/YR/yr-weather-symbols.git",
+  "license": "MIT",
   "private": true,
   "buddy": {
     "build": {
       "js": {
-        "sources": [
-          "src/js"
-        ],
+        "sources": ["src/js"],
         "targets": [
           {
             "input": "src/js/index.js",
@@ -49,10 +48,17 @@
           }
         ]
       },
+      "css": {
+        "sources": ["src/css"],
+        "targets": [
+          {
+            "input": "src/css",
+            "output": "."
+          }
+        ]
+      },
       "html": {
-        "sources": [
-          "src/html"
-        ],
+        "sources": ["src/html"],
         "targets": [
           {
             "input": "src/html/",

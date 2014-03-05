@@ -1,12 +1,5 @@
-.background-day {
-	fill: #ffffff;
-	stroke: #ffffff;
-}
-.background-night {
-	stroke: #f5f5f5;
-	fill: #f5f5f5;
-}
-.bg,
+@import '../../node_modules/yr-colours/colours.styl'
+
 .sun-centre,
 .sun-ray,
 .sun-winter-horizon,
@@ -19,48 +12,48 @@
 	stroke-width: 0;
 }
 .sun-ray {
-	fill: #e88d15;
+	fill: SUN_RAY;
 }
 .sun-centre {
-	fill: #faba2f;
+	fill: SUN_CENTRE;
 }
 .sun-winter-horizon {
-	fill: #4d4d4d;
+	fill: SUN_HORIZON;
 }
 .moon {
-	fill: #afc1c9;
+	fill: MOON;
 }
 .fog {
-	fill: #D9D9D9;
+	fill: lighten(black, 85%);
 }
 .raindrop {
-	fill: #1671CC;
+	fill: RAIN;
 }
 .sleet {
-	fill: #1EB9D8;
+	fill: SLEET;
 }
 .snowflake {
-	fill: #54BFE3;
+	fill: SNOW;
 }
 .lightning {
-	fill: #c9af16;
+	fill: LIGHTNING;
 }
 .cloud {
 	stroke-width: 4;
 	stroke-miterlimit: 10;
 }
 .cloud-10 {
-	fill: #e5e5e5;
+	fill: lighten(black, 90%);
 }
 .cloud-15 {
-	fill: #d9d9d9;
+	fill: lighten(black, 85%);
 }
 .cloud-30 {
-	fill: #b3b3b3;
+	fill: lighten(black, 70%);
 }
 .cloud-40 {
-	fill: #999999;
+	fill: lighten(black, 60%);
 }
 .cloud-50 {
-	fill: #808080;
+	fill: lighten(black, 50%);
 }
