@@ -6,7 +6,7 @@
     "yr-colours": "git://github.com/YR/yr-colours"
   },
   "devDependencies": {
-    "dustjs-linkedin": "*",
+    "dustjs-linkedin": "^2.3.3",
     "classlist": "git://github.com/YR/classlist",
     "style": "git://github.com/YR/style",
     "lodash.foreach": "^2.4.0",
@@ -37,7 +37,7 @@
             "boilerplate": true,
             "bootstrap": true,
             "alias": {
-              "dust": "./node_modules/dustjs-linkedin/dist/dust-core-2.2.8.js"
+              "dust": "./node_modules/dustjs-linkedin/dist/dust-core.js"
             }
           },
           {
