@@ -84,64 +84,46 @@
 })(window != null ? window : global);
 
 require.register('dust', function(module, exports, require) {
-  //
-  // Dust - Asynchronous Templating v2.2.8
-  // http://akdubya.github.com/dustjs
-  //
-  // Copyright (c) 2010, Aleksander Williams
-  // Released under the MIT License.
-  //
-  
-  /*global console */
-  var dust = {};
-  
-  function getGlobal(){
-    return (function(){
-      return this.dust;
-    }).call(null);
-  }
-  
-  (function(dust) {
-    if(!dust) {
-      return;
-    }
-  
-    var NONE = 'NONE',
+  /*! Dust - Asynchronous Templating - v2.3.4
+  * http://linkedin.github.io/dustjs/
+  * Copyright (c) 2014 Aleksander Williams; Released under the MIT License */
+  (function(root) {
+    var dust = {},
+        NONE = 'NONE',
         ERROR = 'ERROR',
         WARN = 'WARN',
         INFO = 'INFO',
         DEBUG = 'DEBUG',
         loggingLevels = [DEBUG, INFO, WARN, ERROR, NONE],
+        EMPTY_FUNC = function() {},
         logger = {},
+        originalLog,
         loggerContext;
   
     dust.debugLevel = NONE;
     dust.silenceErrors = false;
   
-    // Try to find the console logger in window scope (browsers) or top level scope (node.js)
-    if (typeof window !== 'undefined' && window && window.console) {
-      loggerContext = window.console;
-    } else if (typeof console !== 'undefined' && console) {
-      loggerContext = console;
+    // Try to find the console in global scope
+    if (root && root.console && root.console.log) {
+      loggerContext = root.console;
+      originalLog = root.console.log;
     }
   
     // robust logger for node.js, modern browsers, and IE <= 9.
     logger.log = loggerContext ? function() {
-      var originalLog = loggerContext.log;
         // Do this for normal browsers
         if (typeof originalLog === 'function') {
           logger.log = function() {
             originalLog.apply(loggerContext, arguments);
           };
-          logger.log.apply(this, arguments);
         } else {
           // Do this for IE <= 9
           logger.log = function() {
             var message = Array.prototype.slice.apply(arguments).join(' ');
             originalLog(message);
           };
-          logger.log.apply(this, arguments);
         }
+        logger.log.apply(this, arguments);
     } : function() { /* no op */ };
   
     /**
@@ -152,8 +134,7 @@ require.register('dust', function(module, exports, require) {
      * @public
      */
     dust.log = function(message, type) {
-      // dust.isDebug is deprecated, so this conditional will default the debugLevel to INFO if it's set to maintain backcompat.
-      if (dust.isDebug && dust.debugLevel === NONE) {
+      if(dust.isDebug && dust.debugLevel === NONE) {
         logger.log('[!!!DEPRECATION WARNING!!!]: dust.isDebug is deprecated.  Set dust.debugLevel instead to the level of logging you want ["debug","info","warn","error","none"]');
         dust.debugLevel = INFO;
       }
@@ -164,7 +145,7 @@ require.register('dust', function(module, exports, require) {
           dust.logQueue = [];
         }
         dust.logQueue.push({message: message, type: type});
-        logger.log("[DUST " + type + "]: " + message);
+        logger.log('[DUST ' + type + ']: ' + message);
       }
   
       if (!dust.silenceErrors && type === ERROR) {
@@ -230,6 +211,9 @@ require.register('dust', function(module, exports, require) {
     };
   
     dust.compileFn = function(source, name) {
+      // name is optional. When name is not provided the template can only be rendered using the callable returned by this function.
+      // If a name is provided the compiled template can also be rendered by name.
+      name = name || null;
       var tmpl = dust.loadSource(dust.compile(source, name));
       return function(context, callback) {
         var master = callback ? new Stub(callback) : new Stream();
@@ -304,7 +288,7 @@ require.register('dust', function(module, exports, require) {
       }
   
       for (;fromIndex < length; fromIndex++) {
-        if (this[fromIndex] === item) {
+        if (arr[fromIndex] === item) {
           return fromIndex;
         }
       }
@@ -314,13 +298,9 @@ require.register('dust', function(module, exports, require) {
     };
   
     dust.nextTick = (function() {
-      if (typeof process !== 'undefined') {
-        return process.nextTick;
-      } else {
-        return function(callback) {
-          setTimeout(callback,0);
-        };
-      }
+      return function(callback) {
+        setTimeout(callback,0);
+      };
     } )();
   
     dust.isEmpty = function(value) {
@@ -550,7 +530,7 @@ require.register('dust', function(module, exports, require) {
   
     Context.prototype.getTemplateName = function() {
       return this.templateName;
-    }
+    };
   
     function Stack(head, tail, idx, len) {
       this.tail = tail;
@@ -575,7 +555,7 @@ require.register('dust', function(module, exports, require) {
         } else if (chunk.error) {
           this.callback(chunk.error);
           dust.log('Chunk error [' + chunk.error + '] thrown. Ceasing to render this template.', WARN);
-          this.flush = function() {};
+          this.flush = EMPTY_FUNC;
           return;
         } else {
           return;
@@ -599,7 +579,7 @@ require.register('dust', function(module, exports, require) {
         } else if (chunk.error) {
           this.emit('error', chunk.error);
           dust.log('Chunk error [' + chunk.error + '] thrown. Ceasing to render this template.', WARN);
-          this.flush = function() {};
+          this.flush = EMPTY_FUNC;
           return;
         } else {
           return;
@@ -990,14 +970,15 @@ require.register('dust', function(module, exports, require) {
       return s;
     };
   
-  })(dust);
   
-  if (typeof exports !== 'undefined') {
-    if (typeof process !== 'undefined') {
-      require('./server')(dust);
+    if (typeof exports === 'object') {
+      module.exports = dust;
+    } else {
+      root.dust = dust;
     }
-    module.exports = dust;
-  }
+  
+  })(this);
+  
 });
 require.register('symbolGroup', function(module, exports, require) {
   var dust = window.dust || require('dust');
