@@ -1,4 +1,4 @@
-var svg = require('../utils/svg')
+var svg = require('svg')
 	, Trait = require('trait')
 	, TPrimitive = require('./TPrimitive')
 
