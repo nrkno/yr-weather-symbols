@@ -84,64 +84,46 @@
 })(window != null ? window : global);
 
 require.register('dust', function(module, exports, require) {
-  //
-  // Dust - Asynchronous Templating v2.2.8
-  // http://akdubya.github.com/dustjs
-  //
-  // Copyright (c) 2010, Aleksander Williams
-  // Released under the MIT License.
-  //
-  
-  /*global console */
-  var dust = {};
-  
-  function getGlobal(){
-    return (function(){
-      return this.dust;
-    }).call(null);
-  }
-  
-  (function(dust) {
-    if(!dust) {
-      return;
-    }
-  
-    var NONE = 'NONE',
+  /*! Dust - Asynchronous Templating - v2.3.4
+  * http://linkedin.github.io/dustjs/
+  * Copyright (c) 2014 Aleksander Williams; Released under the MIT License */
+  (function(root) {
+    var dust = {},
+        NONE = 'NONE',
         ERROR = 'ERROR',
         WARN = 'WARN',
         INFO = 'INFO',
         DEBUG = 'DEBUG',
         loggingLevels = [DEBUG, INFO, WARN, ERROR, NONE],
+        EMPTY_FUNC = function() {},
         logger = {},
+        originalLog,
         loggerContext;
   
     dust.debugLevel = NONE;
     dust.silenceErrors = false;
   
-    // Try to find the console logger in window scope (browsers) or top level scope (node.js)
-    if (typeof window !== 'undefined' && window && window.console) {
-      loggerContext = window.console;
-    } else if (typeof console !== 'undefined' && console) {
-      loggerContext = console;
+    // Try to find the console in global scope
+    if (root && root.console && root.console.log) {
+      loggerContext = root.console;
+      originalLog = root.console.log;
     }
   
     // robust logger for node.js, modern browsers, and IE <= 9.
     logger.log = loggerContext ? function() {
-      var originalLog = loggerContext.log;
         // Do this for normal browsers
         if (typeof originalLog === 'function') {
           logger.log = function() {
             originalLog.apply(loggerContext, arguments);
           };
-          logger.log.apply(this, arguments);
         } else {
           // Do this for IE <= 9
           logger.log = function() {
             var message = Array.prototype.slice.apply(arguments).join(' ');
             originalLog(message);
           };
-          logger.log.apply(this, arguments);
         }
+        logger.log.apply(this, arguments);
     } : function() { /* no op */ };
   
     /**
@@ -152,8 +134,7 @@ require.register('dust', function(module, exports, require) {
      * @public
      */
     dust.log = function(message, type) {
-      // dust.isDebug is deprecated, so this conditional will default the debugLevel to INFO if it's set to maintain backcompat.
-      if (dust.isDebug && dust.debugLevel === NONE) {
+      if(dust.isDebug && dust.debugLevel === NONE) {
         logger.log('[!!!DEPRECATION WARNING!!!]: dust.isDebug is deprecated.  Set dust.debugLevel instead to the level of logging you want ["debug","info","warn","error","none"]');
         dust.debugLevel = INFO;
       }
@@ -164,7 +145,7 @@ require.register('dust', function(module, exports, require) {
           dust.logQueue = [];
         }
         dust.logQueue.push({message: message, type: type});
-        logger.log("[DUST " + type + "]: " + message);
+        logger.log('[DUST ' + type + ']: ' + message);
       }
   
       if (!dust.silenceErrors && type === ERROR) {
@@ -230,6 +211,9 @@ require.register('dust', function(module, exports, require) {
     };
   
     dust.compileFn = function(source, name) {
+      // name is optional. When name is not provided the template can only be rendered using the callable returned by this function.
+      // If a name is provided the compiled template can also be rendered by name.
+      name = name || null;
       var tmpl = dust.loadSource(dust.compile(source, name));
       return function(context, callback) {
         var master = callback ? new Stub(callback) : new Stream();
@@ -304,7 +288,7 @@ require.register('dust', function(module, exports, require) {
       }
   
       for (;fromIndex < length; fromIndex++) {
-        if (this[fromIndex] === item) {
+        if (arr[fromIndex] === item) {
           return fromIndex;
         }
       }
@@ -314,13 +298,9 @@ require.register('dust', function(module, exports, require) {
     };
   
     dust.nextTick = (function() {
-      if (typeof process !== 'undefined') {
-        return process.nextTick;
-      } else {
-        return function(callback) {
-          setTimeout(callback,0);
-        };
-      }
+      return function(callback) {
+        setTimeout(callback,0);
+      };
     } )();
   
     dust.isEmpty = function(value) {
@@ -550,7 +530,7 @@ require.register('dust', function(module, exports, require) {
   
     Context.prototype.getTemplateName = function() {
       return this.templateName;
-    }
+    };
   
     function Stack(head, tail, idx, len) {
       this.tail = tail;
@@ -575,7 +555,7 @@ require.register('dust', function(module, exports, require) {
         } else if (chunk.error) {
           this.callback(chunk.error);
           dust.log('Chunk error [' + chunk.error + '] thrown. Ceasing to render this template.', WARN);
-          this.flush = function() {};
+          this.flush = EMPTY_FUNC;
           return;
         } else {
           return;
@@ -599,7 +579,7 @@ require.register('dust', function(module, exports, require) {
         } else if (chunk.error) {
           this.emit('error', chunk.error);
           dust.log('Chunk error [' + chunk.error + '] thrown. Ceasing to render this template.', WARN);
-          this.flush = function() {};
+          this.flush = EMPTY_FUNC;
           return;
         } else {
           return;
@@ -990,51 +970,30 @@ require.register('dust', function(module, exports, require) {
       return s;
     };
   
-  })(dust);
   
-  if (typeof exports !== 'undefined') {
-    if (typeof process !== 'undefined') {
-      require('./server')(dust);
+    if (typeof exports === 'object') {
+      module.exports = dust;
+    } else {
+      root.dust = dust;
     }
-    module.exports = dust;
-  }
+  
+  })(this);
+  
 });
 require.register('symbolGroup', function(module, exports, require) {
   var dust = window.dust || require('dust');
   module.exports = (function(){dust.register("symbolGroup",body_0);function body_0(chk,ctx){return chk.section(ctx._get(false, ["symbols"]),ctx,{"block":body_1},null);}function body_1(chk,ctx){return chk.write("<h2>").reference(ctx._get(false, ["title"]),ctx,"h").write("</h2>").section(ctx._get(false, ["variations"]),ctx,{"block":body_2},null);}function body_2(chk,ctx){return chk.write("<section class=\"symbol-group\"><h3>#").reference(ctx._get(false, ["id"]),ctx,"h").write("</h3><figure class=\"s100 svg\"><div class=\"symbol background-day\" data-id=\"").reference(ctx._get(false, ["id"]),ctx,"h").write("\"></div><figcaption>svg@100px</figcaption></figure><figure class=\"s100 canvas\"><div class=\"symbol\" data-id=\"").reference(ctx._get(false, ["id"]),ctx,"h").write("\"></div><figcaption>canvas@100px</figcaption></figure><figure class=\"s100 img\"><div class=\"symbol\" data-id=\"").reference(ctx._get(false, ["id"]),ctx,"h").write("\"></div><figcaption>img@100px</figcaption></figure></section>");}return body_0;})();
 });
-require.register('utils/svg', function(module, exports, require) {
-  exports.NS = 'http://www.w3.org/2000/svg';
-  exports.LINK = 'http://www.w3.org/1999/xlink';
-  
-  exports.appendChild = function (parent, type, attrs) {
-  	var el = document.createElementNS(exports.NS, type);
-  
-  	if (attrs) {
-  		for (var attr in attrs) {
-  			if (attr.indexOf('xlink:') == 0) {
-  				el.setAttributeNS(exports.LINK, attr.substring(6), attrs[attr]);
-  			} else {
-  				el.setAttribute(attr, attrs[attr]);
-  			}
-  		}
-  	}
-  
-  	parent.appendChild(el);
-  };
-});
-require.register('utils/capabilities', function(module, exports, require) {
-  var svg = require('utils/svg')
-  
-  	, hasCanvas = false
+require.register('capabilities', function(module, exports, require) {
+  var hasCanvas = false
   	, hasSVG = false
   	, backingRatio = 1
   	, test;
   
-  // Test for inline svg
+  // Test for inline svg (Modernizr)
   test = document.createElement('div');
   test.innerHTML = '<svg/>';
-  hasSVG = (test.firstChild && test.firstChild.namespaceURI) == svg.NS;
+  hasSVG = (test.firstChild && test.firstChild.namespaceURI) == 'http://www.w3.org/2000/svg';
   
   // Test for canvas
   test = document.createElement('canvas');
@@ -1058,6 +1017,53 @@ require.register('utils/capabilities', function(module, exports, require) {
   exports.hasCanvas = hasCanvas;
   exports.hasSVG = hasSVG;
   exports.backingRatio = backingRatio;
+});
+require.register('svg', function(module, exports, require) {
+  var capabilities = require('capabilities');
+  
+  exports.NS = 'http://www.w3.org/2000/svg';
+  exports.LINK = 'http://www.w3.org/1999/xlink';
+  
+  /**
+   * Inject svg symbol definitions into the DOM
+   * @param {String} id
+   * @param {String} defs
+   */
+  exports.injectDefs = function (id, defs) {
+  	if (capabilities.hasSVG && !document.getElementById(id)) {
+  		var el = document.createElement('div')
+  			, svg = '<svg id="'
+  					+ id
+  					+ '" style="display:none;">'
+  					+ defs
+  					+ '</svg>';
+  
+  		el.innerHTML = svg;
+  		document.body.insertBefore(el.firstChild, document.body.firstChild);
+  	}
+  };
+  
+  /**
+   * Append svg element of 'tye' to 'parent', setting 'attrs'
+   * @parama {DOMElement} parent
+   * @parama {String} type
+   * @parama {Object} attrs
+   */
+  exports.appendChild = function (parent, type, attrs) {
+  	var el = document.createElementNS(exports.NS, type);
+  
+  	if (attrs) {
+  		for (var attr in attrs) {
+  			if (attr.indexOf('xlink:') == 0) {
+  				el.setAttributeNS(exports.LINK, attr.substring(6), attrs[attr]);
+  			} else {
+  				el.setAttribute(attr, attrs[attr]);
+  			}
+  		}
+  	}
+  
+  	parent.appendChild(el);
+  };
 });
 require.register('yr-colours', function(module, exports, require) {
   module.exports = {
@@ -1088,7 +1094,7 @@ require.register('yr-colours', function(module, exports, require) {
   	YELLOW_LIGHT: '#fffecc',
   	EXTREME: '#9e0067',
   	NIGHT: '#f5f5f5'
-  }
+  };
 });
 require.register('lodash._isnative', function(module, exports, require) {
   /**
@@ -2796,7 +2802,7 @@ require.register('primitives/TPrimitive', function(module, exports, require) {
   
 });
 require.register('primitives/sunPrimitive', function(module, exports, require) {
-  var svg = require('utils/svg')  
+  var svg = require('svg')  
   	, colours = require('yr-colours')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
@@ -2966,7 +2972,7 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   ).create();
 });
 require.register('primitives/moonPrimitive', function(module, exports, require) {
-  var svg = require('utils/svg')  
+  var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
     
@@ -3023,7 +3029,7 @@ require.register('primitives/moonPrimitive', function(module, exports, require) 
   
 });
 require.register('primitives/cloudPrimitive', function(module, exports, require) {
-  var svg = require('utils/svg')  
+  var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
     
@@ -3109,7 +3115,7 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
   ).create();
 });
 require.register('primitives/raindropPrimitive', function(module, exports, require) {
-  var svg = require('utils/svg')  
+  var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
     
@@ -3174,7 +3180,7 @@ require.register('primitives/raindropPrimitive', function(module, exports, requi
   
 });
 require.register('primitives/sleetPrimitive', function(module, exports, require) {
-  var svg = require('utils/svg')
+  var svg = require('svg')
   	, Trait = require('trait')
   	, TPrimitive = require('primitives/TPrimitive')
   
@@ -3242,7 +3248,7 @@ require.register('primitives/sleetPrimitive', function(module, exports, require)
   
 });
 require.register('primitives/snowflakePrimitive', function(module, exports, require) {
-  var svg = require('utils/svg')  
+  var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
     
@@ -3341,7 +3347,7 @@ require.register('primitives/snowflakePrimitive', function(module, exports, requ
   
 });
 require.register('primitives/fogPrimitive', function(module, exports, require) {
-  var svg = require('utils/svg')  
+  var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
     
@@ -3430,7 +3436,7 @@ require.register('primitives/fogPrimitive', function(module, exports, require) {
   ).create();
 });
 require.register('primitives/lightningPrimitive', function(module, exports, require) {
-  var svg = require('utils/svg')  
+  var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
     
@@ -3490,8 +3496,8 @@ require.register('primitives/lightningPrimitive', function(module, exports, requ
 require.register('weatherSymbol', function(module, exports, require) {
   // Convert with http://www.professorcloud.com/svg-to-canvas/
   
-  var svg = require('utils/svg')
-  	, capabilities = require('utils/capabilities')
+  var svg = require('svg')
+  	, capabilities = require('capabilities')
   	, primitives = {
   			sun: require('primitives/sunPrimitive'),
   			moon: require('primitives/moonPrimitive'),
@@ -3508,14 +3514,10 @@ require.register('weatherSymbol', function(module, exports, require) {
   	, SVG = 'svg'
   	, CANVAS = 'canvas'
   	, IMG = 'img'
-  	, DEFS = '<svg id="symbolDefs" x="0px" y="0px" width="0" height="0" viewBox="0 0 100 100" style="display:none;"><defs><path id="cloud" class="cloud" d="M55.6,2C46,1.7,37.1,7,34.1,17.3c-6.1-1.5-16,2.4-17.8,10.9C10.1,28,2,33.1,2,41.6C2,51,9,56,21.5,56h43.6 c5.6,0,12.9-0.5,17.3-2.6c14.9-7.2,12.3-32.3-6.4-34.6C73.7,7.9,65.1,2.3,55.6,2z"/></defs><symbol id="sun"><g class="sun-ray" ><path d="M23.5,33.2c2.2-4.1,5.6-7.5,9.7-9.7l-17-10c-1.8-1-3.8,1-2.7,2.7L23.5,33.2z"/><path d="M45,20.5c2.4,0,4.7,0.3,6.9,1l-5-19.1c-0.5-2-3.3-2-3.9,0l-5,19.1C40.3,20.8,42.6,20.5,45,20.5z"/><path d="M87.6,43.1l-19.1-5c0.6,2.2,1,4.5,1,6.9c0,2.4-0.3,4.7-1,6.9l19.1-5C89.6,46.4,89.6,43.6,87.6,43.1z"/><path d="M20.5,45c0-2.4,0.3-4.7,1-6.9l-19.1,5c-2,0.5-2,3.3,0,3.9l19.1,5C20.8,49.7,20.5,47.4,20.5,45z"/><path d="M66.5,33.2l10-17c1-1.8-1-3.8-2.7-2.7l-17,10C60.9,25.8,64.2,29.1,66.5,33.2z"/><path d="M23.5,56.8l-10,17c-1,1.8,1,3.8,2.7,2.7l17-10C29.1,64.2,25.8,60.9,23.5,56.8z"/><path d="M66.5,56.8c-2.2,4.1-5.6,7.5-9.7,9.7l17,10c1.8,1,3.8-1,2.7-2.7L66.5,56.8z"/><path d="M45,69.5c-2.4,0-4.7-0.3-6.9-1l5,19.1c0.5,2,3.3,2,3.9,0l5-19.1C49.7,69.2,47.4,69.5,45,69.5z"/></g><circle class="sun-centre" style="fill-rule:nonzero" cx="45" cy="45" r="20.5"/></symbol><symbol id="sunWinter"><path class="sun-winter-horizon" d="M2.5,0h85.1C88.9,0,90,0.9,90,2v0c0,1.1-1.1,2-2.5,2H2.5C1.1,4,0,3.1,0,2v0C0,0.9,1.1,0,2.5,0z"/><g class="sun-ray"><path d="M23.6,19.8l-10,17c-1,1.8,1,3.8,2.7,2.7l17-10C29.2,27.3,25.8,23.9,23.6,19.8z"/><path d="M66.6,19.8c-2.2,4.1-5.6,7.5-9.7,9.7l17,10c1.8,1,3.8-1,2.7-2.7L66.6,19.8z"/><path d="M45.1,32.6c-2.4,0-4.7-0.3-6.9-1l5,19.1c0.5,2,3.3,2,3.9,0l5-19.1C49.8,32.2,47.5,32.6,45.1,32.6z"/><path d="M69.6,8C69.6,8,69.6,8,69.6,8c0,2.5-0.3,4.8-1,7l19.1-5c1-0.3,1.5-1.1,1.5-2H69.6z"/><path d="M20.6,8H1c0,0.9,0.5,1.7,1.5,2l19.1,5C20.9,12.8,20.6,10.5,20.6,8C20.6,8,20.6,8,20.6,8z"/></g><path class="sun-centre" d="M24.6,8C24.6,8,24.6,8,24.6,8c0,11.4,9.2,20.6,20.5,20.6c11.3,0,20.5-9.2,20.5-20.5c0,0,0,0,0-0.1H24.6z"/></symbol><symbol id="moon"><path class="moon" d="M23,20c0-7.7,2.9-14.7,7.6-20c-0.2,0-0.4,0-0.6,0C13.4,0,0,13.4,0,30s13.4,30,30,30c8.9,0,16.9-3.9,22.4-10 C36.1,49.6,23,36.4,23,20z"/></symbol><symbol id="cloud-10" class="cloud-10"><use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use></symbol><symbol id="cloud-15" class="cloud-15"><use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use></symbol><symbol id="cloud-30" class="cloud-30"><use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use></symbol><symbol id="cloud-40" class="cloud-40"><use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use></symbol><symbol id="cloud-50" class="cloud-50"><use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use></symbol><symbol id="fog"><path class="fog" d="M82.3,42H2.7C1.2,42,0,42.9,0,44s1.2,2,2.7,2h79.7c1.5,0,2.7-0.9,2.7-2S83.8,42,82.3,42z"/><path class="fog" d="M80.1,50H5.9C4.3,50,3,50.9,3,52c0,1.1,1.3,2,2.9,2h74.3c1.6,0,2.9-0.9,2.9-2C83,50.9,81.7,50,80.1,50z"/><path class="fog" d="M80.1,58H10.9C9.3,58,8,58.9,8,60s1.3,2,2.9,2h69.2c1.6,0,2.9-0.9,2.9-2S81.7,58,80.1,58z"/><path class="fog" d="M51.2,0c-9.1-0.3-17.6,4.8-20.5,14.6c-5.9-1.4-15.3,2.3-17,10.4C8.2,24.9,1.2,29,0.1,36C0,37,0.7,37.9,1.7,37.9l82.3,0 c1,0,1.8-0.7,1.9-1.7c1-8.9-4.1-18.7-15.2-20.1C68.5,5.6,60.2,0.3,51.2,0z"/></symbol><symbol id="raindrop"><circle class="bg" cx="9" cy="9" r="9"/><path class="raindrop" d="M20,16.8c0,3.4-2.7,6.2-6,6.2c-3.3,0-6-2.8-6-6.2C8,14.9,8,6,8,6C13.5,11.5,20,11.2,20,16.8z"/></symbol><symbol id="sleet"><circle class="bg" cx="9" cy="9" r="9"/><path class="sleet" d="M19.9,16.6c-1.8,2.3-3.4,5.5-3.9,8.9c-0.1,0.5-0.6,0.7-1,0.4c-2.3-2.1-4.8-3.3-8.5-3.8c-0.4-0.1-0.6-0.5-0.4-0.8 C8.4,17,8.6,10.1,7.8,5c2.7,4.2,7.1,9,11.8,10.7C20,15.8,20.1,16.3,19.9,16.6z"/></symbol><symbol id="snowflake"><circle class="bg" cx="9" cy="9" r="9"/><path class="snowflake" d="M6.2,6.9l1.1,3.8c-0.3,0.2-0.6,0.5-0.9,0.8C6,11.7,5.8,12,5.6,12.4l-3.8-1C1,11.2,0.2,11.7,0,12.5c-0.2,0.8,0.3,1.6,1.1,1.8 l3.8,1c0,0.8,0.3,1.6,0.6,2.3l-2.7,2.8c-0.6,0.6-0.6,1.5,0,2.1c0.6,0.6,1.5,0.6,2.1,0l2.7-2.8c0.7,0.4,1.5,0.6,2.3,0.6l1,3.8 c0.2,0.8,1,1.2,1.8,1c0.8-0.2,1.2-1,1-1.8l-1.1-3.8c0.3-0.2,0.7-0.4,1-0.7c0.3-0.3,0.5-0.6,0.7-1l3.8,1c0.8,0.2,1.6-0.3,1.8-1.1 c0.2-0.8-0.3-1.6-1.1-1.8l-3.8-1c0-0.8-0.3-1.6-0.7-2.3l2.7-2.8c0.6-0.6,0.5-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0l-2.7,2.8 c-0.7-0.4-1.5-0.6-2.3-0.6L9,6.1c-0.2-0.8-1-1.2-1.8-1C6.5,5.3,6,6.1,6.2,6.9z M11.8,13.2c1,1,1,2.6,0,3.6c-1,1-2.6,1-3.6,0 c-1-1-1-2.6,0-3.6C9.2,12.2,10.8,12.2,11.8,13.2z"/></symbol><symbol id="lightning"><path class="lightning" d="M10.4,0L4.2,12.5h8.3L0,25L25,8.3h-8.3L25,0H10.4z"/></symbol></svg>';
+  	, DEFS = '<defs><path id="cloud" class="cloud" d="M55.6,2C46,1.7,37.1,7,34.1,17.3c-6.1-1.5-16,2.4-17.8,10.9C10.1,28,2,33.1,2,41.6C2,51,9,56,21.5,56h43.6 c5.6,0,12.9-0.5,17.3-2.6c14.9-7.2,12.3-32.3-6.4-34.6C73.7,7.9,65.1,2.3,55.6,2z"/></defs><symbol id="sun"><g class="sun-ray" ><path d="M23.5,33.2c2.2-4.1,5.6-7.5,9.7-9.7l-17-10c-1.8-1-3.8,1-2.7,2.7L23.5,33.2z"/><path d="M45,20.5c2.4,0,4.7,0.3,6.9,1l-5-19.1c-0.5-2-3.3-2-3.9,0l-5,19.1C40.3,20.8,42.6,20.5,45,20.5z"/><path d="M87.6,43.1l-19.1-5c0.6,2.2,1,4.5,1,6.9c0,2.4-0.3,4.7-1,6.9l19.1-5C89.6,46.4,89.6,43.6,87.6,43.1z"/><path d="M20.5,45c0-2.4,0.3-4.7,1-6.9l-19.1,5c-2,0.5-2,3.3,0,3.9l19.1,5C20.8,49.7,20.5,47.4,20.5,45z"/><path d="M66.5,33.2l10-17c1-1.8-1-3.8-2.7-2.7l-17,10C60.9,25.8,64.2,29.1,66.5,33.2z"/><path d="M23.5,56.8l-10,17c-1,1.8,1,3.8,2.7,2.7l17-10C29.1,64.2,25.8,60.9,23.5,56.8z"/><path d="M66.5,56.8c-2.2,4.1-5.6,7.5-9.7,9.7l17,10c1.8,1,3.8-1,2.7-2.7L66.5,56.8z"/><path d="M45,69.5c-2.4,0-4.7-0.3-6.9-1l5,19.1c0.5,2,3.3,2,3.9,0l5-19.1C49.7,69.2,47.4,69.5,45,69.5z"/></g><circle class="sun-centre" style="fill-rule:nonzero" cx="45" cy="45" r="20.5"/></symbol><symbol id="sunWinter"><path class="sun-winter-horizon" d="M2.5,0h85.1C88.9,0,90,0.9,90,2v0c0,1.1-1.1,2-2.5,2H2.5C1.1,4,0,3.1,0,2v0C0,0.9,1.1,0,2.5,0z"/><g class="sun-ray"><path d="M23.6,19.8l-10,17c-1,1.8,1,3.8,2.7,2.7l17-10C29.2,27.3,25.8,23.9,23.6,19.8z"/><path d="M66.6,19.8c-2.2,4.1-5.6,7.5-9.7,9.7l17,10c1.8,1,3.8-1,2.7-2.7L66.6,19.8z"/><path d="M45.1,32.6c-2.4,0-4.7-0.3-6.9-1l5,19.1c0.5,2,3.3,2,3.9,0l5-19.1C49.8,32.2,47.5,32.6,45.1,32.6z"/><path d="M69.6,8C69.6,8,69.6,8,69.6,8c0,2.5-0.3,4.8-1,7l19.1-5c1-0.3,1.5-1.1,1.5-2H69.6z"/><path d="M20.6,8H1c0,0.9,0.5,1.7,1.5,2l19.1,5C20.9,12.8,20.6,10.5,20.6,8C20.6,8,20.6,8,20.6,8z"/></g><path class="sun-centre" d="M24.6,8C24.6,8,24.6,8,24.6,8c0,11.4,9.2,20.6,20.5,20.6c11.3,0,20.5-9.2,20.5-20.5c0,0,0,0,0-0.1H24.6z"/></symbol><symbol id="moon"><path class="moon" d="M23,20c0-7.7,2.9-14.7,7.6-20c-0.2,0-0.4,0-0.6,0C13.4,0,0,13.4,0,30s13.4,30,30,30c8.9,0,16.9-3.9,22.4-10 C36.1,49.6,23,36.4,23,20z"/></symbol><symbol id="cloud-10" class="cloud-10"><use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use></symbol><symbol id="cloud-15" class="cloud-15"><use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use></symbol><symbol id="cloud-30" class="cloud-30"><use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use></symbol><symbol id="cloud-40" class="cloud-40"><use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use></symbol><symbol id="cloud-50" class="cloud-50"><use xlink:href="#cloud" x="0" y="0" width="100" height="100"></use></symbol><symbol id="fog"><path class="fog" d="M82.3,42H2.7C1.2,42,0,42.9,0,44s1.2,2,2.7,2h79.7c1.5,0,2.7-0.9,2.7-2S83.8,42,82.3,42z"/><path class="fog" d="M80.1,50H5.9C4.3,50,3,50.9,3,52c0,1.1,1.3,2,2.9,2h74.3c1.6,0,2.9-0.9,2.9-2C83,50.9,81.7,50,80.1,50z"/><path class="fog" d="M80.1,58H10.9C9.3,58,8,58.9,8,60s1.3,2,2.9,2h69.2c1.6,0,2.9-0.9,2.9-2S81.7,58,80.1,58z"/><path class="fog" d="M51.2,0c-9.1-0.3-17.6,4.8-20.5,14.6c-5.9-1.4-15.3,2.3-17,10.4C8.2,24.9,1.2,29,0.1,36C0,37,0.7,37.9,1.7,37.9l82.3,0 c1,0,1.8-0.7,1.9-1.7c1-8.9-4.1-18.7-15.2-20.1C68.5,5.6,60.2,0.3,51.2,0z"/></symbol><symbol id="raindrop"><circle class="bg" cx="9" cy="9" r="9"/><path class="raindrop" d="M20,16.8c0,3.4-2.7,6.2-6,6.2c-3.3,0-6-2.8-6-6.2C8,14.9,8,6,8,6C13.5,11.5,20,11.2,20,16.8z"/></symbol><symbol id="sleet"><circle class="bg" cx="9" cy="9" r="9"/><path class="sleet" d="M19.9,16.6c-1.8,2.3-3.4,5.5-3.9,8.9c-0.1,0.5-0.6,0.7-1,0.4c-2.3-2.1-4.8-3.3-8.5-3.8c-0.4-0.1-0.6-0.5-0.4-0.8 C8.4,17,8.6,10.1,7.8,5c2.7,4.2,7.1,9,11.8,10.7C20,15.8,20.1,16.3,19.9,16.6z"/></symbol><symbol id="snowflake"><circle class="bg" cx="9" cy="9" r="9"/><path class="snowflake" d="M6.2,6.9l1.1,3.8c-0.3,0.2-0.6,0.5-0.9,0.8C6,11.7,5.8,12,5.6,12.4l-3.8-1C1,11.2,0.2,11.7,0,12.5c-0.2,0.8,0.3,1.6,1.1,1.8 l3.8,1c0,0.8,0.3,1.6,0.6,2.3l-2.7,2.8c-0.6,0.6-0.6,1.5,0,2.1c0.6,0.6,1.5,0.6,2.1,0l2.7-2.8c0.7,0.4,1.5,0.6,2.3,0.6l1,3.8 c0.2,0.8,1,1.2,1.8,1c0.8-0.2,1.2-1,1-1.8l-1.1-3.8c0.3-0.2,0.7-0.4,1-0.7c0.3-0.3,0.5-0.6,0.7-1l3.8,1c0.8,0.2,1.6-0.3,1.8-1.1 c0.2-0.8-0.3-1.6-1.1-1.8l-3.8-1c0-0.8-0.3-1.6-0.7-2.3l2.7-2.8c0.6-0.6,0.5-1.5,0-2.1c-0.6-0.6-1.5-0.6-2.1,0l-2.7,2.8 c-0.7-0.4-1.5-0.6-2.3-0.6L9,6.1c-0.2-0.8-1-1.2-1.8-1C6.5,5.3,6,6.1,6.2,6.9z M11.8,13.2c1,1,1,2.6,0,3.6c-1,1-2.6,1-3.6,0 c-1-1-1-2.6,0-3.6C9.2,12.2,10.8,12.2,11.8,13.2z"/></symbol><symbol id="lightning"><path class="lightning" d="M10.4,0L4.2,12.5h8.3L0,25L25,8.3h-8.3L25,0H10.4z"/></symbol>';
   
   // Add svg definitions if not already present
-  if (capabilities.hasSVG && !document.getElementById('symbolDefs')) {
-  	var el = document.createElement('div');
-  	el.innerHTML = DEFS;
-  	document.body.insertBefore(el.firstChild, document.body.firstChild);
-  }
+  svg.injectDefs('symbolDefs', DEFS);
   
   /**
    * Render symbol in 'container' with 'options'

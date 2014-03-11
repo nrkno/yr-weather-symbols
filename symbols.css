@@ -6,7 +6,8 @@
 .raindrop,
 .sleet,
 .snowflake,
-.lightning {
+.lightning,
+.bg {
   stroke-width: 0;
 }
 .sun-ray {

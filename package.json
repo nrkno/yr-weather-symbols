@@ -1,8 +1,10 @@
 {
   "name": "yr-weather-symbols",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "dependencies": {
     "trait": "git://github.com/YR/trait",
+    "svg": "git://github.com/YR/svg",
+    "capabilities": "git://github.com/YR/capabilities",
     "yr-colours": "git://github.com/YR/yr-colours"
   },
   "devDependencies": {
