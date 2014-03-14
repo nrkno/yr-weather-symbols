@@ -20,7 +20,7 @@ dust.render('symbolGroup', data, function(err, html) {
 	if (err) {
 		console.log(err);
 	} else {
-		el.innerHTML = html;
+		el.innerHTML += html;
 	}
 });
 

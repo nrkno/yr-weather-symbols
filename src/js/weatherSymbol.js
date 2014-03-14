@@ -2,6 +2,9 @@
 
 var svg = require('svg')
 	, capabilities = require('capabilities')
+	, map = require('lodash.map')
+	, clone = require('lodash.clone')
+	, Animator = require('./Animator')
 	, primitives = {
 			sun: require('./primitives/sunPrimitive'),
 			moon: require('./primitives/moonPrimitive'),
@@ -12,7 +15,7 @@ var svg = require('svg')
 			fog: require('./primitives/fogPrimitive'),
 			lightning: require('./primitives/lightningPrimitive')
 		}
-	, formula = require('../../yresources/weatherSymbols.json')
+	, formulae = require('../../yresources/weatherSymbols.json')
 
 	, DEFAULT_BG = '#ffffff'
 	, SVG = 'svg'
@@ -28,17 +31,28 @@ module.exports = function (container, options) {
 	if (!container) return;
 
 	options = options || {};
-	var type = (options.type && validateType(options.type)) || getDefaultType()
+	var id = options.id || container.getAttribute('data-id')
+		, animated = id && ~id.indexOf(':') && capabilities.hasCanvas
+		, type = animated
+				? CANVAS
+				: (options.type && validateType(options.type))
+					|| getDefaultType()
 		, element = createElement(type)
-		, id = options.id || container.getAttribute('data-id')
+		, bgContainer = getStyle(container, 'background-color')
 		, w = container.offsetWidth
 		, h = container.offsetHeight
-		, scale = capabilities.backingRatio
-		, tScale = (type == CANVAS) ? (w/100) * scale : 1
-		, bgContainer = getStyle(container, 'background-color')
-		, bg = (bgContainer && bgContainer !== 'rgba(0, 0, 0, 0)') ? bgContainer : DEFAULT_BG
-		, f = formula[id]
-		, layer, opts;
+		// Common layer properties
+		, layerOptions = {
+				type: type,
+				scale: capabilities.backingRatio,
+				width: w * capabilities.backingRatio,
+				height: h * capabilities.backingRatio,
+				tScale: (type == CANVAS) ? (w/100) * capabilities.backingRatio : 1,
+				bg: (bgContainer && bgContainer !== 'rgba(0, 0, 0, 0)')
+					? bgContainer
+					: DEFAULT_BG
+			}
+		, formula;
 
 	// Quit if no id or container is not empty
 	// and element matches type and 'replace' not set
@@ -54,33 +68,35 @@ module.exports = function (container, options) {
 
 	// Render svg or canvas
 	if (type != IMG) {
+		// Scale canvas element for hi-DPI
 		if (type == CANVAS) {
 			if (w != 0) {
-				element.width = w * scale;
-				element.height = h * scale;
+				element.width = layerOptions.width;
+				element.height = layerOptions.height;
 			}
 		}
 
-		if (f) {
-			// Render layers
-			for (var i = 0, n = f.length; i < n; i++) {
-				layer = f[i];
-				opts = {
-					type: type,
-					x: Math.round(layer.x * tScale),
-					y: Math.round(layer.y * tScale),
-					scale: (layer.scale || 1) * tScale,
-					flip: layer.flip,
-					tint: layer.tint || 1,
-					winter: layer.winter,
-					width: w * scale,
-					height: h * scale,
-					bg: bg
-				};
+		if (animated) {
+			formula = map(id.split(':'), function (id) {
+				return map(formulae[id], function (layer) {
+					return {
+						primitive: primitives[layer.primitive],
+						options: getLayerOptions(layer, clone(layerOptions))
+					}
+				});
+			});
+			console.log(formula)
 
-				primitives[layer.primitive].render(element, opts);
+		} else {
+			if (formula = formulae[id]) {
+				// Render layers
+				for (var i = 0, n = formula.length; i < n; i++) {
+					primitives[formula[i].primitive].render(element,
+						getLayerOptions(formula[i], clone(layerOptions)));
+				}
 			}
 		}
+
 	// Load images
 	} else {
 		element.src = (options.imagePath || '') + id + '.png';
@@ -88,6 +104,23 @@ module.exports = function (container, options) {
 
 	return container.appendChild(element);
 };
+
+/**
+ * Update 'options' with 'layer' specific properties
+ * @param {Object} layer
+ * @param {Object} options
+ * @returns {Object}
+ */
+function getLayerOptions (layer, options) {
+	options.x = Math.round(layer.x * options.tScale);
+	options.y = Math.round(layer.y * options.tScale);
+	options.scale = (layer.scale || 1) * options.tScale;
+	options.flip = layer.flip;
+	options.tint = layer.tint || 1;
+	options.winter = layer.winter;
+
+	return options;
+}
 
 /**
  * Retrieve the default type based on platform capabilities
