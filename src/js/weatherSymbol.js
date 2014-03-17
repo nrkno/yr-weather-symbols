@@ -4,7 +4,7 @@ var svg = require('svg')
 	, capabilities = require('capabilities')
 	, map = require('lodash.map')
 	, clone = require('lodash.clone')
-	, Animator = require('./Animator')
+	, animator = require('./animator')
 	, primitives = {
 			sun: require('./primitives/sunPrimitive'),
 			moon: require('./primitives/moonPrimitive'),
@@ -52,7 +52,7 @@ module.exports = function (container, options) {
 					? bgContainer
 					: DEFAULT_BG
 			}
-		, formula;
+		, formula, frames;
 
 	// Quit if no id or container is not empty
 	// and element matches type and 'replace' not set
@@ -77,7 +77,7 @@ module.exports = function (container, options) {
 		}
 
 		if (animated) {
-			formula = map(id.split(':'), function (id) {
+			frames = map(id.split(':'), function (id) {
 				return map(formulae[id], function (layer) {
 					return {
 						primitive: primitives[layer.primitive],
@@ -85,7 +85,7 @@ module.exports = function (container, options) {
 					}
 				});
 			});
-			console.log(formula)
+			animator(element, frames, layerOptions).start();
 
 		} else {
 			if (formula = formulae[id]) {

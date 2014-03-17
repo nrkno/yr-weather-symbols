@@ -1998,10 +1998,138 @@ require.register('lodash.clone', function(module, exports, require) {
   module.exports = clone;
   
 });
-require.register('Animator', function(module, exports, require) {
-  module.exports = function Animator (element, formulae) {
+require.register('requestAnimationFrame', function(module, exports, require) {
+  'use strict';
+  
+  // Adapted from https://gist.github.com/paulirish/1579671 which derived from 
+  // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+  // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
+  
+  // requestAnimationFrame polyfill by Erik Möller.
+  // Fixes from Paul Irish, Tino Zijdel, Andrew Mao, Klemen Slavič, Darius Bacon
+  
+  // MIT license
+  
+  if (!Date.now)
+      Date.now = function() { return new Date().getTime(); };
+  
+  (function() {
+      var vendors = ['webkit', 'moz'];
+      for (var i = 0; i < vendors.length && !window.requestAnimationFrame; ++i) {
+          var vp = vendors[i];
+          window.requestAnimationFrame = window[vp+'RequestAnimationFrame'];
+          window.cancelAnimationFrame = (window[vp+'CancelAnimationFrame']
+                                     || window[vp+'CancelRequestAnimationFrame']);
+      }
+      if (/iP(ad|hone|od).*OS 6/.test(window.navigator.userAgent) // iOS6 is buggy
+          || !window.requestAnimationFrame || !window.cancelAnimationFrame) {
+          var lastTime = 0;
+          window.requestAnimationFrame = function(callback) {
+              var now = Date.now();
+              var nextTime = Math.max(lastTime + 16, now);
+              return setTimeout(function() { callback(lastTime = nextTime); },
+                                nextTime - now);
+          };
+          window.cancelAnimationFrame = clearTimeout;
+      }
+  }());
+  
+});
+require.register('animator', function(module, exports, require) {
+  require('requestAnimationFrame');
+  
+  var anims = {}
+  	, length = 0
+  	, uid = 1
+  	, last = 0
+  	, running = false
+  
+  	, FRAME_RATE = 1000;
+  
+  module.exports = function (element, frames, options) {
+  	if (!element) return;
+  
+  	var anim = new Anim(uid++, element, frames, options);
+  	anims[anim.id] = anim;
+  	length++;
+  	return anim;
+  };
+  
+  function start () {
+  	if (!running) {
+  		running = true;
+  		tick = 0;
+  		last = Date.now();
+  		onTick();
+  	}
+  }
+  
+  function stop () {
+  	if (running) {
+  		running = false;
+  		for (var id in anims) {
+  			anims[id].running = false;
+  		}
+  	}
+  }
+  
+  function onTick (time) {
+  	var now = Date.now()
+  		, tick = now - last;
+  
+  	// Update
+  	if (tick >= FRAME_RATE) {
+  		last = now;
+  		for (var id in anims) {
+  			if (anims[id].running) anims[id].render();
+  		}
+  	}
+  
+  	// Loop
+  	if (running) window.requestAnimationFrame(onTick);
+  };
+  
+  function Anim (id, element, frames, options) {
+  	this.id = id;
+  	this.element = element;
+  	this.frames = frames;
+  	this.frame = 0;
+  	this.ctx = element.getContext('2d');
+  	this.width = options.width;
+  	this.height = options.height;
+  	this.running = false;
+  
+  	this.render();
+  }
+  
+  Anim.prototype.start = function () {
+  	this.running = true;
+  	start();
+  };
+  
+  Anim.prototype.stop = function () {
+  	this.running = false;
+  };
+  
+  Anim.prototype.destroy = function () {
   
   };
+  
+  Anim.prototype.render = function () {
+  	var layer;
+  
+  	// Clear canvas
+  	this.ctx.clearRect(0, 0, this.width, this.height);
+  
+  	for (var i = 0, n = this.frames[this.frame].length; i < n; i++) {
+  		layer = this.frames[this.frame][i];
+  		layer.primitive.render(this.element, layer.options);
+  	}
+  
+  	// Loop frame count
+  	this.frame = (this.frame + 1) % this.frames.length;
+  };
+  
 });
 require.register('yr-colours', function(module, exports, require) {
   module.exports = {
@@ -3499,7 +3627,7 @@ require.register('weatherSymbol', function(module, exports, require) {
   	, capabilities = require('capabilities')
   	, map = require('lodash.map')
   	, clone = require('lodash.clone')
-  	, Animator = require('Animator')
+  	, animator = require('animator')
   	, primitives = {
   			sun: require('primitives/sunPrimitive'),
   			moon: require('primitives/moonPrimitive'),
@@ -3547,7 +3675,7 @@ require.register('weatherSymbol', function(module, exports, require) {
   					? bgContainer
   					: DEFAULT_BG
   			}
-  		, formula;
+  		, formula, frames;
   
   	// Quit if no id or container is not empty
   	// and element matches type and 'replace' not set
@@ -3572,7 +3700,7 @@ require.register('weatherSymbol', function(module, exports, require) {
   		}
   
   		if (animated) {
-  			formula = map(id.split(':'), function (id) {
+  			frames = map(id.split(':'), function (id) {
   				return map(formulae[id], function (layer) {
   					return {
   						primitive: primitives[layer.primitive],
@@ -3580,7 +3708,7 @@ require.register('weatherSymbol', function(module, exports, require) {
   					}
   				});
   			});
-  			console.log(formula)
+  			animator(element, frames, layerOptions).start();
   
   		} else {
   			if (formula = formulae[id]) {
