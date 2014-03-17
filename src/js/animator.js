@@ -5,8 +5,10 @@ var anims = {}
 	, uid = 1
 	, last = 0
 	, running = false
+	, transitioning = false
 
-	, FRAME_RATE = 1000;
+	, FRAME_RATE = 1000
+	, TRANSITION = 250;
 
 module.exports = function (element, frames, options) {
 	if (!element) return;
@@ -39,8 +41,11 @@ function onTick (time) {
 	var now = Date.now()
 		, tick = now - last;
 
-	// Update
-	if (tick >= FRAME_RATE) {
+	if (transitioning && tick < TRANSITION) {
+		for (var id in anims) {
+			if (anims[id].running) anims[id].render(tick/TRANSITION);
+		}
+	} else if (tick >= FRAME_RATE) {
 		last = now;
 		for (var id in anims) {
 			if (anims[id].running) anims[id].render();

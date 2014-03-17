@@ -165,7 +165,7 @@ require.register('svg', function(module, exports, require) {
   };
 });
 require.register('dust', function(module, exports, require) {
-  /*! Dust - Asynchronous Templating - v2.3.4
+  /*! Dust - Asynchronous Templating - v2.3.3
   * http://linkedin.github.io/dustjs/
   * Copyright (c) 2014 Aleksander Williams; Released under the MIT License */
   (function(root) {
@@ -177,35 +177,17 @@ require.register('dust', function(module, exports, require) {
         DEBUG = 'DEBUG',
         loggingLevels = [DEBUG, INFO, WARN, ERROR, NONE],
         EMPTY_FUNC = function() {},
-        logger = {},
-        originalLog,
-        loggerContext;
+        logger = EMPTY_FUNC,
+        loggerContext = this;
   
     dust.debugLevel = NONE;
     dust.silenceErrors = false;
   
-    // Try to find the console in global scope
+    // Try to find the console logger in global scope
     if (root && root.console && root.console.log) {
+      logger = root.console.log;
       loggerContext = root.console;
-      originalLog = root.console.log;
     }
-  
-    // robust logger for node.js, modern browsers, and IE <= 9.
-    logger.log = loggerContext ? function() {
-        // Do this for normal browsers
-        if (typeof originalLog === 'function') {
-          logger.log = function() {
-            originalLog.apply(loggerContext, arguments);
-          };
-        } else {
-          // Do this for IE <= 9
-          logger.log = function() {
-            var message = Array.prototype.slice.apply(arguments).join(' ');
-            originalLog(message);
-          };
-        }
-        logger.log.apply(this, arguments);
-    } : function() { /* no op */ };
   
     /**
      * If dust.isDebug is true, Log dust debug statements, info statements, warning statements, and errors.
@@ -216,17 +198,17 @@ require.register('dust', function(module, exports, require) {
      */
     dust.log = function(message, type) {
       if(dust.isDebug && dust.debugLevel === NONE) {
-        logger.log('[!!!DEPRECATION WARNING!!!]: dust.isDebug is deprecated.  Set dust.debugLevel instead to the level of logging you want ["debug","info","warn","error","none"]');
+        logger.call(loggerContext, '[!!!DEPRECATION WARNING!!!]: dust.isDebug is deprecated.  Set dust.debugLevel instead to the level of logging you want ["debug","info","warn","error","none"]');
         dust.debugLevel = INFO;
       }
   
       type = type || INFO;
-      if (dust.indexInArray(loggingLevels, type) >= dust.indexInArray(loggingLevels, dust.debugLevel)) {
+      if (loggingLevels.indexOf(type) >= loggingLevels.indexOf(dust.debugLevel)) {
         if(!dust.logQueue) {
           dust.logQueue = [];
         }
         dust.logQueue.push({message: message, type: type});
-        logger.log('[DUST ' + type + ']: ' + message);
+        logger.call(loggerContext, '[DUST ' + type + ']: ' + message);
       }
   
       if (!dust.silenceErrors && type === ERROR) {
@@ -246,7 +228,7 @@ require.register('dust', function(module, exports, require) {
      * @public
      */
     dust.onError = function(error, chunk) {
-      logger.log('[!!!DEPRECATION WARNING!!!]: dust.onError will no longer return a chunk object.');
+      logger.call(loggerContext, '[!!!DEPRECATION WARNING!!!]: dust.onError will no longer return a chunk object.');
       dust.log(error.message || error, ERROR);
       if(!dust.silenceErrors) {
         throw error;
@@ -343,40 +325,6 @@ require.register('dust', function(module, exports, require) {
         return Object.prototype.toString.call(arr) === '[object Array]';
       };
     }
-  
-    // indexOf shim for arrays for IE <= 8
-    // source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
-    dust.indexInArray = function(arr, item, fromIndex) {
-      fromIndex = +fromIndex || 0;
-      if (Array.prototype.indexOf) {
-        return arr.indexOf(item, fromIndex);
-      } else {
-      if ( arr === undefined || arr === null ) {
-        throw new TypeError( 'cannot call method "indexOf" of null' );
-      }
-  
-      var length = arr.length; // Hack to convert object.length to a UInt32
-  
-      if (Math.abs(fromIndex) === Infinity) {
-        fromIndex = 0;
-      }
-  
-      if (fromIndex < 0) {
-        fromIndex += length;
-        if (fromIndex < 0) {
-          fromIndex = 0;
-        }
-      }
-  
-      for (;fromIndex < length; fromIndex++) {
-        if (arr[fromIndex] === item) {
-          return fromIndex;
-        }
-      }
-  
-      return -1;
-      }
-    };
   
     dust.nextTick = (function() {
       return function(callback) {
@@ -521,14 +469,9 @@ require.register('dust', function(module, exports, require) {
           } else {
             ctx = this.global ? this.global[first] : undefined;
           }
-        } else if (ctx) {
+        } else {
           // if scope is limited by a leading dot, don't search up the tree
-          if(ctx.head) {
-            ctx = ctx.head[first];
-          } else {
-            //context's head is empty, value we are searching for is not defined
-            ctx = undefined;
-          }
+          ctx = ctx.head[first];
         }
   
         while (ctx && i < len) {
@@ -1059,6 +1002,7 @@ require.register('dust', function(module, exports, require) {
     }
   
   })(this);
+  
   
 });
 require.register('symbolGroup', function(module, exports, require) {
@@ -2944,8 +2888,10 @@ require.register('animator', function(module, exports, require) {
   	, uid = 1
   	, last = 0
   	, running = false
+  	, transitioning = false
   
-  	, FRAME_RATE = 1000;
+  	, FRAME_RATE = 1000
+  	, TRANSITION = 250;
   
   module.exports = function (element, frames, options) {
   	if (!element) return;
@@ -2978,8 +2924,11 @@ require.register('animator', function(module, exports, require) {
   	var now = Date.now()
   		, tick = now - last;
   
-  	// Update
-  	if (tick >= FRAME_RATE) {
+  	if (transitioning && tick < TRANSITION) {
+  		for (var id in anims) {
+  			if (anims[id].running) anims[id].render(tick/TRANSITION);
+  		}
+  	} else if (tick >= FRAME_RATE) {
   		last = now;
   		for (var id in anims) {
   			if (anims[id].running) anims[id].render();
@@ -4544,7 +4493,24 @@ require.register('weatherSymbol', function(module, exports, require) {
   	, DEFAULT_BG = '#ffffff'
   	, SVG = 'svg'
   	, CANVAS = 'canvas'
-  	, IMG = 'img';
+  	, IMG = 'img'
+  	, LAYERS = {
+  			layer0: 'moon',
+  			layer1: 'sun',
+  			layer2: 'cloud:1',
+  			layer3: 'cloud:2',
+  			layer4: 'raindrop:1',
+  			layer5: 'raindrop:2',
+  			layer6: 'raindrop:3',
+  			layer7: 'sleet:1',
+  			layer8: 'sleet:2',
+  			layer9: 'sleet:3',
+  			layer10: 'snowflake:1',
+  			layer11: 'snowflake:2',
+  			layer12: 'snowflake:3',
+  			layer13: 'lightning',
+  			layer14: 'fog'
+  		};
   
   /**
    * Render symbol in 'container' with 'options'
@@ -4602,6 +4568,7 @@ require.register('weatherSymbol', function(module, exports, require) {
   
   		if (animated) {
   			frames = map(id.split(':'), function (id) {
+  
   				return map(formulae[id], function (layer) {
   					return {
   						primitive: primitives[layer.primitive],
@@ -4609,7 +4576,8 @@ require.register('weatherSymbol', function(module, exports, require) {
   					}
   				});
   			});
-  			animator(element, frames, layerOptions).start();
+  			animator(element, frames, layerOptions)
+  				// .start();
   
   		} else {
   			if (formula = formulae[id]) {
@@ -4644,6 +4612,10 @@ require.register('weatherSymbol', function(module, exports, require) {
   	options.winter = layer.winter;
   
   	return options;
+  }
+  
+  function getLayers (layers) {
+  
   }
   
   /**

@@ -20,7 +20,24 @@ var svg = require('svg')
 	, DEFAULT_BG = '#ffffff'
 	, SVG = 'svg'
 	, CANVAS = 'canvas'
-	, IMG = 'img';
+	, IMG = 'img'
+	, LAYERS = {
+			layer0: 'moon',
+			layer1: 'sun',
+			layer2: 'cloud:1',
+			layer3: 'cloud:2',
+			layer4: 'raindrop:1',
+			layer5: 'raindrop:2',
+			layer6: 'raindrop:3',
+			layer7: 'sleet:1',
+			layer8: 'sleet:2',
+			layer9: 'sleet:3',
+			layer10: 'snowflake:1',
+			layer11: 'snowflake:2',
+			layer12: 'snowflake:3',
+			layer13: 'lightning',
+			layer14: 'fog'
+		};
 
 /**
  * Render symbol in 'container' with 'options'
@@ -78,6 +95,7 @@ module.exports = function (container, options) {
 
 		if (animated) {
 			frames = map(id.split(':'), function (id) {
+
 				return map(formulae[id], function (layer) {
 					return {
 						primitive: primitives[layer.primitive],
@@ -85,7 +103,8 @@ module.exports = function (container, options) {
 					}
 				});
 			});
-			animator(element, frames, layerOptions).start();
+			animator(element, frames, layerOptions)
+				// .start();
 
 		} else {
 			if (formula = formulae[id]) {
@@ -120,6 +139,10 @@ function getLayerOptions (layer, options) {
 	options.winter = layer.winter;
 
 	return options;
+}
+
+function getLayers (layers) {
+
 }
 
 /**

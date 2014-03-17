@@ -2043,8 +2043,10 @@ require.register('animator', function(module, exports, require) {
   	, uid = 1
   	, last = 0
   	, running = false
+  	, transitioning = false
   
-  	, FRAME_RATE = 1000;
+  	, FRAME_RATE = 1000
+  	, TRANSITION = 250;
   
   module.exports = function (element, frames, options) {
   	if (!element) return;
@@ -2077,8 +2079,11 @@ require.register('animator', function(module, exports, require) {
   	var now = Date.now()
   		, tick = now - last;
   
-  	// Update
-  	if (tick >= FRAME_RATE) {
+  	if (transitioning && tick < TRANSITION) {
+  		for (var id in anims) {
+  			if (anims[id].running) anims[id].render(tick/TRANSITION);
+  		}
+  	} else if (tick >= FRAME_RATE) {
   		last = now;
   		for (var id in anims) {
   			if (anims[id].running) anims[id].render();
@@ -3643,7 +3648,24 @@ require.register('weatherSymbol', function(module, exports, require) {
   	, DEFAULT_BG = '#ffffff'
   	, SVG = 'svg'
   	, CANVAS = 'canvas'
-  	, IMG = 'img';
+  	, IMG = 'img'
+  	, LAYERS = {
+  			layer0: 'moon',
+  			layer1: 'sun',
+  			layer2: 'cloud:1',
+  			layer3: 'cloud:2',
+  			layer4: 'raindrop:1',
+  			layer5: 'raindrop:2',
+  			layer6: 'raindrop:3',
+  			layer7: 'sleet:1',
+  			layer8: 'sleet:2',
+  			layer9: 'sleet:3',
+  			layer10: 'snowflake:1',
+  			layer11: 'snowflake:2',
+  			layer12: 'snowflake:3',
+  			layer13: 'lightning',
+  			layer14: 'fog'
+  		};
   
   /**
    * Render symbol in 'container' with 'options'
@@ -3701,6 +3723,7 @@ require.register('weatherSymbol', function(module, exports, require) {
   
   		if (animated) {
   			frames = map(id.split(':'), function (id) {
+  
   				return map(formulae[id], function (layer) {
   					return {
   						primitive: primitives[layer.primitive],
@@ -3708,7 +3731,8 @@ require.register('weatherSymbol', function(module, exports, require) {
   					}
   				});
   			});
-  			animator(element, frames, layerOptions).start();
+  			animator(element, frames, layerOptions)
+  				// .start();
   
   		} else {
   			if (formula = formulae[id]) {
@@ -3743,6 +3767,10 @@ require.register('weatherSymbol', function(module, exports, require) {
   	options.winter = layer.winter;
   
   	return options;
+  }
+  
+  function getLayers (layers) {
+  
   }
   
   /**
