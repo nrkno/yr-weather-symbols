@@ -5,7 +5,10 @@
     "trait": "git://github.com/YR/trait",
     "svg": "git://github.com/YR/svg",
     "capabilities": "git://github.com/YR/capabilities",
-    "yr-colours": "git://github.com/YR/yr-colours"
+    "yr-colours": "git://github.com/YR/yr-colours",
+    "requestAnimationFrame": "git://github.com/YR/requestAnimationFrame",
+    "lodash.map": "^2.4.0",
+    "lodash.clone": "^2.4.0"
   },
   "devDependencies": {
     "dustjs-linkedin": "^2.3.3",
