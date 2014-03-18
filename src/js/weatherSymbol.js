@@ -79,14 +79,14 @@ module.exports = function (container, options) {
 					return getLayerOptions(layer, clone(layerOptions))
 				});
 			});
-			animator(element, frames, layerOptions)
+			animator(element.getContext('2d'), frames, layerOptions)
 				// .start();
 
 		} else {
 			if (formula = formulae[id]) {
 				// Render layers
 				for (var i = 0, n = formula.length; i < n; i++) {
-					primitives[formula[i].primitive].render(element,
+					primitives[formula[i].primitive].render((type == CANVAS) ? element.getContext('2d') : element,
 						getLayerOptions(formula[i], clone(layerOptions)));
 				}
 			}

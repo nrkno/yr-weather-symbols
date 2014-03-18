@@ -5,33 +5,42 @@ var svg = require('svg')
 	, TFogPrimitive;
 
 TFogPrimitive = Trait({
+
+	show: function () {
+
+	},
+
+	hide: function () {
+
+	},
+
+	move: function (options) {
+
+	},
+
 	/**
 	 * Render svg version
-	 * @param {DOMElement} element
-	 * @param {Object} options
-	 * @returns {String}
+	 * @param {SVGElement} element
 	 */
-	renderSVG: function (element, options) {
+	renderSVG: function (element) {
 		svg.appendChild(
 			element,
 			'use',
-			this.getUseAttributes('#fog', options)
+			this.getUseAttributes('#fog')
 		);
 	},
 
 	/**
 	 * Render canvas version
-	 * @param {DOMElement} element
-	 * @param {Object} options
+	 * @param {CanvasContext} ctx
 	 */
-	renderCanvas: function (element, options) {
-		var ctx = element.getContext('2d')
-			, tint = Math.floor(255 * (1-options.tint));
+	renderCanvas: function (ctx) {
+		var tint = Math.floor(255 * (1 - this.tint));
 
 		ctx.save();
+		this.translateCanvas(ctx);
+
 		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';
-		ctx.translate(options.x, options.y)
-		ctx.scale(options.scale, options.scale);
 		ctx.beginPath();
 		ctx.moveTo(82.3,42);
 		ctx.lineTo(2.7,42);

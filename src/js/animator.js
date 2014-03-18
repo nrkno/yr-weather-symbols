@@ -7,10 +7,10 @@ var anims = {}
 	, FRAME_DURATION = 2000
 	, TRANSITION_DURATION = 250;
 
-module.exports = function (element, frames, options) {
-	if (!element) return;
+module.exports = function (ctx, frames, options) {
+	if (!ctx) return;
 
-	var anim = new Anim(uid++, element, frames, options);
+	var anim = new Anim(uid++, ctx, frames, options);
 	anims[anim.id] = anim;
 	length++;
 	return anim;
@@ -49,12 +49,11 @@ function onTick (time) {
 	if (running) window.requestAnimationFrame(onTick);
 };
 
-function Anim (id, element, frames, options) {
+function Anim (id, ctx, frames, options) {
 	this.id = id;
-	this.element = element;
+	this.ctx = ctx;
 	this.frame = 0;
 	this.frames = frames;
-	this.ctx = element.getContext('2d');
 	this.width = options.width;
 	this.height = options.height;
 	this.running = false;

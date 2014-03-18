@@ -7,33 +7,41 @@ var svg = require('svg')
 	, TSleetPrimitive;
 
 TSleetPrimitive = Trait({
+
+	show: function () {
+
+	},
+
+	hide: function () {
+
+	},
+
+	move: function (options) {
+
+	},
+
 	/**
 	 * Render svg version
-	 * @param {DOMElement} element
-	 * @param {Object} options
-	 * @returns {String}
+	 * @param {SVGElement} element
 	 */
-	renderSVG: function (element, options) {
+	renderSVG: function (element) {
 		svg.appendChild(
 			element,
 			'use',
-			this.getUseAttributes('#sleet', options)
+			this.getUseAttributes('#sleet')
 		);
 	},
 
 	/**
 	 * Render canvas version
-	 * @param {DOMElement} element
-	 * @param {Object} options
+	 * @param {CanvasContext} ctx
 	 */
-	renderCanvas: function (element, options) {
-		var ctx = element.getContext('2d');
-
-		// Stroke
+	renderCanvas: function (ctx) {
 		ctx.save();
-		ctx.fillStyle = options.bg;
-		ctx.translate(options.x, options.y)
-		ctx.scale(options.scale, options.scale);
+		this.translateCanvas(ctx);
+
+		// Background
+		ctx.fillStyle = this.bg;
 		ctx.save();
 		ctx.globalCompositeOperation = 'destination-out';
 		ctx.beginPath();

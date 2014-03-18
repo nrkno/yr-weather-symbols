@@ -7,32 +7,39 @@ var svg = require('svg')
 	, TLightningPrimitive;
 
 TLightningPrimitive = Trait({
+
+	show: function () {
+
+	},
+
+	hide: function () {
+
+	},
+
+	move: function (options) {
+
+	},
+
 	/**
 	 * Render svg version
-	 * @param {DOMElement} element
-	 * @param {Object} options
-	 * @returns {String}
+	 * @param {SVGElement} element
 	 */
-	renderSVG: function (element, options) {
+	renderSVG: function (element) {
 		svg.appendChild(
 			element,
 			'use',
-			this.getUseAttributes('#lightning', options)
+			this.getUseAttributes('#lightning')
 		);
 	},
 
 	/**
 	 * Render canvas version
-	 * @param {DOMElement} element
-	 * @param {Object} options
+	 * @param {CanvasContext} ctx
 	 */
-	renderCanvas: function (element, options) {
-		var ctx = element.getContext('2d');
-
+	renderCanvas: function (ctx) {
 		// Fill
 		ctx.save();
-		ctx.translate(options.x, options.y)
-		ctx.scale(options.scale, options.scale);
+		this.translateCanvas(ctx);
 
 		ctx.fillStyle = FILL_COLOUR;
 		ctx.beginPath();

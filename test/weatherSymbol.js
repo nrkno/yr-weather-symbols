@@ -2742,72 +2742,83 @@ require.register('primitives/TPrimitive', function(module, exports, require) {
   
   module.exports = Trait({
   	TWO_PI: Math.PI * 2,
-  	STROKE_WIDTH: 4,
-  	WIDTH: 100,
+  	MAX_WIDTH: 100,
+  
+  	type: '',
+  	x: 0,
+  	y: 0,
+  	scale: 1,
+  	tint: 1,
+  	flip: false,
+  	winter: false,
+  	bg: '',
   
   	initialize: function () {
   		return this;
   	},
   
-  	show: function () {
-  
-  	},
-  
-  	hide: function () {
-  
-  	},
-  
-  	move: function (options) {
-  
-  	},
-  
   	/**
-  	 * Render primitive in 'element'
-  	 * @param {DOMElement} element
+  	 * Render primitive
+  	 * @param {SVGElement | CanvasContext} element
   	 * @param {Object} options
   	 */
   	render: function (element, options) {
-  		if (options.type == 'svg') {
-  			return this.renderSVG(element, options);
+  		this.update(options);
+  
+  		if (this.type == 'svg') {
+  			return this.renderSVG(element);
   		} else {
-  			return this.renderCanvas(element, options);
+  			return this.renderCanvas(element);
   		}
+  	},
+  
+  	update: function (options) {
+  		for (var prop in options) {
+  			if (this.hasOwnProperty(prop)) this[prop] = options[prop];
+  		}
+  	},
+  
+  	translateCanvas: function (ctx) {
+  		ctx.translate(this.x, this.y)
+  		ctx.scale(this.scale, this.scale);
   	},
   
   	/**
   	 * Retrieve attribute object for <use>
   	 * @param {String} link
-  	 * @param {Object} options
   	 */
-  	getUseAttributes: function (link, options) {
+  	getUseAttributes: function (link) {
   		return {
   			'xlink:href': link,
   			x: '0',
   			y: '0',
   			width: '100',
   			height: '100',
-  			transform: options.flip
+  			transform: this.flip
   				? 'translate('
-  					+ ((this.WIDTH * options.scale) + options.x)
+  					+ ((this.MAX_WIDTH * this.scale) + this.x)
   					+ ','
-  					+ options.y
+  					+ this.y
   					+ ') scale('
-  					+ (-1 * options.scale)
+  					+ (-1 * this.scale)
   					+ ', '
-  					+ options.scale
+  					+ this.scale
   					+ ')'
   				: 'translate('
-  					+ options.x
+  					+ this.x
   					+ ','
-  					+ options.y
+  					+ this.y
   					+ ') scale('
-  					+ options.scale
+  					+ this.scale
   					+ ')'
   		}
   	},
   
   	renderSVG: Trait.required,
-  	renderCanvas: Trait.required
+  	renderCanvas: Trait.required,
+  	show: Trait.required,
+  	hide: Trait.required,
+  	move: Trait.required
   });
   
 });
@@ -2824,35 +2835,40 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   	, TSunPrimitive;  
     
   TSunPrimitive = Trait({  
+    
+  	show: function () {  
+    
+  	},  
+    
+  	hide: function () {  
+    
+  	},  
+    
+  	move: function (options) {  
+    
+  	},  
+    
   	/**  
   	 * Render svg version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 * @returns {String}  
+  	 * @param {SVGElement} element  
   	 */  
-  	renderSVG: function (element, options) {  
+  	renderSVG: function (element) {  
   		svg.appendChild(  
   			element,  
   			'use',  
-  			this.getUseAttributes(options.winter ? '#sunWinter' : '#sun', options)  
+  			this.getUseAttributes(this.winter ? '#sunWinter' : '#sun')  
   		);  
   	},  
     
   	/**  
   	 * Render canvas version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
+  	 * @param {CanvasContext} ctx  
   	 */  
-  	renderCanvas: function (element, options) {  
-  		var ctx = element.getContext('2d');  
-    
+  	renderCanvas: function (ctx) {  
   		ctx.save();  
-  		ctx.translate(options.x, options.y);  
-  		ctx.scale(options.scale, options.scale);  
-  		ctx.strokeStyle = options.bg;  
-  		ctx.lineWidth = this.STROKE_WIDTH;  
+  		this.translateCanvas(ctx);  
     
-  		if (options.winter) {  
+  		if (this.winter) {  
   			// Horizon  
   			ctx.fillStyle = HORIZON_COLOUR;  
   			ctx.beginPath();  
@@ -2991,32 +3007,39 @@ require.register('primitives/moonPrimitive', function(module, exports, require) 
   	, TMoonPrimitive;  
     
   TMoonPrimitive = Trait({  
+    
+  	show: function () {  
+    
+  	},  
+    
+  	hide: function () {  
+    
+  	},  
+    
+  	move: function (options) {  
+    
+  	},  
+    
   	/**  
   	 * Render svg version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 * @returns {String}  
+  	 * @param {SVGElement} element  
   	 */  
-  	renderSVG: function (element, options) {  
+  	renderSVG: function (element) {  
   		svg.appendChild(  
   			element,  
   			'use',  
-  			this.getUseAttributes('#moon', options)  
+  			this.getUseAttributes('#moon')  
   		);  
   	},  
     
   	/**  
   	 * Render canvas version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
+  	 * @param {CanvasContext} ctx  
   	 */  
-  	renderCanvas: function (element, options) {  
-  		var ctx = element.getContext('2d');  
-    
+  	renderCanvas: function (ctx) {  
   		ctx.save();  
+  		this.translateCanvas(ctx);  
     
-  		ctx.translate(options.x, options.y)  
-  		ctx.scale(options.scale, options.scale);  
   		ctx.fillStyle = FILL_COLOUR;  
   		ctx.beginPath();  
   		ctx.moveTo(23,20);  
@@ -3046,37 +3069,40 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
   	, TCloudPrimitive;  
     
   TCloudPrimitive = Trait({  
+    
+  	show: function () {  
+    
+  	},  
+    
+  	hide: function () {  
+    
+  	},  
+    
+  	move: function (options) {  
+    
+  	},  
+    
   	/**  
   	 * Render svg version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 * @returns {String}  
+  	 * @param {SVGElement} element  
   	 */  
-  	renderSVG: function (element, options) {  
+  	renderSVG: function (element) {  
   		svg.appendChild(  
   			element,  
   			'use',  
-  			this.getUseAttributes('#cloud-' + options.tint * 100, options)  
+  			this.getUseAttributes('#cloud-' + this.tint * 100)  
   		);  
   	},  
     
   	/**  
   	 * Render canvas version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
+  	 * @param {CanvasContext} ctx  
   	 */  
-  	renderCanvas: function (element, options) {  
-  		var ctx = element.getContext('2d')  
-  			, tint = Math.floor(255 * (1-options.tint));  
+  	renderCanvas: function (ctx) {  
+  		var tint = Math.floor(255 * (1 - this.tint));  
     
   		ctx.save();  
-  		if (options.flip) {  
-  			ctx.translate((this.WIDTH * options.scale) + options.x, options.y)  
-  			ctx.scale(-1 * options.scale, options.scale);  
-  		} else {  
-  			ctx.translate(options.x, options.y)  
-  			ctx.scale(options.scale, options.scale);  
-  		}  
+  		this.translateCanvas(ctx);  
     
   		// Mask  
   		ctx.save();  
@@ -3085,11 +3111,19 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
   		ctx.restore();  
     
   		// Fill  
-  		ctx.strokeStyle = options.bg;  
-  		ctx.lineWidth = this.STROKE_WIDTH;  
   		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
   		this.renderCanvasFillShape(ctx);  
   		ctx.restore();  
+  	},  
+    
+  	translateCanvas: function (ctx) {  
+  		if (this.flip) {  
+  			ctx.translate((this.MAX_WIDTH * this.scale) + this.x, this.y)  
+  			ctx.scale(-1 * this.scale, this.scale);  
+  		} else {  
+  			ctx.translate(this.x, this.y)  
+  			ctx.scale(this.scale, this.scale);  
+  		}  
   	},  
     
   	/**  
@@ -3136,7 +3170,7 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
   });  
     
   module.exports = Trait.compose(  
-  	TPrimitive,  
+  	TPrimitive.resolve({translateCanvas: null}),  
   	TCloudPrimitive  
   ).create();
 });
@@ -3150,33 +3184,41 @@ require.register('primitives/raindropPrimitive', function(module, exports, requi
   	, TRaindropPrimitive;  
     
   TRaindropPrimitive = Trait({  
+    
+  	show: function () {  
+    
+  	},  
+    
+  	hide: function () {  
+    
+  	},  
+    
+  	move: function (options) {  
+    
+  	},  
+    
   	/**  
   	 * Render svg version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 * @returns {String}  
+  	 * @param {SVGElement} element  
   	 */  
-  	renderSVG: function (element, options) {  
+  	renderSVG: function (element) {  
   		svg.appendChild(  
   			element,  
   			'use',  
-  			this.getUseAttributes('#raindrop', options)  
+  			this.getUseAttributes('#raindrop')  
   		);  
   	},  
     
   	/**  
   	 * Render canvas version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
+  	 * @param {CanvasContext} ctx  
   	 */  
-  	renderCanvas: function (element, options) {  
-  		var ctx = element.getContext('2d');  
-    
-  		// Stroke  
+  	renderCanvas: function (ctx) {  
   		ctx.save();  
-  		ctx.fillStyle = options.bg;  
-  		ctx.translate(options.x, options.y)  
-  		ctx.scale(options.scale, options.scale);  
+  		this.translateCanvas(ctx);  
+    
+  		// Background  
+  		ctx.fillStyle = this.bg;  
   		ctx.save();  
   		ctx.globalCompositeOperation = 'destination-out';  
   		ctx.beginPath();  
@@ -3215,33 +3257,41 @@ require.register('primitives/sleetPrimitive', function(module, exports, require)
   	, TSleetPrimitive;
   
   TSleetPrimitive = Trait({
+  
+  	show: function () {
+  
+  	},
+  
+  	hide: function () {
+  
+  	},
+  
+  	move: function (options) {
+  
+  	},
+  
   	/**
   	 * Render svg version
-  	 * @param {DOMElement} element
-  	 * @param {Object} options
-  	 * @returns {String}
+  	 * @param {SVGElement} element
   	 */
-  	renderSVG: function (element, options) {
+  	renderSVG: function (element) {
   		svg.appendChild(
   			element,
   			'use',
-  			this.getUseAttributes('#sleet', options)
+  			this.getUseAttributes('#sleet')
   		);
   	},
   
   	/**
   	 * Render canvas version
-  	 * @param {DOMElement} element
-  	 * @param {Object} options
+  	 * @param {CanvasContext} ctx
   	 */
-  	renderCanvas: function (element, options) {
-  		var ctx = element.getContext('2d');
-  
-  		// Stroke
+  	renderCanvas: function (ctx) {
   		ctx.save();
-  		ctx.fillStyle = options.bg;
-  		ctx.translate(options.x, options.y)
-  		ctx.scale(options.scale, options.scale);
+  		this.translateCanvas(ctx);
+  
+  		// Background
+  		ctx.fillStyle = this.bg;
   		ctx.save();
   		ctx.globalCompositeOperation = 'destination-out';
   		ctx.beginPath();
@@ -3283,33 +3333,41 @@ require.register('primitives/snowflakePrimitive', function(module, exports, requ
   	, TSnowflakePrimitive;  
     
   TSnowflakePrimitive = Trait({  
+    
+  	show: function () {  
+    
+  	},  
+    
+  	hide: function () {  
+    
+  	},  
+    
+  	move: function (options) {  
+    
+  	},  
+    
   	/**  
   	 * Render svg version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 * @returns {String}  
+  	 * @param {SVGElement} element  
   	 */  
-  	renderSVG: function (element, options) {  
+  	renderSVG: function (element) {  
   		svg.appendChild(  
   			element,  
   			'use',  
-  			this.getUseAttributes('#snowflake', options)  
+  			this.getUseAttributes('#snowflake')  
   		);  
   	},  
     
   	/**  
   	 * Render canvas version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
+  	 * @param {CanvasContext} ctx  
   	 */  
-  	renderCanvas: function (element, options) {  
-  		var ctx = element.getContext('2d');  
-    
-  		// Stroke  
+  	renderCanvas: function (ctx) {  
   		ctx.save();  
-  		ctx.fillStyle = options.bg;  
-  		ctx.translate(options.x, options.y)  
-  		ctx.scale(options.scale, options.scale);  
+  		this.translateCanvas(ctx);  
+    
+  		// Background  
+  		ctx.fillStyle = this.bg;  
   		ctx.save();  
   		ctx.globalCompositeOperation = 'destination-out';  
   		ctx.beginPath();  
@@ -3382,32 +3440,39 @@ require.register('primitives/lightningPrimitive', function(module, exports, requ
   	, TLightningPrimitive;  
     
   TLightningPrimitive = Trait({  
+    
+  	show: function () {  
+    
+  	},  
+    
+  	hide: function () {  
+    
+  	},  
+    
+  	move: function (options) {  
+    
+  	},  
+    
   	/**  
   	 * Render svg version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 * @returns {String}  
+  	 * @param {SVGElement} element  
   	 */  
-  	renderSVG: function (element, options) {  
+  	renderSVG: function (element) {  
   		svg.appendChild(  
   			element,  
   			'use',  
-  			this.getUseAttributes('#lightning', options)  
+  			this.getUseAttributes('#lightning')  
   		);  
   	},  
     
   	/**  
   	 * Render canvas version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
+  	 * @param {CanvasContext} ctx  
   	 */  
-  	renderCanvas: function (element, options) {  
-  		var ctx = element.getContext('2d');  
-    
+  	renderCanvas: function (ctx) {  
   		// Fill  
   		ctx.save();  
-  		ctx.translate(options.x, options.y)  
-  		ctx.scale(options.scale, options.scale);  
+  		this.translateCanvas(ctx);  
     
   		ctx.fillStyle = FILL_COLOUR;  
   		ctx.beginPath();  
@@ -3438,33 +3503,42 @@ require.register('primitives/fogPrimitive', function(module, exports, require) {
   	, TFogPrimitive;  
     
   TFogPrimitive = Trait({  
+    
+  	show: function () {  
+    
+  	},  
+    
+  	hide: function () {  
+    
+  	},  
+    
+  	move: function (options) {  
+    
+  	},  
+    
   	/**  
   	 * Render svg version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 * @returns {String}  
+  	 * @param {SVGElement} element  
   	 */  
-  	renderSVG: function (element, options) {  
+  	renderSVG: function (element) {  
   		svg.appendChild(  
   			element,  
   			'use',  
-  			this.getUseAttributes('#fog', options)  
+  			this.getUseAttributes('#fog')  
   		);  
   	},  
     
   	/**  
   	 * Render canvas version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
+  	 * @param {CanvasContext} ctx  
   	 */  
-  	renderCanvas: function (element, options) {  
-  		var ctx = element.getContext('2d')  
-  			, tint = Math.floor(255 * (1-options.tint));  
+  	renderCanvas: function (ctx) {  
+  		var tint = Math.floor(255 * (1 - this.tint));  
     
   		ctx.save();  
+  		this.translateCanvas(ctx);  
+    
   		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
-  		ctx.translate(options.x, options.y)  
-  		ctx.scale(options.scale, options.scale);  
   		ctx.beginPath();  
   		ctx.moveTo(82.3,42);  
   		ctx.lineTo(2.7,42);  
@@ -3529,10 +3603,10 @@ require.register('animator', function(module, exports, require) {
   	, FRAME_DURATION = 2000
   	, TRANSITION_DURATION = 250;
   
-  module.exports = function (element, frames, options) {
-  	if (!element) return;
+  module.exports = function (ctx, frames, options) {
+  	if (!ctx) return;
   
-  	var anim = new Anim(uid++, element, frames, options);
+  	var anim = new Anim(uid++, ctx, frames, options);
   	anims[anim.id] = anim;
   	length++;
   	return anim;
@@ -3571,12 +3645,11 @@ require.register('animator', function(module, exports, require) {
   	if (running) window.requestAnimationFrame(onTick);
   };
   
-  function Anim (id, element, frames, options) {
+  function Anim (id, ctx, frames, options) {
   	this.id = id;
-  	this.element = element;
+  	this.ctx = ctx;
   	this.frame = 0;
   	this.frames = frames;
-  	this.ctx = element.getContext('2d');
   	this.width = options.width;
   	this.height = options.height;
   	this.running = false;
@@ -3743,14 +3816,14 @@ require.register('weatherSymbol', function(module, exports, require) {
   					return getLayerOptions(layer, clone(layerOptions))
   				});
   			});
-  			animator(element, frames, layerOptions)
+  			animator(element.getContext('2d'), frames, layerOptions)
   				// .start();
   
   		} else {
   			if (formula = formulae[id]) {
   				// Render layers
   				for (var i = 0, n = formula.length; i < n; i++) {
-  					primitives[formula[i].primitive].render(element,
+  					primitives[formula[i].primitive].render((type == CANVAS) ? element.getContext('2d') : element,
   						getLayerOptions(formula[i], clone(layerOptions)));
   				}
   			}

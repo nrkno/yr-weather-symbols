@@ -5,37 +5,40 @@ var svg = require('svg')
 	, TCloudPrimitive;
 
 TCloudPrimitive = Trait({
+
+	show: function () {
+
+	},
+
+	hide: function () {
+
+	},
+
+	move: function (options) {
+
+	},
+
 	/**
 	 * Render svg version
-	 * @param {DOMElement} element
-	 * @param {Object} options
-	 * @returns {String}
+	 * @param {SVGElement} element
 	 */
-	renderSVG: function (element, options) {
+	renderSVG: function (element) {
 		svg.appendChild(
 			element,
 			'use',
-			this.getUseAttributes('#cloud-' + options.tint * 100, options)
+			this.getUseAttributes('#cloud-' + this.tint * 100)
 		);
 	},
 
 	/**
 	 * Render canvas version
-	 * @param {DOMElement} element
-	 * @param {Object} options
+	 * @param {CanvasContext} ctx
 	 */
-	renderCanvas: function (element, options) {
-		var ctx = element.getContext('2d')
-			, tint = Math.floor(255 * (1-options.tint));
+	renderCanvas: function (ctx) {
+		var tint = Math.floor(255 * (1 - this.tint));
 
 		ctx.save();
-		if (options.flip) {
-			ctx.translate((this.WIDTH * options.scale) + options.x, options.y)
-			ctx.scale(-1 * options.scale, options.scale);
-		} else {
-			ctx.translate(options.x, options.y)
-			ctx.scale(options.scale, options.scale);
-		}
+		this.translateCanvas(ctx);
 
 		// Mask
 		ctx.save();
@@ -44,11 +47,19 @@ TCloudPrimitive = Trait({
 		ctx.restore();
 
 		// Fill
-		ctx.strokeStyle = options.bg;
-		ctx.lineWidth = this.STROKE_WIDTH;
 		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';
 		this.renderCanvasFillShape(ctx);
 		ctx.restore();
+	},
+
+	translateCanvas: function (ctx) {
+		if (this.flip) {
+			ctx.translate((this.MAX_WIDTH * this.scale) + this.x, this.y)
+			ctx.scale(-1 * this.scale, this.scale);
+		} else {
+			ctx.translate(this.x, this.y)
+			ctx.scale(this.scale, this.scale);
+		}
 	},
 
 	/**
@@ -95,6 +106,6 @@ TCloudPrimitive = Trait({
 });
 
 module.exports = Trait.compose(
-	TPrimitive,
+	TPrimitive.resolve({translateCanvas: null}),
 	TCloudPrimitive
 ).create();

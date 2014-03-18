@@ -10,35 +10,40 @@ var svg = require('svg')
 	, TSunPrimitive;
 
 TSunPrimitive = Trait({
+
+	show: function () {
+
+	},
+
+	hide: function () {
+
+	},
+
+	move: function (options) {
+
+	},
+
 	/**
 	 * Render svg version
-	 * @param {DOMElement} element
-	 * @param {Object} options
-	 * @returns {String}
+	 * @param {SVGElement} element
 	 */
-	renderSVG: function (element, options) {
+	renderSVG: function (element) {
 		svg.appendChild(
 			element,
 			'use',
-			this.getUseAttributes(options.winter ? '#sunWinter' : '#sun', options)
+			this.getUseAttributes(this.winter ? '#sunWinter' : '#sun')
 		);
 	},
 
 	/**
 	 * Render canvas version
-	 * @param {DOMElement} element
-	 * @param {Object} options
+	 * @param {CanvasContext} ctx
 	 */
-	renderCanvas: function (element, options) {
-		var ctx = element.getContext('2d');
-
+	renderCanvas: function (ctx) {
 		ctx.save();
-		ctx.translate(options.x, options.y);
-		ctx.scale(options.scale, options.scale);
-		ctx.strokeStyle = options.bg;
-		ctx.lineWidth = this.STROKE_WIDTH;
+		this.translateCanvas(ctx);
 
-		if (options.winter) {
+		if (this.winter) {
 			// Horizon
 			ctx.fillStyle = HORIZON_COLOUR;
 			ctx.beginPath();
