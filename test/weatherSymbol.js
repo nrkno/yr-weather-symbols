@@ -1998,105 +1998,6 @@ require.register('lodash.clone', function(module, exports, require) {
   module.exports = clone;
   
 });
-require.register('animator', function(module, exports, require) {
-  var anims = {}
-  	, length = 0
-  	, uid = 1
-  	, last = 0
-  	, running = false
-  	, transitioning = false
-  
-  	, FRAME_RATE = 1000
-  	, TRANSITION = 250;
-  
-  module.exports = function (element, frames, options) {
-  	if (!element) return;
-  
-  	var anim = new Anim(uid++, element, frames, options);
-  	anims[anim.id] = anim;
-  	length++;
-  	return anim;
-  };
-  
-  function start () {
-  	if (!running) {
-  		running = true;
-  		tick = 0;
-  		last = Date.now();
-  		onTick();
-  	}
-  }
-  
-  function stop () {
-  	if (running) {
-  		running = false;
-  		for (var id in anims) {
-  			anims[id].running = false;
-  		}
-  	}
-  }
-  
-  function onTick (time) {
-  	var now = Date.now()
-  		, tick = now - last;
-  
-  	if (transitioning && tick < TRANSITION) {
-  		for (var id in anims) {
-  			if (anims[id].running) anims[id].render(tick/TRANSITION);
-  		}
-  	} else if (tick >= FRAME_RATE) {
-  		last = now;
-  		for (var id in anims) {
-  			if (anims[id].running) anims[id].render();
-  		}
-  	}
-  
-  	// Loop
-  	if (running) window.requestAnimationFrame(onTick);
-  };
-  
-  function Anim (id, element, frames, options) {
-  	this.id = id;
-  	this.element = element;
-  	this.frames = frames;
-  	this.frame = 0;
-  	this.ctx = element.getContext('2d');
-  	this.width = options.width;
-  	this.height = options.height;
-  	this.running = false;
-  
-  	this.render();
-  }
-  
-  Anim.prototype.start = function () {
-  	this.running = true;
-  	start();
-  };
-  
-  Anim.prototype.stop = function () {
-  	this.running = false;
-  };
-  
-  Anim.prototype.destroy = function () {
-  
-  };
-  
-  Anim.prototype.render = function () {
-  	var layer;
-  
-  	// Clear canvas
-  	this.ctx.clearRect(0, 0, this.width, this.height);
-  
-  	for (var i = 0, n = this.frames[this.frame].length; i < n; i++) {
-  		layer = this.frames[this.frame][i];
-  		layer.primitive.render(this.element, layer.options);
-  	}
-  
-  	// Loop frame count
-  	this.frame = (this.frame + 1) % this.frames.length;
-  };
-  
-});
 require.register('yr-colours', function(module, exports, require) {
   module.exports = {
   	// Symbols
@@ -2844,6 +2745,22 @@ require.register('primitives/TPrimitive', function(module, exports, require) {
   	STROKE_WIDTH: 4,
   	WIDTH: 100,
   
+  	initialize: function () {
+  		return this;
+  	},
+  
+  	show: function () {
+  
+  	},
+  
+  	hide: function () {
+  
+  	},
+  
+  	move: function (options) {
+  
+  	},
+  
   	/**
   	 * Render primitive in 'element'
   	 * @param {DOMElement} element
@@ -3455,6 +3372,64 @@ require.register('primitives/snowflakePrimitive', function(module, exports, requ
   ).create();  
   
 });
+require.register('primitives/lightningPrimitive', function(module, exports, require) {
+  var svg = require('svg')  
+  	, Trait = require('trait')  
+  	, TPrimitive = require('primitives/TPrimitive')  
+    
+  	, FILL_COLOUR = require('yr-colours').LIGHTNING  
+    
+  	, TLightningPrimitive;  
+    
+  TLightningPrimitive = Trait({  
+  	/**  
+  	 * Render svg version  
+  	 * @param {DOMElement} element  
+  	 * @param {Object} options  
+  	 * @returns {String}  
+  	 */  
+  	renderSVG: function (element, options) {  
+  		svg.appendChild(  
+  			element,  
+  			'use',  
+  			this.getUseAttributes('#lightning', options)  
+  		);  
+  	},  
+    
+  	/**  
+  	 * Render canvas version  
+  	 * @param {DOMElement} element  
+  	 * @param {Object} options  
+  	 */  
+  	renderCanvas: function (element, options) {  
+  		var ctx = element.getContext('2d');  
+    
+  		// Fill  
+  		ctx.save();  
+  		ctx.translate(options.x, options.y)  
+  		ctx.scale(options.scale, options.scale);  
+    
+  		ctx.fillStyle = FILL_COLOUR;  
+  		ctx.beginPath();  
+  		ctx.moveTo(10.413,0);  
+  		ctx.lineTo(4.163,12.484);  
+  		ctx.lineTo(12.488,12.484);  
+  		ctx.lineTo(0,25);  
+  		ctx.lineTo(25.001,8.32);  
+  		ctx.lineTo(16.663,8.32);  
+  		ctx.lineTo(24.995,0);  
+  		ctx.lineTo(10.413,0);  
+  		ctx.closePath();  
+  		ctx.fill();  
+  		ctx.restore();  
+  	}  
+  });  
+    
+  module.exports = Trait.compose(  
+  	TPrimitive,  
+  	TLightningPrimitive  
+  ).create();
+});
 require.register('primitives/fogPrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, Trait = require('trait')  
@@ -3544,63 +3519,147 @@ require.register('primitives/fogPrimitive', function(module, exports, require) {
   	TFogPrimitive  
   ).create();
 });
-require.register('primitives/lightningPrimitive', function(module, exports, require) {
-  var svg = require('svg')  
-  	, Trait = require('trait')  
-  	, TPrimitive = require('primitives/TPrimitive')  
-    
-  	, FILL_COLOUR = require('yr-colours').LIGHTNING  
-    
-  	, TLightningPrimitive;  
-    
-  TLightningPrimitive = Trait({  
-  	/**  
-  	 * Render svg version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 * @returns {String}  
-  	 */  
-  	renderSVG: function (element, options) {  
-  		svg.appendChild(  
-  			element,  
-  			'use',  
-  			this.getUseAttributes('#lightning', options)  
-  		);  
-  	},  
-    
-  	/**  
-  	 * Render canvas version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 */  
-  	renderCanvas: function (element, options) {  
-  		var ctx = element.getContext('2d');  
-    
-  		// Fill  
-  		ctx.save();  
-  		ctx.translate(options.x, options.y)  
-  		ctx.scale(options.scale, options.scale);  
-    
-  		ctx.fillStyle = FILL_COLOUR;  
-  		ctx.beginPath();  
-  		ctx.moveTo(10.413,0);  
-  		ctx.lineTo(4.163,12.484);  
-  		ctx.lineTo(12.488,12.484);  
-  		ctx.lineTo(0,25);  
-  		ctx.lineTo(25.001,8.32);  
-  		ctx.lineTo(16.663,8.32);  
-  		ctx.lineTo(24.995,0);  
-  		ctx.lineTo(10.413,0);  
-  		ctx.closePath();  
-  		ctx.fill();  
-  		ctx.restore();  
-  	}  
-  });  
-    
-  module.exports = Trait.compose(  
-  	TPrimitive,  
-  	TLightningPrimitive  
-  ).create();
+require.register('animator', function(module, exports, require) {
+  var anims = {}
+  	, length = 0
+  	, uid = 1
+  	, last = 0
+  	, running = false
+  
+  	, FRAME_DURATION = 2000
+  	, TRANSITION_DURATION = 250;
+  
+  module.exports = function (element, frames, options) {
+  	if (!element) return;
+  
+  	var anim = new Anim(uid++, element, frames, options);
+  	anims[anim.id] = anim;
+  	length++;
+  	return anim;
+  };
+  
+  function start () {
+  	if (!running) {
+  		running = true;
+  		tick = 0;
+  		last = Date.now();
+  		onTick();
+  	}
+  }
+  
+  function stop () {
+  	if (running) {
+  		running = false;
+  		for (var id in anims) {
+  			anims[id].running = false;
+  		}
+  	}
+  }
+  
+  function onTick (time) {
+  	var now = Date.now()
+  		, tick = now - last;
+  
+  	if (tick >= FRAME_DURATION) {
+  		last = now;
+  		for (var id in anims) {
+  			if (anims[id].running) anims[id].render();
+  		}
+  	}
+  
+  	// Loop
+  	if (running) window.requestAnimationFrame(onTick);
+  };
+  
+  function Anim (id, element, frames, options) {
+  	this.id = id;
+  	this.element = element;
+  	this.frame = 0;
+  	this.frames = frames;
+  	this.ctx = element.getContext('2d');
+  	this.width = options.width;
+  	this.height = options.height;
+  	this.running = false;
+  	this.layers = {
+  		layer0: require('primitives/sunPrimitive').initialize(),
+  		layer1: require('primitives/moonPrimitive').initialize(),
+  		layer2: require('primitives/cloudPrimitive').initialize(),
+  		layer3: require('./primitives/cloudPrimitive').initialize(),
+  		layer4: require('primitives/raindropPrimitive').initialize(),
+  		layer5: require('./primitives/raindropPrimitive').initialize(),
+  		layer6: require('./primitives/raindropPrimitive').initialize(),
+  		layer7: require('primitives/sleetPrimitive').initialize(),
+  		layer8: require('./primitives/sleetPrimitive').initialize(),
+  		layer9: require('./primitives/sleetPrimitive').initialize(),
+  		layer10: require('primitives/snowflakePrimitive').initialize(),
+  		layer11: require('./primitives/snowflakePrimitive').initialize(),
+  		layer12: require('./primitives/snowflakePrimitive').initialize(),
+  		layer13: require('primitives/lightningPrimitive').initialize(),
+  		layer14: require('primitives/fogPrimitive').initialize(),
+  	}
+  
+  	for (var i = 0, n = this.frames.length; i < n; i++) {
+  		for (var j = 0, k = this.frames[i].length; j < k; j++) {
+  			var layer = this.frames[i][j];
+  			switch (layer.primitive) {
+  				case 'sun':
+  					layer.layer = 'layer0';
+  					break;
+  				case 'moon':
+  					layer.layer = 'layer1';
+  					break;
+  				case 'cloud':
+  					layer.layer = layer.flip ? 'layer2' : 'layer3';
+  					break;
+  				case 'raindrop':
+  					layer.layer = 'layer' + (j + 2);
+  					break;
+  				case 'sleet':
+  					layer.layer = 'layer' + (j + 5);
+  					break;
+  				case 'snowflake':
+  					layer.layer = 'layer' + (j + 8);
+  					break;
+  				case 'lightning':
+  					layer.layer = 'layer13';
+  					break;
+  				case 'fog':
+  					layer.layer = 'layer14';
+  					break;
+  			}
+  		}
+  	}
+  
+  	console.dir(this.frames)
+  }
+  
+  Anim.prototype.start = function () {
+  	this.running = true;
+  	start();
+  };
+  
+  Anim.prototype.stop = function () {
+  	this.running = false;
+  };
+  
+  Anim.prototype.destroy = function () {
+  
+  };
+  
+  Anim.prototype.render = function () {
+  	var layer;
+  
+  	// Clear canvas
+  	this.ctx.clearRect(0, 0, this.width, this.height);
+  
+  	for (var i = 0, n = this.frames[this.frame].length; i < n; i++) {
+  		layer = this.frames[this.frame][i];
+  		// layer.primitive.render(this.element, layer.options);
+  	}
+  
+  	// Loop frame count
+  	this.frame = (this.frame + 1) % this.frames.length;
+  };
 });
 require.register('weatherSymbol', function(module, exports, require) {
   // Convert with http://www.professorcloud.com/svg-to-canvas/
@@ -3625,24 +3684,7 @@ require.register('weatherSymbol', function(module, exports, require) {
   	, DEFAULT_BG = '#ffffff'
   	, SVG = 'svg'
   	, CANVAS = 'canvas'
-  	, IMG = 'img'
-  	, LAYERS = {
-  			layer0: 'moon',
-  			layer1: 'sun',
-  			layer2: 'cloud:1',
-  			layer3: 'cloud:2',
-  			layer4: 'raindrop:1',
-  			layer5: 'raindrop:2',
-  			layer6: 'raindrop:3',
-  			layer7: 'sleet:1',
-  			layer8: 'sleet:2',
-  			layer9: 'sleet:3',
-  			layer10: 'snowflake:1',
-  			layer11: 'snowflake:2',
-  			layer12: 'snowflake:3',
-  			layer13: 'lightning',
-  			layer14: 'fog'
-  		};
+  	, IMG = 'img';
   
   /**
    * Render symbol in 'container' with 'options'
@@ -3697,12 +3739,8 @@ require.register('weatherSymbol', function(module, exports, require) {
   
   		if (animated) {
   			frames = map(id.split(':'), function (id) {
-  
   				return map(formulae[id], function (layer) {
-  					return {
-  						primitive: primitives[layer.primitive],
-  						options: getLayerOptions(layer, clone(layerOptions))
-  					}
+  					return getLayerOptions(layer, clone(layerOptions))
   				});
   			});
   			animator(element, frames, layerOptions)
@@ -3733,6 +3771,7 @@ require.register('weatherSymbol', function(module, exports, require) {
    * @returns {Object}
    */
   function getLayerOptions (layer, options) {
+  	options.primitive = layer.primitive;
   	options.x = Math.round(layer.x * options.scale);
   	options.y = Math.round(layer.y * options.scale);
   	options.scale = (layer.scale || 1) * options.scale;

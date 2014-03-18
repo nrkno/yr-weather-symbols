@@ -3,10 +3,9 @@ var anims = {}
 	, uid = 1
 	, last = 0
 	, running = false
-	, transitioning = false
 
-	, FRAME_RATE = 1000
-	, TRANSITION = 250;
+	, FRAME_DURATION = 2000
+	, TRANSITION_DURATION = 250;
 
 module.exports = function (element, frames, options) {
 	if (!element) return;
@@ -39,11 +38,7 @@ function onTick (time) {
 	var now = Date.now()
 		, tick = now - last;
 
-	if (transitioning && tick < TRANSITION) {
-		for (var id in anims) {
-			if (anims[id].running) anims[id].render(tick/TRANSITION);
-		}
-	} else if (tick >= FRAME_RATE) {
+	if (tick >= FRAME_DURATION) {
 		last = now;
 		for (var id in anims) {
 			if (anims[id].running) anims[id].render();
@@ -57,14 +52,63 @@ function onTick (time) {
 function Anim (id, element, frames, options) {
 	this.id = id;
 	this.element = element;
-	this.frames = frames;
 	this.frame = 0;
+	this.frames = frames;
 	this.ctx = element.getContext('2d');
 	this.width = options.width;
 	this.height = options.height;
 	this.running = false;
+	this.layers = {
+		layer0: require('./primitives/sunPrimitive').initialize(),
+		layer1: require('./primitives/moonPrimitive').initialize(),
+		layer2: require('./primitives/cloudPrimitive').initialize(),
+		layer3: require('./primitives/cloudPrimitive').initialize(),
+		layer4: require('./primitives/raindropPrimitive').initialize(),
+		layer5: require('./primitives/raindropPrimitive').initialize(),
+		layer6: require('./primitives/raindropPrimitive').initialize(),
+		layer7: require('./primitives/sleetPrimitive').initialize(),
+		layer8: require('./primitives/sleetPrimitive').initialize(),
+		layer9: require('./primitives/sleetPrimitive').initialize(),
+		layer10: require('./primitives/snowflakePrimitive').initialize(),
+		layer11: require('./primitives/snowflakePrimitive').initialize(),
+		layer12: require('./primitives/snowflakePrimitive').initialize(),
+		layer13: require('./primitives/lightningPrimitive').initialize(),
+		layer14: require('./primitives/fogPrimitive').initialize(),
+	}
 
-	this.render();
+	for (var i = 0, n = this.frames.length; i < n; i++) {
+		for (var j = 0, k = this.frames[i].length; j < k; j++) {
+			var layer = this.frames[i][j];
+			switch (layer.primitive) {
+				case 'sun':
+					layer.layer = 'layer0';
+					break;
+				case 'moon':
+					layer.layer = 'layer1';
+					break;
+				case 'cloud':
+					layer.layer = layer.flip ? 'layer2' : 'layer3';
+					break;
+				case 'raindrop':
+					layer.layer = 'layer' + (j + 2);
+					break;
+				case 'sleet':
+					layer.layer = 'layer' + (j + 5);
+					break;
+				case 'snowflake':
+					layer.layer = 'layer' + (j + 8);
+					break;
+				case 'lightning':
+					layer.layer = 'layer13';
+					break;
+				case 'fog':
+					layer.layer = 'layer14';
+					break;
+			}
+		}
+	}
+
+	console.dir(this.frames)
 }
 
 Anim.prototype.start = function () {
@@ -88,7 +132,7 @@ Anim.prototype.render = function () {
 
 	for (var i = 0, n = this.frames[this.frame].length; i < n; i++) {
 		layer = this.frames[this.frame][i];
-		layer.primitive.render(this.element, layer.options);
+		// layer.primitive.render(this.element, layer.options);
 	}
 
 	// Loop frame count

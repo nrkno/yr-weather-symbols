@@ -5,6 +5,22 @@ module.exports = Trait({
 	STROKE_WIDTH: 4,
 	WIDTH: 100,
 
+	initialize: function () {
+		return this;
+	},
+
+	show: function () {
+
+	},
+
+	hide: function () {
+
+	},
+
+	move: function (options) {
+
+	},
+
 	/**
 	 * Render primitive in 'element'
 	 * @param {DOMElement} element

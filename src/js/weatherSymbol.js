@@ -20,24 +20,7 @@ var svg = require('svg')
 	, DEFAULT_BG = '#ffffff'
 	, SVG = 'svg'
 	, CANVAS = 'canvas'
-	, IMG = 'img'
-	, LAYERS = {
-			layer0: 'moon',
-			layer1: 'sun',
-			layer2: 'cloud:1',
-			layer3: 'cloud:2',
-			layer4: 'raindrop:1',
-			layer5: 'raindrop:2',
-			layer6: 'raindrop:3',
-			layer7: 'sleet:1',
-			layer8: 'sleet:2',
-			layer9: 'sleet:3',
-			layer10: 'snowflake:1',
-			layer11: 'snowflake:2',
-			layer12: 'snowflake:3',
-			layer13: 'lightning',
-			layer14: 'fog'
-		};
+	, IMG = 'img';
 
 /**
  * Render symbol in 'container' with 'options'
@@ -92,12 +75,8 @@ module.exports = function (container, options) {
 
 		if (animated) {
 			frames = map(id.split(':'), function (id) {
-
 				return map(formulae[id], function (layer) {
-					return {
-						primitive: primitives[layer.primitive],
-						options: getLayerOptions(layer, clone(layerOptions))
-					}
+					return getLayerOptions(layer, clone(layerOptions))
 				});
 			});
 			animator(element, frames, layerOptions)
@@ -128,6 +107,7 @@ module.exports = function (container, options) {
  * @returns {Object}
  */
 function getLayerOptions (layer, options) {
+	options.primitive = layer.primitive;
 	options.x = Math.round(layer.x * options.scale);
 	options.y = Math.round(layer.y * options.scale);
 	options.scale = (layer.scale || 1) * options.scale;
