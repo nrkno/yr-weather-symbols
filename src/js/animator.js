@@ -1,5 +1,3 @@
-require('requestAnimationFrame');
-
 var anims = {}
 	, length = 0
 	, uid = 1

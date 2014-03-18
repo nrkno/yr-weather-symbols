@@ -6,11 +6,11 @@
     "svg": "git://github.com/YR/svg",
     "capabilities": "git://github.com/YR/capabilities",
     "yr-colours": "git://github.com/YR/yr-colours",
-    "requestAnimationFrame": "git://github.com/YR/requestAnimationFrame",
     "lodash.map": "^2.4.0",
     "lodash.clone": "^2.4.0"
   },
   "devDependencies": {
+    "requestAnimationFrame": "git://github.com/YR/requestAnimationFrame",
     "dustjs-linkedin": "^2.3.3",
     "classlist": "git://github.com/YR/classlist",
     "style": "git://github.com/YR/style",
