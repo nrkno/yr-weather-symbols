@@ -165,7 +165,7 @@ require.register('svg', function(module, exports, require) {
   };
 });
 require.register('dust', function(module, exports, require) {
-  /*! Dust - Asynchronous Templating - v2.3.3
+  /*! Dust - Asynchronous Templating - v2.3.4
   * http://linkedin.github.io/dustjs/
   * Copyright (c) 2014 Aleksander Williams; Released under the MIT License */
   (function(root) {
@@ -177,17 +177,35 @@ require.register('dust', function(module, exports, require) {
         DEBUG = 'DEBUG',
         loggingLevels = [DEBUG, INFO, WARN, ERROR, NONE],
         EMPTY_FUNC = function() {},
-        logger = EMPTY_FUNC,
-        loggerContext = this;
+        logger = {},
+        originalLog,
+        loggerContext;
   
     dust.debugLevel = NONE;
     dust.silenceErrors = false;
   
-    // Try to find the console logger in global scope
+    // Try to find the console in global scope
     if (root && root.console && root.console.log) {
-      logger = root.console.log;
       loggerContext = root.console;
+      originalLog = root.console.log;
     }
+  
+    // robust logger for node.js, modern browsers, and IE <= 9.
+    logger.log = loggerContext ? function() {
+        // Do this for normal browsers
+        if (typeof originalLog === 'function') {
+          logger.log = function() {
+            originalLog.apply(loggerContext, arguments);
+          };
+        } else {
+          // Do this for IE <= 9
+          logger.log = function() {
+            var message = Array.prototype.slice.apply(arguments).join(' ');
+            originalLog(message);
+          };
+        }
+        logger.log.apply(this, arguments);
+    } : function() { /* no op */ };
   
     /**
      * If dust.isDebug is true, Log dust debug statements, info statements, warning statements, and errors.
@@ -198,17 +216,17 @@ require.register('dust', function(module, exports, require) {
      */
     dust.log = function(message, type) {
       if(dust.isDebug && dust.debugLevel === NONE) {
-        logger.call(loggerContext, '[!!!DEPRECATION WARNING!!!]: dust.isDebug is deprecated.  Set dust.debugLevel instead to the level of logging you want ["debug","info","warn","error","none"]');
+        logger.log('[!!!DEPRECATION WARNING!!!]: dust.isDebug is deprecated.  Set dust.debugLevel instead to the level of logging you want ["debug","info","warn","error","none"]');
         dust.debugLevel = INFO;
       }
   
       type = type || INFO;
-      if (loggingLevels.indexOf(type) >= loggingLevels.indexOf(dust.debugLevel)) {
+      if (dust.indexInArray(loggingLevels, type) >= dust.indexInArray(loggingLevels, dust.debugLevel)) {
         if(!dust.logQueue) {
           dust.logQueue = [];
         }
         dust.logQueue.push({message: message, type: type});
-        logger.call(loggerContext, '[DUST ' + type + ']: ' + message);
+        logger.log('[DUST ' + type + ']: ' + message);
       }
   
       if (!dust.silenceErrors && type === ERROR) {
@@ -228,7 +246,7 @@ require.register('dust', function(module, exports, require) {
      * @public
      */
     dust.onError = function(error, chunk) {
-      logger.call(loggerContext, '[!!!DEPRECATION WARNING!!!]: dust.onError will no longer return a chunk object.');
+      logger.log('[!!!DEPRECATION WARNING!!!]: dust.onError will no longer return a chunk object.');
       dust.log(error.message || error, ERROR);
       if(!dust.silenceErrors) {
         throw error;
@@ -325,6 +343,40 @@ require.register('dust', function(module, exports, require) {
         return Object.prototype.toString.call(arr) === '[object Array]';
       };
     }
+  
+    // indexOf shim for arrays for IE <= 8
+    // source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
+    dust.indexInArray = function(arr, item, fromIndex) {
+      fromIndex = +fromIndex || 0;
+      if (Array.prototype.indexOf) {
+        return arr.indexOf(item, fromIndex);
+      } else {
+      if ( arr === undefined || arr === null ) {
+        throw new TypeError( 'cannot call method "indexOf" of null' );
+      }
+  
+      var length = arr.length; // Hack to convert object.length to a UInt32
+  
+      if (Math.abs(fromIndex) === Infinity) {
+        fromIndex = 0;
+      }
+  
+      if (fromIndex < 0) {
+        fromIndex += length;
+        if (fromIndex < 0) {
+          fromIndex = 0;
+        }
+      }
+  
+      for (;fromIndex < length; fromIndex++) {
+        if (arr[fromIndex] === item) {
+          return fromIndex;
+        }
+      }
+  
+      return -1;
+      }
+    };
   
     dust.nextTick = (function() {
       return function(callback) {
@@ -469,9 +521,14 @@ require.register('dust', function(module, exports, require) {
           } else {
             ctx = this.global ? this.global[first] : undefined;
           }
-        } else {
+        } else if (ctx) {
           // if scope is limited by a leading dot, don't search up the tree
-          ctx = ctx.head[first];
+          if(ctx.head) {
+            ctx = ctx.head[first];
+          } else {
+            //context's head is empty, value we are searching for is not defined
+            ctx = undefined;
+          }
         }
   
         while (ctx && i < len) {
@@ -1002,7 +1059,6 @@ require.register('dust', function(module, exports, require) {
     }
   
   })(this);
-  
   
 });
 require.register('symbolGroup', function(module, exports, require) {
@@ -3839,17 +3895,17 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   			ctx.fillStyle = RAY_COLOUR;  
   			ctx.beginPath();  
   			ctx.moveTo(23.6,19.8);  
-  			ctx.lineTo(13.600000000000001,36.8);  
-  			ctx.bezierCurveTo(12.600000000000001,38.599999999999994,14.600000000000001,40.599999999999994,16.3,39.5);  
+  			ctx.lineTo(13.6,36.8);  
+  			ctx.bezierCurveTo(12.6,38.6,14.6,40.6,16.3,39.5);  
   			ctx.lineTo(33.3,29.5);  
   			ctx.bezierCurveTo(29.2,27.3,25.8,23.9,23.6,19.8);  
   			ctx.moveTo(66.6,19.8);  
-  			ctx.bezierCurveTo(64.39999999999999,23.9,60.99999999999999,27.3,56.89999999999999,29.5);  
-  			ctx.lineTo(73.89999999999999,39.5);  
-  			ctx.bezierCurveTo(75.69999999999999,40.5,77.69999999999999,38.5,76.6,36.8);  
+  			ctx.bezierCurveTo(64.4,23.9,61,27.3,56.9,29.5);  
+  			ctx.lineTo(73.9,39.5);  
+  			ctx.bezierCurveTo(75.7,40.5,77.7,38.5,76.6,36.8);  
   			ctx.lineTo(66.6,19.8);  
   			ctx.moveTo(45.1,32.6);  
-  			ctx.bezierCurveTo(42.7,32.6,40.4,32.300000000000004,38.2,31.6);  
+  			ctx.bezierCurveTo(42.7,32.6,40.4,32.3,38.2,31.6);  
   			ctx.lineTo(43.2,50.7);  
   			ctx.bezierCurveTo(43.7,52.7,46.5,52.7,47.1,50.7);  
   			ctx.lineTo(52.1,31.6);  
@@ -3857,8 +3913,8 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   			ctx.moveTo(69.6,8);  
   			ctx.bezierCurveTo(69.6,8,69.6,8,69.6,8);  
   			ctx.bezierCurveTo(69.6,10.5,69.3,12.8,68.6,15);  
-  			ctx.lineTo(87.69999999999999,10);  
-  			ctx.bezierCurveTo(88.69999999999999,9.7,89.19999999999999,8.9,89.19999999999999,8);  
+  			ctx.lineTo(87.7,10);  
+  			ctx.bezierCurveTo(88.7,9.7,89.2,8.9,89.2,8);  
   			ctx.lineTo(69.6,8);  
   			ctx.moveTo(20.6,8);  
   			ctx.lineTo(1,8);  
@@ -3875,9 +3931,9 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   			ctx.moveTo(24.6,8);  
   			ctx.bezierCurveTo(24.6,8,24.6,8,24.6,8);  
   			ctx.bezierCurveTo(24.6,19.4,33.8,28.6,45.1,28.6);  
-  			ctx.bezierCurveTo(56.400000000000006,28.6,65.6,19.400000000000002,65.6,8.100000000000001);  
-  			ctx.bezierCurveTo(65.6,8.100000000000001,65.6,8.100000000000001,65.6,8.000000000000002);  
-  			ctx.lineTo(24.6,8.000000000000002);  
+  			ctx.bezierCurveTo(56.4,28.6,65.6,19.4,65.6,8.1);  
+  			ctx.bezierCurveTo(65.6,8.1,65.6,8.1,65.6,8);  
+  			ctx.lineTo(24.6,8);  
   			ctx.closePath();  
   			ctx.fill();  
     
@@ -3886,32 +3942,32 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   			ctx.fillStyle = RAY_COLOUR;  
   			ctx.beginPath();  
   			ctx.moveTo(23.5,33.2);  
-  			ctx.bezierCurveTo(25.7,29.1,29.1,25.700000000000003,33.2,23.500000000000004);  
-  			ctx.lineTo(16.200000000000003,13.500000000000004);  
-  			ctx.bezierCurveTo(14.400000000000002,12.500000000000004,12.400000000000002,14.500000000000004,13.500000000000004,16.200000000000003);  
+  			ctx.bezierCurveTo(25.7,29.1,29.1,25.7,33.2,23.5);  
+  			ctx.lineTo(16.2,13.5);  
+  			ctx.bezierCurveTo(14.4,12.5,12.4,14.5,13.5,16.2);  
   			ctx.lineTo(23.5,33.2);  
   			ctx.moveTo(45,20.5);  
   			ctx.bezierCurveTo(47.4,20.5,49.7,20.8,51.9,21.5);  
-  			ctx.lineTo(46.9,2.3999999999999986);  
-  			ctx.bezierCurveTo(46.4,0.3999999999999986,43.6,0.3999999999999986,43,2.3999999999999986);  
+  			ctx.lineTo(46.9,2.4);  
+  			ctx.bezierCurveTo(46.4,0.4,43.6,0.4,43,2.4);  
   			ctx.lineTo(38,21.5);  
   			ctx.bezierCurveTo(40.3,20.8,42.6,20.5,45,20.5);  
   			ctx.moveTo(87.6,43.1);  
   			ctx.lineTo(68.5,38.1);  
-  			ctx.bezierCurveTo(69.1,40.300000000000004,69.5,42.6,69.5,45);  
+  			ctx.bezierCurveTo(69.1,40.3,69.5,42.6,69.5,45);  
   			ctx.bezierCurveTo(69.5,47.4,69.2,49.7,68.5,51.9);  
   			ctx.lineTo(87.6,46.9);  
   			ctx.bezierCurveTo(89.6,46.4,89.6,43.6,87.6,43.1);  
   			ctx.moveTo(20.5,45);  
   			ctx.bezierCurveTo(20.5,42.6,20.8,40.3,21.5,38.1);  
-  			ctx.lineTo(2.3999999999999986,43.1);  
-  			ctx.bezierCurveTo(0.3999999999999986,43.6,0.3999999999999986,46.4,2.3999999999999986,47);  
+  			ctx.lineTo(2.4,43.1);  
+  			ctx.bezierCurveTo(0.4,43.6,0.4,46.4,2.4,47);  
   			ctx.lineTo(21.5,52);  
   			ctx.bezierCurveTo(20.8,49.7,20.5,47.4,20.5,45);  
   			ctx.moveTo(66.5,33.2);  
-  			ctx.lineTo(76.5,16.200000000000003);  
-  			ctx.bezierCurveTo(77.5,14.400000000000002,75.5,12.400000000000002,73.8,13.500000000000004);  
-  			ctx.lineTo(56.8,23.500000000000004);  
+  			ctx.lineTo(76.5,16.2);  
+  			ctx.bezierCurveTo(77.5,14.4,75.5,12.4,73.8,13.5);  
+  			ctx.lineTo(56.8,23.5);  
   			ctx.bezierCurveTo(60.9,25.8,64.2,29.1,66.5,33.2);  
   			ctx.moveTo(23.5,56.8);  
   			ctx.lineTo(13.5,73.8);  
@@ -3987,7 +4043,7 @@ require.register('primitives/moonPrimitive', function(module, exports, require) 
   		ctx.fillStyle = FILL_COLOUR;  
   		ctx.beginPath();  
   		ctx.moveTo(23,20);  
-  		ctx.bezierCurveTo(23,12.322,25.887999999999998,5.321999999999999,30.631,0.015999999999998238);  
+  		ctx.bezierCurveTo(23,12.322,25.89,5.3,30.631,0);  
   		ctx.bezierCurveTo(30.421,0.012,30.212,0,30,0);  
   		ctx.bezierCurveTo(13.432,0,0,13.432,0,30);  
   		ctx.bezierCurveTo(0,46.568,13.432,60,30,60);  
@@ -4048,33 +4104,50 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
   		// Mask  
   		ctx.save();  
   		ctx.globalCompositeOperation = 'destination-out';  
-  		ctx.beginPath();  
-  		ctx.moveTo(93.7,33.7);  
-  		ctx.bezierCurveTo(92.60000000000001,26.700000000000003,87.7,18.900000000000002,77.6,17.000000000000004);  
-  		ctx.bezierCurveTo(74.9,6.9,66.5,0.3,55.7,0);  
-  		ctx.bezierCurveTo(55.400000000000006,0,55.2,0,54.900000000000006,0);  
-  		ctx.bezierCurveTo(44.5,0,36.2,5.7,32.8,15.1);  
-  		ctx.bezierCurveTo(32.3,15.1,31.9,15,31.4,15);  
-  		ctx.bezierCurveTo(24.9,15,17.2,18.9,14.799999999999997,26.2);  
-  		ctx.bezierCurveTo(5.9,26.9,0,34.5,0,41.6);  
-  		ctx.bezierCurveTo(0,52,7.8,58,21.5,58);  
-  		ctx.lineTo(65.1,58);  
-  		ctx.bezierCurveTo(70.69999999999999,58,78.5,57.5,83.3,55.2);  
-  		ctx.bezierCurveTo(91,51.5,95.2,42.8,93.7,33.7);  
-  		ctx.closePath();  
-  		ctx.fill();  
+  		this.renderCanvasStrokeShape(ctx);  
   		ctx.restore();  
     
   		// Fill  
   		ctx.strokeStyle = options.bg;  
   		ctx.lineWidth = this.STROKE_WIDTH;  
   		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
+  		this.renderCanvasFillShape(ctx);  
+  		ctx.restore();  
+  	},  
+    
+  	/**  
+  	 * Render canvas stroke shape  
+  	 * @param {Context} ctx  
+  	 */  
+  	renderCanvasStrokeShape: function (ctx) {  
+  		ctx.beginPath();  
+  		ctx.moveTo(93.7,33.7);  
+  		ctx.bezierCurveTo(92.6,26.7,87.7,18.9,77.6,17);  
+  		ctx.bezierCurveTo(74.9,6.9,66.5,0.3,55.7,0);  
+  		ctx.bezierCurveTo(55.4,0,55.2,0,54.9,0);  
+  		ctx.bezierCurveTo(44.5,0,36.2,5.7,32.8,15.1);  
+  		ctx.bezierCurveTo(32.3,15.1,31.9,15,31.4,15);  
+  		ctx.bezierCurveTo(24.9,15,17.2,18.9,14.8,26.2);  
+  		ctx.bezierCurveTo(5.9,26.9,0,34.5,0,41.6);  
+  		ctx.bezierCurveTo(0,52,7.8,58,21.5,58);  
+  		ctx.lineTo(65.1,58);  
+  		ctx.bezierCurveTo(70.7,58,78.5,57.5,83.3,55.2);  
+  		ctx.bezierCurveTo(91,51.5,95.2,42.8,93.7,33.7);  
+  		ctx.closePath();  
+  		ctx.fill();  
+  	},  
+    
+  	/**  
+  	 * Render canvas fill shape  
+  	 * @param {Context} ctx  
+  	 */  
+  	renderCanvasFillShape: function (ctx) {  
   		ctx.beginPath();  
   		ctx.moveTo(74.3,20.6);  
   		ctx.bezierCurveTo(72.4,8.3,63.1,4,54.9,4);  
-  		ctx.bezierCurveTo(45.9,4,38,9.4,35.599999999999994,19.7);  
-  		ctx.bezierCurveTo(27.699999999999996,17.099999999999998,18.599999999999994,22.599999999999998,18.099999999999994,30.299999999999997);  
-  		ctx.bezierCurveTo(14.399999999999995,29.499999999999996,4.099999999999994,31.599999999999998,4.099999999999994,41.599999999999994);  
+  		ctx.bezierCurveTo(45.9,4,38,9.4,35.6,19.7);  
+  		ctx.bezierCurveTo(27.7,17.1,18.6,22.6,18.1,30.3);  
+  		ctx.bezierCurveTo(14.4,29.5,4.1,31.6,4.1,41.6);  
   		ctx.bezierCurveTo(4,51.9,13.5,54,21.5,54);  
   		ctx.lineTo(65.1,54);  
   		ctx.bezierCurveTo(72.5,54,78.3,53.2,81.5,51.6);  
@@ -4082,8 +4155,7 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
   		ctx.bezierCurveTo(88.8,28.5,84.6,21.3,74.3,20.6);  
   		ctx.closePath();  
   		ctx.fill();  
-  		ctx.restore();  
-  	}  
+  	},  
   });  
     
   module.exports = Trait.compose(  
@@ -4205,12 +4277,12 @@ require.register('primitives/sleetPrimitive', function(module, exports, require)
   		ctx.fillStyle = FILL_COLOUR;
   		ctx.beginPath();
   		ctx.moveTo(19.9,16.6);
-  		ctx.bezierCurveTo(18.099999999999998,18.900000000000002,16.5,22.1,15.999999999999998,25.5);
-  		ctx.bezierCurveTo(15.899999999999999,26,15.399999999999999,26.2,14.999999999999998,25.9);
-  		ctx.bezierCurveTo(12.7,23.799999999999997,10.2,22.599999999999998,6.499999999999998,22.099999999999998);
-  		ctx.bezierCurveTo(6.099999999999998,21.999999999999996,5.899999999999999,21.599999999999998,6.099999999999998,21.299999999999997);
+  		ctx.bezierCurveTo(18.1,18.9,16.5,22.1,16,25.5);
+  		ctx.bezierCurveTo(15.9,26,15.4,26.2,15,25.9);
+  		ctx.bezierCurveTo(12.7,23.8,10.2,22.6,6.5,22.1);
+  		ctx.bezierCurveTo(6.1,22,5.9,21.6,6.1,21.3);
   		ctx.bezierCurveTo(8.4,17,8.6,10.1,7.8,5);
-  		ctx.bezierCurveTo(10.5,9.2,14.899999999999999,14,19.6,15.7);
+  		ctx.bezierCurveTo(10.5,9.2,14.9,14,19.6,15.7);
   		ctx.bezierCurveTo(20,15.8,20.1,16.3,19.9,16.6);
   		ctx.closePath();
   		ctx.fill();
@@ -4273,43 +4345,43 @@ require.register('primitives/snowflakePrimitive', function(module, exports, requ
   		ctx.fillStyle = FILL_COLOUR;  
   		ctx.beginPath();  
   		ctx.moveTo(6.2,6.9);  
-  		ctx.lineTo(7.300000000000001,10.7);  
-  		ctx.bezierCurveTo(7.000000000000001,10.899999999999999,6.700000000000001,11.2,6.4,11.5);  
+  		ctx.lineTo(7.3,10.7);  
+  		ctx.bezierCurveTo(7,10.9,6.7,11.2,6.4,11.5);  
   		ctx.bezierCurveTo(6,11.7,5.8,12,5.6,12.4);  
-  		ctx.lineTo(1.7999999999999998,11.4);  
+  		ctx.lineTo(1.8,11.4);  
   		ctx.bezierCurveTo(1,11.2,0.2,11.7,0,12.5);  
   		ctx.bezierCurveTo(-0.2,13.3,0.3,14.1,1.1,14.3);  
   		ctx.lineTo(4.9,15.3);  
-  		ctx.bezierCurveTo(4.9,16.1,5.2,16.900000000000002,5.5,17.6);  
-  		ctx.lineTo(2.8,20.400000000000002);  
-  		ctx.bezierCurveTo(2.1999999999999997,21.000000000000004,2.1999999999999997,21.900000000000002,2.8,22.500000000000004);  
-  		ctx.bezierCurveTo(3.4,23.100000000000005,4.3,23.100000000000005,4.9,22.500000000000004);  
-  		ctx.lineTo(7.6000000000000005,19.700000000000003);  
-  		ctx.bezierCurveTo(8.3,20.1,9.100000000000001,20.300000000000004,9.9,20.300000000000004);  
-  		ctx.lineTo(10.9,24.100000000000005);  
-  		ctx.bezierCurveTo(11.1,24.900000000000006,11.9,25.300000000000004,12.700000000000001,25.100000000000005);  
-  		ctx.bezierCurveTo(13.500000000000002,24.900000000000006,13.9,24.100000000000005,13.700000000000001,23.300000000000004);  
-  		ctx.lineTo(12.600000000000001,19.500000000000004);  
-  		ctx.bezierCurveTo(12.900000000000002,19.300000000000004,13.3,19.100000000000005,13.600000000000001,18.800000000000004);  
-  		ctx.bezierCurveTo(13.900000000000002,18.500000000000004,14.100000000000001,18.200000000000003,14.3,17.800000000000004);  
-  		ctx.lineTo(18.1,18.800000000000004);  
-  		ctx.bezierCurveTo(18.900000000000002,19.000000000000004,19.700000000000003,18.500000000000004,19.900000000000002,17.700000000000003);  
-  		ctx.bezierCurveTo(20.1,16.900000000000002,19.6,16.1,18.8,15.900000000000002);  
-  		ctx.lineTo(15,14.900000000000002);  
-  		ctx.bezierCurveTo(15,14.100000000000001,14.7,13.300000000000002,14.3,12.600000000000001);  
+  		ctx.bezierCurveTo(4.9,16.1,5.2,16.9,5.5,17.6);  
+  		ctx.lineTo(2.8,20.4);  
+  		ctx.bezierCurveTo(2.2,21,2.2,21.9,2.8,22.5);  
+  		ctx.bezierCurveTo(3.4,23.1,4.3,23.1,4.9,22.5);  
+  		ctx.lineTo(7.6,19.7);  
+  		ctx.bezierCurveTo(8.3,20.1,9.1,20.3,9.9,20.3);  
+  		ctx.lineTo(10.9,24.1);  
+  		ctx.bezierCurveTo(11.1,24.9,11.9,25.3,12.7,25.1);  
+  		ctx.bezierCurveTo(13.5,24.9,13.9,24.1,13.7,23.3);  
+  		ctx.lineTo(12.6,19.5);  
+  		ctx.bezierCurveTo(12.9,19.3,13.3,19.1,13.6,18.8);  
+  		ctx.bezierCurveTo(13.9,18.5,14.1,18.2,14.3,17.8);  
+  		ctx.lineTo(18.1,18.8);  
+  		ctx.bezierCurveTo(18.9,19,19.7,18.5,19.9,17.7);  
+  		ctx.bezierCurveTo(20.1,16.9,19.6,16.1,18.8,15.9);  
+  		ctx.lineTo(15,14.9);  
+  		ctx.bezierCurveTo(15,14.1,14.7,13.3,14.3,12.6);  
   		ctx.lineTo(17,9.8);  
-  		ctx.bezierCurveTo(17.6,9.200000000000001,17.5,8.3,17,7.700000000000001);  
-  		ctx.bezierCurveTo(16.4,7.100000000000001,15.5,7.100000000000001,14.9,7.700000000000001);  
+  		ctx.bezierCurveTo(17.6,9.2,17.5,8.3,17,7.7);  
+  		ctx.bezierCurveTo(16.4,7.1,15.5,7.1,14.9,7.7);  
   		ctx.lineTo(12.2,10.5);  
-  		ctx.bezierCurveTo(11.5,10.1,10.7,9.9,9.899999999999999,9.9);  
+  		ctx.bezierCurveTo(11.5,10.1,10.7,9.9,9.9,9.9);  
   		ctx.lineTo(9,6.1);  
-  		ctx.bezierCurveTo(8.8,5.3,8,4.8999999999999995,7.2,5.1);  
+  		ctx.bezierCurveTo(8.8,5.3,8,4.9,7.2,5.1);  
   		ctx.bezierCurveTo(6.5,5.3,6,6.1,6.2,6.9);  
   		ctx.closePath();  
   		ctx.moveTo(11.8,13.2);  
-  		ctx.bezierCurveTo(12.8,14.2,12.8,15.799999999999999,11.8,16.8);  
-  		ctx.bezierCurveTo(10.8,17.8,9.200000000000001,17.8,8.200000000000001,16.8);  
-  		ctx.bezierCurveTo(7.200000000000001,15.8,7.200000000000001,14.200000000000001,8.200000000000001,13.200000000000001);  
+  		ctx.bezierCurveTo(12.8,14.2,12.8,15.8,11.8,16.8);  
+  		ctx.bezierCurveTo(10.8,17.8,9.2,17.8,8.2,16.8);  
+  		ctx.bezierCurveTo(7.2,15.8,7.2,14.2,8.2,13.2);  
   		ctx.bezierCurveTo(9.2,12.2,10.8,12.2,11.8,13.2);  
   		ctx.closePath();  
   		ctx.fill();  
@@ -4364,8 +4436,8 @@ require.register('primitives/fogPrimitive', function(module, exports, require) {
   		ctx.bezierCurveTo(1.2,42,0,42.9,0,44);  
   		ctx.bezierCurveTo(0,45.1,1.2,46,2.7,46);  
   		ctx.lineTo(82.4,46);  
-  		ctx.bezierCurveTo(83.9,46,85.10000000000001,45.1,85.10000000000001,44);  
-  		ctx.bezierCurveTo(85.10000000000001,42.9,83.8,42,82.3,42);  
+  		ctx.bezierCurveTo(83.9,46,85.1,45.1,85.1,44);  
+  		ctx.bezierCurveTo(85.1,42.9,83.8,42,82.3,42);  
   		ctx.closePath();  
   		ctx.fill();  
     
@@ -4375,7 +4447,7 @@ require.register('primitives/fogPrimitive', function(module, exports, require) {
   		ctx.bezierCurveTo(4.3,50,3,50.9,3,52);  
   		ctx.bezierCurveTo(3,53.1,4.3,54,5.9,54);  
   		ctx.lineTo(80.2,54);  
-  		ctx.bezierCurveTo(81.8,54,83.10000000000001,53.1,83.10000000000001,52);  
+  		ctx.bezierCurveTo(81.8,54,83.1,53.1,83.1,52);  
   		ctx.bezierCurveTo(83,50.9,81.7,50,80.1,50);  
   		ctx.closePath();  
   		ctx.fill();  
@@ -4385,21 +4457,21 @@ require.register('primitives/fogPrimitive', function(module, exports, require) {
   		ctx.lineTo(10.9,58);  
   		ctx.bezierCurveTo(9.3,58,8,58.9,8,60);  
   		ctx.bezierCurveTo(8,61.1,9.3,62,10.9,62);  
-  		ctx.lineTo(80.10000000000001,62);  
-  		ctx.bezierCurveTo(81.7,62,83.00000000000001,61.1,83.00000000000001,60);  
-  		ctx.bezierCurveTo(83.00000000000001,58.9,81.7,58,80.1,58);  
+  		ctx.lineTo(80.1,62);  
+  		ctx.bezierCurveTo(81.7,62,83,61.1,83,60);  
+  		ctx.bezierCurveTo(83,58.9,81.7,58,80.1,58);  
   		ctx.closePath();  
   		ctx.fill();  
     
   		ctx.beginPath();  
   		ctx.moveTo(51.2,0);  
-  		ctx.bezierCurveTo(42.1,-0.3,33.6,4.8,30.700000000000003,14.6);  
-  		ctx.bezierCurveTo(24.800000000000004,13.2,15.400000000000002,16.9,13.700000000000003,25);  
+  		ctx.bezierCurveTo(42.1,-0.3,33.6,4.8,30.7,14.6);  
+  		ctx.bezierCurveTo(24.8,13.2,15.4,16.9,13.7,25);  
   		ctx.bezierCurveTo(8.2,24.9,1.2,29,0.1,36);  
   		ctx.bezierCurveTo(0,37,0.7,37.9,1.7,37.9);  
   		ctx.lineTo(84,37.9);  
-  		ctx.bezierCurveTo(85,37.9,85.8,37.199999999999996,85.9,36.199999999999996);  
-  		ctx.bezierCurveTo(86.9,27.299999999999997,81.80000000000001,17.499999999999996,70.7,16.099999999999994);  
+  		ctx.bezierCurveTo(85,37.9,85.8,37.2,85.9,36.2);  
+  		ctx.bezierCurveTo(86.9,27.3,81.8,17.5,70.7,16.1);  
   		ctx.bezierCurveTo(68.5,5.6,60.2,0.3,51.2,0);  
   		ctx.closePath();  
   		ctx.fill();  
@@ -4456,7 +4528,7 @@ require.register('primitives/lightningPrimitive', function(module, exports, requ
   		ctx.lineTo(12.488,12.484);  
   		ctx.lineTo(0,25);  
   		ctx.lineTo(25.001,8.32);  
-  		ctx.lineTo(16.663000000000004,8.32);  
+  		ctx.lineTo(16.663,8.32);  
   		ctx.lineTo(24.995,0);  
   		ctx.lineTo(10.413,0);  
   		ctx.closePath();  
@@ -4534,10 +4606,9 @@ require.register('weatherSymbol', function(module, exports, require) {
   		// Common layer properties
   		, layerOptions = {
   				type: type,
-  				scale: capabilities.backingRatio,
   				width: w * capabilities.backingRatio,
   				height: h * capabilities.backingRatio,
-  				tScale: (type == CANVAS) ? (w/100) * capabilities.backingRatio : 1,
+  				scale: (type == CANVAS) ? (w/100) * capabilities.backingRatio : 1,
   				bg: (bgContainer && bgContainer !== 'rgba(0, 0, 0, 0)')
   					? bgContainer
   					: DEFAULT_BG
@@ -4560,10 +4631,8 @@ require.register('weatherSymbol', function(module, exports, require) {
   	if (type != IMG) {
   		// Scale canvas element for hi-DPI
   		if (type == CANVAS) {
-  			if (w != 0) {
-  				element.width = layerOptions.width;
-  				element.height = layerOptions.height;
-  			}
+  			element.width = layerOptions.width;
+  			element.height = layerOptions.height;
   		}
   
   		if (animated) {
@@ -4604,9 +4673,9 @@ require.register('weatherSymbol', function(module, exports, require) {
    * @returns {Object}
    */
   function getLayerOptions (layer, options) {
-  	options.x = Math.round(layer.x * options.tScale);
-  	options.y = Math.round(layer.y * options.tScale);
-  	options.scale = (layer.scale || 1) * options.tScale;
+  	options.x = Math.round(layer.x * options.scale);
+  	options.y = Math.round(layer.y * options.scale);
+  	options.scale = (layer.scale || 1) * options.scale;
   	options.flip = layer.flip;
   	options.tint = layer.tint || 1;
   	options.winter = layer.winter;

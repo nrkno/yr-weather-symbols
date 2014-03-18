@@ -36,7 +36,7 @@ TMoonPrimitive = Trait({
 		ctx.fillStyle = FILL_COLOUR;
 		ctx.beginPath();
 		ctx.moveTo(23,20);
-		ctx.bezierCurveTo(23,12.322,25.887999999999998,5.321999999999999,30.631,0.015999999999998238);
+		ctx.bezierCurveTo(23,12.322,25.89,5.3,30.631,0);
 		ctx.bezierCurveTo(30.421,0.012,30.212,0,30,0);
 		ctx.bezierCurveTo(13.432,0,0,13.432,0,30);
 		ctx.bezierCurveTo(0,46.568,13.432,60,30,60);

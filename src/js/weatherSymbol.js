@@ -61,10 +61,9 @@ module.exports = function (container, options) {
 		// Common layer properties
 		, layerOptions = {
 				type: type,
-				scale: capabilities.backingRatio,
 				width: w * capabilities.backingRatio,
 				height: h * capabilities.backingRatio,
-				tScale: (type == CANVAS) ? (w/100) * capabilities.backingRatio : 1,
+				scale: (type == CANVAS) ? (w/100) * capabilities.backingRatio : 1,
 				bg: (bgContainer && bgContainer !== 'rgba(0, 0, 0, 0)')
 					? bgContainer
 					: DEFAULT_BG
@@ -87,10 +86,8 @@ module.exports = function (container, options) {
 	if (type != IMG) {
 		// Scale canvas element for hi-DPI
 		if (type == CANVAS) {
-			if (w != 0) {
-				element.width = layerOptions.width;
-				element.height = layerOptions.height;
-			}
+			element.width = layerOptions.width;
+			element.height = layerOptions.height;
 		}
 
 		if (animated) {
@@ -131,9 +128,9 @@ module.exports = function (container, options) {
  * @returns {Object}
  */
 function getLayerOptions (layer, options) {
-	options.x = Math.round(layer.x * options.tScale);
-	options.y = Math.round(layer.y * options.tScale);
-	options.scale = (layer.scale || 1) * options.tScale;
+	options.x = Math.round(layer.x * options.scale);
+	options.y = Math.round(layer.y * options.scale);
+	options.scale = (layer.scale || 1) * options.scale;
 	options.flip = layer.flip;
 	options.tint = layer.tint || 1;
 	options.winter = layer.winter;
