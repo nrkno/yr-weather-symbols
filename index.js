@@ -165,7 +165,7 @@ require.register('svg', function(module, exports, require) {
   };
 });
 require.register('dust', function(module, exports, require) {
-  /*! Dust - Asynchronous Templating - v2.3.4
+  /*! Dust - Asynchronous Templating - v2.3.3
   * http://linkedin.github.io/dustjs/
   * Copyright (c) 2014 Aleksander Williams; Released under the MIT License */
   (function(root) {
@@ -177,35 +177,17 @@ require.register('dust', function(module, exports, require) {
         DEBUG = 'DEBUG',
         loggingLevels = [DEBUG, INFO, WARN, ERROR, NONE],
         EMPTY_FUNC = function() {},
-        logger = {},
-        originalLog,
-        loggerContext;
+        logger = EMPTY_FUNC,
+        loggerContext = this;
   
     dust.debugLevel = NONE;
     dust.silenceErrors = false;
   
-    // Try to find the console in global scope
+    // Try to find the console logger in global scope
     if (root && root.console && root.console.log) {
+      logger = root.console.log;
       loggerContext = root.console;
-      originalLog = root.console.log;
     }
-  
-    // robust logger for node.js, modern browsers, and IE <= 9.
-    logger.log = loggerContext ? function() {
-        // Do this for normal browsers
-        if (typeof originalLog === 'function') {
-          logger.log = function() {
-            originalLog.apply(loggerContext, arguments);
-          };
-        } else {
-          // Do this for IE <= 9
-          logger.log = function() {
-            var message = Array.prototype.slice.apply(arguments).join(' ');
-            originalLog(message);
-          };
-        }
-        logger.log.apply(this, arguments);
-    } : function() { /* no op */ };
   
     /**
      * If dust.isDebug is true, Log dust debug statements, info statements, warning statements, and errors.
@@ -216,17 +198,17 @@ require.register('dust', function(module, exports, require) {
      */
     dust.log = function(message, type) {
       if(dust.isDebug && dust.debugLevel === NONE) {
-        logger.log('[!!!DEPRECATION WARNING!!!]: dust.isDebug is deprecated.  Set dust.debugLevel instead to the level of logging you want ["debug","info","warn","error","none"]');
+        logger.call(loggerContext, '[!!!DEPRECATION WARNING!!!]: dust.isDebug is deprecated.  Set dust.debugLevel instead to the level of logging you want ["debug","info","warn","error","none"]');
         dust.debugLevel = INFO;
       }
   
       type = type || INFO;
-      if (dust.indexInArray(loggingLevels, type) >= dust.indexInArray(loggingLevels, dust.debugLevel)) {
+      if (loggingLevels.indexOf(type) >= loggingLevels.indexOf(dust.debugLevel)) {
         if(!dust.logQueue) {
           dust.logQueue = [];
         }
         dust.logQueue.push({message: message, type: type});
-        logger.log('[DUST ' + type + ']: ' + message);
+        logger.call(loggerContext, '[DUST ' + type + ']: ' + message);
       }
   
       if (!dust.silenceErrors && type === ERROR) {
@@ -246,7 +228,7 @@ require.register('dust', function(module, exports, require) {
      * @public
      */
     dust.onError = function(error, chunk) {
-      logger.log('[!!!DEPRECATION WARNING!!!]: dust.onError will no longer return a chunk object.');
+      logger.call(loggerContext, '[!!!DEPRECATION WARNING!!!]: dust.onError will no longer return a chunk object.');
       dust.log(error.message || error, ERROR);
       if(!dust.silenceErrors) {
         throw error;
@@ -343,40 +325,6 @@ require.register('dust', function(module, exports, require) {
         return Object.prototype.toString.call(arr) === '[object Array]';
       };
     }
-  
-    // indexOf shim for arrays for IE <= 8
-    // source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
-    dust.indexInArray = function(arr, item, fromIndex) {
-      fromIndex = +fromIndex || 0;
-      if (Array.prototype.indexOf) {
-        return arr.indexOf(item, fromIndex);
-      } else {
-      if ( arr === undefined || arr === null ) {
-        throw new TypeError( 'cannot call method "indexOf" of null' );
-      }
-  
-      var length = arr.length; // Hack to convert object.length to a UInt32
-  
-      if (Math.abs(fromIndex) === Infinity) {
-        fromIndex = 0;
-      }
-  
-      if (fromIndex < 0) {
-        fromIndex += length;
-        if (fromIndex < 0) {
-          fromIndex = 0;
-        }
-      }
-  
-      for (;fromIndex < length; fromIndex++) {
-        if (arr[fromIndex] === item) {
-          return fromIndex;
-        }
-      }
-  
-      return -1;
-      }
-    };
   
     dust.nextTick = (function() {
       return function(callback) {
@@ -521,14 +469,9 @@ require.register('dust', function(module, exports, require) {
           } else {
             ctx = this.global ? this.global[first] : undefined;
           }
-        } else if (ctx) {
+        } else {
           // if scope is limited by a leading dot, don't search up the tree
-          if(ctx.head) {
-            ctx = ctx.head[first];
-          } else {
-            //context's head is empty, value we are searching for is not defined
-            ctx = undefined;
-          }
+          ctx = ctx.head[first];
         }
   
         while (ctx && i < len) {
@@ -1059,6 +1002,7 @@ require.register('dust', function(module, exports, require) {
     }
   
   })(this);
+  
   
 });
 require.register('symbolGroup', function(module, exports, require) {
@@ -2899,139 +2843,6 @@ require.register('lodash.clone', function(module, exports, require) {
   module.exports = clone;
   
 });
-require.register('requestAnimationFrame', function(module, exports, require) {
-  'use strict';
-  
-  // Adapted from https://gist.github.com/paulirish/1579671 which derived from 
-  // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-  // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
-  
-  // requestAnimationFrame polyfill by Erik Möller.
-  // Fixes from Paul Irish, Tino Zijdel, Andrew Mao, Klemen Slavič, Darius Bacon
-  
-  // MIT license
-  
-  if (!Date.now)
-      Date.now = function() { return new Date().getTime(); };
-  
-  (function() {
-      var vendors = ['webkit', 'moz'];
-      for (var i = 0; i < vendors.length && !window.requestAnimationFrame; ++i) {
-          var vp = vendors[i];
-          window.requestAnimationFrame = window[vp+'RequestAnimationFrame'];
-          window.cancelAnimationFrame = (window[vp+'CancelAnimationFrame']
-                                     || window[vp+'CancelRequestAnimationFrame']);
-      }
-      if (/iP(ad|hone|od).*OS 6/.test(window.navigator.userAgent) // iOS6 is buggy
-          || !window.requestAnimationFrame || !window.cancelAnimationFrame) {
-          var lastTime = 0;
-          window.requestAnimationFrame = function(callback) {
-              var now = Date.now();
-              var nextTime = Math.max(lastTime + 16, now);
-              return setTimeout(function() { callback(lastTime = nextTime); },
-                                nextTime - now);
-          };
-          window.cancelAnimationFrame = clearTimeout;
-      }
-  }());
-  
-});
-require.register('animator', function(module, exports, require) {
-  require('requestAnimationFrame');
-  
-  var anims = {}
-  	, length = 0
-  	, uid = 1
-  	, last = 0
-  	, running = false
-  
-  	, FRAME_RATE = 1000;
-  
-  module.exports = function (element, frames, options) {
-  	if (!element) return;
-  
-  	var anim = new Anim(uid++, element, frames, options);
-  	anims[anim.id] = anim;
-  	length++;
-  	return anim;
-  };
-  
-  function start () {
-  	if (!running) {
-  		running = true;
-  		tick = 0;
-  		last = Date.now();
-  		onTick();
-  	}
-  }
-  
-  function stop () {
-  	if (running) {
-  		running = false;
-  		for (var id in anims) {
-  			anims[id].running = false;
-  		}
-  	}
-  }
-  
-  function onTick (time) {
-  	var now = Date.now()
-  		, tick = now - last;
-  
-  	// Update
-  	if (tick >= FRAME_RATE) {
-  		last = now;
-  		for (var id in anims) {
-  			if (anims[id].running) anims[id].render();
-  		}
-  	}
-  
-  	// Loop
-  	if (running) window.requestAnimationFrame(onTick);
-  };
-  
-  function Anim (id, element, frames, options) {
-  	this.id = id;
-  	this.element = element;
-  	this.frames = frames;
-  	this.frame = 0;
-  	this.ctx = element.getContext('2d');
-  	this.width = options.width;
-  	this.height = options.height;
-  	this.running = false;
-  
-  	this.render();
-  }
-  
-  Anim.prototype.start = function () {
-  	this.running = true;
-  	start();
-  };
-  
-  Anim.prototype.stop = function () {
-  	this.running = false;
-  };
-  
-  Anim.prototype.destroy = function () {
-  
-  };
-  
-  Anim.prototype.render = function () {
-  	var layer;
-  
-  	// Clear canvas
-  	this.ctx.clearRect(0, 0, this.width, this.height);
-  
-  	for (var i = 0, n = this.frames[this.frame].length; i < n; i++) {
-  		layer = this.frames[this.frame][i];
-  		layer.primitive.render(this.element, layer.options);
-  	}
-  
-  	// Loop frame count
-  	this.frame = (this.frame + 1) % this.frames.length;
-  };
-  
-});
 require.register('yr-colours', function(module, exports, require) {
   module.exports = {
   	// Symbols
@@ -3771,55 +3582,168 @@ require.register('trait', function(module, exports, require) {
   
   module.exports = freeze(Trait);
 });
+require.register('ease/lib/quad', function(module, exports, require) {
+  // t: current time, b: beginning value, c: change in value, d: duration
+  
+  exports.inQuad = {
+  	js: function(t, b, c, d) {
+  			return c * (t /= d) * t + b;
+  		},
+  	css: 'cubic-bezier(0.550, 0.085, 0.680, 0.530)'
+  };
+  
+  exports.outQuad = {
+  	js: function(t, b, c, d) {
+  			return -c * (t /= d) * (t - 2) + b;
+  		},
+  	css: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)'
+  };
+  
+  exports.inOutQuad = {
+  	js: function(t, b, c, d) {
+  			if ((t /= d / 2) < 1) {
+  				return c / 2 * t * t + b;
+  			}
+  			return -c / 2 * ((--t) * (t - 2) - 1) + b;
+  		}
+  };
+  
+});
 require.register('primitives/TPrimitive', function(module, exports, require) {
-  var Trait = require('trait');
+  var Trait = require('trait')
+  	, ease = require('ease/lib/quad').outQuad.js;
   
   module.exports = Trait({
   	TWO_PI: Math.PI * 2,
-  	STROKE_WIDTH: 4,
-  	WIDTH: 100,
+  	MAX_WIDTH: 100,
+  	OFFSET: 10,
+  
+  	type: '',
+  	x: 0,
+  	y: 0,
+  	scale: 1,
+  	tint: 1,
+  	opacity: 1,
+  	flip: false,
+  	winter: false,
+  	bg: '',
+  	transitionDuration: 0,
+  	transitionStart: 0,
+  	transitionProps: null,
+  
+  	// Animation targets
+  	_x: 0,
+  	_y: 0,
+  	_scale: 1,
+  	_tint: 1,
+  	_opacity: 1,
+  	_dx: 0,
+  	_dy: 0,
+  	_dscale: 0,
+  	_dtint: 0,
+  	_dopacity: 0,
   
   	/**
-  	 * Render primitive in 'element'
-  	 * @param {DOMElement} element
+  	 * Initialize instance with 'options'
+  	 * @param {Object} options
+  	 * @returns {Object}
+  	 */
+  	initialize: function (options) {
+  		this.transitionDuration = options.transitionDuration;
+  		return this;
+  	},
+  
+  	/**
+  	 * Transition instance with 'options'
   	 * @param {Object} options
   	 */
-  	render: function (element, options) {
-  		if (options.type == 'svg') {
-  			return this.renderSVG(element, options);
-  		} else {
-  			return this.renderCanvas(element, options);
+  	transition: function (options) {
+  		this.transitionStart = options.time;
+  		this.update(options);
+  	},
+  
+  	/**
+  	 * Update instance with 'options'
+  	 * @param {Object} options
+  	 */
+  	update: function (options) {
+  		// Copy props to instance
+  		for (var prop in options) {
+  			if (this.hasOwnProperty(prop)) this[prop] = options[prop];
   		}
+  
+  		// Compute transition target props
+  		if (this.transitionProps) {
+  			var isComplete = (options.time >= this.transitionStart + this.transitionDuration)
+  				, elapsed = isComplete ? this.transitionStart + this.transitionDuration : options.time - this.transitionStart
+  				, prop;
+  
+  			// Set transition props
+  			for (var i = 0, n = this.transitionProps.length; i < n; i++) {
+  				prop = this.transitionProps[i];
+  				// Tween or set final
+  				this[prop] = isComplete
+  					? this['_' + prop] + this['_d' + prop]
+  					: ease(elapsed, this['_' + prop], this['_d' + prop], this.transitionDuration);
+  				if (prop == 'scale' && this[prop] > 1) console.log(options.time, elapsed, this.transitionStart, this['_' + prop], this['_d' + prop])
+  			}
+  
+  			// Clear
+  			if (isComplete) this.transitionProps = null;
+  		}
+  	},
+  
+  	/**
+  	 * Render primitive
+  	 * @param {SVGElement | CanvasContext} element
+  	 * @param {Object} [options]
+  	 */
+  	render: function (element, options) {
+  		if (options) this.update(options);
+  
+  		if (this.type == 'svg') {
+  			return this.renderSVG(element);
+  		} else {
+  			return this.renderCanvas(element);
+  		}
+  	},
+  
+  	/**
+  	 * Transform canvas 'ctx'
+  	 * @param {CanvasContext} ctx
+  	 */
+  	transformCanvas: function (ctx) {
+  		ctx.translate(this.x, this.y)
+  		ctx.scale(this.scale, this.scale);
   	},
   
   	/**
   	 * Retrieve attribute object for <use>
   	 * @param {String} link
-  	 * @param {Object} options
   	 */
-  	getUseAttributes: function (link, options) {
+  	getUseAttributes: function (link) {
   		return {
   			'xlink:href': link,
   			x: '0',
   			y: '0',
   			width: '100',
   			height: '100',
-  			transform: options.flip
+  			transform: this.flip
   				? 'translate('
-  					+ ((this.WIDTH * options.scale) + options.x)
+  					+ ((this.MAX_WIDTH * this.scale) + this.x)
   					+ ','
-  					+ options.y
+  					+ this.y
   					+ ') scale('
-  					+ (-1 * options.scale)
+  					+ (-1 * this.scale)
   					+ ', '
-  					+ options.scale
+  					+ this.scale
   					+ ')'
   				: 'translate('
-  					+ options.x
+  					+ this.x
   					+ ','
-  					+ options.y
+  					+ this.y
   					+ ') scale('
-  					+ options.scale
+  					+ this.scale
   					+ ')'
   		}
   	},
@@ -3829,7 +3753,7 @@ require.register('primitives/TPrimitive', function(module, exports, require) {
   });
   
 });
-require.register('primitives/sunPrimitive', function(module, exports, require) {
+require.register('primitives/SunPrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, colours = require('yr-colours')  
   	, Trait = require('trait')  
@@ -3843,34 +3767,70 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
     
   TSunPrimitive = Trait({  
   	/**  
-  	 * Render svg version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 * @returns {String}  
+  	 * Show transition  
+  	 * @params {Object} options  
   	 */  
-  	renderSVG: function (element, options) {  
+  	show: function (options) {  
+  		this._y = options.y + this.OFFSET;  
+  		this._dy = -this.OFFSET;  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		this._y = this.y;  
+  		this._dy = this.OFFSET;  
+  		this._opacity = 1;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Move transition  
+  	 * @params {Object} options  
+  	 */  
+  	move: function (options) {  
+  		this._y = this.y;  
+  		this._dy = options.y - this.y;  
+  		this._x = this.x;  
+  		this._dx = options.x - this.x;  
+  		this._scale = this.scale;  
+  		this._dscale = options.scale - this.scale;  
+  		if (this._dy || this._dx || this._dscale) {  
+  			this.transitionProps = ['y', 'x', 'scale'];  
+  			this.transition(options);  
+  		}  
+  	},  
+    
+  	/**  
+  	 * Render svg version  
+  	 * @param {SVGElement} element  
+  	 */  
+  	renderSVG: function (element) {  
   		svg.appendChild(  
   			element,  
   			'use',  
-  			this.getUseAttributes(options.winter ? '#sunWinter' : '#sun', options)  
+  			this.getUseAttributes(this.winter ? '#sunWinter' : '#sun')  
   		);  
   	},  
     
   	/**  
   	 * Render canvas version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
+  	 * @param {CanvasContext} ctx  
   	 */  
-  	renderCanvas: function (element, options) {  
-  		var ctx = element.getContext('2d');  
-    
+  	renderCanvas: function (ctx) {  
   		ctx.save();  
-  		ctx.translate(options.x, options.y);  
-  		ctx.scale(options.scale, options.scale);  
-  		ctx.strokeStyle = options.bg;  
-  		ctx.lineWidth = this.STROKE_WIDTH;  
+  		this.transformCanvas(ctx);  
+  		ctx.globalAlpha = this.opacity;  
     
-  		if (options.winter) {  
+  		if (this.winter) {  
   			// Horizon  
   			ctx.fillStyle = HORIZON_COLOUR;  
   			ctx.beginPath();  
@@ -3890,17 +3850,17 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   			ctx.fillStyle = RAY_COLOUR;  
   			ctx.beginPath();  
   			ctx.moveTo(23.6,19.8);  
-  			ctx.lineTo(13.600000000000001,36.8);  
-  			ctx.bezierCurveTo(12.600000000000001,38.599999999999994,14.600000000000001,40.599999999999994,16.3,39.5);  
+  			ctx.lineTo(13.6,36.8);  
+  			ctx.bezierCurveTo(12.6,38.6,14.6,40.6,16.3,39.5);  
   			ctx.lineTo(33.3,29.5);  
   			ctx.bezierCurveTo(29.2,27.3,25.8,23.9,23.6,19.8);  
   			ctx.moveTo(66.6,19.8);  
-  			ctx.bezierCurveTo(64.39999999999999,23.9,60.99999999999999,27.3,56.89999999999999,29.5);  
-  			ctx.lineTo(73.89999999999999,39.5);  
-  			ctx.bezierCurveTo(75.69999999999999,40.5,77.69999999999999,38.5,76.6,36.8);  
+  			ctx.bezierCurveTo(64.4,23.9,61,27.3,56.9,29.5);  
+  			ctx.lineTo(73.9,39.5);  
+  			ctx.bezierCurveTo(75.7,40.5,77.7,38.5,76.6,36.8);  
   			ctx.lineTo(66.6,19.8);  
   			ctx.moveTo(45.1,32.6);  
-  			ctx.bezierCurveTo(42.7,32.6,40.4,32.300000000000004,38.2,31.6);  
+  			ctx.bezierCurveTo(42.7,32.6,40.4,32.3,38.2,31.6);  
   			ctx.lineTo(43.2,50.7);  
   			ctx.bezierCurveTo(43.7,52.7,46.5,52.7,47.1,50.7);  
   			ctx.lineTo(52.1,31.6);  
@@ -3908,8 +3868,8 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   			ctx.moveTo(69.6,8);  
   			ctx.bezierCurveTo(69.6,8,69.6,8,69.6,8);  
   			ctx.bezierCurveTo(69.6,10.5,69.3,12.8,68.6,15);  
-  			ctx.lineTo(87.69999999999999,10);  
-  			ctx.bezierCurveTo(88.69999999999999,9.7,89.19999999999999,8.9,89.19999999999999,8);  
+  			ctx.lineTo(87.7,10);  
+  			ctx.bezierCurveTo(88.7,9.7,89.2,8.9,89.2,8);  
   			ctx.lineTo(69.6,8);  
   			ctx.moveTo(20.6,8);  
   			ctx.lineTo(1,8);  
@@ -3926,9 +3886,9 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   			ctx.moveTo(24.6,8);  
   			ctx.bezierCurveTo(24.6,8,24.6,8,24.6,8);  
   			ctx.bezierCurveTo(24.6,19.4,33.8,28.6,45.1,28.6);  
-  			ctx.bezierCurveTo(56.400000000000006,28.6,65.6,19.400000000000002,65.6,8.100000000000001);  
-  			ctx.bezierCurveTo(65.6,8.100000000000001,65.6,8.100000000000001,65.6,8.000000000000002);  
-  			ctx.lineTo(24.6,8.000000000000002);  
+  			ctx.bezierCurveTo(56.4,28.6,65.6,19.4,65.6,8.1);  
+  			ctx.bezierCurveTo(65.6,8.1,65.6,8.1,65.6,8);  
+  			ctx.lineTo(24.6,8);  
   			ctx.closePath();  
   			ctx.fill();  
     
@@ -3937,32 +3897,32 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   			ctx.fillStyle = RAY_COLOUR;  
   			ctx.beginPath();  
   			ctx.moveTo(23.5,33.2);  
-  			ctx.bezierCurveTo(25.7,29.1,29.1,25.700000000000003,33.2,23.500000000000004);  
-  			ctx.lineTo(16.200000000000003,13.500000000000004);  
-  			ctx.bezierCurveTo(14.400000000000002,12.500000000000004,12.400000000000002,14.500000000000004,13.500000000000004,16.200000000000003);  
+  			ctx.bezierCurveTo(25.7,29.1,29.1,25.7,33.2,23.5);  
+  			ctx.lineTo(16.2,13.5);  
+  			ctx.bezierCurveTo(14.4,12.5,12.4,14.5,13.5,16.2);  
   			ctx.lineTo(23.5,33.2);  
   			ctx.moveTo(45,20.5);  
   			ctx.bezierCurveTo(47.4,20.5,49.7,20.8,51.9,21.5);  
-  			ctx.lineTo(46.9,2.3999999999999986);  
-  			ctx.bezierCurveTo(46.4,0.3999999999999986,43.6,0.3999999999999986,43,2.3999999999999986);  
+  			ctx.lineTo(46.9,2.4);  
+  			ctx.bezierCurveTo(46.4,0.4,43.6,0.4,43,2.4);  
   			ctx.lineTo(38,21.5);  
   			ctx.bezierCurveTo(40.3,20.8,42.6,20.5,45,20.5);  
   			ctx.moveTo(87.6,43.1);  
   			ctx.lineTo(68.5,38.1);  
-  			ctx.bezierCurveTo(69.1,40.300000000000004,69.5,42.6,69.5,45);  
+  			ctx.bezierCurveTo(69.1,40.3,69.5,42.6,69.5,45);  
   			ctx.bezierCurveTo(69.5,47.4,69.2,49.7,68.5,51.9);  
   			ctx.lineTo(87.6,46.9);  
   			ctx.bezierCurveTo(89.6,46.4,89.6,43.6,87.6,43.1);  
   			ctx.moveTo(20.5,45);  
   			ctx.bezierCurveTo(20.5,42.6,20.8,40.3,21.5,38.1);  
-  			ctx.lineTo(2.3999999999999986,43.1);  
-  			ctx.bezierCurveTo(0.3999999999999986,43.6,0.3999999999999986,46.4,2.3999999999999986,47);  
+  			ctx.lineTo(2.4,43.1);  
+  			ctx.bezierCurveTo(0.4,43.6,0.4,46.4,2.4,47);  
   			ctx.lineTo(21.5,52);  
   			ctx.bezierCurveTo(20.8,49.7,20.5,47.4,20.5,45);  
   			ctx.moveTo(66.5,33.2);  
-  			ctx.lineTo(76.5,16.200000000000003);  
-  			ctx.bezierCurveTo(77.5,14.400000000000002,75.5,12.400000000000002,73.8,13.500000000000004);  
-  			ctx.lineTo(56.8,23.500000000000004);  
+  			ctx.lineTo(76.5,16.2);  
+  			ctx.bezierCurveTo(77.5,14.4,75.5,12.4,73.8,13.5);  
+  			ctx.lineTo(56.8,23.5);  
   			ctx.bezierCurveTo(60.9,25.8,64.2,29.1,66.5,33.2);  
   			ctx.moveTo(23.5,56.8);  
   			ctx.lineTo(13.5,73.8);  
@@ -3994,12 +3954,14 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   	}  
   });  
     
-  module.exports = Trait.compose(  
-  	TPrimitive,  
-  	TSunPrimitive  
-  ).create();
+  module.exports = function () {  
+  	return Trait.compose(  
+  		TPrimitive,  
+  		TSunPrimitive  
+  	).create();  
+  };
 });
-require.register('primitives/moonPrimitive', function(module, exports, require) {
+require.register('primitives/MoonPrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
@@ -4010,35 +3972,73 @@ require.register('primitives/moonPrimitive', function(module, exports, require) 
     
   TMoonPrimitive = Trait({  
   	/**  
-  	 * Render svg version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 * @returns {String}  
+  	 * Show transition  
+  	 * @params {Object} options  
   	 */  
-  	renderSVG: function (element, options) {  
+  	show: function (options) {  
+  		this._y = options.y + this.OFFSET;  
+  		this._dy = -this.OFFSET;  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		this._y = this.y;  
+  		this._dy = this.OFFSET;  
+  		this._opacity = 1;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Move transition  
+  	 * @params {Object} options  
+  	 */  
+  	move: function (options) {  
+  		this._y = this.y;  
+  		this._dy = options.y - this.y;  
+  		this._x = this.x;  
+  		this._dx = options.x - this.x;  
+  		this._scale = this.scale;  
+  		this._dscale = options.scale - this.scale;  
+  		if (this._dy || this._dx || this._dscale) {  
+  			this.transitionProps = ['y', 'x', 'scale'];  
+  			this.transition(options);  
+  		}  
+  	},  
+    
+  	/**  
+  	 * Render svg version  
+  	 * @param {SVGElement} element  
+  	 */  
+  	renderSVG: function (element) {  
   		svg.appendChild(  
   			element,  
   			'use',  
-  			this.getUseAttributes('#moon', options)  
+  			this.getUseAttributes('#moon')  
   		);  
   	},  
     
   	/**  
   	 * Render canvas version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
+  	 * @param {CanvasContext} ctx  
   	 */  
-  	renderCanvas: function (element, options) {  
-  		var ctx = element.getContext('2d');  
-    
+  	renderCanvas: function (ctx) {  
   		ctx.save();  
+  		this.transformCanvas(ctx);  
+  		ctx.globalAlpha = this.opacity;  
     
-  		ctx.translate(options.x, options.y)  
-  		ctx.scale(options.scale, options.scale);  
   		ctx.fillStyle = FILL_COLOUR;  
   		ctx.beginPath();  
   		ctx.moveTo(23,20);  
-  		ctx.bezierCurveTo(23,12.322,25.887999999999998,5.321999999999999,30.631,0.015999999999998238);  
+  		ctx.bezierCurveTo(23,12.322,25.89,5.3,30.631,0);  
   		ctx.bezierCurveTo(30.421,0.012,30.212,0,30,0);  
   		ctx.bezierCurveTo(13.432,0,0,13.432,0,30);  
   		ctx.bezierCurveTo(0,46.568,13.432,60,30,60);  
@@ -4050,13 +4050,14 @@ require.register('primitives/moonPrimitive', function(module, exports, require) 
   	}  
   });  
     
-  module.exports = Trait.compose(  
-  	TPrimitive,  
-  	TMoonPrimitive  
-  ).create();  
-  
+  module.exports = function () {  
+  	return Trait.compose(  
+  		TPrimitive,  
+  		TMoonPrimitive  
+  	).create();  
+  };
 });
-require.register('primitives/cloudPrimitive', function(module, exports, require) {
+require.register('primitives/CloudPrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
@@ -4065,67 +4066,124 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
     
   TCloudPrimitive = Trait({  
   	/**  
-  	 * Render svg version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 * @returns {String}  
+  	 * Show transition  
+  	 * @params {Object} options  
   	 */  
-  	renderSVG: function (element, options) {  
+  	show: function (options) {  
+  		var offset = options.flip ? this.OFFSET : -this.OFFSET;  
+  		this._x = options.x - offset;  
+  		this._dx = offset;  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['x', 'opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		var offset = this.flip ? -this.OFFSET : this.OFFSET;  
+  		this._x = this.x;  
+  		this._dx = offset;  
+  		this._opacity = this.opacity;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['x', 'opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Move transition  
+  	 * @params {Object} options  
+  	 */  
+  	move: function (options) {  
+  		this._tint = this.tint;  
+  		this._dtint = options.tint - this.tint;  
+  		if (this._dtint) {  
+  			this.transitionProps = ['tint'];  
+  			this.transition(options);  
+  		}  
+  	},  
+    
+  	/**  
+  	 * Render svg version  
+  	 * @param {SVGElement} element  
+  	 */  
+  	renderSVG: function (element) {  
   		svg.appendChild(  
   			element,  
   			'use',  
-  			this.getUseAttributes('#cloud-' + options.tint * 100, options)  
+  			this.getUseAttributes('#cloud-' + this.tint * 100)  
   		);  
   	},  
     
   	/**  
   	 * Render canvas version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
+  	 * @param {CanvasContext} ctx  
   	 */  
-  	renderCanvas: function (element, options) {  
-  		var ctx = element.getContext('2d')  
-  			, tint = Math.floor(255 * (1-options.tint));  
+  	renderCanvas: function (ctx) {  
+  		var tint = Math.floor(255 * (1 - this.tint));  
     
   		ctx.save();  
-  		if (options.flip) {  
-  			ctx.translate((this.WIDTH * options.scale) + options.x, options.y)  
-  			ctx.scale(-1 * options.scale, options.scale);  
-  		} else {  
-  			ctx.translate(options.x, options.y)  
-  			ctx.scale(options.scale, options.scale);  
-  		}  
+  		this.transformCanvas(ctx);  
     
   		// Mask  
   		ctx.save();  
   		ctx.globalCompositeOperation = 'destination-out';  
-  		ctx.beginPath();  
-  		ctx.moveTo(93.7,33.7);  
-  		ctx.bezierCurveTo(92.60000000000001,26.700000000000003,87.7,18.900000000000002,77.6,17.000000000000004);  
-  		ctx.bezierCurveTo(74.9,6.9,66.5,0.3,55.7,0);  
-  		ctx.bezierCurveTo(55.400000000000006,0,55.2,0,54.900000000000006,0);  
-  		ctx.bezierCurveTo(44.5,0,36.2,5.7,32.8,15.1);  
-  		ctx.bezierCurveTo(32.3,15.1,31.9,15,31.4,15);  
-  		ctx.bezierCurveTo(24.9,15,17.2,18.9,14.799999999999997,26.2);  
-  		ctx.bezierCurveTo(5.9,26.9,0,34.5,0,41.6);  
-  		ctx.bezierCurveTo(0,52,7.8,58,21.5,58);  
-  		ctx.lineTo(65.1,58);  
-  		ctx.bezierCurveTo(70.69999999999999,58,78.5,57.5,83.3,55.2);  
-  		ctx.bezierCurveTo(91,51.5,95.2,42.8,93.7,33.7);  
-  		ctx.closePath();  
-  		ctx.fill();  
+  		this.renderCanvasStrokeShape(ctx);  
   		ctx.restore();  
     
   		// Fill  
-  		ctx.strokeStyle = options.bg;  
-  		ctx.lineWidth = this.STROKE_WIDTH;  
+  		ctx.globalAlpha = this.opacity;  
   		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
+  		this.renderCanvasFillShape(ctx);  
+  		ctx.restore();  
+  	},  
+    
+  	transformCanvas: function (ctx) {  
+  		if (this.flip) {  
+  			ctx.translate((this.MAX_WIDTH * this.scale) + this.x, this.y)  
+  			ctx.scale(-1 * this.scale, this.scale);  
+  		} else {  
+  			ctx.translate(this.x, this.y)  
+  			ctx.scale(this.scale, this.scale);  
+  		}  
+  	},  
+    
+  	/**  
+  	 * Render canvas stroke shape  
+  	 * @param {Context} ctx  
+  	 */  
+  	renderCanvasStrokeShape: function (ctx) {  
+  		ctx.beginPath();  
+  		ctx.moveTo(93.7,33.7);  
+  		ctx.bezierCurveTo(92.6,26.7,87.7,18.9,77.6,17);  
+  		ctx.bezierCurveTo(74.9,6.9,66.5,0.3,55.7,0);  
+  		ctx.bezierCurveTo(55.4,0,55.2,0,54.9,0);  
+  		ctx.bezierCurveTo(44.5,0,36.2,5.7,32.8,15.1);  
+  		ctx.bezierCurveTo(32.3,15.1,31.9,15,31.4,15);  
+  		ctx.bezierCurveTo(24.9,15,17.2,18.9,14.8,26.2);  
+  		ctx.bezierCurveTo(5.9,26.9,0,34.5,0,41.6);  
+  		ctx.bezierCurveTo(0,52,7.8,58,21.5,58);  
+  		ctx.lineTo(65.1,58);  
+  		ctx.bezierCurveTo(70.7,58,78.5,57.5,83.3,55.2);  
+  		ctx.bezierCurveTo(91,51.5,95.2,42.8,93.7,33.7);  
+  		ctx.closePath();  
+  		ctx.fill();  
+  	},  
+    
+  	/**  
+  	 * Render canvas fill shape  
+  	 * @param {Context} ctx  
+  	 */  
+  	renderCanvasFillShape: function (ctx) {  
   		ctx.beginPath();  
   		ctx.moveTo(74.3,20.6);  
   		ctx.bezierCurveTo(72.4,8.3,63.1,4,54.9,4);  
-  		ctx.bezierCurveTo(45.9,4,38,9.4,35.599999999999994,19.7);  
-  		ctx.bezierCurveTo(27.699999999999996,17.099999999999998,18.599999999999994,22.599999999999998,18.099999999999994,30.299999999999997);  
-  		ctx.bezierCurveTo(14.399999999999995,29.499999999999996,4.099999999999994,31.599999999999998,4.099999999999994,41.599999999999994);  
+  		ctx.bezierCurveTo(45.9,4,38,9.4,35.6,19.7);  
+  		ctx.bezierCurveTo(27.7,17.1,18.6,22.6,18.1,30.3);  
+  		ctx.bezierCurveTo(14.4,29.5,4.1,31.6,4.1,41.6);  
   		ctx.bezierCurveTo(4,51.9,13.5,54,21.5,54);  
   		ctx.lineTo(65.1,54);  
   		ctx.bezierCurveTo(72.5,54,78.3,53.2,81.5,51.6);  
@@ -4133,16 +4191,17 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
   		ctx.bezierCurveTo(88.8,28.5,84.6,21.3,74.3,20.6);  
   		ctx.closePath();  
   		ctx.fill();  
-  		ctx.restore();  
-  	}  
+  	},  
   });  
     
-  module.exports = Trait.compose(  
-  	TPrimitive,  
-  	TCloudPrimitive  
-  ).create();
+  module.exports = function () {  
+  	return Trait.compose(  
+  		TPrimitive.resolve({transformCanvas: null}),  
+  		TCloudPrimitive  
+  	).create();  
+  };
 });
-require.register('primitives/raindropPrimitive', function(module, exports, require) {
+require.register('primitives/RaindropPrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
@@ -4153,32 +4212,51 @@ require.register('primitives/raindropPrimitive', function(module, exports, requi
     
   TRaindropPrimitive = Trait({  
   	/**  
-  	 * Render svg version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 * @returns {String}  
+  	 * Show transition  
+  	 * @params {Object} options  
   	 */  
-  	renderSVG: function (element, options) {  
+  	show: function (options) {  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		this._y = this.y;  
+  		this._dy = this.OFFSET;  
+  		this._opacity = 1;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Render svg version  
+  	 * @param {SVGElement} element  
+  	 */  
+  	renderSVG: function (element) {  
   		svg.appendChild(  
   			element,  
   			'use',  
-  			this.getUseAttributes('#raindrop', options)  
+  			this.getUseAttributes('#raindrop')  
   		);  
   	},  
     
   	/**  
   	 * Render canvas version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
+  	 * @param {CanvasContext} ctx  
   	 */  
-  	renderCanvas: function (element, options) {  
-  		var ctx = element.getContext('2d');  
-    
-  		// Stroke  
+  	renderCanvas: function (ctx) {  
   		ctx.save();  
-  		ctx.fillStyle = options.bg;  
-  		ctx.translate(options.x, options.y)  
-  		ctx.scale(options.scale, options.scale);  
+  		this.transformCanvas(ctx);  
+    
+  		// Background  
+  		ctx.fillStyle = this.bg;  
   		ctx.save();  
   		ctx.globalCompositeOperation = 'destination-out';  
   		ctx.beginPath();  
@@ -4188,6 +4266,7 @@ require.register('primitives/raindropPrimitive', function(module, exports, requi
   		ctx.restore();  
     
   		// Fill  
+  		ctx.globalAlpha = this.opacity;  
   		ctx.fillStyle = FILL_COLOUR;  
   		ctx.beginPath();  
   		ctx.moveTo(20,16.8);  
@@ -4201,13 +4280,14 @@ require.register('primitives/raindropPrimitive', function(module, exports, requi
   	}  
   });  
     
-  module.exports = Trait.compose(  
-  	TPrimitive,  
-  	TRaindropPrimitive  
-  ).create();  
-  
+  module.exports = function () {  
+  	return Trait.compose(  
+  		TPrimitive,  
+  		TRaindropPrimitive  
+  	).create();  
+  };
 });
-require.register('primitives/sleetPrimitive', function(module, exports, require) {
+require.register('primitives/SleetPrimitive', function(module, exports, require) {
   var svg = require('svg')
   	, Trait = require('trait')
   	, TPrimitive = require('primitives/TPrimitive')
@@ -4218,32 +4298,51 @@ require.register('primitives/sleetPrimitive', function(module, exports, require)
   
   TSleetPrimitive = Trait({
   	/**
-  	 * Render svg version
-  	 * @param {DOMElement} element
-  	 * @param {Object} options
-  	 * @returns {String}
+  	 * Show transition
+  	 * @params {Object} options
   	 */
-  	renderSVG: function (element, options) {
+  	show: function (options) {
+  		this._opacity = 0;
+  		this._dopacity = 1;
+  		this.transitionProps = ['opacity'];
+  		this.transition(options);
+  	},
+  
+  	/**
+  	 * Hide transition
+  	 * @params {Object} options
+  	 */
+  	hide: function (options) {
+  		this._y = this.y;
+  		this._dy = this.OFFSET;
+  		this._opacity = 1;
+  		this._dopacity = -1;
+  		this.transitionProps = ['y', 'opacity'];
+  		this.transition(options);
+  	},
+  
+  	/**
+  	 * Render svg version
+  	 * @param {SVGElement} element
+  	 */
+  	renderSVG: function (element) {
   		svg.appendChild(
   			element,
   			'use',
-  			this.getUseAttributes('#sleet', options)
+  			this.getUseAttributes('#sleet')
   		);
   	},
   
   	/**
   	 * Render canvas version
-  	 * @param {DOMElement} element
-  	 * @param {Object} options
+  	 * @param {CanvasContext} ctx
   	 */
-  	renderCanvas: function (element, options) {
-  		var ctx = element.getContext('2d');
-  
-  		// Stroke
+  	renderCanvas: function (ctx) {
   		ctx.save();
-  		ctx.fillStyle = options.bg;
-  		ctx.translate(options.x, options.y)
-  		ctx.scale(options.scale, options.scale);
+  		this.transformCanvas(ctx);
+  
+  		// Background
+  		ctx.fillStyle = this.bg;
   		ctx.save();
   		ctx.globalCompositeOperation = 'destination-out';
   		ctx.beginPath();
@@ -4253,15 +4352,16 @@ require.register('primitives/sleetPrimitive', function(module, exports, require)
   		ctx.restore();
   
   		// Fill
+  		ctx.globalAlpha = this.opacity;
   		ctx.fillStyle = FILL_COLOUR;
   		ctx.beginPath();
   		ctx.moveTo(19.9,16.6);
-  		ctx.bezierCurveTo(18.099999999999998,18.900000000000002,16.5,22.1,15.999999999999998,25.5);
-  		ctx.bezierCurveTo(15.899999999999999,26,15.399999999999999,26.2,14.999999999999998,25.9);
-  		ctx.bezierCurveTo(12.7,23.799999999999997,10.2,22.599999999999998,6.499999999999998,22.099999999999998);
-  		ctx.bezierCurveTo(6.099999999999998,21.999999999999996,5.899999999999999,21.599999999999998,6.099999999999998,21.299999999999997);
+  		ctx.bezierCurveTo(18.1,18.9,16.5,22.1,16,25.5);
+  		ctx.bezierCurveTo(15.9,26,15.4,26.2,15,25.9);
+  		ctx.bezierCurveTo(12.7,23.8,10.2,22.6,6.5,22.1);
+  		ctx.bezierCurveTo(6.1,22,5.9,21.6,6.1,21.3);
   		ctx.bezierCurveTo(8.4,17,8.6,10.1,7.8,5);
-  		ctx.bezierCurveTo(10.5,9.2,14.899999999999999,14,19.6,15.7);
+  		ctx.bezierCurveTo(10.5,9.2,14.9,14,19.6,15.7);
   		ctx.bezierCurveTo(20,15.8,20.1,16.3,19.9,16.6);
   		ctx.closePath();
   		ctx.fill();
@@ -4269,13 +4369,14 @@ require.register('primitives/sleetPrimitive', function(module, exports, require)
   	}
   });
   
-  module.exports = Trait.compose(
-  	TPrimitive,
-  	TSleetPrimitive
-  ).create();
-  
+  module.exports = function () {
+  	return Trait.compose(
+  		TPrimitive.resolve({}),
+  		TSleetPrimitive
+  	).create();
+  };
 });
-require.register('primitives/snowflakePrimitive', function(module, exports, require) {
+require.register('primitives/SnowflakePrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
@@ -4286,32 +4387,51 @@ require.register('primitives/snowflakePrimitive', function(module, exports, requ
     
   TSnowflakePrimitive = Trait({  
   	/**  
-  	 * Render svg version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 * @returns {String}  
+  	 * Show transition  
+  	 * @params {Object} options  
   	 */  
-  	renderSVG: function (element, options) {  
+  	show: function (options) {  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		this._y = this.y;  
+  		this._dy = this.OFFSET;  
+  		this._opacity = 1;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Render svg version  
+  	 * @param {SVGElement} element  
+  	 */  
+  	renderSVG: function (element) {  
   		svg.appendChild(  
   			element,  
   			'use',  
-  			this.getUseAttributes('#snowflake', options)  
+  			this.getUseAttributes('#snowflake')  
   		);  
   	},  
     
   	/**  
   	 * Render canvas version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
+  	 * @param {CanvasContext} ctx  
   	 */  
-  	renderCanvas: function (element, options) {  
-  		var ctx = element.getContext('2d');  
-    
-  		// Stroke  
+  	renderCanvas: function (ctx) {  
   		ctx.save();  
-  		ctx.fillStyle = options.bg;  
-  		ctx.translate(options.x, options.y)  
-  		ctx.scale(options.scale, options.scale);  
+  		this.transformCanvas(ctx);  
+    
+  		// Background  
+  		ctx.fillStyle = this.bg;  
   		ctx.save();  
   		ctx.globalCompositeOperation = 'destination-out';  
   		ctx.beginPath();  
@@ -4324,43 +4444,43 @@ require.register('primitives/snowflakePrimitive', function(module, exports, requ
   		ctx.fillStyle = FILL_COLOUR;  
   		ctx.beginPath();  
   		ctx.moveTo(6.2,6.9);  
-  		ctx.lineTo(7.300000000000001,10.7);  
-  		ctx.bezierCurveTo(7.000000000000001,10.899999999999999,6.700000000000001,11.2,6.4,11.5);  
+  		ctx.lineTo(7.3,10.7);  
+  		ctx.bezierCurveTo(7,10.9,6.7,11.2,6.4,11.5);  
   		ctx.bezierCurveTo(6,11.7,5.8,12,5.6,12.4);  
-  		ctx.lineTo(1.7999999999999998,11.4);  
+  		ctx.lineTo(1.8,11.4);  
   		ctx.bezierCurveTo(1,11.2,0.2,11.7,0,12.5);  
   		ctx.bezierCurveTo(-0.2,13.3,0.3,14.1,1.1,14.3);  
   		ctx.lineTo(4.9,15.3);  
-  		ctx.bezierCurveTo(4.9,16.1,5.2,16.900000000000002,5.5,17.6);  
-  		ctx.lineTo(2.8,20.400000000000002);  
-  		ctx.bezierCurveTo(2.1999999999999997,21.000000000000004,2.1999999999999997,21.900000000000002,2.8,22.500000000000004);  
-  		ctx.bezierCurveTo(3.4,23.100000000000005,4.3,23.100000000000005,4.9,22.500000000000004);  
-  		ctx.lineTo(7.6000000000000005,19.700000000000003);  
-  		ctx.bezierCurveTo(8.3,20.1,9.100000000000001,20.300000000000004,9.9,20.300000000000004);  
-  		ctx.lineTo(10.9,24.100000000000005);  
-  		ctx.bezierCurveTo(11.1,24.900000000000006,11.9,25.300000000000004,12.700000000000001,25.100000000000005);  
-  		ctx.bezierCurveTo(13.500000000000002,24.900000000000006,13.9,24.100000000000005,13.700000000000001,23.300000000000004);  
-  		ctx.lineTo(12.600000000000001,19.500000000000004);  
-  		ctx.bezierCurveTo(12.900000000000002,19.300000000000004,13.3,19.100000000000005,13.600000000000001,18.800000000000004);  
-  		ctx.bezierCurveTo(13.900000000000002,18.500000000000004,14.100000000000001,18.200000000000003,14.3,17.800000000000004);  
-  		ctx.lineTo(18.1,18.800000000000004);  
-  		ctx.bezierCurveTo(18.900000000000002,19.000000000000004,19.700000000000003,18.500000000000004,19.900000000000002,17.700000000000003);  
-  		ctx.bezierCurveTo(20.1,16.900000000000002,19.6,16.1,18.8,15.900000000000002);  
-  		ctx.lineTo(15,14.900000000000002);  
-  		ctx.bezierCurveTo(15,14.100000000000001,14.7,13.300000000000002,14.3,12.600000000000001);  
+  		ctx.bezierCurveTo(4.9,16.1,5.2,16.9,5.5,17.6);  
+  		ctx.lineTo(2.8,20.4);  
+  		ctx.bezierCurveTo(2.2,21,2.2,21.9,2.8,22.5);  
+  		ctx.bezierCurveTo(3.4,23.1,4.3,23.1,4.9,22.5);  
+  		ctx.lineTo(7.6,19.7);  
+  		ctx.bezierCurveTo(8.3,20.1,9.1,20.3,9.9,20.3);  
+  		ctx.lineTo(10.9,24.1);  
+  		ctx.bezierCurveTo(11.1,24.9,11.9,25.3,12.7,25.1);  
+  		ctx.bezierCurveTo(13.5,24.9,13.9,24.1,13.7,23.3);  
+  		ctx.lineTo(12.6,19.5);  
+  		ctx.bezierCurveTo(12.9,19.3,13.3,19.1,13.6,18.8);  
+  		ctx.bezierCurveTo(13.9,18.5,14.1,18.2,14.3,17.8);  
+  		ctx.lineTo(18.1,18.8);  
+  		ctx.bezierCurveTo(18.9,19,19.7,18.5,19.9,17.7);  
+  		ctx.bezierCurveTo(20.1,16.9,19.6,16.1,18.8,15.9);  
+  		ctx.lineTo(15,14.9);  
+  		ctx.bezierCurveTo(15,14.1,14.7,13.3,14.3,12.6);  
   		ctx.lineTo(17,9.8);  
-  		ctx.bezierCurveTo(17.6,9.200000000000001,17.5,8.3,17,7.700000000000001);  
-  		ctx.bezierCurveTo(16.4,7.100000000000001,15.5,7.100000000000001,14.9,7.700000000000001);  
+  		ctx.bezierCurveTo(17.6,9.2,17.5,8.3,17,7.7);  
+  		ctx.bezierCurveTo(16.4,7.1,15.5,7.1,14.9,7.7);  
   		ctx.lineTo(12.2,10.5);  
-  		ctx.bezierCurveTo(11.5,10.1,10.7,9.9,9.899999999999999,9.9);  
+  		ctx.bezierCurveTo(11.5,10.1,10.7,9.9,9.9,9.9);  
   		ctx.lineTo(9,6.1);  
-  		ctx.bezierCurveTo(8.8,5.3,8,4.8999999999999995,7.2,5.1);  
+  		ctx.bezierCurveTo(8.8,5.3,8,4.9,7.2,5.1);  
   		ctx.bezierCurveTo(6.5,5.3,6,6.1,6.2,6.9);  
   		ctx.closePath();  
   		ctx.moveTo(11.8,13.2);  
-  		ctx.bezierCurveTo(12.8,14.2,12.8,15.799999999999999,11.8,16.8);  
-  		ctx.bezierCurveTo(10.8,17.8,9.200000000000001,17.8,8.200000000000001,16.8);  
-  		ctx.bezierCurveTo(7.200000000000001,15.8,7.200000000000001,14.200000000000001,8.200000000000001,13.200000000000001);  
+  		ctx.bezierCurveTo(12.8,14.2,12.8,15.8,11.8,16.8);  
+  		ctx.bezierCurveTo(10.8,17.8,9.2,17.8,8.2,16.8);  
+  		ctx.bezierCurveTo(7.2,15.8,7.2,14.2,8.2,13.2);  
   		ctx.bezierCurveTo(9.2,12.2,10.8,12.2,11.8,13.2);  
   		ctx.closePath();  
   		ctx.fill();  
@@ -4368,102 +4488,14 @@ require.register('primitives/snowflakePrimitive', function(module, exports, requ
   	}  
   });  
     
-  module.exports = Trait.compose(  
-  	TPrimitive,  
-  	TSnowflakePrimitive  
-  ).create();  
-  
+  module.exports = function () {  
+  	return Trait.compose(  
+  		TPrimitive.resolve({}),  
+  		TSnowflakePrimitive  
+  	).create();  
+  };
 });
-require.register('primitives/fogPrimitive', function(module, exports, require) {
-  var svg = require('svg')  
-  	, Trait = require('trait')  
-  	, TPrimitive = require('primitives/TPrimitive')  
-    
-  	, TFogPrimitive;  
-    
-  TFogPrimitive = Trait({  
-  	/**  
-  	 * Render svg version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 * @returns {String}  
-  	 */  
-  	renderSVG: function (element, options) {  
-  		svg.appendChild(  
-  			element,  
-  			'use',  
-  			this.getUseAttributes('#fog', options)  
-  		);  
-  	},  
-    
-  	/**  
-  	 * Render canvas version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 */  
-  	renderCanvas: function (element, options) {  
-  		var ctx = element.getContext('2d')  
-  			, tint = Math.floor(255 * (1-options.tint));  
-    
-  		ctx.save();  
-  		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
-  		ctx.translate(options.x, options.y)  
-  		ctx.scale(options.scale, options.scale);  
-  		ctx.beginPath();  
-  		ctx.moveTo(82.3,42);  
-  		ctx.lineTo(2.7,42);  
-  		ctx.bezierCurveTo(1.2,42,0,42.9,0,44);  
-  		ctx.bezierCurveTo(0,45.1,1.2,46,2.7,46);  
-  		ctx.lineTo(82.4,46);  
-  		ctx.bezierCurveTo(83.9,46,85.10000000000001,45.1,85.10000000000001,44);  
-  		ctx.bezierCurveTo(85.10000000000001,42.9,83.8,42,82.3,42);  
-  		ctx.closePath();  
-  		ctx.fill();  
-    
-  		ctx.beginPath();  
-  		ctx.moveTo(80.1,50);  
-  		ctx.lineTo(5.9,50);  
-  		ctx.bezierCurveTo(4.3,50,3,50.9,3,52);  
-  		ctx.bezierCurveTo(3,53.1,4.3,54,5.9,54);  
-  		ctx.lineTo(80.2,54);  
-  		ctx.bezierCurveTo(81.8,54,83.10000000000001,53.1,83.10000000000001,52);  
-  		ctx.bezierCurveTo(83,50.9,81.7,50,80.1,50);  
-  		ctx.closePath();  
-  		ctx.fill();  
-    
-  		ctx.beginPath();  
-  		ctx.moveTo(80.1,58);  
-  		ctx.lineTo(10.9,58);  
-  		ctx.bezierCurveTo(9.3,58,8,58.9,8,60);  
-  		ctx.bezierCurveTo(8,61.1,9.3,62,10.9,62);  
-  		ctx.lineTo(80.10000000000001,62);  
-  		ctx.bezierCurveTo(81.7,62,83.00000000000001,61.1,83.00000000000001,60);  
-  		ctx.bezierCurveTo(83.00000000000001,58.9,81.7,58,80.1,58);  
-  		ctx.closePath();  
-  		ctx.fill();  
-    
-  		ctx.beginPath();  
-  		ctx.moveTo(51.2,0);  
-  		ctx.bezierCurveTo(42.1,-0.3,33.6,4.8,30.700000000000003,14.6);  
-  		ctx.bezierCurveTo(24.800000000000004,13.2,15.400000000000002,16.9,13.700000000000003,25);  
-  		ctx.bezierCurveTo(8.2,24.9,1.2,29,0.1,36);  
-  		ctx.bezierCurveTo(0,37,0.7,37.9,1.7,37.9);  
-  		ctx.lineTo(84,37.9);  
-  		ctx.bezierCurveTo(85,37.9,85.8,37.199999999999996,85.9,36.199999999999996);  
-  		ctx.bezierCurveTo(86.9,27.299999999999997,81.80000000000001,17.499999999999996,70.7,16.099999999999994);  
-  		ctx.bezierCurveTo(68.5,5.6,60.2,0.3,51.2,0);  
-  		ctx.closePath();  
-  		ctx.fill();  
-  		ctx.restore();  
-  	}  
-  });  
-    
-  module.exports = Trait.compose(  
-  	TPrimitive,  
-  	TFogPrimitive  
-  ).create();
-});
-require.register('primitives/lightningPrimitive', function(module, exports, require) {
+require.register('primitives/LightningPrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
@@ -4474,31 +4506,49 @@ require.register('primitives/lightningPrimitive', function(module, exports, requ
     
   TLightningPrimitive = Trait({  
   	/**  
-  	 * Render svg version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
-  	 * @returns {String}  
+  	 * Show transition  
+  	 * @params {Object} options  
   	 */  
-  	renderSVG: function (element, options) {  
+  	show: function (options) {  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		this._y = this.y;  
+  		this._dy = this.OFFSET;  
+  		this._opacity = 1;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Render svg version  
+  	 * @param {SVGElement} element  
+  	 */  
+  	renderSVG: function (element) {  
   		svg.appendChild(  
   			element,  
   			'use',  
-  			this.getUseAttributes('#lightning', options)  
+  			this.getUseAttributes('#lightning')  
   		);  
   	},  
     
   	/**  
   	 * Render canvas version  
-  	 * @param {DOMElement} element  
-  	 * @param {Object} options  
+  	 * @param {CanvasContext} ctx  
   	 */  
-  	renderCanvas: function (element, options) {  
-  		var ctx = element.getContext('2d');  
-    
+  	renderCanvas: function (ctx) {  
   		// Fill  
   		ctx.save();  
-  		ctx.translate(options.x, options.y)  
-  		ctx.scale(options.scale, options.scale);  
+  		this.transformCanvas(ctx);  
     
   		ctx.fillStyle = FILL_COLOUR;  
   		ctx.beginPath();  
@@ -4507,7 +4557,7 @@ require.register('primitives/lightningPrimitive', function(module, exports, requ
   		ctx.lineTo(12.488,12.484);  
   		ctx.lineTo(0,25);  
   		ctx.lineTo(25.001,8.32);  
-  		ctx.lineTo(16.663000000000004,8.32);  
+  		ctx.lineTo(16.663,8.32);  
   		ctx.lineTo(24.995,0);  
   		ctx.lineTo(10.413,0);  
   		ctx.closePath();  
@@ -4516,10 +4566,339 @@ require.register('primitives/lightningPrimitive', function(module, exports, requ
   	}  
   });  
     
-  module.exports = Trait.compose(  
-  	TPrimitive,  
-  	TLightningPrimitive  
-  ).create();
+  module.exports = function () {  
+  	return Trait.compose(  
+  		TPrimitive,  
+  		TLightningPrimitive  
+  	).create();  
+  };
+});
+require.register('primitives/FogPrimitive', function(module, exports, require) {
+  var svg = require('svg')  
+  	, Trait = require('trait')  
+  	, TPrimitive = require('primitives/TPrimitive')  
+    
+  	, TFogPrimitive;  
+    
+  TFogPrimitive = Trait({  
+  	/**  
+  	 * Show transition  
+  	 * @params {Object} options  
+  	 */  
+  	show: function (options) {  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		this._opacity = 1;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Render svg version  
+  	 * @param {SVGElement} element  
+  	 */  
+  	renderSVG: function (element) {  
+  		svg.appendChild(  
+  			element,  
+  			'use',  
+  			this.getUseAttributes('#fog')  
+  		);  
+  	},  
+    
+  	/**  
+  	 * Render canvas version  
+  	 * @param {CanvasContext} ctx  
+  	 */  
+  	renderCanvas: function (ctx) {  
+  		var tint = Math.floor(255 * (1 - this.tint));  
+    
+  		ctx.save();  
+  		this.transformCanvas(ctx);  
+    
+  		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
+  		ctx.beginPath();  
+  		ctx.moveTo(82.3,42);  
+  		ctx.lineTo(2.7,42);  
+  		ctx.bezierCurveTo(1.2,42,0,42.9,0,44);  
+  		ctx.bezierCurveTo(0,45.1,1.2,46,2.7,46);  
+  		ctx.lineTo(82.4,46);  
+  		ctx.bezierCurveTo(83.9,46,85.1,45.1,85.1,44);  
+  		ctx.bezierCurveTo(85.1,42.9,83.8,42,82.3,42);  
+  		ctx.closePath();  
+  		ctx.fill();  
+    
+  		ctx.beginPath();  
+  		ctx.moveTo(80.1,50);  
+  		ctx.lineTo(5.9,50);  
+  		ctx.bezierCurveTo(4.3,50,3,50.9,3,52);  
+  		ctx.bezierCurveTo(3,53.1,4.3,54,5.9,54);  
+  		ctx.lineTo(80.2,54);  
+  		ctx.bezierCurveTo(81.8,54,83.1,53.1,83.1,52);  
+  		ctx.bezierCurveTo(83,50.9,81.7,50,80.1,50);  
+  		ctx.closePath();  
+  		ctx.fill();  
+    
+  		ctx.beginPath();  
+  		ctx.moveTo(80.1,58);  
+  		ctx.lineTo(10.9,58);  
+  		ctx.bezierCurveTo(9.3,58,8,58.9,8,60);  
+  		ctx.bezierCurveTo(8,61.1,9.3,62,10.9,62);  
+  		ctx.lineTo(80.1,62);  
+  		ctx.bezierCurveTo(81.7,62,83,61.1,83,60);  
+  		ctx.bezierCurveTo(83,58.9,81.7,58,80.1,58);  
+  		ctx.closePath();  
+  		ctx.fill();  
+    
+  		ctx.beginPath();  
+  		ctx.moveTo(51.2,0);  
+  		ctx.bezierCurveTo(42.1,-0.3,33.6,4.8,30.7,14.6);  
+  		ctx.bezierCurveTo(24.8,13.2,15.4,16.9,13.7,25);  
+  		ctx.bezierCurveTo(8.2,24.9,1.2,29,0.1,36);  
+  		ctx.bezierCurveTo(0,37,0.7,37.9,1.7,37.9);  
+  		ctx.lineTo(84,37.9);  
+  		ctx.bezierCurveTo(85,37.9,85.8,37.2,85.9,36.2);  
+  		ctx.bezierCurveTo(86.9,27.3,81.8,17.5,70.7,16.1);  
+  		ctx.bezierCurveTo(68.5,5.6,60.2,0.3,51.2,0);  
+  		ctx.closePath();  
+  		ctx.fill();  
+  		ctx.restore();  
+  	}  
+  });  
+    
+  module.exports = function () {  
+  	return Trait.compose(  
+  		TPrimitive.resolve({}),  
+  		TFogPrimitive  
+  	).create();  
+  };
+});
+require.register('animator', function(module, exports, require) {
+  var anims = {}
+  	, length = 0
+  	, uid = 1
+  	, last = 0
+  	, running = false
+  
+  	, FRAME_DURATION = 2000
+  	, TRANSITION_DURATION = 250;
+  
+  module.exports = function (ctx, frames, options) {
+  	if (!ctx) return;
+  
+  	var anim = new Anim(uid++, ctx, frames, options);
+  	anims[anim.id] = anim;
+  	length++;
+  	return anim;
+  };
+  
+  function start () {
+  	if (!running) {
+  		running = true;
+  		tick = 0;
+  		window.requestAnimationFrame(onTick);
+  	}
+  }
+  
+  function stop () {
+  	if (running) {
+  		running = false;
+  		for (var id in anims) {
+  			anims[id].running = false;
+  		}
+  	}
+  }
+  
+  /**
+   * Handle frame tick
+   * @param {Number} time
+   */
+  function onTick (time) {
+  	var now = Date.now()
+  		, tick;
+  
+  	// Reset
+  	if (last == 0) last = now;
+  
+  	if ((tick = now - last) >= FRAME_DURATION) {
+  		// Force reset when frame duration ellapsed
+  		last = 0;
+  		// Clamp to frame duration
+  		tick = FRAME_DURATION;
+  	}
+  
+  	// Render anims
+  	for (var id in anims) {
+  		if (anims[id].running) render(anims[id], tick);
+  	}
+  
+  	// Loop
+  	if (running) window.requestAnimationFrame(onTick);
+  };
+  
+  /**
+   * Render 'anim'
+   * @param {Anim} anim
+   * @param {Number} time
+   */
+  function render (anim, time) {
+  	var newFrame = (time == 0)
+  		, transitioning = (time <= TRANSITION_DURATION) || (time >= FRAME_DURATION - TRANSITION_DURATION)
+  		, options = {time: time}
+  		, opts, layer, nextOpts;
+  
+  	// Loop frame count
+  	if (newFrame) {
+  		anim.frame = (anim.frame + 1) % anim.frames.length;
+  	}
+  
+  	// Clear canvas
+  	anim.ctx.clearRect(0, 0, anim.width, anim.height);
+  
+  	// Loop through frame layers
+  	for (var i = 0, n = anim.frames[anim.frame].length; i < n; i++) {
+  		opts = anim.frames[anim.frame][i];
+  		// Get layer instance
+  		layer = anim.layers[opts.layer];
+  		// Start new frame
+  		if (newFrame) {
+  			// Show if first frame or if layer in previous frame
+  			if (anim.frame == 0 || !contains(anim.frames[anim.frame - 1], opts.layer)) {
+  					opts.time = 0;
+  					layer.show(opts);
+  			}
+  		// End frame
+  		} else if (!anim.transitioning && transitioning) {
+  			// Move if not last frame
+  			if (anim.frame < anim.frames.length - 1
+  				// ...and sun/moon/cloud
+  				&& parseInt(opts.layer.slice(-1), 10) < 4
+  				// ...and if layer in next frame
+  				&& (nextOpts = contains(anim.frames[anim.frame + 1], opts.layer))) {
+  					// Force time to ensure transition doesn't last longer than the frame
+  					nextOpts.time = FRAME_DURATION - TRANSITION_DURATION;
+  					layer.move(nextOpts);
+  			// Hide
+  			} else {
+  				layer.hide(options);
+  			}
+  		}
+  		layer.render(anim.ctx, options);
+  	}
+  
+  	anim.transitioning = transitioning;
+  };
+  
+  /**
+   * Determine if 'layer' in 'layers'
+   * @param {Array} layers
+   * @param {String} layer
+   * @returns {Object|false}
+   */
+  function contains (layers, layer) {
+  	for (var i = 0, n = layers.length; i < n; i++) {
+  		if (layers[i].layer === layer) return layers[i];
+  	}
+  	return false;
+  }
+  
+  /**
+   * Constructor
+   * @param {String} id
+   * @param {CanvasContext} ctx
+   * @param {Arrray} frames
+   * @param {Object} options
+   */
+  function Anim (id, ctx, frames, options) {
+  	var layerOptions = {
+  		transitionDuration: TRANSITION_DURATION
+  	};
+  
+  	this.id = id;
+  	this.ctx = ctx;
+  	this.frame = -1;
+  	this.frames = frames;
+  	this.width = options.width;
+  	this.height = options.height;
+  	this.running = false;
+  	this.transitioning = false;
+  	this.last = 0;
+  	// Layer instances
+  	this.layers = {
+  		layer0: require('primitives/SunPrimitive')().initialize(layerOptions),
+  		layer1: require('primitives/MoonPrimitive')().initialize(layerOptions),
+  		layer2: require('primitives/CloudPrimitive')().initialize(layerOptions),
+  		layer3: require('./primitives/CloudPrimitive')().initialize(layerOptions),
+  		layer4: require('primitives/RaindropPrimitive')().initialize(layerOptions),
+  		layer5: require('./primitives/RaindropPrimitive')().initialize(layerOptions),
+  		layer6: require('./primitives/RaindropPrimitive')().initialize(layerOptions),
+  		layer7: require('primitives/SleetPrimitive')().initialize(layerOptions),
+  		layer8: require('./primitives/SleetPrimitive')().initialize(layerOptions),
+  		layer9: require('./primitives/SleetPrimitive')().initialize(layerOptions),
+  		layer10: require('primitives/SnowflakePrimitive')().initialize(layerOptions),
+  		layer11: require('./primitives/SnowflakePrimitive')().initialize(layerOptions),
+  		layer12: require('./primitives/SnowflakePrimitive')().initialize(layerOptions),
+  		layer13: require('primitives/LightningPrimitive')().initialize(layerOptions),
+  		layer14: require('primitives/FogPrimitive')().initialize(layerOptions),
+  	}
+  
+  	// Store layer instance key in layer object for all frames
+  	for (var i = 0, n = this.frames.length; i < n; i++) {
+  		for (var j = 0, k = this.frames[i].length; j < k; j++) {
+  			var layer = this.frames[i][j];
+  			switch (layer.primitive) {
+  				case 'sun':
+  					layer.layer = 'layer0';
+  					break;
+  				case 'moon':
+  					layer.layer = 'layer1';
+  					break;
+  				case 'cloud':
+  					layer.layer = layer.flip ? 'layer2' : 'layer3';
+  					break;
+  				case 'raindrop':
+  					layer.layer = 'layer' + (j + 2);
+  					break;
+  				case 'sleet':
+  					layer.layer = 'layer' + (j + 5);
+  					break;
+  				case 'snowflake':
+  					layer.layer = 'layer' + (j + 8);
+  					break;
+  				case 'lightning':
+  					layer.layer = 'layer13';
+  					break;
+  				case 'fog':
+  					layer.layer = 'layer14';
+  					break;
+  			}
+  		}
+  	}
+  
+  	console.dir(this.frames)
+  }
+  
+  Anim.prototype.start = function () {
+  	this.running = true;
+  	start();
+  };
+  
+  Anim.prototype.stop = function () {
+  	this.running = false;
+  };
+  
+  Anim.prototype.destroy = function () {
+  
+  };
 });
 require.register('weatherSymbol', function(module, exports, require) {
   // Convert with http://www.professorcloud.com/svg-to-canvas/
@@ -4530,14 +4909,14 @@ require.register('weatherSymbol', function(module, exports, require) {
   	, clone = require('lodash.clone')
   	, animator = require('animator')
   	, primitives = {
-  			sun: require('primitives/sunPrimitive'),
-  			moon: require('primitives/moonPrimitive'),
-  			cloud: require('primitives/cloudPrimitive'),
-  			raindrop: require('primitives/raindropPrimitive'),
-  			sleet: require('primitives/sleetPrimitive'),
-  			snowflake: require('primitives/snowflakePrimitive'),
-  			fog: require('primitives/fogPrimitive'),
-  			lightning: require('primitives/lightningPrimitive')
+  			sun: require('primitives/SunPrimitive')(),
+  			moon: require('primitives/MoonPrimitive')(),
+  			cloud: require('primitives/CloudPrimitive')(),
+  			raindrop: require('primitives/RaindropPrimitive')(),
+  			sleet: require('primitives/SleetPrimitive')(),
+  			snowflake: require('primitives/SnowflakePrimitive')(),
+  			fog: require('primitives/FogPrimitive')(),
+  			lightning: require('primitives/LightningPrimitive')()
   		}
   	, formulae = {"10":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":65,"y":72},{"primitive":"raindrop","x":49,"y":72},{"primitive":"raindrop","x":33,"y":68}],"11":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"lightning","x":14,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":69,"y":72},{"primitive":"raindrop","x":53,"y":72},{"primitive":"raindrop","x":37,"y":68}],"12":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":39,"y":68}],"13":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":54,"y":69},{"primitive":"snowflake","x":36,"y":71}],"14":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":62,"y":69},{"primitive":"snowflake","x":44,"y":71}],"15":[{"primitive":"fog","x":4,"y":18,"tint":0.15}],"22":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"lightning","x":21,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":60,"y":72},{"primitive":"raindrop","x":44,"y":68}],"23":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":58,"y":72},{"primitive":"sleet","x":42,"y":68}],"30":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"lightning","x":27,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":51,"y":68}],"31":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"lightning","x":25,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":48,"y":68}],"32":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"lightning","x":15,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":71,"y":72},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":38,"y":68}],"33":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"lightning","x":23,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":49,"y":69}],"34":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"lightning","x":8,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":70,"y":69},{"primitive":"snowflake","x":51,"y":69},{"primitive":"snowflake","x":33,"y":71}],"46":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":48,"y":68}],"47":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":45,"y":68}],"48":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":67,"y":72},{"primitive":"sleet","x":50,"y":68},{"primitive":"sleet","x":33,"y":68}],"49":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":43,"y":69}],"50":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":63,"y":69},{"primitive":"snowflake","x":44,"y":69},{"primitive":"snowflake","x":26,"y":71}],"01d":[{"primitive":"sun","x":5,"y":5}],"02d":[{"primitive":"sun","x":5,"y":5},{"primitive":"cloud","x":8,"y":56,"scale":0.6,"flip":true,"tint":0.1}],"03d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.1}],"40d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":48,"y":68}],"05d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":55,"y":72},{"primitive":"raindrop","x":39,"y":68}],"41d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":65,"y":72},{"primitive":"raindrop","x":49,"y":72},{"primitive":"raindrop","x":33,"y":68}],"42d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":45,"y":68}],"07d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":39,"y":68}],"43d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":67,"y":72},{"primitive":"sleet","x":50,"y":68},{"primitive":"sleet","x":33,"y":68}],"44d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":43,"y":69}],"08d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":54,"y":69},{"primitive":"snowflake","x":36,"y":71}],"45d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":63,"y":69},{"primitive":"snowflake","x":44,"y":69},{"primitive":"snowflake","x":26,"y":71}],"24d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":27,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":51,"y":68}],"06d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":21,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":60,"y":72},{"primitive":"raindrop","x":44,"y":68}],"25d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":14,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":69,"y":72},{"primitive":"raindrop","x":53,"y":72},{"primitive":"raindrop","x":37,"y":68}],"26d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":25,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":48,"y":68}],"20d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":58,"y":72},{"primitive":"sleet","x":42,"y":68}],"27d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":15,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":71,"y":72},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":38,"y":68}],"28d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":23,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":49,"y":69}],"21d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":62,"y":69},{"primitive":"snowflake","x":44,"y":71}],"29d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":8,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":70,"y":69},{"primitive":"snowflake","x":51,"y":69},{"primitive":"snowflake","x":33,"y":71}],"01m":[{"primitive":"sun","x":5,"y":32,"winter":true}],"02m":[{"primitive":"sun","x":5,"y":32,"winter":true},{"primitive":"cloud","x":8,"y":46,"scale":0.6,"flip":true,"tint":0.1}],"03m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.1}],"40m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":48,"y":68}],"05m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":55,"y":72},{"primitive":"raindrop","x":39,"y":68}],"41m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":65,"y":72},{"primitive":"raindrop","x":49,"y":72},{"primitive":"raindrop","x":33,"y":68}],"42m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":45,"y":68}],"07m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":39,"y":68}],"43m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":67,"y":72},{"primitive":"sleet","x":50,"y":68},{"primitive":"sleet","x":33,"y":68}],"44m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":43,"y":69}],"08m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":54,"y":69},{"primitive":"snowflake","x":36,"y":71}],"45m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":63,"y":69},{"primitive":"snowflake","x":44,"y":69},{"primitive":"snowflake","x":26,"y":71}],"24m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":27,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":51,"y":68}],"06m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":21,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":60,"y":72},{"primitive":"raindrop","x":44,"y":68}],"25m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":14,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":69,"y":72},{"primitive":"raindrop","x":53,"y":72},{"primitive":"raindrop","x":37,"y":68}],"26m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":25,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":48,"y":68}],"20m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":58,"y":72},{"primitive":"sleet","x":42,"y":68}],"27m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":15,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":71,"y":72},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":38,"y":68}],"28m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":23,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":49,"y":69}],"21m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":62,"y":69},{"primitive":"snowflake","x":44,"y":71}],"29m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":8,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":70,"y":69},{"primitive":"snowflake","x":51,"y":69},{"primitive":"snowflake","x":33,"y":71}],"01n":[{"primitive":"moon","x":20,"y":20}],"02n":[{"primitive":"moon","x":20,"y":20},{"primitive":"cloud","x":8,"y":56,"scale":0.6,"flip":true,"tint":0.1}],"03n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.1}],"40n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":48,"y":68}],"05n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":55,"y":72},{"primitive":"raindrop","x":39,"y":68}],"41n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":65,"y":72},{"primitive":"raindrop","x":49,"y":72},{"primitive":"raindrop","x":33,"y":68}],"42n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":45,"y":68}],"07n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":39,"y":68}],"43n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":67,"y":72},{"primitive":"sleet","x":50,"y":68},{"primitive":"sleet","x":33,"y":68}],"44n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":43,"y":69}],"08n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":54,"y":69},{"primitive":"snowflake","x":36,"y":71}],"45n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":63,"y":69},{"primitive":"snowflake","x":44,"y":69},{"primitive":"snowflake","x":26,"y":71}],"24n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":27,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":51,"y":68}],"06n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":21,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":60,"y":72},{"primitive":"raindrop","x":44,"y":68}],"25n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":14,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":69,"y":72},{"primitive":"raindrop","x":53,"y":72},{"primitive":"raindrop","x":37,"y":68}],"26n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":25,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":48,"y":68}],"20n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":58,"y":72},{"primitive":"sleet","x":42,"y":68}],"27n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":15,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":71,"y":72},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":38,"y":68}],"28n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":23,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":49,"y":69}],"21n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":62,"y":69},{"primitive":"snowflake","x":44,"y":71}],"29n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":8,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":70,"y":69},{"primitive":"snowflake","x":51,"y":69},{"primitive":"snowflake","x":33,"y":71}],"04":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.1},{"primitive":"cloud","x":7,"y":22,"tint":0.15}],"09":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":55,"y":72},{"primitive":"raindrop","x":39,"y":68}]}
   
@@ -4568,10 +4947,9 @@ require.register('weatherSymbol', function(module, exports, require) {
   		// Common layer properties
   		, layerOptions = {
   				type: type,
-  				scale: capabilities.backingRatio,
   				width: w * capabilities.backingRatio,
   				height: h * capabilities.backingRatio,
-  				tScale: (type == CANVAS) ? (w/100) * capabilities.backingRatio : 1,
+  				scale: (type == CANVAS) ? (w/100) * capabilities.backingRatio : 1,
   				bg: (bgContainer && bgContainer !== 'rgba(0, 0, 0, 0)')
   					? bgContainer
   					: DEFAULT_BG
@@ -4594,28 +4972,24 @@ require.register('weatherSymbol', function(module, exports, require) {
   	if (type != IMG) {
   		// Scale canvas element for hi-DPI
   		if (type == CANVAS) {
-  			if (w != 0) {
-  				element.width = layerOptions.width;
-  				element.height = layerOptions.height;
-  			}
+  			element.width = layerOptions.width;
+  			element.height = layerOptions.height;
   		}
   
   		if (animated) {
   			frames = map(id.split(':'), function (id) {
   				return map(formulae[id], function (layer) {
-  					return {
-  						primitive: primitives[layer.primitive],
-  						options: getLayerOptions(layer, clone(layerOptions))
-  					}
+  					return getLayerOptions(layer, clone(layerOptions))
   				});
   			});
-  			animator(element, frames, layerOptions).start();
+  			animator(element.getContext('2d'), frames, layerOptions)
+  				.start();
   
   		} else {
   			if (formula = formulae[id]) {
   				// Render layers
   				for (var i = 0, n = formula.length; i < n; i++) {
-  					primitives[formula[i].primitive].render(element,
+  					primitives[formula[i].primitive].render((type == CANVAS) ? element.getContext('2d') : element,
   						getLayerOptions(formula[i], clone(layerOptions)));
   				}
   			}
@@ -4636,14 +5010,19 @@ require.register('weatherSymbol', function(module, exports, require) {
    * @returns {Object}
    */
   function getLayerOptions (layer, options) {
-  	options.x = Math.round(layer.x * options.tScale);
-  	options.y = Math.round(layer.y * options.tScale);
-  	options.scale = (layer.scale || 1) * options.tScale;
+  	options.primitive = layer.primitive;
+  	options.x = Math.round(layer.x * options.scale);
+  	options.y = Math.round(layer.y * options.scale);
+  	options.scale = (layer.scale || 1) * options.scale;
   	options.flip = layer.flip;
   	options.tint = layer.tint || 1;
   	options.winter = layer.winter;
   
   	return options;
+  }
+  
+  function getLayers (layers) {
+  
   }
   
   /**

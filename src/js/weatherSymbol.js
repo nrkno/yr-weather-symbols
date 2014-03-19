@@ -6,14 +6,14 @@ var svg = require('svg')
 	, clone = require('lodash.clone')
 	, animator = require('./animator')
 	, primitives = {
-			sun: require('./primitives/sunPrimitive'),
-			moon: require('./primitives/moonPrimitive'),
-			cloud: require('./primitives/cloudPrimitive'),
-			raindrop: require('./primitives/raindropPrimitive'),
-			sleet: require('./primitives/sleetPrimitive'),
-			snowflake: require('./primitives/snowflakePrimitive'),
-			fog: require('./primitives/fogPrimitive'),
-			lightning: require('./primitives/lightningPrimitive')
+			sun: require('./primitives/SunPrimitive')(),
+			moon: require('./primitives/MoonPrimitive')(),
+			cloud: require('./primitives/CloudPrimitive')(),
+			raindrop: require('./primitives/RaindropPrimitive')(),
+			sleet: require('./primitives/SleetPrimitive')(),
+			snowflake: require('./primitives/SnowflakePrimitive')(),
+			fog: require('./primitives/FogPrimitive')(),
+			lightning: require('./primitives/LightningPrimitive')()
 		}
 	, formulae = require('../../yresources/weatherSymbols.json')
 
@@ -44,10 +44,9 @@ module.exports = function (container, options) {
 		// Common layer properties
 		, layerOptions = {
 				type: type,
-				scale: capabilities.backingRatio,
 				width: w * capabilities.backingRatio,
 				height: h * capabilities.backingRatio,
-				tScale: (type == CANVAS) ? (w/100) * capabilities.backingRatio : 1,
+				scale: (type == CANVAS) ? (w/100) * capabilities.backingRatio : 1,
 				bg: (bgContainer && bgContainer !== 'rgba(0, 0, 0, 0)')
 					? bgContainer
 					: DEFAULT_BG
@@ -70,28 +69,24 @@ module.exports = function (container, options) {
 	if (type != IMG) {
 		// Scale canvas element for hi-DPI
 		if (type == CANVAS) {
-			if (w != 0) {
-				element.width = layerOptions.width;
-				element.height = layerOptions.height;
-			}
+			element.width = layerOptions.width;
+			element.height = layerOptions.height;
 		}
 
 		if (animated) {
 			frames = map(id.split(':'), function (id) {
 				return map(formulae[id], function (layer) {
-					return {
-						primitive: primitives[layer.primitive],
-						options: getLayerOptions(layer, clone(layerOptions))
-					}
+					return getLayerOptions(layer, clone(layerOptions))
 				});
 			});
-			animator(element, frames, layerOptions).start();
+			animator(element.getContext('2d'), frames, layerOptions)
+				.start();
 
 		} else {
 			if (formula = formulae[id]) {
 				// Render layers
 				for (var i = 0, n = formula.length; i < n; i++) {
-					primitives[formula[i].primitive].render(element,
+					primitives[formula[i].primitive].render((type == CANVAS) ? element.getContext('2d') : element,
 						getLayerOptions(formula[i], clone(layerOptions)));
 				}
 			}
@@ -112,14 +107,19 @@ module.exports = function (container, options) {
  * @returns {Object}
  */
 function getLayerOptions (layer, options) {
-	options.x = Math.round(layer.x * options.tScale);
-	options.y = Math.round(layer.y * options.tScale);
-	options.scale = (layer.scale || 1) * options.tScale;
+	options.primitive = layer.primitive;
+	options.x = Math.round(layer.x * options.scale);
+	options.y = Math.round(layer.y * options.scale);
+	options.scale = (layer.scale || 1) * options.scale;
 	options.flip = layer.flip;
 	options.tint = layer.tint || 1;
 	options.winter = layer.winter;
 
 	return options;
+}
+
+function getLayers (layers) {
+
 }
 
 /**
