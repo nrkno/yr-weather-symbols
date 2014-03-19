@@ -93,8 +93,11 @@ function render (anim, time) {
 			}
 		// End frame
 		} else if (!anim.transitioning && transitioning) {
-			// Move if not last frame or if layer in next frame
+			// Move if not last frame
 			if (anim.frame < anim.frames.length - 1
+				// ...and sun/moon/cloud
+				&& parseInt(opts.layer.slice(-1), 10) < 4
+				// ...and if layer in next frame
 				&& (nextOpts = contains(anim.frames[anim.frame + 1], opts.layer))) {
 					// Force time to ensure transition doesn't last longer than the frame
 					nextOpts.time = FRAME_DURATION - TRANSITION_DURATION;

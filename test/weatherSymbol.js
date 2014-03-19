@@ -3153,6 +3153,23 @@ require.register('primitives/MoonPrimitive', function(module, exports, require) 
   	},  
     
   	/**  
+  	 * Move transition  
+  	 * @params {Object} options  
+  	 */  
+  	move: function (options) {  
+  		this._y = this.y;  
+  		this._dy = options.y - this.y;  
+  		this._x = this.x;  
+  		this._dx = options.x - this.x;  
+  		this._scale = this.scale;  
+  		this._dscale = options.scale - this.scale;  
+  		if (this._dy || this._dx || this._dscale) {  
+  			this.transitionProps = ['y', 'x', 'scale'];  
+  			this.transition(options);  
+  		}  
+  	},  
+    
+  	/**  
   	 * Render svg version  
   	 * @param {SVGElement} element  
   	 */  
@@ -3203,7 +3220,6 @@ require.register('primitives/CloudPrimitive', function(module, exports, require)
   	, TCloudPrimitive;  
     
   TCloudPrimitive = Trait({  
-    
   	/**  
   	 * Show transition  
   	 * @params {Object} options  
@@ -3239,8 +3255,10 @@ require.register('primitives/CloudPrimitive', function(module, exports, require)
   	move: function (options) {  
   		this._tint = this.tint;  
   		this._dtint = options.tint - this.tint;  
-  		this.transitionProps = ['tint'];  
-  		this.transition(options);  
+  		if (this._dtint) {  
+  			this.transitionProps = ['tint'];  
+  			this.transition(options);  
+  		}  
   	},  
     
   	/**  
@@ -3349,6 +3367,30 @@ require.register('primitives/RaindropPrimitive', function(module, exports, requi
     
   TRaindropPrimitive = Trait({  
   	/**  
+  	 * Show transition  
+  	 * @params {Object} options  
+  	 */  
+  	show: function (options) {  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		this._y = this.y;  
+  		this._dy = this.OFFSET;  
+  		this._opacity = 1;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
   	 * Render svg version  
   	 * @param {SVGElement} element  
   	 */  
@@ -3379,6 +3421,7 @@ require.register('primitives/RaindropPrimitive', function(module, exports, requi
   		ctx.restore();  
     
   		// Fill  
+  		ctx.globalAlpha = this.opacity;  
   		ctx.fillStyle = FILL_COLOUR;  
   		ctx.beginPath();  
   		ctx.moveTo(20,16.8);  
@@ -3394,7 +3437,7 @@ require.register('primitives/RaindropPrimitive', function(module, exports, requi
     
   module.exports = function () {  
   	return Trait.compose(  
-  		TPrimitive.resolve({}),  
+  		TPrimitive,  
   		TRaindropPrimitive  
   	).create();  
   };
@@ -3409,6 +3452,30 @@ require.register('primitives/SleetPrimitive', function(module, exports, require)
   	, TSleetPrimitive;
   
   TSleetPrimitive = Trait({
+  	/**
+  	 * Show transition
+  	 * @params {Object} options
+  	 */
+  	show: function (options) {
+  		this._opacity = 0;
+  		this._dopacity = 1;
+  		this.transitionProps = ['opacity'];
+  		this.transition(options);
+  	},
+  
+  	/**
+  	 * Hide transition
+  	 * @params {Object} options
+  	 */
+  	hide: function (options) {
+  		this._y = this.y;
+  		this._dy = this.OFFSET;
+  		this._opacity = 1;
+  		this._dopacity = -1;
+  		this.transitionProps = ['y', 'opacity'];
+  		this.transition(options);
+  	},
+  
   	/**
   	 * Render svg version
   	 * @param {SVGElement} element
@@ -3440,6 +3507,7 @@ require.register('primitives/SleetPrimitive', function(module, exports, require)
   		ctx.restore();
   
   		// Fill
+  		ctx.globalAlpha = this.opacity;
   		ctx.fillStyle = FILL_COLOUR;
   		ctx.beginPath();
   		ctx.moveTo(19.9,16.6);
@@ -3473,6 +3541,30 @@ require.register('primitives/SnowflakePrimitive', function(module, exports, requ
   	, TSnowflakePrimitive;  
     
   TSnowflakePrimitive = Trait({  
+  	/**  
+  	 * Show transition  
+  	 * @params {Object} options  
+  	 */  
+  	show: function (options) {  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		this._y = this.y;  
+  		this._dy = this.OFFSET;  
+  		this._opacity = 1;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
+  	},  
+    
   	/**  
   	 * Render svg version  
   	 * @param {SVGElement} element  
@@ -3569,6 +3661,30 @@ require.register('primitives/LightningPrimitive', function(module, exports, requ
     
   TLightningPrimitive = Trait({  
   	/**  
+  	 * Show transition  
+  	 * @params {Object} options  
+  	 */  
+  	show: function (options) {  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		this._y = this.y;  
+  		this._dy = this.OFFSET;  
+  		this._opacity = 1;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
   	 * Render svg version  
   	 * @param {SVGElement} element  
   	 */  
@@ -3607,7 +3723,7 @@ require.register('primitives/LightningPrimitive', function(module, exports, requ
     
   module.exports = function () {  
   	return Trait.compose(  
-  		TPrimitive.resolve({}),  
+  		TPrimitive,  
   		TLightningPrimitive  
   	).create();  
   };
@@ -3620,6 +3736,28 @@ require.register('primitives/FogPrimitive', function(module, exports, require) {
   	, TFogPrimitive;  
     
   TFogPrimitive = Trait({  
+  	/**  
+  	 * Show transition  
+  	 * @params {Object} options  
+  	 */  
+  	show: function (options) {  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		this._opacity = 1;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['opacity'];  
+  		this.transition(options);  
+  	},  
+    
   	/**  
   	 * Render svg version  
   	 * @param {SVGElement} element  
@@ -3795,8 +3933,11 @@ require.register('animator', function(module, exports, require) {
   			}
   		// End frame
   		} else if (!anim.transitioning && transitioning) {
-  			// Move if not last frame or if layer in next frame
+  			// Move if not last frame
   			if (anim.frame < anim.frames.length - 1
+  				// ...and sun/moon/cloud
+  				&& parseInt(opts.layer.slice(-1), 10) < 4
+  				// ...and if layer in next frame
   				&& (nextOpts = contains(anim.frames[anim.frame + 1], opts.layer))) {
   					// Force time to ensure transition doesn't last longer than the frame
   					nextOpts.time = FRAME_DURATION - TRANSITION_DURATION;

@@ -34,6 +34,23 @@ TMoonPrimitive = Trait({
 	},
 
 	/**
+	 * Move transition
+	 * @params {Object} options
+	 */
+	move: function (options) {
+		this._y = this.y;
+		this._dy = options.y - this.y;
+		this._x = this.x;
+		this._dx = options.x - this.x;
+		this._scale = this.scale;
+		this._dscale = options.scale - this.scale;
+		if (this._dy || this._dx || this._dscale) {
+			this.transitionProps = ['y', 'x', 'scale'];
+			this.transition(options);
+		}
+	},
+
+	/**
 	 * Render svg version
 	 * @param {SVGElement} element
 	 */

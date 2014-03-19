@@ -165,7 +165,7 @@ require.register('svg', function(module, exports, require) {
   };
 });
 require.register('dust', function(module, exports, require) {
-  /*! Dust - Asynchronous Templating - v2.3.4
+  /*! Dust - Asynchronous Templating - v2.3.3
   * http://linkedin.github.io/dustjs/
   * Copyright (c) 2014 Aleksander Williams; Released under the MIT License */
   (function(root) {
@@ -177,35 +177,17 @@ require.register('dust', function(module, exports, require) {
         DEBUG = 'DEBUG',
         loggingLevels = [DEBUG, INFO, WARN, ERROR, NONE],
         EMPTY_FUNC = function() {},
-        logger = {},
-        originalLog,
-        loggerContext;
+        logger = EMPTY_FUNC,
+        loggerContext = this;
   
     dust.debugLevel = NONE;
     dust.silenceErrors = false;
   
-    // Try to find the console in global scope
+    // Try to find the console logger in global scope
     if (root && root.console && root.console.log) {
+      logger = root.console.log;
       loggerContext = root.console;
-      originalLog = root.console.log;
     }
-  
-    // robust logger for node.js, modern browsers, and IE <= 9.
-    logger.log = loggerContext ? function() {
-        // Do this for normal browsers
-        if (typeof originalLog === 'function') {
-          logger.log = function() {
-            originalLog.apply(loggerContext, arguments);
-          };
-        } else {
-          // Do this for IE <= 9
-          logger.log = function() {
-            var message = Array.prototype.slice.apply(arguments).join(' ');
-            originalLog(message);
-          };
-        }
-        logger.log.apply(this, arguments);
-    } : function() { /* no op */ };
   
     /**
      * If dust.isDebug is true, Log dust debug statements, info statements, warning statements, and errors.
@@ -216,17 +198,17 @@ require.register('dust', function(module, exports, require) {
      */
     dust.log = function(message, type) {
       if(dust.isDebug && dust.debugLevel === NONE) {
-        logger.log('[!!!DEPRECATION WARNING!!!]: dust.isDebug is deprecated.  Set dust.debugLevel instead to the level of logging you want ["debug","info","warn","error","none"]');
+        logger.call(loggerContext, '[!!!DEPRECATION WARNING!!!]: dust.isDebug is deprecated.  Set dust.debugLevel instead to the level of logging you want ["debug","info","warn","error","none"]');
         dust.debugLevel = INFO;
       }
   
       type = type || INFO;
-      if (dust.indexInArray(loggingLevels, type) >= dust.indexInArray(loggingLevels, dust.debugLevel)) {
+      if (loggingLevels.indexOf(type) >= loggingLevels.indexOf(dust.debugLevel)) {
         if(!dust.logQueue) {
           dust.logQueue = [];
         }
         dust.logQueue.push({message: message, type: type});
-        logger.log('[DUST ' + type + ']: ' + message);
+        logger.call(loggerContext, '[DUST ' + type + ']: ' + message);
       }
   
       if (!dust.silenceErrors && type === ERROR) {
@@ -246,7 +228,7 @@ require.register('dust', function(module, exports, require) {
      * @public
      */
     dust.onError = function(error, chunk) {
-      logger.log('[!!!DEPRECATION WARNING!!!]: dust.onError will no longer return a chunk object.');
+      logger.call(loggerContext, '[!!!DEPRECATION WARNING!!!]: dust.onError will no longer return a chunk object.');
       dust.log(error.message || error, ERROR);
       if(!dust.silenceErrors) {
         throw error;
@@ -343,40 +325,6 @@ require.register('dust', function(module, exports, require) {
         return Object.prototype.toString.call(arr) === '[object Array]';
       };
     }
-  
-    // indexOf shim for arrays for IE <= 8
-    // source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
-    dust.indexInArray = function(arr, item, fromIndex) {
-      fromIndex = +fromIndex || 0;
-      if (Array.prototype.indexOf) {
-        return arr.indexOf(item, fromIndex);
-      } else {
-      if ( arr === undefined || arr === null ) {
-        throw new TypeError( 'cannot call method "indexOf" of null' );
-      }
-  
-      var length = arr.length; // Hack to convert object.length to a UInt32
-  
-      if (Math.abs(fromIndex) === Infinity) {
-        fromIndex = 0;
-      }
-  
-      if (fromIndex < 0) {
-        fromIndex += length;
-        if (fromIndex < 0) {
-          fromIndex = 0;
-        }
-      }
-  
-      for (;fromIndex < length; fromIndex++) {
-        if (arr[fromIndex] === item) {
-          return fromIndex;
-        }
-      }
-  
-      return -1;
-      }
-    };
   
     dust.nextTick = (function() {
       return function(callback) {
@@ -521,14 +469,9 @@ require.register('dust', function(module, exports, require) {
           } else {
             ctx = this.global ? this.global[first] : undefined;
           }
-        } else if (ctx) {
+        } else {
           // if scope is limited by a leading dot, don't search up the tree
-          if(ctx.head) {
-            ctx = ctx.head[first];
-          } else {
-            //context's head is empty, value we are searching for is not defined
-            ctx = undefined;
-          }
+          ctx = ctx.head[first];
         }
   
         while (ctx && i < len) {
@@ -1059,6 +1002,7 @@ require.register('dust', function(module, exports, require) {
     }
   
   })(this);
+  
   
 });
 require.register('symbolGroup', function(module, exports, require) {
@@ -4054,6 +3998,23 @@ require.register('primitives/MoonPrimitive', function(module, exports, require) 
   	},  
     
   	/**  
+  	 * Move transition  
+  	 * @params {Object} options  
+  	 */  
+  	move: function (options) {  
+  		this._y = this.y;  
+  		this._dy = options.y - this.y;  
+  		this._x = this.x;  
+  		this._dx = options.x - this.x;  
+  		this._scale = this.scale;  
+  		this._dscale = options.scale - this.scale;  
+  		if (this._dy || this._dx || this._dscale) {  
+  			this.transitionProps = ['y', 'x', 'scale'];  
+  			this.transition(options);  
+  		}  
+  	},  
+    
+  	/**  
   	 * Render svg version  
   	 * @param {SVGElement} element  
   	 */  
@@ -4104,7 +4065,6 @@ require.register('primitives/CloudPrimitive', function(module, exports, require)
   	, TCloudPrimitive;  
     
   TCloudPrimitive = Trait({  
-    
   	/**  
   	 * Show transition  
   	 * @params {Object} options  
@@ -4140,8 +4100,10 @@ require.register('primitives/CloudPrimitive', function(module, exports, require)
   	move: function (options) {  
   		this._tint = this.tint;  
   		this._dtint = options.tint - this.tint;  
-  		this.transitionProps = ['tint'];  
-  		this.transition(options);  
+  		if (this._dtint) {  
+  			this.transitionProps = ['tint'];  
+  			this.transition(options);  
+  		}  
   	},  
     
   	/**  
@@ -4250,6 +4212,30 @@ require.register('primitives/RaindropPrimitive', function(module, exports, requi
     
   TRaindropPrimitive = Trait({  
   	/**  
+  	 * Show transition  
+  	 * @params {Object} options  
+  	 */  
+  	show: function (options) {  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		this._y = this.y;  
+  		this._dy = this.OFFSET;  
+  		this._opacity = 1;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
   	 * Render svg version  
   	 * @param {SVGElement} element  
   	 */  
@@ -4280,6 +4266,7 @@ require.register('primitives/RaindropPrimitive', function(module, exports, requi
   		ctx.restore();  
     
   		// Fill  
+  		ctx.globalAlpha = this.opacity;  
   		ctx.fillStyle = FILL_COLOUR;  
   		ctx.beginPath();  
   		ctx.moveTo(20,16.8);  
@@ -4295,7 +4282,7 @@ require.register('primitives/RaindropPrimitive', function(module, exports, requi
     
   module.exports = function () {  
   	return Trait.compose(  
-  		TPrimitive.resolve({}),  
+  		TPrimitive,  
   		TRaindropPrimitive  
   	).create();  
   };
@@ -4310,6 +4297,30 @@ require.register('primitives/SleetPrimitive', function(module, exports, require)
   	, TSleetPrimitive;
   
   TSleetPrimitive = Trait({
+  	/**
+  	 * Show transition
+  	 * @params {Object} options
+  	 */
+  	show: function (options) {
+  		this._opacity = 0;
+  		this._dopacity = 1;
+  		this.transitionProps = ['opacity'];
+  		this.transition(options);
+  	},
+  
+  	/**
+  	 * Hide transition
+  	 * @params {Object} options
+  	 */
+  	hide: function (options) {
+  		this._y = this.y;
+  		this._dy = this.OFFSET;
+  		this._opacity = 1;
+  		this._dopacity = -1;
+  		this.transitionProps = ['y', 'opacity'];
+  		this.transition(options);
+  	},
+  
   	/**
   	 * Render svg version
   	 * @param {SVGElement} element
@@ -4341,6 +4352,7 @@ require.register('primitives/SleetPrimitive', function(module, exports, require)
   		ctx.restore();
   
   		// Fill
+  		ctx.globalAlpha = this.opacity;
   		ctx.fillStyle = FILL_COLOUR;
   		ctx.beginPath();
   		ctx.moveTo(19.9,16.6);
@@ -4374,6 +4386,30 @@ require.register('primitives/SnowflakePrimitive', function(module, exports, requ
   	, TSnowflakePrimitive;  
     
   TSnowflakePrimitive = Trait({  
+  	/**  
+  	 * Show transition  
+  	 * @params {Object} options  
+  	 */  
+  	show: function (options) {  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		this._y = this.y;  
+  		this._dy = this.OFFSET;  
+  		this._opacity = 1;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
+  	},  
+    
   	/**  
   	 * Render svg version  
   	 * @param {SVGElement} element  
@@ -4470,6 +4506,30 @@ require.register('primitives/LightningPrimitive', function(module, exports, requ
     
   TLightningPrimitive = Trait({  
   	/**  
+  	 * Show transition  
+  	 * @params {Object} options  
+  	 */  
+  	show: function (options) {  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		this._y = this.y;  
+  		this._dy = this.OFFSET;  
+  		this._opacity = 1;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
   	 * Render svg version  
   	 * @param {SVGElement} element  
   	 */  
@@ -4508,7 +4568,7 @@ require.register('primitives/LightningPrimitive', function(module, exports, requ
     
   module.exports = function () {  
   	return Trait.compose(  
-  		TPrimitive.resolve({}),  
+  		TPrimitive,  
   		TLightningPrimitive  
   	).create();  
   };
@@ -4521,6 +4581,28 @@ require.register('primitives/FogPrimitive', function(module, exports, require) {
   	, TFogPrimitive;  
     
   TFogPrimitive = Trait({  
+  	/**  
+  	 * Show transition  
+  	 * @params {Object} options  
+  	 */  
+  	show: function (options) {  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['opacity'];  
+  		this.transition(options);  
+  	},  
+    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		this._opacity = 1;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['opacity'];  
+  		this.transition(options);  
+  	},  
+    
   	/**  
   	 * Render svg version  
   	 * @param {SVGElement} element  
@@ -4696,8 +4778,11 @@ require.register('animator', function(module, exports, require) {
   			}
   		// End frame
   		} else if (!anim.transitioning && transitioning) {
-  			// Move if not last frame or if layer in next frame
+  			// Move if not last frame
   			if (anim.frame < anim.frames.length - 1
+  				// ...and sun/moon/cloud
+  				&& parseInt(opts.layer.slice(-1), 10) < 4
+  				// ...and if layer in next frame
   				&& (nextOpts = contains(anim.frames[anim.frame + 1], opts.layer))) {
   					// Force time to ensure transition doesn't last longer than the frame
   					nextOpts.time = FRAME_DURATION - TRANSITION_DURATION;

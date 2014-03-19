@@ -5,7 +5,6 @@ var svg = require('svg')
 	, TCloudPrimitive;
 
 TCloudPrimitive = Trait({
-
 	/**
 	 * Show transition
 	 * @params {Object} options
@@ -41,8 +40,10 @@ TCloudPrimitive = Trait({
 	move: function (options) {
 		this._tint = this.tint;
 		this._dtint = options.tint - this.tint;
-		this.transitionProps = ['tint'];
-		this.transition(options);
+		if (this._dtint) {
+			this.transitionProps = ['tint'];
+			this.transition(options);
+		}
 	},
 
 	/**

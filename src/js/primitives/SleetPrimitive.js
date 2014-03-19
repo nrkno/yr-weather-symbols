@@ -8,6 +8,30 @@ var svg = require('svg')
 
 TSleetPrimitive = Trait({
 	/**
+	 * Show transition
+	 * @params {Object} options
+	 */
+	show: function (options) {
+		this._opacity = 0;
+		this._dopacity = 1;
+		this.transitionProps = ['opacity'];
+		this.transition(options);
+	},
+
+	/**
+	 * Hide transition
+	 * @params {Object} options
+	 */
+	hide: function (options) {
+		this._y = this.y;
+		this._dy = this.OFFSET;
+		this._opacity = 1;
+		this._dopacity = -1;
+		this.transitionProps = ['y', 'opacity'];
+		this.transition(options);
+	},
+
+	/**
 	 * Render svg version
 	 * @param {SVGElement} element
 	 */
@@ -38,6 +62,7 @@ TSleetPrimitive = Trait({
 		ctx.restore();
 
 		// Fill
+		ctx.globalAlpha = this.opacity;
 		ctx.fillStyle = FILL_COLOUR;
 		ctx.beginPath();
 		ctx.moveTo(19.9,16.6);

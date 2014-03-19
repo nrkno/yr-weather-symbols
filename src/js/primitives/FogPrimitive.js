@@ -6,6 +6,28 @@ var svg = require('svg')
 
 TFogPrimitive = Trait({
 	/**
+	 * Show transition
+	 * @params {Object} options
+	 */
+	show: function (options) {
+		this._opacity = 0;
+		this._dopacity = 1;
+		this.transitionProps = ['opacity'];
+		this.transition(options);
+	},
+
+	/**
+	 * Hide transition
+	 * @params {Object} options
+	 */
+	hide: function (options) {
+		this._opacity = 1;
+		this._dopacity = -1;
+		this.transitionProps = ['opacity'];
+		this.transition(options);
+	},
+
+	/**
 	 * Render svg version
 	 * @param {SVGElement} element
 	 */
