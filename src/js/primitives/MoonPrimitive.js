@@ -7,17 +7,30 @@ var svg = require('svg')
 	, TMoonPrimitive;
 
 TMoonPrimitive = Trait({
-
-	show: function () {
-
+	/**
+	 * Show transition
+	 * @params {Object} options
+	 */
+	show: function (options) {
+		this._y = options.y + this.OFFSET;
+		this._dy = -this.OFFSET;
+		this._opacity = 0;
+		this._dopacity = 1;
+		this.transitionProps = ['y', 'opacity'];
+		this.transition(options);
 	},
 
-	hide: function () {
-
-	},
-
-	move: function (options) {
-
+	/**
+	 * Hide transition
+	 * @params {Object} options
+	 */
+	hide: function (options) {
+		this._y = this.y;
+		this._dy = this.OFFSET;
+		this._opacity = 1;
+		this._dopacity = -1;
+		this.transitionProps = ['y', 'opacity'];
+		this.transition(options);
 	},
 
 	/**
@@ -38,7 +51,8 @@ TMoonPrimitive = Trait({
 	 */
 	renderCanvas: function (ctx) {
 		ctx.save();
-		this.translateCanvas(ctx);
+		this.transformCanvas(ctx);
+		ctx.globalAlpha = this.opacity;
 
 		ctx.fillStyle = FILL_COLOUR;
 		ctx.beginPath();
@@ -55,7 +69,9 @@ TMoonPrimitive = Trait({
 	}
 });
 
-module.exports = Trait.compose(
-	TPrimitive,
-	TMoonPrimitive
-).create();
+module.exports = function () {
+	return Trait.compose(
+		TPrimitive,
+		TMoonPrimitive
+	).create();
+};

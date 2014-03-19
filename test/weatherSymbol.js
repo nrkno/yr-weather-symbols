@@ -2737,33 +2737,124 @@ require.register('trait', function(module, exports, require) {
   
   module.exports = freeze(Trait);
 });
+require.register('ease/lib/quad', function(module, exports, require) {
+  // t: current time, b: beginning value, c: change in value, d: duration
+  
+  exports.inQuad = {
+  	js: function(t, b, c, d) {
+  			return c * (t /= d) * t + b;
+  		},
+  	css: 'cubic-bezier(0.550, 0.085, 0.680, 0.530)'
+  };
+  
+  exports.outQuad = {
+  	js: function(t, b, c, d) {
+  			return -c * (t /= d) * (t - 2) + b;
+  		},
+  	css: 'cubic-bezier(0.250, 0.460, 0.450, 0.940)'
+  };
+  
+  exports.inOutQuad = {
+  	js: function(t, b, c, d) {
+  			if ((t /= d / 2) < 1) {
+  				return c / 2 * t * t + b;
+  			}
+  			return -c / 2 * ((--t) * (t - 2) - 1) + b;
+  		}
+  };
+  
+});
 require.register('primitives/TPrimitive', function(module, exports, require) {
-  var Trait = require('trait');
+  var Trait = require('trait')
+  	, ease = require('ease/lib/quad').outQuad.js;
   
   module.exports = Trait({
   	TWO_PI: Math.PI * 2,
   	MAX_WIDTH: 100,
+  	OFFSET: 10,
   
   	type: '',
   	x: 0,
   	y: 0,
   	scale: 1,
   	tint: 1,
+  	opacity: 1,
   	flip: false,
   	winter: false,
   	bg: '',
+  	transitionDuration: 0,
+  	transitionStart: 0,
+  	transitionProps: null,
   
-  	initialize: function () {
+  	// Animation targets
+  	_x: 0,
+  	_y: 0,
+  	_scale: 1,
+  	_tint: 1,
+  	_opacity: 1,
+  	_dx: 0,
+  	_dy: 0,
+  	_dscale: 0,
+  	_dtint: 0,
+  	_dopacity: 0,
+  
+  	/**
+  	 * Initialize instance with 'options'
+  	 * @param {Object} options
+  	 * @returns {Object}
+  	 */
+  	initialize: function (options) {
+  		this.transitionDuration = options.transitionDuration;
   		return this;
+  	},
+  
+  	/**
+  	 * Transition instance with 'options'
+  	 * @param {Object} options
+  	 */
+  	transition: function (options) {
+  		this.transitionStart = options.time;
+  		this.update(options);
+  	},
+  
+  	/**
+  	 * Update instance with 'options'
+  	 * @param {Object} options
+  	 */
+  	update: function (options) {
+  		// Copy props to instance
+  		for (var prop in options) {
+  			if (this.hasOwnProperty(prop)) this[prop] = options[prop];
+  		}
+  
+  		// Compute transition target props
+  		if (this.transitionProps) {
+  			var isComplete = (options.time >= this.transitionStart + this.transitionDuration)
+  				, elapsed = isComplete ? this.transitionStart + this.transitionDuration : options.time - this.transitionStart
+  				, prop;
+  
+  			// Set transition props
+  			for (var i = 0, n = this.transitionProps.length; i < n; i++) {
+  				prop = this.transitionProps[i];
+  				// Tween or set final
+  				this[prop] = isComplete
+  					? this['_' + prop] + this['_d' + prop]
+  					: ease(elapsed, this['_' + prop], this['_d' + prop], this.transitionDuration);
+  				if (prop == 'scale' && this[prop] > 1) console.log(options.time, elapsed, this.transitionStart, this['_' + prop], this['_d' + prop])
+  			}
+  
+  			// Clear
+  			if (isComplete) this.transitionProps = null;
+  		}
   	},
   
   	/**
   	 * Render primitive
   	 * @param {SVGElement | CanvasContext} element
-  	 * @param {Object} options
+  	 * @param {Object} [options]
   	 */
   	render: function (element, options) {
-  		this.update(options);
+  		if (options) this.update(options);
   
   		if (this.type == 'svg') {
   			return this.renderSVG(element);
@@ -2772,13 +2863,11 @@ require.register('primitives/TPrimitive', function(module, exports, require) {
   		}
   	},
   
-  	update: function (options) {
-  		for (var prop in options) {
-  			if (this.hasOwnProperty(prop)) this[prop] = options[prop];
-  		}
-  	},
-  
-  	translateCanvas: function (ctx) {
+  	/**
+  	 * Transform canvas 'ctx'
+  	 * @param {CanvasContext} ctx
+  	 */
+  	transformCanvas: function (ctx) {
   		ctx.translate(this.x, this.y)
   		ctx.scale(this.scale, this.scale);
   	},
@@ -2815,14 +2904,11 @@ require.register('primitives/TPrimitive', function(module, exports, require) {
   	},
   
   	renderSVG: Trait.required,
-  	renderCanvas: Trait.required,
-  	show: Trait.required,
-  	hide: Trait.required,
-  	move: Trait.required
+  	renderCanvas: Trait.required
   });
   
 });
-require.register('primitives/sunPrimitive', function(module, exports, require) {
+require.register('primitives/SunPrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, colours = require('yr-colours')  
   	, Trait = require('trait')  
@@ -2835,17 +2921,47 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   	, TSunPrimitive;  
     
   TSunPrimitive = Trait({  
-    
-  	show: function () {  
-    
+  	/**  
+  	 * Show transition  
+  	 * @params {Object} options  
+  	 */  
+  	show: function (options) {  
+  		this._y = options.y + this.OFFSET;  
+  		this._dy = -this.OFFSET;  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
   	},  
     
-  	hide: function () {  
-    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		this._y = this.y;  
+  		this._dy = this.OFFSET;  
+  		this._opacity = 1;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
   	},  
     
+  	/**  
+  	 * Move transition  
+  	 * @params {Object} options  
+  	 */  
   	move: function (options) {  
-    
+  		this._y = this.y;  
+  		this._dy = options.y - this.y;  
+  		this._x = this.x;  
+  		this._dx = options.x - this.x;  
+  		this._scale = this.scale;  
+  		this._dscale = options.scale - this.scale;  
+  		if (this._dy || this._dx || this._dscale) {  
+  			this.transitionProps = ['y', 'x', 'scale'];  
+  			this.transition(options);  
+  		}  
   	},  
     
   	/**  
@@ -2866,7 +2982,8 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   	 */  
   	renderCanvas: function (ctx) {  
   		ctx.save();  
-  		this.translateCanvas(ctx);  
+  		this.transformCanvas(ctx);  
+  		ctx.globalAlpha = this.opacity;  
     
   		if (this.winter) {  
   			// Horizon  
@@ -2992,12 +3109,14 @@ require.register('primitives/sunPrimitive', function(module, exports, require) {
   	}  
   });  
     
-  module.exports = Trait.compose(  
-  	TPrimitive,  
-  	TSunPrimitive  
-  ).create();
+  module.exports = function () {  
+  	return Trait.compose(  
+  		TPrimitive,  
+  		TSunPrimitive  
+  	).create();  
+  };
 });
-require.register('primitives/moonPrimitive', function(module, exports, require) {
+require.register('primitives/MoonPrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
@@ -3007,17 +3126,30 @@ require.register('primitives/moonPrimitive', function(module, exports, require) 
   	, TMoonPrimitive;  
     
   TMoonPrimitive = Trait({  
-    
-  	show: function () {  
-    
+  	/**  
+  	 * Show transition  
+  	 * @params {Object} options  
+  	 */  
+  	show: function (options) {  
+  		this._y = options.y + this.OFFSET;  
+  		this._dy = -this.OFFSET;  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
   	},  
     
-  	hide: function () {  
-    
-  	},  
-    
-  	move: function (options) {  
-    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		this._y = this.y;  
+  		this._dy = this.OFFSET;  
+  		this._opacity = 1;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['y', 'opacity'];  
+  		this.transition(options);  
   	},  
     
   	/**  
@@ -3038,7 +3170,8 @@ require.register('primitives/moonPrimitive', function(module, exports, require) 
   	 */  
   	renderCanvas: function (ctx) {  
   		ctx.save();  
-  		this.translateCanvas(ctx);  
+  		this.transformCanvas(ctx);  
+  		ctx.globalAlpha = this.opacity;  
     
   		ctx.fillStyle = FILL_COLOUR;  
   		ctx.beginPath();  
@@ -3055,13 +3188,14 @@ require.register('primitives/moonPrimitive', function(module, exports, require) 
   	}  
   });  
     
-  module.exports = Trait.compose(  
-  	TPrimitive,  
-  	TMoonPrimitive  
-  ).create();  
-  
+  module.exports = function () {  
+  	return Trait.compose(  
+  		TPrimitive,  
+  		TMoonPrimitive  
+  	).create();  
+  };
 });
-require.register('primitives/cloudPrimitive', function(module, exports, require) {
+require.register('primitives/CloudPrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
@@ -3070,16 +3204,43 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
     
   TCloudPrimitive = Trait({  
     
-  	show: function () {  
-    
+  	/**  
+  	 * Show transition  
+  	 * @params {Object} options  
+  	 */  
+  	show: function (options) {  
+  		var offset = options.flip ? this.OFFSET : -this.OFFSET;  
+  		this._x = options.x - offset;  
+  		this._dx = offset;  
+  		this._opacity = 0;  
+  		this._dopacity = 1;  
+  		this.transitionProps = ['x', 'opacity'];  
+  		this.transition(options);  
   	},  
     
-  	hide: function () {  
-    
+  	/**  
+  	 * Hide transition  
+  	 * @params {Object} options  
+  	 */  
+  	hide: function (options) {  
+  		var offset = this.flip ? -this.OFFSET : this.OFFSET;  
+  		this._x = this.x;  
+  		this._dx = offset;  
+  		this._opacity = this.opacity;  
+  		this._dopacity = -1;  
+  		this.transitionProps = ['x', 'opacity'];  
+  		this.transition(options);  
   	},  
     
+  	/**  
+  	 * Move transition  
+  	 * @params {Object} options  
+  	 */  
   	move: function (options) {  
-    
+  		this._tint = this.tint;  
+  		this._dtint = options.tint - this.tint;  
+  		this.transitionProps = ['tint'];  
+  		this.transition(options);  
   	},  
     
   	/**  
@@ -3102,7 +3263,7 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
   		var tint = Math.floor(255 * (1 - this.tint));  
     
   		ctx.save();  
-  		this.translateCanvas(ctx);  
+  		this.transformCanvas(ctx);  
     
   		// Mask  
   		ctx.save();  
@@ -3111,12 +3272,13 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
   		ctx.restore();  
     
   		// Fill  
+  		ctx.globalAlpha = this.opacity;  
   		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
   		this.renderCanvasFillShape(ctx);  
   		ctx.restore();  
   	},  
     
-  	translateCanvas: function (ctx) {  
+  	transformCanvas: function (ctx) {  
   		if (this.flip) {  
   			ctx.translate((this.MAX_WIDTH * this.scale) + this.x, this.y)  
   			ctx.scale(-1 * this.scale, this.scale);  
@@ -3169,12 +3331,14 @@ require.register('primitives/cloudPrimitive', function(module, exports, require)
   	},  
   });  
     
-  module.exports = Trait.compose(  
-  	TPrimitive.resolve({translateCanvas: null}),  
-  	TCloudPrimitive  
-  ).create();
+  module.exports = function () {  
+  	return Trait.compose(  
+  		TPrimitive.resolve({transformCanvas: null}),  
+  		TCloudPrimitive  
+  	).create();  
+  };
 });
-require.register('primitives/raindropPrimitive', function(module, exports, require) {
+require.register('primitives/RaindropPrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
@@ -3184,19 +3348,6 @@ require.register('primitives/raindropPrimitive', function(module, exports, requi
   	, TRaindropPrimitive;  
     
   TRaindropPrimitive = Trait({  
-    
-  	show: function () {  
-    
-  	},  
-    
-  	hide: function () {  
-    
-  	},  
-    
-  	move: function (options) {  
-    
-  	},  
-    
   	/**  
   	 * Render svg version  
   	 * @param {SVGElement} element  
@@ -3215,7 +3366,7 @@ require.register('primitives/raindropPrimitive', function(module, exports, requi
   	 */  
   	renderCanvas: function (ctx) {  
   		ctx.save();  
-  		this.translateCanvas(ctx);  
+  		this.transformCanvas(ctx);  
     
   		// Background  
   		ctx.fillStyle = this.bg;  
@@ -3241,13 +3392,14 @@ require.register('primitives/raindropPrimitive', function(module, exports, requi
   	}  
   });  
     
-  module.exports = Trait.compose(  
-  	TPrimitive,  
-  	TRaindropPrimitive  
-  ).create();  
-  
+  module.exports = function () {  
+  	return Trait.compose(  
+  		TPrimitive.resolve({}),  
+  		TRaindropPrimitive  
+  	).create();  
+  };
 });
-require.register('primitives/sleetPrimitive', function(module, exports, require) {
+require.register('primitives/SleetPrimitive', function(module, exports, require) {
   var svg = require('svg')
   	, Trait = require('trait')
   	, TPrimitive = require('primitives/TPrimitive')
@@ -3257,19 +3409,6 @@ require.register('primitives/sleetPrimitive', function(module, exports, require)
   	, TSleetPrimitive;
   
   TSleetPrimitive = Trait({
-  
-  	show: function () {
-  
-  	},
-  
-  	hide: function () {
-  
-  	},
-  
-  	move: function (options) {
-  
-  	},
-  
   	/**
   	 * Render svg version
   	 * @param {SVGElement} element
@@ -3288,7 +3427,7 @@ require.register('primitives/sleetPrimitive', function(module, exports, require)
   	 */
   	renderCanvas: function (ctx) {
   		ctx.save();
-  		this.translateCanvas(ctx);
+  		this.transformCanvas(ctx);
   
   		// Background
   		ctx.fillStyle = this.bg;
@@ -3317,13 +3456,14 @@ require.register('primitives/sleetPrimitive', function(module, exports, require)
   	}
   });
   
-  module.exports = Trait.compose(
-  	TPrimitive,
-  	TSleetPrimitive
-  ).create();
-  
+  module.exports = function () {
+  	return Trait.compose(
+  		TPrimitive.resolve({}),
+  		TSleetPrimitive
+  	).create();
+  };
 });
-require.register('primitives/snowflakePrimitive', function(module, exports, require) {
+require.register('primitives/SnowflakePrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
@@ -3333,19 +3473,6 @@ require.register('primitives/snowflakePrimitive', function(module, exports, requ
   	, TSnowflakePrimitive;  
     
   TSnowflakePrimitive = Trait({  
-    
-  	show: function () {  
-    
-  	},  
-    
-  	hide: function () {  
-    
-  	},  
-    
-  	move: function (options) {  
-    
-  	},  
-    
   	/**  
   	 * Render svg version  
   	 * @param {SVGElement} element  
@@ -3364,7 +3491,7 @@ require.register('primitives/snowflakePrimitive', function(module, exports, requ
   	 */  
   	renderCanvas: function (ctx) {  
   		ctx.save();  
-  		this.translateCanvas(ctx);  
+  		this.transformCanvas(ctx);  
     
   		// Background  
   		ctx.fillStyle = this.bg;  
@@ -3424,13 +3551,14 @@ require.register('primitives/snowflakePrimitive', function(module, exports, requ
   	}  
   });  
     
-  module.exports = Trait.compose(  
-  	TPrimitive,  
-  	TSnowflakePrimitive  
-  ).create();  
-  
+  module.exports = function () {  
+  	return Trait.compose(  
+  		TPrimitive.resolve({}),  
+  		TSnowflakePrimitive  
+  	).create();  
+  };
 });
-require.register('primitives/lightningPrimitive', function(module, exports, require) {
+require.register('primitives/LightningPrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
@@ -3440,19 +3568,6 @@ require.register('primitives/lightningPrimitive', function(module, exports, requ
   	, TLightningPrimitive;  
     
   TLightningPrimitive = Trait({  
-    
-  	show: function () {  
-    
-  	},  
-    
-  	hide: function () {  
-    
-  	},  
-    
-  	move: function (options) {  
-    
-  	},  
-    
   	/**  
   	 * Render svg version  
   	 * @param {SVGElement} element  
@@ -3472,7 +3587,7 @@ require.register('primitives/lightningPrimitive', function(module, exports, requ
   	renderCanvas: function (ctx) {  
   		// Fill  
   		ctx.save();  
-  		this.translateCanvas(ctx);  
+  		this.transformCanvas(ctx);  
     
   		ctx.fillStyle = FILL_COLOUR;  
   		ctx.beginPath();  
@@ -3490,12 +3605,14 @@ require.register('primitives/lightningPrimitive', function(module, exports, requ
   	}  
   });  
     
-  module.exports = Trait.compose(  
-  	TPrimitive,  
-  	TLightningPrimitive  
-  ).create();
+  module.exports = function () {  
+  	return Trait.compose(  
+  		TPrimitive.resolve({}),  
+  		TLightningPrimitive  
+  	).create();  
+  };
 });
-require.register('primitives/fogPrimitive', function(module, exports, require) {
+require.register('primitives/FogPrimitive', function(module, exports, require) {
   var svg = require('svg')  
   	, Trait = require('trait')  
   	, TPrimitive = require('primitives/TPrimitive')  
@@ -3503,19 +3620,6 @@ require.register('primitives/fogPrimitive', function(module, exports, require) {
   	, TFogPrimitive;  
     
   TFogPrimitive = Trait({  
-    
-  	show: function () {  
-    
-  	},  
-    
-  	hide: function () {  
-    
-  	},  
-    
-  	move: function (options) {  
-    
-  	},  
-    
   	/**  
   	 * Render svg version  
   	 * @param {SVGElement} element  
@@ -3536,7 +3640,7 @@ require.register('primitives/fogPrimitive', function(module, exports, require) {
   		var tint = Math.floor(255 * (1 - this.tint));  
     
   		ctx.save();  
-  		this.translateCanvas(ctx);  
+  		this.transformCanvas(ctx);  
     
   		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
   		ctx.beginPath();  
@@ -3588,10 +3692,12 @@ require.register('primitives/fogPrimitive', function(module, exports, require) {
   	}  
   });  
     
-  module.exports = Trait.compose(  
-  	TPrimitive,  
-  	TFogPrimitive  
-  ).create();
+  module.exports = function () {  
+  	return Trait.compose(  
+  		TPrimitive.resolve({}),  
+  		TFogPrimitive  
+  	).create();  
+  };
 });
 require.register('animator', function(module, exports, require) {
   var anims = {}
@@ -3616,8 +3722,7 @@ require.register('animator', function(module, exports, require) {
   	if (!running) {
   		running = true;
   		tick = 0;
-  		last = Date.now();
-  		onTick();
+  		window.requestAnimationFrame(onTick);
   	}
   }
   
@@ -3630,47 +3735,137 @@ require.register('animator', function(module, exports, require) {
   	}
   }
   
+  /**
+   * Handle frame tick
+   * @param {Number} time
+   */
   function onTick (time) {
   	var now = Date.now()
-  		, tick = now - last;
+  		, tick;
   
-  	if (tick >= FRAME_DURATION) {
-  		last = now;
-  		for (var id in anims) {
-  			if (anims[id].running) anims[id].render();
-  		}
+  	// Reset
+  	if (last == 0) last = now;
+  
+  	if ((tick = now - last) >= FRAME_DURATION) {
+  		// Force reset when frame duration ellapsed
+  		last = 0;
+  		// Clamp to frame duration
+  		tick = FRAME_DURATION;
+  	}
+  
+  	// Render anims
+  	for (var id in anims) {
+  		if (anims[id].running) render(anims[id], tick);
   	}
   
   	// Loop
   	if (running) window.requestAnimationFrame(onTick);
   };
   
+  /**
+   * Render 'anim'
+   * @param {Anim} anim
+   * @param {Number} time
+   */
+  function render (anim, time) {
+  	var newFrame = (time == 0)
+  		, transitioning = (time <= TRANSITION_DURATION) || (time >= FRAME_DURATION - TRANSITION_DURATION)
+  		, options = {time: time}
+  		, opts, layer, nextOpts;
+  
+  	// Loop frame count
+  	if (newFrame) {
+  		anim.frame = (anim.frame + 1) % anim.frames.length;
+  	}
+  
+  	// Clear canvas
+  	anim.ctx.clearRect(0, 0, anim.width, anim.height);
+  
+  	// Loop through frame layers
+  	for (var i = 0, n = anim.frames[anim.frame].length; i < n; i++) {
+  		opts = anim.frames[anim.frame][i];
+  		// Get layer instance
+  		layer = anim.layers[opts.layer];
+  		// Start new frame
+  		if (newFrame) {
+  			// Show if first frame or if layer in previous frame
+  			if (anim.frame == 0 || !contains(anim.frames[anim.frame - 1], opts.layer)) {
+  					opts.time = 0;
+  					layer.show(opts);
+  			}
+  		// End frame
+  		} else if (!anim.transitioning && transitioning) {
+  			// Move if not last frame or if layer in next frame
+  			if (anim.frame < anim.frames.length - 1
+  				&& (nextOpts = contains(anim.frames[anim.frame + 1], opts.layer))) {
+  					// Force time to ensure transition doesn't last longer than the frame
+  					nextOpts.time = FRAME_DURATION - TRANSITION_DURATION;
+  					layer.move(nextOpts);
+  			// Hide
+  			} else {
+  				layer.hide(options);
+  			}
+  		}
+  		layer.render(anim.ctx, options);
+  	}
+  
+  	anim.transitioning = transitioning;
+  };
+  
+  /**
+   * Determine if 'layer' in 'layers'
+   * @param {Array} layers
+   * @param {String} layer
+   * @returns {Object|false}
+   */
+  function contains (layers, layer) {
+  	for (var i = 0, n = layers.length; i < n; i++) {
+  		if (layers[i].layer === layer) return layers[i];
+  	}
+  	return false;
+  }
+  
+  /**
+   * Constructor
+   * @param {String} id
+   * @param {CanvasContext} ctx
+   * @param {Arrray} frames
+   * @param {Object} options
+   */
   function Anim (id, ctx, frames, options) {
+  	var layerOptions = {
+  		transitionDuration: TRANSITION_DURATION
+  	};
+  
   	this.id = id;
   	this.ctx = ctx;
-  	this.frame = 0;
+  	this.frame = -1;
   	this.frames = frames;
   	this.width = options.width;
   	this.height = options.height;
   	this.running = false;
+  	this.transitioning = false;
+  	this.last = 0;
+  	// Layer instances
   	this.layers = {
-  		layer0: require('primitives/sunPrimitive').initialize(),
-  		layer1: require('primitives/moonPrimitive').initialize(),
-  		layer2: require('primitives/cloudPrimitive').initialize(),
-  		layer3: require('./primitives/cloudPrimitive').initialize(),
-  		layer4: require('primitives/raindropPrimitive').initialize(),
-  		layer5: require('./primitives/raindropPrimitive').initialize(),
-  		layer6: require('./primitives/raindropPrimitive').initialize(),
-  		layer7: require('primitives/sleetPrimitive').initialize(),
-  		layer8: require('./primitives/sleetPrimitive').initialize(),
-  		layer9: require('./primitives/sleetPrimitive').initialize(),
-  		layer10: require('primitives/snowflakePrimitive').initialize(),
-  		layer11: require('./primitives/snowflakePrimitive').initialize(),
-  		layer12: require('./primitives/snowflakePrimitive').initialize(),
-  		layer13: require('primitives/lightningPrimitive').initialize(),
-  		layer14: require('primitives/fogPrimitive').initialize(),
+  		layer0: require('primitives/SunPrimitive')().initialize(layerOptions),
+  		layer1: require('primitives/MoonPrimitive')().initialize(layerOptions),
+  		layer2: require('primitives/CloudPrimitive')().initialize(layerOptions),
+  		layer3: require('./primitives/CloudPrimitive')().initialize(layerOptions),
+  		layer4: require('primitives/RaindropPrimitive')().initialize(layerOptions),
+  		layer5: require('./primitives/RaindropPrimitive')().initialize(layerOptions),
+  		layer6: require('./primitives/RaindropPrimitive')().initialize(layerOptions),
+  		layer7: require('primitives/SleetPrimitive')().initialize(layerOptions),
+  		layer8: require('./primitives/SleetPrimitive')().initialize(layerOptions),
+  		layer9: require('./primitives/SleetPrimitive')().initialize(layerOptions),
+  		layer10: require('primitives/SnowflakePrimitive')().initialize(layerOptions),
+  		layer11: require('./primitives/SnowflakePrimitive')().initialize(layerOptions),
+  		layer12: require('./primitives/SnowflakePrimitive')().initialize(layerOptions),
+  		layer13: require('primitives/LightningPrimitive')().initialize(layerOptions),
+  		layer14: require('primitives/FogPrimitive')().initialize(layerOptions),
   	}
   
+  	// Store layer instance key in layer object for all frames
   	for (var i = 0, n = this.frames.length; i < n; i++) {
   		for (var j = 0, k = this.frames[i].length; j < k; j++) {
   			var layer = this.frames[i][j];
@@ -3718,21 +3913,6 @@ require.register('animator', function(module, exports, require) {
   Anim.prototype.destroy = function () {
   
   };
-  
-  Anim.prototype.render = function () {
-  	var layer;
-  
-  	// Clear canvas
-  	this.ctx.clearRect(0, 0, this.width, this.height);
-  
-  	for (var i = 0, n = this.frames[this.frame].length; i < n; i++) {
-  		layer = this.frames[this.frame][i];
-  		// layer.primitive.render(this.element, layer.options);
-  	}
-  
-  	// Loop frame count
-  	this.frame = (this.frame + 1) % this.frames.length;
-  };
 });
 require.register('weatherSymbol', function(module, exports, require) {
   // Convert with http://www.professorcloud.com/svg-to-canvas/
@@ -3743,14 +3923,14 @@ require.register('weatherSymbol', function(module, exports, require) {
   	, clone = require('lodash.clone')
   	, animator = require('animator')
   	, primitives = {
-  			sun: require('primitives/sunPrimitive'),
-  			moon: require('primitives/moonPrimitive'),
-  			cloud: require('primitives/cloudPrimitive'),
-  			raindrop: require('primitives/raindropPrimitive'),
-  			sleet: require('primitives/sleetPrimitive'),
-  			snowflake: require('primitives/snowflakePrimitive'),
-  			fog: require('primitives/fogPrimitive'),
-  			lightning: require('primitives/lightningPrimitive')
+  			sun: require('primitives/SunPrimitive')(),
+  			moon: require('primitives/MoonPrimitive')(),
+  			cloud: require('primitives/CloudPrimitive')(),
+  			raindrop: require('primitives/RaindropPrimitive')(),
+  			sleet: require('primitives/SleetPrimitive')(),
+  			snowflake: require('primitives/SnowflakePrimitive')(),
+  			fog: require('primitives/FogPrimitive')(),
+  			lightning: require('primitives/LightningPrimitive')()
   		}
   	, formulae = {"10":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":65,"y":72},{"primitive":"raindrop","x":49,"y":72},{"primitive":"raindrop","x":33,"y":68}],"11":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"lightning","x":14,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":69,"y":72},{"primitive":"raindrop","x":53,"y":72},{"primitive":"raindrop","x":37,"y":68}],"12":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":39,"y":68}],"13":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":54,"y":69},{"primitive":"snowflake","x":36,"y":71}],"14":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":62,"y":69},{"primitive":"snowflake","x":44,"y":71}],"15":[{"primitive":"fog","x":4,"y":18,"tint":0.15}],"22":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"lightning","x":21,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":60,"y":72},{"primitive":"raindrop","x":44,"y":68}],"23":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":58,"y":72},{"primitive":"sleet","x":42,"y":68}],"30":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"lightning","x":27,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":51,"y":68}],"31":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"lightning","x":25,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":48,"y":68}],"32":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"lightning","x":15,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":71,"y":72},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":38,"y":68}],"33":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"lightning","x":23,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":49,"y":69}],"34":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"lightning","x":8,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":70,"y":69},{"primitive":"snowflake","x":51,"y":69},{"primitive":"snowflake","x":33,"y":71}],"46":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":48,"y":68}],"47":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":45,"y":68}],"48":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":67,"y":72},{"primitive":"sleet","x":50,"y":68},{"primitive":"sleet","x":33,"y":68}],"49":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.15},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":43,"y":69}],"50":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.4},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":63,"y":69},{"primitive":"snowflake","x":44,"y":69},{"primitive":"snowflake","x":26,"y":71}],"01d":[{"primitive":"sun","x":5,"y":5}],"02d":[{"primitive":"sun","x":5,"y":5},{"primitive":"cloud","x":8,"y":56,"scale":0.6,"flip":true,"tint":0.1}],"03d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.1}],"40d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":48,"y":68}],"05d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":55,"y":72},{"primitive":"raindrop","x":39,"y":68}],"41d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":65,"y":72},{"primitive":"raindrop","x":49,"y":72},{"primitive":"raindrop","x":33,"y":68}],"42d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":45,"y":68}],"07d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":39,"y":68}],"43d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":67,"y":72},{"primitive":"sleet","x":50,"y":68},{"primitive":"sleet","x":33,"y":68}],"44d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":43,"y":69}],"08d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":54,"y":69},{"primitive":"snowflake","x":36,"y":71}],"45d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":63,"y":69},{"primitive":"snowflake","x":44,"y":69},{"primitive":"snowflake","x":26,"y":71}],"24d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":27,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":51,"y":68}],"06d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":21,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":60,"y":72},{"primitive":"raindrop","x":44,"y":68}],"25d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":14,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":69,"y":72},{"primitive":"raindrop","x":53,"y":72},{"primitive":"raindrop","x":37,"y":68}],"26d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":25,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":48,"y":68}],"20d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":58,"y":72},{"primitive":"sleet","x":42,"y":68}],"27d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":15,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":71,"y":72},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":38,"y":68}],"28d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":23,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":49,"y":69}],"21d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":62,"y":69},{"primitive":"snowflake","x":44,"y":71}],"29d":[{"primitive":"sun","x":4,"y":7,"scale":0.6},{"primitive":"lightning","x":8,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":70,"y":69},{"primitive":"snowflake","x":51,"y":69},{"primitive":"snowflake","x":33,"y":71}],"01m":[{"primitive":"sun","x":5,"y":32,"winter":true}],"02m":[{"primitive":"sun","x":5,"y":32,"winter":true},{"primitive":"cloud","x":8,"y":46,"scale":0.6,"flip":true,"tint":0.1}],"03m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.1}],"40m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":48,"y":68}],"05m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":55,"y":72},{"primitive":"raindrop","x":39,"y":68}],"41m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":65,"y":72},{"primitive":"raindrop","x":49,"y":72},{"primitive":"raindrop","x":33,"y":68}],"42m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":45,"y":68}],"07m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":39,"y":68}],"43m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":67,"y":72},{"primitive":"sleet","x":50,"y":68},{"primitive":"sleet","x":33,"y":68}],"44m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":43,"y":69}],"08m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":54,"y":69},{"primitive":"snowflake","x":36,"y":71}],"45m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":63,"y":69},{"primitive":"snowflake","x":44,"y":69},{"primitive":"snowflake","x":26,"y":71}],"24m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":27,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":51,"y":68}],"06m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":21,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":60,"y":72},{"primitive":"raindrop","x":44,"y":68}],"25m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":14,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":69,"y":72},{"primitive":"raindrop","x":53,"y":72},{"primitive":"raindrop","x":37,"y":68}],"26m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":25,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":48,"y":68}],"20m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":58,"y":72},{"primitive":"sleet","x":42,"y":68}],"27m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":15,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":71,"y":72},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":38,"y":68}],"28m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":23,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":49,"y":69}],"21m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":62,"y":69},{"primitive":"snowflake","x":44,"y":71}],"29m":[{"primitive":"sun","x":8,"y":20,"scale":0.6,"winter":true},{"primitive":"lightning","x":8,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":70,"y":69},{"primitive":"snowflake","x":51,"y":69},{"primitive":"snowflake","x":33,"y":71}],"01n":[{"primitive":"moon","x":20,"y":20}],"02n":[{"primitive":"moon","x":20,"y":20},{"primitive":"cloud","x":8,"y":56,"scale":0.6,"flip":true,"tint":0.1}],"03n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.1}],"40n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":48,"y":68}],"05n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":55,"y":72},{"primitive":"raindrop","x":39,"y":68}],"41n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":65,"y":72},{"primitive":"raindrop","x":49,"y":72},{"primitive":"raindrop","x":33,"y":68}],"42n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":45,"y":68}],"07n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":39,"y":68}],"43n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":67,"y":72},{"primitive":"sleet","x":50,"y":68},{"primitive":"sleet","x":33,"y":68}],"44n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":43,"y":69}],"08n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":54,"y":69},{"primitive":"snowflake","x":36,"y":71}],"45n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":63,"y":69},{"primitive":"snowflake","x":44,"y":69},{"primitive":"snowflake","x":26,"y":71}],"24n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":27,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"raindrop","x":51,"y":68}],"06n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":21,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":60,"y":72},{"primitive":"raindrop","x":44,"y":68}],"25n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":14,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"raindrop","x":69,"y":72},{"primitive":"raindrop","x":53,"y":72},{"primitive":"raindrop","x":37,"y":68}],"26n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":25,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"sleet","x":48,"y":68}],"20n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"sleet","x":58,"y":72},{"primitive":"sleet","x":42,"y":68}],"27n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":15,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"sleet","x":71,"y":72},{"primitive":"sleet","x":55,"y":72},{"primitive":"sleet","x":38,"y":68}],"28n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":23,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.3},{"primitive":"snowflake","x":49,"y":69}],"21n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":19,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"snowflake","x":62,"y":69},{"primitive":"snowflake","x":44,"y":71}],"29n":[{"primitive":"moon","x":18,"y":13,"scale":0.6},{"primitive":"lightning","x":8,"y":75},{"primitive":"cloud","x":7,"y":22,"tint":0.5},{"primitive":"snowflake","x":70,"y":69},{"primitive":"snowflake","x":51,"y":69},{"primitive":"snowflake","x":33,"y":71}],"04":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.1},{"primitive":"cloud","x":7,"y":22,"tint":0.15}],"09":[{"primitive":"cloud","x":5,"y":10,"scale":0.8,"flip":true,"tint":0.3},{"primitive":"cloud","x":7,"y":22,"tint":0.4},{"primitive":"raindrop","x":55,"y":72},{"primitive":"raindrop","x":39,"y":68}]}
   
@@ -3817,7 +3997,7 @@ require.register('weatherSymbol', function(module, exports, require) {
   				});
   			});
   			animator(element.getContext('2d'), frames, layerOptions)
-  				// .start();
+  				.start();
   
   		} else {
   			if (formula = formulae[id]) {

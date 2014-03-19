@@ -7,19 +7,6 @@ var svg = require('svg')
 	, TSleetPrimitive;
 
 TSleetPrimitive = Trait({
-
-	show: function () {
-
-	},
-
-	hide: function () {
-
-	},
-
-	move: function (options) {
-
-	},
-
 	/**
 	 * Render svg version
 	 * @param {SVGElement} element
@@ -38,7 +25,7 @@ TSleetPrimitive = Trait({
 	 */
 	renderCanvas: function (ctx) {
 		ctx.save();
-		this.translateCanvas(ctx);
+		this.transformCanvas(ctx);
 
 		// Background
 		ctx.fillStyle = this.bg;
@@ -67,7 +54,9 @@ TSleetPrimitive = Trait({
 	}
 });
 
-module.exports = Trait.compose(
-	TPrimitive,
-	TSleetPrimitive
-).create();
+module.exports = function () {
+	return Trait.compose(
+		TPrimitive.resolve({}),
+		TSleetPrimitive
+	).create();
+};

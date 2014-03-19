@@ -6,26 +6,51 @@ var svg = require('svg')
 	, RAY_COLOUR = colours.SUN_RAY
 	, CENTER_COLOUR = colours.SUN_CENTRE
 	, HORIZON_COLOUR = colours.SUN_HORIZON
-	, OFFSET = 10
 
 	, TSunPrimitive;
 
 TSunPrimitive = Trait({
-
-	show: function () {
-		// this.animating = true;
-		// this._y = this.y;
-		// this._opacity = 1;
-		// this.y += OFFSET;
-		// this.opacity = 0;
+	/**
+	 * Show transition
+	 * @params {Object} options
+	 */
+	show: function (options) {
+		this._y = options.y + this.OFFSET;
+		this._dy = -this.OFFSET;
+		this._opacity = 0;
+		this._dopacity = 1;
+		this.transitionProps = ['y', 'opacity'];
+		this.transition(options);
 	},
 
-	hide: function () {
-
+	/**
+	 * Hide transition
+	 * @params {Object} options
+	 */
+	hide: function (options) {
+		this._y = this.y;
+		this._dy = this.OFFSET;
+		this._opacity = 1;
+		this._dopacity = -1;
+		this.transitionProps = ['y', 'opacity'];
+		this.transition(options);
 	},
 
+	/**
+	 * Move transition
+	 * @params {Object} options
+	 */
 	move: function (options) {
-
+		this._y = this.y;
+		this._dy = options.y - this.y;
+		this._x = this.x;
+		this._dx = options.x - this.x;
+		this._scale = this.scale;
+		this._dscale = options.scale - this.scale;
+		if (this._dy || this._dx || this._dscale) {
+			this.transitionProps = ['y', 'x', 'scale'];
+			this.transition(options);
+		}
 	},
 
 	/**
@@ -46,7 +71,8 @@ TSunPrimitive = Trait({
 	 */
 	renderCanvas: function (ctx) {
 		ctx.save();
-		this.translateCanvas(ctx);
+		this.transformCanvas(ctx);
+		ctx.globalAlpha = this.opacity;
 
 		if (this.winter) {
 			// Horizon

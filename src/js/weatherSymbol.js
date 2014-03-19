@@ -6,14 +6,14 @@ var svg = require('svg')
 	, clone = require('lodash.clone')
 	, animator = require('./animator')
 	, primitives = {
-			sun: require('./primitives/sunPrimitive'),
-			moon: require('./primitives/moonPrimitive'),
-			cloud: require('./primitives/cloudPrimitive'),
-			raindrop: require('./primitives/raindropPrimitive'),
-			sleet: require('./primitives/sleetPrimitive'),
-			snowflake: require('./primitives/snowflakePrimitive'),
-			fog: require('./primitives/fogPrimitive'),
-			lightning: require('./primitives/lightningPrimitive')
+			sun: require('./primitives/SunPrimitive')(),
+			moon: require('./primitives/MoonPrimitive')(),
+			cloud: require('./primitives/CloudPrimitive')(),
+			raindrop: require('./primitives/RaindropPrimitive')(),
+			sleet: require('./primitives/SleetPrimitive')(),
+			snowflake: require('./primitives/SnowflakePrimitive')(),
+			fog: require('./primitives/FogPrimitive')(),
+			lightning: require('./primitives/LightningPrimitive')()
 		}
 	, formulae = require('../../yresources/weatherSymbols.json')
 
@@ -80,7 +80,7 @@ module.exports = function (container, options) {
 				});
 			});
 			animator(element.getContext('2d'), frames, layerOptions)
-				// .start();
+				.start();
 
 		} else {
 			if (formula = formulae[id]) {

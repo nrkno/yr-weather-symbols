@@ -7,19 +7,6 @@ var svg = require('svg')
 	, TSnowflakePrimitive;
 
 TSnowflakePrimitive = Trait({
-
-	show: function () {
-
-	},
-
-	hide: function () {
-
-	},
-
-	move: function (options) {
-
-	},
-
 	/**
 	 * Render svg version
 	 * @param {SVGElement} element
@@ -38,7 +25,7 @@ TSnowflakePrimitive = Trait({
 	 */
 	renderCanvas: function (ctx) {
 		ctx.save();
-		this.translateCanvas(ctx);
+		this.transformCanvas(ctx);
 
 		// Background
 		ctx.fillStyle = this.bg;
@@ -98,7 +85,9 @@ TSnowflakePrimitive = Trait({
 	}
 });
 
-module.exports = Trait.compose(
-	TPrimitive,
-	TSnowflakePrimitive
-).create();
+module.exports = function () {
+	return Trait.compose(
+		TPrimitive.resolve({}),
+		TSnowflakePrimitive
+	).create();
+};

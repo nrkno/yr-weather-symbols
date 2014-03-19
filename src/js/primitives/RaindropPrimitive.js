@@ -7,19 +7,6 @@ var svg = require('svg')
 	, TRaindropPrimitive;
 
 TRaindropPrimitive = Trait({
-
-	show: function () {
-
-	},
-
-	hide: function () {
-
-	},
-
-	move: function (options) {
-
-	},
-
 	/**
 	 * Render svg version
 	 * @param {SVGElement} element
@@ -38,7 +25,7 @@ TRaindropPrimitive = Trait({
 	 */
 	renderCanvas: function (ctx) {
 		ctx.save();
-		this.translateCanvas(ctx);
+		this.transformCanvas(ctx);
 
 		// Background
 		ctx.fillStyle = this.bg;
@@ -64,7 +51,9 @@ TRaindropPrimitive = Trait({
 	}
 });
 
-module.exports = Trait.compose(
-	TPrimitive,
-	TRaindropPrimitive
-).create();
+module.exports = function () {
+	return Trait.compose(
+		TPrimitive.resolve({}),
+		TRaindropPrimitive
+	).create();
+};

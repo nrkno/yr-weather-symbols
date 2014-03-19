@@ -6,16 +6,43 @@ var svg = require('svg')
 
 TCloudPrimitive = Trait({
 
-	show: function () {
-
+	/**
+	 * Show transition
+	 * @params {Object} options
+	 */
+	show: function (options) {
+		var offset = options.flip ? this.OFFSET : -this.OFFSET;
+		this._x = options.x - offset;
+		this._dx = offset;
+		this._opacity = 0;
+		this._dopacity = 1;
+		this.transitionProps = ['x', 'opacity'];
+		this.transition(options);
 	},
 
-	hide: function () {
-
+	/**
+	 * Hide transition
+	 * @params {Object} options
+	 */
+	hide: function (options) {
+		var offset = this.flip ? -this.OFFSET : this.OFFSET;
+		this._x = this.x;
+		this._dx = offset;
+		this._opacity = this.opacity;
+		this._dopacity = -1;
+		this.transitionProps = ['x', 'opacity'];
+		this.transition(options);
 	},
 
+	/**
+	 * Move transition
+	 * @params {Object} options
+	 */
 	move: function (options) {
-
+		this._tint = this.tint;
+		this._dtint = options.tint - this.tint;
+		this.transitionProps = ['tint'];
+		this.transition(options);
 	},
 
 	/**
@@ -38,7 +65,7 @@ TCloudPrimitive = Trait({
 		var tint = Math.floor(255 * (1 - this.tint));
 
 		ctx.save();
-		this.translateCanvas(ctx);
+		this.transformCanvas(ctx);
 
 		// Mask
 		ctx.save();
@@ -47,12 +74,13 @@ TCloudPrimitive = Trait({
 		ctx.restore();
 
 		// Fill
+		ctx.globalAlpha = this.opacity;
 		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';
 		this.renderCanvasFillShape(ctx);
 		ctx.restore();
 	},
 
-	translateCanvas: function (ctx) {
+	transformCanvas: function (ctx) {
 		if (this.flip) {
 			ctx.translate((this.MAX_WIDTH * this.scale) + this.x, this.y)
 			ctx.scale(-1 * this.scale, this.scale);
@@ -105,7 +133,9 @@ TCloudPrimitive = Trait({
 	},
 });
 
-module.exports = Trait.compose(
-	TPrimitive.resolve({translateCanvas: null}),
-	TCloudPrimitive
-).create();
+module.exports = function () {
+	return Trait.compose(
+		TPrimitive.resolve({transformCanvas: null}),
+		TCloudPrimitive
+	).create();
+};

@@ -7,19 +7,6 @@ var svg = require('svg')
 	, TLightningPrimitive;
 
 TLightningPrimitive = Trait({
-
-	show: function () {
-
-	},
-
-	hide: function () {
-
-	},
-
-	move: function (options) {
-
-	},
-
 	/**
 	 * Render svg version
 	 * @param {SVGElement} element
@@ -39,7 +26,7 @@ TLightningPrimitive = Trait({
 	renderCanvas: function (ctx) {
 		// Fill
 		ctx.save();
-		this.translateCanvas(ctx);
+		this.transformCanvas(ctx);
 
 		ctx.fillStyle = FILL_COLOUR;
 		ctx.beginPath();
@@ -57,7 +44,9 @@ TLightningPrimitive = Trait({
 	}
 });
 
-module.exports = Trait.compose(
-	TPrimitive,
-	TLightningPrimitive
-).create();
+module.exports = function () {
+	return Trait.compose(
+		TPrimitive.resolve({}),
+		TLightningPrimitive
+	).create();
+};

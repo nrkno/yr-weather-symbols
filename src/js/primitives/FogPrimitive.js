@@ -5,19 +5,6 @@ var svg = require('svg')
 	, TFogPrimitive;
 
 TFogPrimitive = Trait({
-
-	show: function () {
-
-	},
-
-	hide: function () {
-
-	},
-
-	move: function (options) {
-
-	},
-
 	/**
 	 * Render svg version
 	 * @param {SVGElement} element
@@ -38,7 +25,7 @@ TFogPrimitive = Trait({
 		var tint = Math.floor(255 * (1 - this.tint));
 
 		ctx.save();
-		this.translateCanvas(ctx);
+		this.transformCanvas(ctx);
 
 		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';
 		ctx.beginPath();
@@ -90,7 +77,9 @@ TFogPrimitive = Trait({
 	}
 });
 
-module.exports = Trait.compose(
-	TPrimitive,
-	TFogPrimitive
-).create();
+module.exports = function () {
+	return Trait.compose(
+		TPrimitive.resolve({}),
+		TFogPrimitive
+	).create();
+};
