@@ -6,43 +6,33 @@ var svg = require('svg')
 
 TCloudPrimitive = Trait({
 	/**
-	 * Show transition
-	 * @params {Object} options
+	 * Animate instance based on 'action'
+	 * @param {String} action
+	 * @param {Object} options
+	 * @returns {Boolean}
 	 */
-	show: function (options) {
-		var offset = options.flip ? this.OFFSET : -this.OFFSET;
-		this._x = options.x - offset;
-		this._dx = offset;
-		this._opacity = 0;
-		this._dopacity = 1;
-		this.transitionProps = ['x', 'opacity'];
-		this.transition(options);
-	},
-
-	/**
-	 * Hide transition
-	 * @params {Object} options
-	 */
-	hide: function (options) {
-		var offset = this.flip ? -this.OFFSET : this.OFFSET;
-		this._x = this.x;
-		this._dx = offset;
-		this._opacity = this.opacity;
-		this._dopacity = -1;
-		this.transitionProps = ['x', 'opacity'];
-		this.transition(options);
-	},
-
-	/**
-	 * Move transition
-	 * @params {Object} options
-	 */
-	move: function (options) {
-		this._tint = this.tint;
-		this._dtint = options.tint - this.tint;
-		if (this._dtint) {
-			this.transitionProps = ['tint'];
-			this.transition(options);
+	animate: function (action, options) {
+		if (action == 'show') {
+			var offset = options.flip ? this.OFFSET : -this.OFFSET;
+			this._x = options.x - offset;
+			this._dx = offset;
+			this._opacity = 0;
+			this._dopacity = 1;
+			this.animationProps = ['x', 'opacity'];
+			return true;
+		} else if (action == 'hide') {
+			var offset = this.flip ? -this.OFFSET : this.OFFSET;
+			this._x = this.x;
+			this._dx = offset;
+			this._opacity = this.opacity;
+			this._dopacity = -1;
+			this.animationProps = ['x', 'opacity'];
+			return true;
+		} else if (action == 'move') {
+			this._tint = this.tint;
+			this._dtint = options.tint - this.tint;
+			this.animationProps = ['tint'];
+			return !!(this._dtint);
 		}
 	},
 
@@ -81,6 +71,10 @@ TCloudPrimitive = Trait({
 		ctx.restore();
 	},
 
+	/**
+	 * Transform canvas 'ctx'
+	 * @param {CanvasContext} ctx
+	 */
 	transformCanvas: function (ctx) {
 		if (this.flip) {
 			ctx.translate((this.MAX_WIDTH * this.scale) + this.x, this.y)
