@@ -18,14 +18,18 @@ TPrecipPrimitive = Trait({
 	 */
 	animate: function (action, options) {
 		if (action == 'show') {
-			this._opacity = 0;
+			this._opacity = 0.75;
 			this._dopacity = 1;
+			this.animationProps = ['opacity'];
 			return true;
 		} else if (action == 'hide') {
+			this._x = this.x;
+			this._dx = this.OFFSET * 0.5;
 			this._y = this.y;
 			this._dy = this.OFFSET;
 			this._opacity = 1;
 			this._dopacity = -1;
+			this.animationProps = ['x', 'y', 'opacity'];
 			return true;
 		} else if (action == 'move') {
 			return false;
@@ -51,6 +55,7 @@ TPrecipPrimitive = Trait({
 	renderCanvas: function (ctx) {
 		ctx.save();
 		this.transformCanvas(ctx);
+		ctx.globalAlpha = this.opacity;
 
 		// Background
 		ctx.fillStyle = this.bg;
@@ -63,7 +68,6 @@ TPrecipPrimitive = Trait({
 		ctx.restore();
 
 		// Fill
-		ctx.globalAlpha = this.opacity;
 		if (this.primitive == 'raindrop') {
 			this.renderCanvasRaindropShape(ctx);
 		} else if (this.primitive == 'sleet') {

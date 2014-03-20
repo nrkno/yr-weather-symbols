@@ -1,5 +1,6 @@
 var Trait = require('trait')
-	, ease = require('ease/lib/quad').outQuad.js;
+	, easeOut = require('ease/lib/quad').outQuad.js
+	, easeIn = require('ease/lib/quad').inOutQuad.js;
 
 module.exports = Trait({
 	TWO_PI: Math.PI * 2,
@@ -49,13 +50,14 @@ module.exports = Trait({
 	 * Show transition
 	 * @params {Object} options
 	 */
-	show: function (time, start, duration, options) {
+	show: function (duration, options) {
+		// Skip if already visible
 		if (!this.visible && this.animate('show', options)) {
 			this.visible = true;
 			this.animation = 'show';
-			this.start = start;
+			this.elapsed = 0;
 			this.duration = duration;
-			this.update(time, options);
+			this.update(options);
 		}
 	},
 
@@ -63,12 +65,12 @@ module.exports = Trait({
 	 * Hide transition
 	 * @params {Object} options
 	 */
-	hide: function (time, start, duration, options) {
+	hide: function (duration, options) {
 		if (this.animate('hide', options)) {
 			this.animation = 'hide';
-			this.start = start;
+			this.elapsed = 0;
 			this.duration = duration;
-			this.update(time, options);
+			this.update(options);
 		}
 	},
 
@@ -76,71 +78,56 @@ module.exports = Trait({
 	 * Move transition
 	 * @params {Object} options
 	 */
-	move: function (time, start, duration, options) {
+	move: function (duration, options) {
 		if (this.animate('move', options)) {
 			this.animation = 'move';
-			this.start = start;
+			this.elapsed = 0;
 			this.duration = duration;
-			this.update(time, options);
+			this.update(options);
 		}
 	},
 
 	/**
-	 * Update instance with 'options' at 'time'
-	 * @param {Number} time
+	 * Update instance with 'options' for frame 'tick'
+	 * @param {Number} tick
 	 * @param {Object} options
 	 */
-	update: function (time, options) {
-		if ('number' != typeof time) {
-			options = time;
-			time = 0;
+	update: function (tick, options) {
+		if ('number' != typeof tick) {
+			options = tick;
+			tick = 0;
 		}
 
+		// Copy options
 		if (options) {
 			this.extend(options);
 		}
 
 		// Animating
 		if (this.animation) {
-			var end = this.start + this.duration
-				, isComplete = (time >= end)
+			this.elapsed += tick;
+
+			var isComplete = (this.elapsed >= this.duration)
+				, ease = (this.animation.show) ? easeOut : easeIn
 				, prop;
 
+			// Calculate properties
 			for (var i = 0, n = this.animationProps.length; i < n; i++) {
 				prop = this.animationProps[i];
 				this[prop] = isComplete
 					? this['_' + prop] + this['_d' + prop]
-					: ease(time - this.start, this['_' + prop], this['_d' + prop], this.duration);
+					: ease(this.elapsed, this['_' + prop], this['_d' + prop], this.duration);
 			}
 
+			// Animation complete
 			if (isComplete) {
 				this.duration = 0;
-				this.start = 0;
+				this.elapsed = 0;
 				if (this.animation == 'hide') this.visible = false;
 				this.animation = '';
 				this.animationProps = null;
 			}
 		}
-
-		// Compute transition target props
-		// if (this.transitionProps) {
-		// 	var isComplete = (options.time >= this.transitionStart + this.transitionDuration)
-		// 		, elapsed = isComplete ? this.transitionStart + this.transitionDuration : options.time - this.transitionStart
-		// 		, prop;
-
-		// 	// Set transition props
-		// 	for (var i = 0, n = this.transitionProps.length; i < n; i++) {
-		// 		prop = this.transitionProps[i];
-		// 		// Tween or set final
-		// 		this[prop] = isComplete
-		// 			? this['_' + prop] + this['_d' + prop]
-		// 			: ease(elapsed, this['_' + prop], this['_d' + prop], this.transitionDuration);
-		// 		if (prop == 'scale' && this[prop] > 1) console.log(options.time, elapsed, this.transitionStart, this['_' + prop], this['_d' + prop])
-		// 	}
-
-		// 	// Clear
-		// 	if (isComplete) this.transitionProps = null;
-		// }
 	},
 
 	/**
@@ -197,8 +184,11 @@ module.exports = Trait({
 		}
 	},
 
+	/**
+	 * Copy properties from 'options'
+	 * @param {Object} options
+	 */
 	extend: function (options) {
-		// Copy props to instance
 		for (var prop in options) {
 			if (this.hasOwnProperty(prop)) this[prop] = options[prop];
 		}

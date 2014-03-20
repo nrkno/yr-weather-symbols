@@ -57,6 +57,7 @@ TCloudPrimitive = Trait({
 
 		ctx.save();
 		this.transformCanvas(ctx);
+		ctx.globalAlpha = this.opacity;
 
 		// Mask
 		ctx.save();
@@ -65,7 +66,6 @@ TCloudPrimitive = Trait({
 		ctx.restore();
 
 		// Fill
-		ctx.globalAlpha = this.opacity;
 		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';
 		this.renderCanvasFillShape(ctx);
 		ctx.restore();

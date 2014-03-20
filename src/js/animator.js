@@ -3,6 +3,7 @@ var CelestialPrimitive = require('./primitives/CelestialPrimitive')
 	, PrecipPrimitive = require('./primitives/PrecipPrimitive')
 	, LightningPrimitive = require('./primitives/LightningPrimitive')
 	, FogPrimitive = require('./primitives/FogPrimitive')
+	, random = require('number-utils').rangedRandom
 
 	, anims = {}
 	, length = 0
@@ -11,7 +12,7 @@ var CelestialPrimitive = require('./primitives/CelestialPrimitive')
 	, running = false
 
 	, FRAME_DURATION = 2000
-	, TRANSITION_DURATION = 250;
+	, TRANSITION_DURATION = 500;;
 
 module.exports = function (ctx, frames, options) {
 	if (!ctx) return;
@@ -63,9 +64,9 @@ function onTick (time) {
 }
 
 /**
- * Render 'anim'
+ * Render 'anim' at frame 'tick'
  * @param {Anim} anim
- * @param {Number} time
+ * @param {Number} tick
  */
 function render (anim, tick) {
 	var time = (anim.time + tick) % anim.duration
@@ -74,13 +75,13 @@ function render (anim, tick) {
 
 	anim.time = time;
 
+	// Trigger keyframe
 	for (var keyframe in anim.timeline) {
 		if (keyframe == time
 			|| keyframe > last && time > keyframe) {
 				for (var i = 0, n = anim.timeline[keyframe].length; i < n; i++) {
 					layer = anim.timeline[keyframe][i];
-					layer.instance[layer.action](time, layer.start, layer.duration, layer.options);
-					// console.log(layer.action, layer.options.primitive, time)
+					layer.instance[layer.action](layer.duration, layer.options);
 				}
 		}
 	}
@@ -88,59 +89,20 @@ function render (anim, tick) {
 	// Clear canvas
 	anim.ctx.clearRect(0, 0, anim.width, anim.height);
 
+	// Update all layers
 	for (var i = 0, n = anim.layers.length; i < n; i++) {
 		layer = anim.layers[i]
-		layer.update(time);
+		layer.update(tick);
 		layer.render(anim.ctx);
 	}
-
-	// var newFrame = (time == 0)
-	// 	, transitioning = (time <= TRANSITION_DURATION) || (time >= FRAME_DURATION - TRANSITION_DURATION)
-	// 	, options = {time: time}
-	// 	, opts, layer, nextOpts;
-
-	// // Loop frame count
-	// if (newFrame) {
-	// 	anim.frame = (anim.frame + 1) % anim.frames.length;
-	// }
-
-	// // Clear canvas
-	// anim.ctx.clearRect(0, 0, anim.width, anim.height);
-
-	// // Loop through frame layers
-	// for (var i = 0, n = anim.frames[anim.frame].length; i < n; i++) {
-	// 	opts = anim.frames[anim.frame][i];
-	// 	// Get layer instance
-	// 	layer = anim.layers[opts.layer];
-	// 	// Start new frame
-	// 	if (newFrame) {
-	// 		// Show if first frame or if layer in previous frame
-	// 		if (anim.frame == 0 || !contains(anim.frames[anim.frame - 1], opts.layer)) {
-	// 				opts.time = 0;
-	// 				layer.show(opts);
-	// 		}
-	// 	// End frame
-	// 	} else if (!anim.transitioning && transitioning) {
-	// 		// Move if not last frame
-	// 		if (anim.frame < anim.frames.length - 1
-	// 			// ...and sun/moon/cloud
-	// 			&& parseInt(opts.layer.slice(-1), 10) < 4
-	// 			// ...and if layer in next frame
-	// 			&& (nextOpts = contains(anim.frames[anim.frame + 1], opts.layer))) {
-	// 				// Force time to ensure transition doesn't last longer than the frame
-	// 				nextOpts.time = FRAME_DURATION - TRANSITION_DURATION;
-	// 				layer.move(nextOpts);
-	// 		// Hide
-	// 		} else {
-	// 			layer.hide(options);
-	// 		}
-	// 	}
-	// 	layer.render(anim.ctx, options);
-	// }
-
-	// anim.transitioning = transitioning;
 }
 
+/**
+ * Generate a timeline from 'frames'
+ * @param {Object} frames
+ * @param {Object} layers
+ * @returns {Object}
+ */
 function generateTimeline (frames, layers) {
 	var timeline = {}
 		, time = 0
@@ -149,29 +111,59 @@ function generateTimeline (frames, layers) {
 	for (var i = 0, n = frames.length; i < n; i++) {
 		for (var j = 0, k = frames[i].length; j < k; j++) {
 			layer = frames[i][j];
-			prevLayer = contains(frames[(i == 0) ? n - 1: i - 1], layer.layer);
-			nextLayer = contains(frames[(i + 1) % n], layer.layer);
-			generateKeyframe(timeline, time, {
-				instance: layers[layer.layer],
-				action: 'show',
-				duration: TRANSITION_DURATION,
-				start: time,
-				options: layer
-			})
-			if (nextLayer) {
-				generateKeyframe(timeline, time + FRAME_DURATION - TRANSITION_DURATION, {
-					instance: layers[layer.layer],
-					action: 'move',
+			// Sun/Moon/Clouds/Fog
+			if (layer.idx <= 4) {
+				// Determine if layer active in previous and next frame
+				prevLayer = contains(frames[(i == 0) ? n - 1: i - 1], layer.idx);
+				nextLayer = contains(frames[(i + 1) % n], layer.idx);
+				// Show at beginning of frame
+				generateKeyframe(timeline, time, {
+					instance: layers[layer.idx],
+					action: 'show',
 					duration: TRANSITION_DURATION,
-					start: time + FRAME_DURATION - TRANSITION_DURATION,
-					options: nextLayer
+					options: layer
 				})
+				// Move if in next frame
+				if (nextLayer) {
+					generateKeyframe(timeline, time + FRAME_DURATION - TRANSITION_DURATION, {
+						instance: layers[layer.idx],
+						action: 'move',
+						duration: TRANSITION_DURATION,
+						options: nextLayer
+					})
+				// Hide with overlap
+				} else {
+					generateKeyframe(timeline, time + FRAME_DURATION - (TRANSITION_DURATION * 0.5), {
+						instance: layers[layer.idx],
+						action: 'hide',
+						duration: TRANSITION_DURATION,
+						options: layer
+					})
+				}
+			// Rain/Sleet/Snow/Lightning
 			} else {
-				generateKeyframe(timeline, time + FRAME_DURATION - TRANSITION_DURATION, {
-					instance: layers[layer.layer],
+				generateKeyframe(timeline, time + (TRANSITION_DURATION * random(0.3, 0.5)), {
+					instance: layers[layer.idx],
+					action: 'show',
+					duration: TRANSITION_DURATION * random(0.4, 0.6),
+					options: layer
+				})
+				generateKeyframe(timeline, time + (TRANSITION_DURATION * random(1.3, 1.5)), {
+					instance: layers[layer.idx],
 					action: 'hide',
-					duration: TRANSITION_DURATION,
-					start: time + FRAME_DURATION - TRANSITION_DURATION,
+					duration: TRANSITION_DURATION * random(0.4, 0.6),
+					options: layer
+				})
+				generateKeyframe(timeline, time + (TRANSITION_DURATION * random(2.3, 2.5)), {
+					instance: layers[layer.idx],
+					action: 'show',
+					duration: TRANSITION_DURATION * random(0.4, 0.6),
+					options: layer
+				})
+				generateKeyframe(timeline, time + (TRANSITION_DURATION * random(3.3, 3.5)), {
+					instance: layers[layer.idx],
+					action: 'hide',
+					duration: TRANSITION_DURATION * random(0.4, 0.6),
 					options: layer
 				})
 			}
@@ -182,20 +174,26 @@ function generateTimeline (frames, layers) {
 	return timeline;
 }
 
+/**
+ * Generate keyframe for 'timeline' at 'time' with 'data'
+ * @param {Object} timeline
+ * @param {time} time
+ * @param {Object} data
+ */
 function generateKeyframe (timeline, time, data) {
 	if (timeline[time] == null) timeline[time] = [];
 	timeline[time].push(data);
 }
 
 /**
- * Determine if 'layer' in 'layers'
+ * Determine if 'idx' in 'layers'
  * @param {Array} layers
- * @param {String} layer
+ * @param {Number} idx
  * @returns {Object|false}
  */
-function contains (layers, layer) {
+function contains (layers, idx) {
 	for (var i = 0, n = layers.length; i < n; i++) {
-		if (layers[i].layer === layer) return layers[i];
+		if (layers[i].idx === idx) return layers[i];
 	}
 	return false;
 }
@@ -218,21 +216,36 @@ function Anim (id, ctx, frames, options) {
 	this.time = 0;
 	// Layer instances
 	this.layers = [
+		// Sun
 		CelestialPrimitive().initialize(),
+		// Moon
 		CelestialPrimitive().initialize(),
+		// Cloud back
 		CloudPrimitive().initialize(),
+		// Cloud front
 		CloudPrimitive().initialize(),
+		// Fog
+		FogPrimitive().initialize(),
+		// Raindrop 1
 		PrecipPrimitive().initialize(),
+		// Raindrop 2
 		PrecipPrimitive().initialize(),
+		// Raindrop 3
 		PrecipPrimitive().initialize(),
+		// Sleet 1
 		PrecipPrimitive().initialize(),
+		// Sleet 2
 		PrecipPrimitive().initialize(),
+		// Sleet 3
 		PrecipPrimitive().initialize(),
+		// Snowflake 1
 		PrecipPrimitive().initialize(),
+		// Snowflake 2
 		PrecipPrimitive().initialize(),
+		// Snowflake 3
 		PrecipPrimitive().initialize(),
-		LightningPrimitive().initialize(),
-		FogPrimitive().initialize()
+		// Lightning
+		LightningPrimitive().initialize()
 	]
 
 	// Store layer instance key in layer object for all frames
@@ -241,28 +254,28 @@ function Anim (id, ctx, frames, options) {
 			var layer = this.frames[i][j];
 			switch (layer.primitive) {
 				case 'sun':
-					layer.layer = 0;
+					layer.idx = 0;
 					break;
 				case 'moon':
-					layer.layer = 1;
+					layer.idx = 1;
 					break;
 				case 'cloud':
-					layer.layer = layer.flip ? 2 : 3;
-					break;
-				case 'raindrop':
-					layer.layer = j + 2;
-					break;
-				case 'sleet':
-					layer.layer = j + 5;
-					break;
-				case 'snowflake':
-					layer.layer = j + 8;
-					break;
-				case 'lightning':
-					layer.layer = 13;
+					layer.idx = layer.flip ? 2 : 3;
 					break;
 				case 'fog':
-					layer.layer = 14;
+					layer.idx = 4;
+					break;
+				case 'raindrop':
+					layer.idx = j + 3;
+					break;
+				case 'sleet':
+					layer.idx = j + 6;
+					break;
+				case 'snowflake':
+					layer.idx = j + 9;
+					break;
+				case 'lightning':
+					layer.idx = 14;
 					break;
 			}
 		}

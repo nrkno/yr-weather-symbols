@@ -2766,7 +2766,8 @@ require.register('ease/lib/quad', function(module, exports, require) {
 });
 require.register('primitives/TPrimitive', function(module, exports, require) {
   var Trait = require('trait')
-  	, ease = require('ease/lib/quad').outQuad.js;
+  	, easeOut = require('ease/lib/quad').outQuad.js
+  	, easeIn = require('ease/lib/quad').inOutQuad.js;
   
   module.exports = Trait({
   	TWO_PI: Math.PI * 2,
@@ -2816,13 +2817,14 @@ require.register('primitives/TPrimitive', function(module, exports, require) {
   	 * Show transition
   	 * @params {Object} options
   	 */
-  	show: function (time, start, duration, options) {
+  	show: function (duration, options) {
+  		// Skip if already visible
   		if (!this.visible && this.animate('show', options)) {
   			this.visible = true;
   			this.animation = 'show';
-  			this.start = start;
+  			this.elapsed = 0;
   			this.duration = duration;
-  			this.update(time, options);
+  			this.update(options);
   		}
   	},
   
@@ -2830,12 +2832,12 @@ require.register('primitives/TPrimitive', function(module, exports, require) {
   	 * Hide transition
   	 * @params {Object} options
   	 */
-  	hide: function (time, start, duration, options) {
+  	hide: function (duration, options) {
   		if (this.animate('hide', options)) {
   			this.animation = 'hide';
-  			this.start = start;
+  			this.elapsed = 0;
   			this.duration = duration;
-  			this.update(time, options);
+  			this.update(options);
   		}
   	},
   
@@ -2843,71 +2845,56 @@ require.register('primitives/TPrimitive', function(module, exports, require) {
   	 * Move transition
   	 * @params {Object} options
   	 */
-  	move: function (time, start, duration, options) {
+  	move: function (duration, options) {
   		if (this.animate('move', options)) {
   			this.animation = 'move';
-  			this.start = start;
+  			this.elapsed = 0;
   			this.duration = duration;
-  			this.update(time, options);
+  			this.update(options);
   		}
   	},
   
   	/**
-  	 * Update instance with 'options' at 'time'
-  	 * @param {Number} time
+  	 * Update instance with 'options' for frame 'tick'
+  	 * @param {Number} tick
   	 * @param {Object} options
   	 */
-  	update: function (time, options) {
-  		if ('number' != typeof time) {
-  			options = time;
-  			time = 0;
+  	update: function (tick, options) {
+  		if ('number' != typeof tick) {
+  			options = tick;
+  			tick = 0;
   		}
   
+  		// Copy options
   		if (options) {
   			this.extend(options);
   		}
   
   		// Animating
   		if (this.animation) {
-  			var end = this.start + this.duration
-  				, isComplete = (time >= end)
+  			this.elapsed += tick;
+  
+  			var isComplete = (this.elapsed >= this.duration)
+  				, ease = (this.animation.show) ? easeOut : easeIn
   				, prop;
   
+  			// Calculate properties
   			for (var i = 0, n = this.animationProps.length; i < n; i++) {
   				prop = this.animationProps[i];
   				this[prop] = isComplete
   					? this['_' + prop] + this['_d' + prop]
-  					: ease(time - this.start, this['_' + prop], this['_d' + prop], this.duration);
+  					: ease(this.elapsed, this['_' + prop], this['_d' + prop], this.duration);
   			}
   
+  			// Animation complete
   			if (isComplete) {
   				this.duration = 0;
-  				this.start = 0;
+  				this.elapsed = 0;
   				if (this.animation == 'hide') this.visible = false;
   				this.animation = '';
   				this.animationProps = null;
   			}
   		}
-  
-  		// Compute transition target props
-  		// if (this.transitionProps) {
-  		// 	var isComplete = (options.time >= this.transitionStart + this.transitionDuration)
-  		// 		, elapsed = isComplete ? this.transitionStart + this.transitionDuration : options.time - this.transitionStart
-  		// 		, prop;
-  
-  		// 	// Set transition props
-  		// 	for (var i = 0, n = this.transitionProps.length; i < n; i++) {
-  		// 		prop = this.transitionProps[i];
-  		// 		// Tween or set final
-  		// 		this[prop] = isComplete
-  		// 			? this['_' + prop] + this['_d' + prop]
-  		// 			: ease(elapsed, this['_' + prop], this['_d' + prop], this.transitionDuration);
-  		// 		if (prop == 'scale' && this[prop] > 1) console.log(options.time, elapsed, this.transitionStart, this['_' + prop], this['_d' + prop])
-  		// 	}
-  
-  		// 	// Clear
-  		// 	if (isComplete) this.transitionProps = null;
-  		// }
   	},
   
   	/**
@@ -2964,8 +2951,11 @@ require.register('primitives/TPrimitive', function(module, exports, require) {
   		}
   	},
   
+  	/**
+  	 * Copy properties from 'options'
+  	 * @param {Object} options
+  	 */
   	extend: function (options) {
-  		// Copy props to instance
   		for (var prop in options) {
   			if (this.hasOwnProperty(prop)) this[prop] = options[prop];
   		}
@@ -3254,6 +3244,7 @@ require.register('primitives/CloudPrimitive', function(module, exports, require)
     
   		ctx.save();  
   		this.transformCanvas(ctx);  
+  		ctx.globalAlpha = this.opacity;  
     
   		// Mask  
   		ctx.save();  
@@ -3262,7 +3253,6 @@ require.register('primitives/CloudPrimitive', function(module, exports, require)
   		ctx.restore();  
     
   		// Fill  
-  		ctx.globalAlpha = this.opacity;  
   		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
   		this.renderCanvasFillShape(ctx);  
   		ctx.restore();  
@@ -3353,14 +3343,18 @@ require.register('primitives/PrecipPrimitive', function(module, exports, require
   	 */
   	animate: function (action, options) {
   		if (action == 'show') {
-  			this._opacity = 0;
+  			this._opacity = 0.75;
   			this._dopacity = 1;
+  			this.animationProps = ['opacity'];
   			return true;
   		} else if (action == 'hide') {
+  			this._x = this.x;
+  			this._dx = this.OFFSET * 0.5;
   			this._y = this.y;
   			this._dy = this.OFFSET;
   			this._opacity = 1;
   			this._dopacity = -1;
+  			this.animationProps = ['x', 'y', 'opacity'];
   			return true;
   		} else if (action == 'move') {
   			return false;
@@ -3386,6 +3380,7 @@ require.register('primitives/PrecipPrimitive', function(module, exports, require
   	renderCanvas: function (ctx) {
   		ctx.save();
   		this.transformCanvas(ctx);
+  		ctx.globalAlpha = this.opacity;
   
   		// Background
   		ctx.fillStyle = this.bg;
@@ -3398,7 +3393,6 @@ require.register('primitives/PrecipPrimitive', function(module, exports, require
   		ctx.restore();
   
   		// Fill
-  		ctx.globalAlpha = this.opacity;
   		if (this.primitive == 'raindrop') {
   			this.renderCanvasRaindropShape(ctx);
   		} else if (this.primitive == 'sleet') {
@@ -3686,12 +3680,111 @@ require.register('primitives/FogPrimitive', function(module, exports, require) {
   	).create();  
   };
 });
+require.register('number-utils', function(module, exports, require) {
+  exports.TWO_PI = (function() {
+  	return Math.PI * 2;
+  })();
+  
+  exports.HALF_PI = (function() {
+  	return Math.PI * 0.5;
+  })();
+  
+  /**
+   * Converts a given value in degrees to radians
+   * @param {Number} deg
+   * @returns {Number}
+   */
+  exports.degreesToRadians = function(deg) {
+  	return (deg * Math.PI) / 180;
+  };
+  
+  /**
+   * Converts a given value in radians to degrees
+   * @param {Number} rad
+   * @returns {Number}
+   */
+  exports.radiansToDegrees = function(rad) {
+  	return (180 * rad) / Math.PI;
+  };
+  
+  /**
+   * Takes a 'value' within a given range and converts it to a number between 0 and 1.
+   * @param {Number} value
+   * @param {Number} minimum
+   * @param {Number} maximum
+   * @returns {Number}
+   */
+  var normalize = exports.normalize = function(value, min, max) {
+  	if (min === max) {
+  		return 1;
+  	} else {
+  		return (value - min) / (max - min);
+  	}
+  };
+  
+  /**
+   * Takes a normalized value and a range and returns the actual value in that range.
+   * @param {Number} normValue
+   * @param {Number} minimum
+   * @param {Number} maximum
+   * @returns {Number}
+   */
+  var interplate = exports.interpolate = function(normValue, min, max) {
+  	return min + (max - min) * normValue;
+  };
+  
+  /**
+   * Takes a value in a given range (min1, max1) and finds the corresonding value in the next range (min2, max2).
+   * @param {Number} value
+   * @param {Number} min1
+   * @param {Number} max1
+   * @param {Number} min2
+   * @param {Number} max2
+   * @returns {Number}
+   */
+  var map = exports.map = function(value, min1, max1, min2, max2) {
+  	return interplate(normalize(value, min1, max1), min2, max2);
+  };
+  
+  /**
+   * Takes a value and limits it to fall within a given range.
+   * @param {Number} value
+   * @param {Number} minimum
+   * @param {Number} maximum
+   * @returns {Number}
+   */
+  var limit = exports.limit = function(value, min, max) {
+  	return Math.min(Math.max(min, value), max);
+  };
+  
+  /**
+   * Generates a random number between a given range.
+   * @param {Number} low
+   * @param {Number} high
+   * @returns {Number}
+   */
+  var rangedRandom = exports.rangedRandom = function(low, high) {
+  	return map(Math.random(), 0, 1, low, high);
+  };
+  
+  /**
+   * Rounds a value to the number of specified decimal places
+   * @param {Number} value
+   * @param {Number} decimalPlaces
+   * @returns {Number}
+   */
+  exports.round = function (value, decimalPlaces) {
+  	var places = Math.pow(10, (decimalPlaces || 0));
+  	return Math.round(value * places) / places;
+  };
+});
 require.register('animator', function(module, exports, require) {
   var CelestialPrimitive = require('primitives/CelestialPrimitive')
   	, CloudPrimitive = require('primitives/CloudPrimitive')
   	, PrecipPrimitive = require('primitives/PrecipPrimitive')
   	, LightningPrimitive = require('primitives/LightningPrimitive')
   	, FogPrimitive = require('primitives/FogPrimitive')
+  	, random = require('number-utils').rangedRandom
   
   	, anims = {}
   	, length = 0
@@ -3700,7 +3793,7 @@ require.register('animator', function(module, exports, require) {
   	, running = false
   
   	, FRAME_DURATION = 2000
-  	, TRANSITION_DURATION = 250;
+  	, TRANSITION_DURATION = 500;;
   
   module.exports = function (ctx, frames, options) {
   	if (!ctx) return;
@@ -3752,9 +3845,9 @@ require.register('animator', function(module, exports, require) {
   }
   
   /**
-   * Render 'anim'
+   * Render 'anim' at frame 'tick'
    * @param {Anim} anim
-   * @param {Number} time
+   * @param {Number} tick
    */
   function render (anim, tick) {
   	var time = (anim.time + tick) % anim.duration
@@ -3763,13 +3856,13 @@ require.register('animator', function(module, exports, require) {
   
   	anim.time = time;
   
+  	// Trigger keyframe
   	for (var keyframe in anim.timeline) {
   		if (keyframe == time
   			|| keyframe > last && time > keyframe) {
   				for (var i = 0, n = anim.timeline[keyframe].length; i < n; i++) {
   					layer = anim.timeline[keyframe][i];
-  					layer.instance[layer.action](time, layer.start, layer.duration, layer.options);
-  					// console.log(layer.action, layer.options.primitive, time)
+  					layer.instance[layer.action](layer.duration, layer.options);
   				}
   		}
   	}
@@ -3777,59 +3870,20 @@ require.register('animator', function(module, exports, require) {
   	// Clear canvas
   	anim.ctx.clearRect(0, 0, anim.width, anim.height);
   
+  	// Update all layers
   	for (var i = 0, n = anim.layers.length; i < n; i++) {
   		layer = anim.layers[i]
-  		layer.update(time);
+  		layer.update(tick);
   		layer.render(anim.ctx);
   	}
-  
-  	// var newFrame = (time == 0)
-  	// 	, transitioning = (time <= TRANSITION_DURATION) || (time >= FRAME_DURATION - TRANSITION_DURATION)
-  	// 	, options = {time: time}
-  	// 	, opts, layer, nextOpts;
-  
-  	// // Loop frame count
-  	// if (newFrame) {
-  	// 	anim.frame = (anim.frame + 1) % anim.frames.length;
-  	// }
-  
-  	// // Clear canvas
-  	// anim.ctx.clearRect(0, 0, anim.width, anim.height);
-  
-  	// // Loop through frame layers
-  	// for (var i = 0, n = anim.frames[anim.frame].length; i < n; i++) {
-  	// 	opts = anim.frames[anim.frame][i];
-  	// 	// Get layer instance
-  	// 	layer = anim.layers[opts.layer];
-  	// 	// Start new frame
-  	// 	if (newFrame) {
-  	// 		// Show if first frame or if layer in previous frame
-  	// 		if (anim.frame == 0 || !contains(anim.frames[anim.frame - 1], opts.layer)) {
-  	// 				opts.time = 0;
-  	// 				layer.show(opts);
-  	// 		}
-  	// 	// End frame
-  	// 	} else if (!anim.transitioning && transitioning) {
-  	// 		// Move if not last frame
-  	// 		if (anim.frame < anim.frames.length - 1
-  	// 			// ...and sun/moon/cloud
-  	// 			&& parseInt(opts.layer.slice(-1), 10) < 4
-  	// 			// ...and if layer in next frame
-  	// 			&& (nextOpts = contains(anim.frames[anim.frame + 1], opts.layer))) {
-  	// 				// Force time to ensure transition doesn't last longer than the frame
-  	// 				nextOpts.time = FRAME_DURATION - TRANSITION_DURATION;
-  	// 				layer.move(nextOpts);
-  	// 		// Hide
-  	// 		} else {
-  	// 			layer.hide(options);
-  	// 		}
-  	// 	}
-  	// 	layer.render(anim.ctx, options);
-  	// }
-  
-  	// anim.transitioning = transitioning;
   }
   
+  /**
+   * Generate a timeline from 'frames'
+   * @param {Object} frames
+   * @param {Object} layers
+   * @returns {Object}
+   */
   function generateTimeline (frames, layers) {
   	var timeline = {}
   		, time = 0
@@ -3838,29 +3892,59 @@ require.register('animator', function(module, exports, require) {
   	for (var i = 0, n = frames.length; i < n; i++) {
   		for (var j = 0, k = frames[i].length; j < k; j++) {
   			layer = frames[i][j];
-  			prevLayer = contains(frames[(i == 0) ? n - 1: i - 1], layer.layer);
-  			nextLayer = contains(frames[(i + 1) % n], layer.layer);
-  			generateKeyframe(timeline, time, {
-  				instance: layers[layer.layer],
-  				action: 'show',
-  				duration: TRANSITION_DURATION,
-  				start: time,
-  				options: layer
-  			})
-  			if (nextLayer) {
-  				generateKeyframe(timeline, time + FRAME_DURATION - TRANSITION_DURATION, {
-  					instance: layers[layer.layer],
-  					action: 'move',
+  			// Sun/Moon/Clouds/Fog
+  			if (layer.idx <= 4) {
+  				// Determine if layer active in previous and next frame
+  				prevLayer = contains(frames[(i == 0) ? n - 1: i - 1], layer.idx);
+  				nextLayer = contains(frames[(i + 1) % n], layer.idx);
+  				// Show at beginning of frame
+  				generateKeyframe(timeline, time, {
+  					instance: layers[layer.idx],
+  					action: 'show',
   					duration: TRANSITION_DURATION,
-  					start: time + FRAME_DURATION - TRANSITION_DURATION,
-  					options: nextLayer
+  					options: layer
   				})
+  				// Move if in next frame
+  				if (nextLayer) {
+  					generateKeyframe(timeline, time + FRAME_DURATION - TRANSITION_DURATION, {
+  						instance: layers[layer.idx],
+  						action: 'move',
+  						duration: TRANSITION_DURATION,
+  						options: nextLayer
+  					})
+  				// Hide with overlap
+  				} else {
+  					generateKeyframe(timeline, time + FRAME_DURATION - (TRANSITION_DURATION * 0.5), {
+  						instance: layers[layer.idx],
+  						action: 'hide',
+  						duration: TRANSITION_DURATION,
+  						options: layer
+  					})
+  				}
+  			// Rain/Sleet/Snow/Lightning
   			} else {
-  				generateKeyframe(timeline, time + FRAME_DURATION - TRANSITION_DURATION, {
-  					instance: layers[layer.layer],
+  				generateKeyframe(timeline, time + (TRANSITION_DURATION * random(0.3, 0.5)), {
+  					instance: layers[layer.idx],
+  					action: 'show',
+  					duration: TRANSITION_DURATION * random(0.4, 0.6),
+  					options: layer
+  				})
+  				generateKeyframe(timeline, time + (TRANSITION_DURATION * random(1.3, 1.5)), {
+  					instance: layers[layer.idx],
   					action: 'hide',
-  					duration: TRANSITION_DURATION,
-  					start: time + FRAME_DURATION - TRANSITION_DURATION,
+  					duration: TRANSITION_DURATION * random(0.4, 0.6),
+  					options: layer
+  				})
+  				generateKeyframe(timeline, time + (TRANSITION_DURATION * random(2.3, 2.5)), {
+  					instance: layers[layer.idx],
+  					action: 'show',
+  					duration: TRANSITION_DURATION * random(0.4, 0.6),
+  					options: layer
+  				})
+  				generateKeyframe(timeline, time + (TRANSITION_DURATION * random(3.3, 3.5)), {
+  					instance: layers[layer.idx],
+  					action: 'hide',
+  					duration: TRANSITION_DURATION * random(0.4, 0.6),
   					options: layer
   				})
   			}
@@ -3871,20 +3955,26 @@ require.register('animator', function(module, exports, require) {
   	return timeline;
   }
   
+  /**
+   * Generate keyframe for 'timeline' at 'time' with 'data'
+   * @param {Object} timeline
+   * @param {time} time
+   * @param {Object} data
+   */
   function generateKeyframe (timeline, time, data) {
   	if (timeline[time] == null) timeline[time] = [];
   	timeline[time].push(data);
   }
   
   /**
-   * Determine if 'layer' in 'layers'
+   * Determine if 'idx' in 'layers'
    * @param {Array} layers
-   * @param {String} layer
+   * @param {Number} idx
    * @returns {Object|false}
    */
-  function contains (layers, layer) {
+  function contains (layers, idx) {
   	for (var i = 0, n = layers.length; i < n; i++) {
-  		if (layers[i].layer === layer) return layers[i];
+  		if (layers[i].idx === idx) return layers[i];
   	}
   	return false;
   }
@@ -3907,21 +3997,36 @@ require.register('animator', function(module, exports, require) {
   	this.time = 0;
   	// Layer instances
   	this.layers = [
+  		// Sun
   		CelestialPrimitive().initialize(),
+  		// Moon
   		CelestialPrimitive().initialize(),
+  		// Cloud back
   		CloudPrimitive().initialize(),
+  		// Cloud front
   		CloudPrimitive().initialize(),
+  		// Fog
+  		FogPrimitive().initialize(),
+  		// Raindrop 1
   		PrecipPrimitive().initialize(),
+  		// Raindrop 2
   		PrecipPrimitive().initialize(),
+  		// Raindrop 3
   		PrecipPrimitive().initialize(),
+  		// Sleet 1
   		PrecipPrimitive().initialize(),
+  		// Sleet 2
   		PrecipPrimitive().initialize(),
+  		// Sleet 3
   		PrecipPrimitive().initialize(),
+  		// Snowflake 1
   		PrecipPrimitive().initialize(),
+  		// Snowflake 2
   		PrecipPrimitive().initialize(),
+  		// Snowflake 3
   		PrecipPrimitive().initialize(),
-  		LightningPrimitive().initialize(),
-  		FogPrimitive().initialize()
+  		// Lightning
+  		LightningPrimitive().initialize()
   	]
   
   	// Store layer instance key in layer object for all frames
@@ -3930,28 +4035,28 @@ require.register('animator', function(module, exports, require) {
   			var layer = this.frames[i][j];
   			switch (layer.primitive) {
   				case 'sun':
-  					layer.layer = 0;
+  					layer.idx = 0;
   					break;
   				case 'moon':
-  					layer.layer = 1;
+  					layer.idx = 1;
   					break;
   				case 'cloud':
-  					layer.layer = layer.flip ? 2 : 3;
-  					break;
-  				case 'raindrop':
-  					layer.layer = j + 2;
-  					break;
-  				case 'sleet':
-  					layer.layer = j + 5;
-  					break;
-  				case 'snowflake':
-  					layer.layer = j + 8;
-  					break;
-  				case 'lightning':
-  					layer.layer = 13;
+  					layer.idx = layer.flip ? 2 : 3;
   					break;
   				case 'fog':
-  					layer.layer = 14;
+  					layer.idx = 4;
+  					break;
+  				case 'raindrop':
+  					layer.idx = j + 3;
+  					break;
+  				case 'sleet':
+  					layer.idx = j + 6;
+  					break;
+  				case 'snowflake':
+  					layer.idx = j + 9;
+  					break;
+  				case 'lightning':
+  					layer.idx = 14;
   					break;
   			}
   		}
