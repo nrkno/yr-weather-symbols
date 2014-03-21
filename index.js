@@ -165,7 +165,7 @@ require.register('svg', function(module, exports, require) {
   };
 });
 require.register('dust', function(module, exports, require) {
-  /*! Dust - Asynchronous Templating - v2.3.3
+  /*! Dust - Asynchronous Templating - v2.3.4
   * http://linkedin.github.io/dustjs/
   * Copyright (c) 2014 Aleksander Williams; Released under the MIT License */
   (function(root) {
@@ -177,17 +177,35 @@ require.register('dust', function(module, exports, require) {
         DEBUG = 'DEBUG',
         loggingLevels = [DEBUG, INFO, WARN, ERROR, NONE],
         EMPTY_FUNC = function() {},
-        logger = EMPTY_FUNC,
-        loggerContext = this;
+        logger = {},
+        originalLog,
+        loggerContext;
   
     dust.debugLevel = NONE;
     dust.silenceErrors = false;
   
-    // Try to find the console logger in global scope
+    // Try to find the console in global scope
     if (root && root.console && root.console.log) {
-      logger = root.console.log;
       loggerContext = root.console;
+      originalLog = root.console.log;
     }
+  
+    // robust logger for node.js, modern browsers, and IE <= 9.
+    logger.log = loggerContext ? function() {
+        // Do this for normal browsers
+        if (typeof originalLog === 'function') {
+          logger.log = function() {
+            originalLog.apply(loggerContext, arguments);
+          };
+        } else {
+          // Do this for IE <= 9
+          logger.log = function() {
+            var message = Array.prototype.slice.apply(arguments).join(' ');
+            originalLog(message);
+          };
+        }
+        logger.log.apply(this, arguments);
+    } : function() { /* no op */ };
   
     /**
      * If dust.isDebug is true, Log dust debug statements, info statements, warning statements, and errors.
@@ -198,17 +216,17 @@ require.register('dust', function(module, exports, require) {
      */
     dust.log = function(message, type) {
       if(dust.isDebug && dust.debugLevel === NONE) {
-        logger.call(loggerContext, '[!!!DEPRECATION WARNING!!!]: dust.isDebug is deprecated.  Set dust.debugLevel instead to the level of logging you want ["debug","info","warn","error","none"]');
+        logger.log('[!!!DEPRECATION WARNING!!!]: dust.isDebug is deprecated.  Set dust.debugLevel instead to the level of logging you want ["debug","info","warn","error","none"]');
         dust.debugLevel = INFO;
       }
   
       type = type || INFO;
-      if (loggingLevels.indexOf(type) >= loggingLevels.indexOf(dust.debugLevel)) {
+      if (dust.indexInArray(loggingLevels, type) >= dust.indexInArray(loggingLevels, dust.debugLevel)) {
         if(!dust.logQueue) {
           dust.logQueue = [];
         }
         dust.logQueue.push({message: message, type: type});
-        logger.call(loggerContext, '[DUST ' + type + ']: ' + message);
+        logger.log('[DUST ' + type + ']: ' + message);
       }
   
       if (!dust.silenceErrors && type === ERROR) {
@@ -228,7 +246,7 @@ require.register('dust', function(module, exports, require) {
      * @public
      */
     dust.onError = function(error, chunk) {
-      logger.call(loggerContext, '[!!!DEPRECATION WARNING!!!]: dust.onError will no longer return a chunk object.');
+      logger.log('[!!!DEPRECATION WARNING!!!]: dust.onError will no longer return a chunk object.');
       dust.log(error.message || error, ERROR);
       if(!dust.silenceErrors) {
         throw error;
@@ -325,6 +343,40 @@ require.register('dust', function(module, exports, require) {
         return Object.prototype.toString.call(arr) === '[object Array]';
       };
     }
+  
+    // indexOf shim for arrays for IE <= 8
+    // source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
+    dust.indexInArray = function(arr, item, fromIndex) {
+      fromIndex = +fromIndex || 0;
+      if (Array.prototype.indexOf) {
+        return arr.indexOf(item, fromIndex);
+      } else {
+      if ( arr === undefined || arr === null ) {
+        throw new TypeError( 'cannot call method "indexOf" of null' );
+      }
+  
+      var length = arr.length; // Hack to convert object.length to a UInt32
+  
+      if (Math.abs(fromIndex) === Infinity) {
+        fromIndex = 0;
+      }
+  
+      if (fromIndex < 0) {
+        fromIndex += length;
+        if (fromIndex < 0) {
+          fromIndex = 0;
+        }
+      }
+  
+      for (;fromIndex < length; fromIndex++) {
+        if (arr[fromIndex] === item) {
+          return fromIndex;
+        }
+      }
+  
+      return -1;
+      }
+    };
   
     dust.nextTick = (function() {
       return function(callback) {
@@ -469,9 +521,14 @@ require.register('dust', function(module, exports, require) {
           } else {
             ctx = this.global ? this.global[first] : undefined;
           }
-        } else {
+        } else if (ctx) {
           // if scope is limited by a leading dot, don't search up the tree
-          ctx = ctx.head[first];
+          if(ctx.head) {
+            ctx = ctx.head[first];
+          } else {
+            //context's head is empty, value we are searching for is not defined
+            ctx = undefined;
+          }
         }
   
         while (ctx && i < len) {
@@ -1002,7 +1059,6 @@ require.register('dust', function(module, exports, require) {
     }
   
   })(this);
-  
   
 });
 require.register('symbolGroup', function(module, exports, require) {
@@ -4932,11 +4988,11 @@ require.register('weatherSymbol', function(module, exports, require) {
   	, animator = require('animator')
   	, primitives = {
   			sun: require('primitives/CelestialPrimitive')(),
-  			moon: require('./primitives/CelestialPrimitive')(),
+  			moon: require('primitives/CelestialPrimitive')(),
   			cloud: require('primitives/CloudPrimitive')(),
   			raindrop: require('primitives/PrecipPrimitive')(),
-  			sleet: require('./primitives/PrecipPrimitive')(),
-  			snowflake: require('./primitives/PrecipPrimitive')(),
+  			sleet: require('primitives/PrecipPrimitive')(),
+  			snowflake: require('primitives/PrecipPrimitive')(),
   			fog: require('primitives/FogPrimitive')(),
   			lightning: require('primitives/LightningPrimitive')()
   		}

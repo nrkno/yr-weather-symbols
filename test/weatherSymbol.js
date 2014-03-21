@@ -4087,11 +4087,11 @@ require.register('weatherSymbol', function(module, exports, require) {
   	, animator = require('animator')
   	, primitives = {
   			sun: require('primitives/CelestialPrimitive')(),
-  			moon: require('./primitives/CelestialPrimitive')(),
+  			moon: require('primitives/CelestialPrimitive')(),
   			cloud: require('primitives/CloudPrimitive')(),
   			raindrop: require('primitives/PrecipPrimitive')(),
-  			sleet: require('./primitives/PrecipPrimitive')(),
-  			snowflake: require('./primitives/PrecipPrimitive')(),
+  			sleet: require('primitives/PrecipPrimitive')(),
+  			snowflake: require('primitives/PrecipPrimitive')(),
   			fog: require('primitives/FogPrimitive')(),
   			lightning: require('primitives/LightningPrimitive')()
   		}
