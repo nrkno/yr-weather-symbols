@@ -6,12 +6,12 @@ var svg = require('svg')
 	, clone = require('lodash.clone')
 	, animator = require('./animator')
 	, primitives = {
-			sun: require('./primitives/SunPrimitive')(),
-			moon: require('./primitives/MoonPrimitive')(),
+			sun: require('./primitives/CelestialPrimitive')(),
+			moon: require('./primitives/CelestialPrimitive')(),
 			cloud: require('./primitives/CloudPrimitive')(),
-			raindrop: require('./primitives/RaindropPrimitive')(),
-			sleet: require('./primitives/SleetPrimitive')(),
-			snowflake: require('./primitives/SnowflakePrimitive')(),
+			raindrop: require('./primitives/PrecipPrimitive')(),
+			sleet: require('./primitives/PrecipPrimitive')(),
+			snowflake: require('./primitives/PrecipPrimitive')(),
 			fog: require('./primitives/FogPrimitive')(),
 			lightning: require('./primitives/LightningPrimitive')()
 		}
@@ -43,6 +43,7 @@ module.exports = function (container, options) {
 		, h = container.offsetHeight
 		// Common layer properties
 		, layerOptions = {
+				visible: true,
 				type: type,
 				width: w * capabilities.backingRatio,
 				height: h * capabilities.backingRatio,
@@ -86,8 +87,8 @@ module.exports = function (container, options) {
 			if (formula = formulae[id]) {
 				// Render layers
 				for (var i = 0, n = formula.length; i < n; i++) {
-					primitives[formula[i].primitive].render((type == CANVAS) ? element.getContext('2d') : element,
-						getLayerOptions(formula[i], clone(layerOptions)));
+					primitives[formula[i].primitive].update(getLayerOptions(formula[i], clone(layerOptions)));
+					primitives[formula[i].primitive].render((type == CANVAS) ? element.getContext('2d') : element);
 				}
 			}
 		}

@@ -1,5 +1,6 @@
 var Trait = require('trait')
-	, ease = require('ease/lib/quad').outQuad.js;
+	, easeOut = require('ease/lib/quad').outQuad.js
+	, easeIn = require('ease/lib/quad').inOutQuad.js;
 
 module.exports = Trait({
 	TWO_PI: Math.PI * 2,
@@ -7,6 +8,13 @@ module.exports = Trait({
 	OFFSET: 10,
 
 	type: '',
+	primitive: '',
+	duration: 0,
+	start: 0,
+	animation: '',
+	animationProps: null,
+	visible: false,
+
 	x: 0,
 	y: 0,
 	scale: 1,
@@ -15,9 +23,6 @@ module.exports = Trait({
 	flip: false,
 	winter: false,
 	bg: '',
-	transitionDuration: 0,
-	transitionStart: 0,
-	transitionProps: null,
 
 	// Animation targets
 	_x: 0,
@@ -37,62 +42,105 @@ module.exports = Trait({
 	 * @returns {Object}
 	 */
 	initialize: function (options) {
-		this.transitionDuration = options.transitionDuration;
+		this.extend(options);
 		return this;
 	},
 
 	/**
-	 * Transition instance with 'options'
-	 * @param {Object} options
+	 * Show transition
+	 * @params {Object} options
 	 */
-	transition: function (options) {
-		this.transitionStart = options.time;
-		this.update(options);
+	show: function (duration, options) {
+		// Skip if already visible
+		if (!this.visible && this.animate('show', options)) {
+			this.visible = true;
+			this.animation = 'show';
+			this.elapsed = 0;
+			this.duration = duration;
+			this.update(options);
+		}
 	},
 
 	/**
-	 * Update instance with 'options'
+	 * Hide transition
+	 * @params {Object} options
+	 */
+	hide: function (duration, options) {
+		if (this.animate('hide', options)) {
+			this.animation = 'hide';
+			this.elapsed = 0;
+			this.duration = duration;
+			this.update(options);
+		}
+	},
+
+	/**
+	 * Move transition
+	 * @params {Object} options
+	 */
+	move: function (duration, options) {
+		if (this.animate('move', options)) {
+			this.animation = 'move';
+			this.elapsed = 0;
+			this.duration = duration;
+			this.update(options);
+		}
+	},
+
+	/**
+	 * Update instance with 'options' for frame 'tick'
+	 * @param {Number} tick
 	 * @param {Object} options
 	 */
-	update: function (options) {
-		// Copy props to instance
-		for (var prop in options) {
-			if (this.hasOwnProperty(prop)) this[prop] = options[prop];
+	update: function (tick, options) {
+		if ('number' != typeof tick) {
+			options = tick;
+			tick = 0;
 		}
 
-		// Compute transition target props
-		if (this.transitionProps) {
-			var isComplete = (options.time >= this.transitionStart + this.transitionDuration)
-				, elapsed = isComplete ? this.transitionStart + this.transitionDuration : options.time - this.transitionStart
+		// Copy options
+		if (options) {
+			this.extend(options);
+		}
+
+		// Animating
+		if (this.animation) {
+			this.elapsed += tick;
+
+			var isComplete = (this.elapsed >= this.duration)
+				, ease = (this.animation.show) ? easeOut : easeIn
 				, prop;
 
-			// Set transition props
-			for (var i = 0, n = this.transitionProps.length; i < n; i++) {
-				prop = this.transitionProps[i];
-				// Tween or set final
+			// Calculate properties
+			for (var i = 0, n = this.animationProps.length; i < n; i++) {
+				prop = this.animationProps[i];
 				this[prop] = isComplete
 					? this['_' + prop] + this['_d' + prop]
-					: ease(elapsed, this['_' + prop], this['_d' + prop], this.transitionDuration);
-				if (prop == 'scale' && this[prop] > 1) console.log(options.time, elapsed, this.transitionStart, this['_' + prop], this['_d' + prop])
+					: ease(this.elapsed, this['_' + prop], this['_d' + prop], this.duration);
 			}
 
-			// Clear
-			if (isComplete) this.transitionProps = null;
+			// Animation complete
+			if (isComplete) {
+				this.duration = 0;
+				this.elapsed = 0;
+				if (this.animation == 'hide') this.visible = false;
+				this.animation = '';
+				this.animationProps = null;
+			}
 		}
 	},
 
 	/**
 	 * Render primitive
 	 * @param {SVGElement | CanvasContext} element
-	 * @param {Object} [options]
 	 */
-	render: function (element, options) {
-		if (options) this.update(options);
-
-		if (this.type == 'svg') {
-			return this.renderSVG(element);
-		} else {
-			return this.renderCanvas(element);
+	render: function (element) {
+		if (this.visible) {
+			if (this.type == 'svg') {
+				return this.renderSVG(element);
+			} else {
+				return this.renderCanvas(element);
+			}
 		}
 	},
 
@@ -136,6 +184,17 @@ module.exports = Trait({
 		}
 	},
 
+	/**
+	 * Copy properties from 'options'
+	 * @param {Object} options
+	 */
+	extend: function (options) {
+		for (var prop in options) {
+			if (this.hasOwnProperty(prop)) this[prop] = options[prop];
+		}
+	},
+
 	renderSVG: Trait.required,
-	renderCanvas: Trait.required
+	renderCanvas: Trait.required,
+	animate: Trait.required
 });

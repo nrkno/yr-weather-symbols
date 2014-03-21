@@ -7,6 +7,7 @@
     "capabilities": "git://github.com/YR/capabilities",
     "ease": "git://github.com/YR/ease",
     "yr-colours": "git://github.com/YR/yr-colours",
+    "number-utilities": "git://github.com/YR/number-utilities",
     "lodash.map": "^2.4.0",
     "lodash.clone": "^2.4.0"
   },

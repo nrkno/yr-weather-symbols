@@ -8,27 +8,25 @@ var svg = require('svg')
 
 TLightningPrimitive = Trait({
 	/**
-	 * Show transition
-	 * @params {Object} options
+	 * Animate instance based on 'action'
+	 * @param {String} action
+	 * @param {Object} options
+	 * @returns {Boolean}
 	 */
-	show: function (options) {
-		this._opacity = 0;
-		this._dopacity = 1;
-		this.transitionProps = ['opacity'];
-		this.transition(options);
-	},
-
-	/**
-	 * Hide transition
-	 * @params {Object} options
-	 */
-	hide: function (options) {
-		this._y = this.y;
-		this._dy = this.OFFSET;
-		this._opacity = 1;
-		this._dopacity = -1;
-		this.transitionProps = ['y', 'opacity'];
-		this.transition(options);
+	animate: function (action, options) {
+		if (action == 'show') {
+			this._opacity = 0;
+			this._dopacity = 1;
+			return true;
+		} else if (action == 'hide') {
+			this._y = this.y;
+			this._dy = this.OFFSET;
+			this._opacity = 1;
+			this._dopacity = -1;
+			return true;
+		} else if (action == 'move') {
+			return false;
+		}
 	},
 
 	/**

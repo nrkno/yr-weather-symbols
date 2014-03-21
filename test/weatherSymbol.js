@@ -2766,7 +2766,8 @@ require.register('ease/lib/quad', function(module, exports, require) {
 });
 require.register('primitives/TPrimitive', function(module, exports, require) {
   var Trait = require('trait')
-  	, ease = require('ease/lib/quad').outQuad.js;
+  	, easeOut = require('ease/lib/quad').outQuad.js
+  	, easeIn = require('ease/lib/quad').inOutQuad.js;
   
   module.exports = Trait({
   	TWO_PI: Math.PI * 2,
@@ -2774,6 +2775,13 @@ require.register('primitives/TPrimitive', function(module, exports, require) {
   	OFFSET: 10,
   
   	type: '',
+  	primitive: '',
+  	duration: 0,
+  	start: 0,
+  	animation: '',
+  	animationProps: null,
+  	visible: false,
+  
   	x: 0,
   	y: 0,
   	scale: 1,
@@ -2782,9 +2790,6 @@ require.register('primitives/TPrimitive', function(module, exports, require) {
   	flip: false,
   	winter: false,
   	bg: '',
-  	transitionDuration: 0,
-  	transitionStart: 0,
-  	transitionProps: null,
   
   	// Animation targets
   	_x: 0,
@@ -2804,62 +2809,105 @@ require.register('primitives/TPrimitive', function(module, exports, require) {
   	 * @returns {Object}
   	 */
   	initialize: function (options) {
-  		this.transitionDuration = options.transitionDuration;
+  		this.extend(options);
   		return this;
   	},
   
   	/**
-  	 * Transition instance with 'options'
-  	 * @param {Object} options
+  	 * Show transition
+  	 * @params {Object} options
   	 */
-  	transition: function (options) {
-  		this.transitionStart = options.time;
-  		this.update(options);
+  	show: function (duration, options) {
+  		// Skip if already visible
+  		if (!this.visible && this.animate('show', options)) {
+  			this.visible = true;
+  			this.animation = 'show';
+  			this.elapsed = 0;
+  			this.duration = duration;
+  			this.update(options);
+  		}
   	},
   
   	/**
-  	 * Update instance with 'options'
+  	 * Hide transition
+  	 * @params {Object} options
+  	 */
+  	hide: function (duration, options) {
+  		if (this.animate('hide', options)) {
+  			this.animation = 'hide';
+  			this.elapsed = 0;
+  			this.duration = duration;
+  			this.update(options);
+  		}
+  	},
+  
+  	/**
+  	 * Move transition
+  	 * @params {Object} options
+  	 */
+  	move: function (duration, options) {
+  		if (this.animate('move', options)) {
+  			this.animation = 'move';
+  			this.elapsed = 0;
+  			this.duration = duration;
+  			this.update(options);
+  		}
+  	},
+  
+  	/**
+  	 * Update instance with 'options' for frame 'tick'
+  	 * @param {Number} tick
   	 * @param {Object} options
   	 */
-  	update: function (options) {
-  		// Copy props to instance
-  		for (var prop in options) {
-  			if (this.hasOwnProperty(prop)) this[prop] = options[prop];
+  	update: function (tick, options) {
+  		if ('number' != typeof tick) {
+  			options = tick;
+  			tick = 0;
   		}
   
-  		// Compute transition target props
-  		if (this.transitionProps) {
-  			var isComplete = (options.time >= this.transitionStart + this.transitionDuration)
-  				, elapsed = isComplete ? this.transitionStart + this.transitionDuration : options.time - this.transitionStart
+  		// Copy options
+  		if (options) {
+  			this.extend(options);
+  		}
+  
+  		// Animating
+  		if (this.animation) {
+  			this.elapsed += tick;
+  
+  			var isComplete = (this.elapsed >= this.duration)
+  				, ease = (this.animation.show) ? easeOut : easeIn
   				, prop;
   
-  			// Set transition props
-  			for (var i = 0, n = this.transitionProps.length; i < n; i++) {
-  				prop = this.transitionProps[i];
-  				// Tween or set final
+  			// Calculate properties
+  			for (var i = 0, n = this.animationProps.length; i < n; i++) {
+  				prop = this.animationProps[i];
   				this[prop] = isComplete
   					? this['_' + prop] + this['_d' + prop]
-  					: ease(elapsed, this['_' + prop], this['_d' + prop], this.transitionDuration);
-  				if (prop == 'scale' && this[prop] > 1) console.log(options.time, elapsed, this.transitionStart, this['_' + prop], this['_d' + prop])
+  					: ease(this.elapsed, this['_' + prop], this['_d' + prop], this.duration);
   			}
   
-  			// Clear
-  			if (isComplete) this.transitionProps = null;
+  			// Animation complete
+  			if (isComplete) {
+  				this.duration = 0;
+  				this.elapsed = 0;
+  				if (this.animation == 'hide') this.visible = false;
+  				this.animation = '';
+  				this.animationProps = null;
+  			}
   		}
   	},
   
   	/**
   	 * Render primitive
   	 * @param {SVGElement | CanvasContext} element
-  	 * @param {Object} [options]
   	 */
-  	render: function (element, options) {
-  		if (options) this.update(options);
-  
-  		if (this.type == 'svg') {
-  			return this.renderSVG(element);
-  		} else {
-  			return this.renderCanvas(element);
+  	render: function (element) {
+  		if (this.visible) {
+  			if (this.type == 'svg') {
+  				return this.renderSVG(element);
+  			} else {
+  				return this.renderCanvas(element);
+  			}
   		}
   	},
   
@@ -2903,313 +2951,237 @@ require.register('primitives/TPrimitive', function(module, exports, require) {
   		}
   	},
   
+  	/**
+  	 * Copy properties from 'options'
+  	 * @param {Object} options
+  	 */
+  	extend: function (options) {
+  		for (var prop in options) {
+  			if (this.hasOwnProperty(prop)) this[prop] = options[prop];
+  		}
+  	},
+  
   	renderSVG: Trait.required,
-  	renderCanvas: Trait.required
+  	renderCanvas: Trait.required,
+  	animate: Trait.required
   });
   
 });
-require.register('primitives/SunPrimitive', function(module, exports, require) {
-  var svg = require('svg')  
-  	, colours = require('yr-colours')  
-  	, Trait = require('trait')  
-  	, TPrimitive = require('primitives/TPrimitive')  
-    
-  	, RAY_COLOUR = colours.SUN_RAY  
-  	, CENTER_COLOUR = colours.SUN_CENTRE  
-  	, HORIZON_COLOUR = colours.SUN_HORIZON  
-    
-  	, TSunPrimitive;  
-    
-  TSunPrimitive = Trait({  
-  	/**  
-  	 * Show transition  
-  	 * @params {Object} options  
-  	 */  
-  	show: function (options) {  
-  		this._y = options.y + this.OFFSET;  
-  		this._dy = -this.OFFSET;  
-  		this._opacity = 0;  
-  		this._dopacity = 1;  
-  		this.transitionProps = ['y', 'opacity'];  
-  		this.transition(options);  
-  	},  
-    
-  	/**  
-  	 * Hide transition  
-  	 * @params {Object} options  
-  	 */  
-  	hide: function (options) {  
-  		this._y = this.y;  
-  		this._dy = this.OFFSET;  
-  		this._opacity = 1;  
-  		this._dopacity = -1;  
-  		this.transitionProps = ['y', 'opacity'];  
-  		this.transition(options);  
-  	},  
-    
-  	/**  
-  	 * Move transition  
-  	 * @params {Object} options  
-  	 */  
-  	move: function (options) {  
-  		this._y = this.y;  
-  		this._dy = options.y - this.y;  
-  		this._x = this.x;  
-  		this._dx = options.x - this.x;  
-  		this._scale = this.scale;  
-  		this._dscale = options.scale - this.scale;  
-  		if (this._dy || this._dx || this._dscale) {  
-  			this.transitionProps = ['y', 'x', 'scale'];  
-  			this.transition(options);  
-  		}  
-  	},  
-    
-  	/**  
-  	 * Render svg version  
-  	 * @param {SVGElement} element  
-  	 */  
-  	renderSVG: function (element) {  
-  		svg.appendChild(  
-  			element,  
-  			'use',  
-  			this.getUseAttributes(this.winter ? '#sunWinter' : '#sun')  
-  		);  
-  	},  
-    
-  	/**  
-  	 * Render canvas version  
-  	 * @param {CanvasContext} ctx  
-  	 */  
-  	renderCanvas: function (ctx) {  
-  		ctx.save();  
-  		this.transformCanvas(ctx);  
-  		ctx.globalAlpha = this.opacity;  
-    
-  		if (this.winter) {  
-  			// Horizon  
-  			ctx.fillStyle = HORIZON_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(2.5,0);  
-  			ctx.lineTo(87.6,0);  
-  			ctx.bezierCurveTo(88.9,0,90,0.9,90,2);  
-  			ctx.lineTo(90,2);  
-  			ctx.bezierCurveTo(90,3.1,88.9,4,87.5,4);  
-  			ctx.lineTo(2.5,4);  
-  			ctx.bezierCurveTo(1.1,4,0,3.1,0,2);  
-  			ctx.lineTo(0,2);  
-  			ctx.bezierCurveTo(0,0.9,1.1,0,2.5,0);  
-  			ctx.fill();  
-  			ctx.closePath();  
-    
-  			// Rays  
-  			ctx.fillStyle = RAY_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(23.6,19.8);  
-  			ctx.lineTo(13.6,36.8);  
-  			ctx.bezierCurveTo(12.6,38.6,14.6,40.6,16.3,39.5);  
-  			ctx.lineTo(33.3,29.5);  
-  			ctx.bezierCurveTo(29.2,27.3,25.8,23.9,23.6,19.8);  
-  			ctx.moveTo(66.6,19.8);  
-  			ctx.bezierCurveTo(64.4,23.9,61,27.3,56.9,29.5);  
-  			ctx.lineTo(73.9,39.5);  
-  			ctx.bezierCurveTo(75.7,40.5,77.7,38.5,76.6,36.8);  
-  			ctx.lineTo(66.6,19.8);  
-  			ctx.moveTo(45.1,32.6);  
-  			ctx.bezierCurveTo(42.7,32.6,40.4,32.3,38.2,31.6);  
-  			ctx.lineTo(43.2,50.7);  
-  			ctx.bezierCurveTo(43.7,52.7,46.5,52.7,47.1,50.7);  
-  			ctx.lineTo(52.1,31.6);  
-  			ctx.bezierCurveTo(49.8,32.2,47.5,32.6,45.1,32.6);  
-  			ctx.moveTo(69.6,8);  
-  			ctx.bezierCurveTo(69.6,8,69.6,8,69.6,8);  
-  			ctx.bezierCurveTo(69.6,10.5,69.3,12.8,68.6,15);  
-  			ctx.lineTo(87.7,10);  
-  			ctx.bezierCurveTo(88.7,9.7,89.2,8.9,89.2,8);  
-  			ctx.lineTo(69.6,8);  
-  			ctx.moveTo(20.6,8);  
-  			ctx.lineTo(1,8);  
-  			ctx.bezierCurveTo(1,8.9,1.5,9.7,2.5,10);  
-  			ctx.lineTo(21.6,15);  
-  			ctx.bezierCurveTo(20.9,12.8,20.6,10.5,20.6,8);  
-  			ctx.bezierCurveTo(20.6,8,20.6,8,20.6,8);  
-  			ctx.closePath();  
-  			ctx.fill();  
-    
-  			// Center fill  
-  			ctx.fillStyle = CENTER_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(24.6,8);  
-  			ctx.bezierCurveTo(24.6,8,24.6,8,24.6,8);  
-  			ctx.bezierCurveTo(24.6,19.4,33.8,28.6,45.1,28.6);  
-  			ctx.bezierCurveTo(56.4,28.6,65.6,19.4,65.6,8.1);  
-  			ctx.bezierCurveTo(65.6,8.1,65.6,8.1,65.6,8);  
-  			ctx.lineTo(24.6,8);  
-  			ctx.closePath();  
-  			ctx.fill();  
-    
-  		} else {  
-  			// Rays  
-  			ctx.fillStyle = RAY_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.moveTo(23.5,33.2);  
-  			ctx.bezierCurveTo(25.7,29.1,29.1,25.7,33.2,23.5);  
-  			ctx.lineTo(16.2,13.5);  
-  			ctx.bezierCurveTo(14.4,12.5,12.4,14.5,13.5,16.2);  
-  			ctx.lineTo(23.5,33.2);  
-  			ctx.moveTo(45,20.5);  
-  			ctx.bezierCurveTo(47.4,20.5,49.7,20.8,51.9,21.5);  
-  			ctx.lineTo(46.9,2.4);  
-  			ctx.bezierCurveTo(46.4,0.4,43.6,0.4,43,2.4);  
-  			ctx.lineTo(38,21.5);  
-  			ctx.bezierCurveTo(40.3,20.8,42.6,20.5,45,20.5);  
-  			ctx.moveTo(87.6,43.1);  
-  			ctx.lineTo(68.5,38.1);  
-  			ctx.bezierCurveTo(69.1,40.3,69.5,42.6,69.5,45);  
-  			ctx.bezierCurveTo(69.5,47.4,69.2,49.7,68.5,51.9);  
-  			ctx.lineTo(87.6,46.9);  
-  			ctx.bezierCurveTo(89.6,46.4,89.6,43.6,87.6,43.1);  
-  			ctx.moveTo(20.5,45);  
-  			ctx.bezierCurveTo(20.5,42.6,20.8,40.3,21.5,38.1);  
-  			ctx.lineTo(2.4,43.1);  
-  			ctx.bezierCurveTo(0.4,43.6,0.4,46.4,2.4,47);  
-  			ctx.lineTo(21.5,52);  
-  			ctx.bezierCurveTo(20.8,49.7,20.5,47.4,20.5,45);  
-  			ctx.moveTo(66.5,33.2);  
-  			ctx.lineTo(76.5,16.2);  
-  			ctx.bezierCurveTo(77.5,14.4,75.5,12.4,73.8,13.5);  
-  			ctx.lineTo(56.8,23.5);  
-  			ctx.bezierCurveTo(60.9,25.8,64.2,29.1,66.5,33.2);  
-  			ctx.moveTo(23.5,56.8);  
-  			ctx.lineTo(13.5,73.8);  
-  			ctx.bezierCurveTo(12.5,75.6,14.5,77.6,16.2,76.5);  
-  			ctx.lineTo(33.2,66.5);  
-  			ctx.bezierCurveTo(29.1,64.2,25.8,60.9,23.5,56.8);  
-  			ctx.moveTo(66.5,56.8);  
-  			ctx.bezierCurveTo(64.3,60.9,60.9,64.3,56.8,66.5);  
-  			ctx.lineTo(73.8,76.5);  
-  			ctx.bezierCurveTo(75.6,77.5,77.6,75.5,76.5,73.8);  
-  			ctx.lineTo(66.5,56.8);  
-  			ctx.moveTo(45,69.5);  
-  			ctx.bezierCurveTo(42.6,69.5,40.3,69.2,38.1,68.5);  
-  			ctx.lineTo(43.1,87.6);  
-  			ctx.bezierCurveTo(43.6,89.6,46.4,89.6,47,87.6);  
-  			ctx.lineTo(52,68.5);  
-  			ctx.bezierCurveTo(49.7,69.2,47.4,69.5,45,69.5);  
-  			ctx.closePath();  
-  			ctx.fill();  
-    
-  			// Center fill  
-  			ctx.fillStyle = CENTER_COLOUR;  
-  			ctx.beginPath();  
-  			ctx.arc(45,45,20.5,0,this.TWO_PI,true);  
-  			ctx.closePath();  
-  			ctx.fill();  
-  		}  
-  		ctx.restore();  
-  	}  
-  });  
-    
-  module.exports = function () {  
-  	return Trait.compose(  
-  		TPrimitive,  
-  		TSunPrimitive  
-  	).create();  
-  };
-});
-require.register('primitives/MoonPrimitive', function(module, exports, require) {
-  var svg = require('svg')  
-  	, Trait = require('trait')  
-  	, TPrimitive = require('primitives/TPrimitive')  
-    
-  	, FILL_COLOUR = require('yr-colours').MOON  
-    
-  	, TMoonPrimitive;  
-    
-  TMoonPrimitive = Trait({  
-  	/**  
-  	 * Show transition  
-  	 * @params {Object} options  
-  	 */  
-  	show: function (options) {  
-  		this._y = options.y + this.OFFSET;  
-  		this._dy = -this.OFFSET;  
-  		this._opacity = 0;  
-  		this._dopacity = 1;  
-  		this.transitionProps = ['y', 'opacity'];  
-  		this.transition(options);  
-  	},  
-    
-  	/**  
-  	 * Hide transition  
-  	 * @params {Object} options  
-  	 */  
-  	hide: function (options) {  
-  		this._y = this.y;  
-  		this._dy = this.OFFSET;  
-  		this._opacity = 1;  
-  		this._dopacity = -1;  
-  		this.transitionProps = ['y', 'opacity'];  
-  		this.transition(options);  
-  	},  
-    
-  	/**  
-  	 * Move transition  
-  	 * @params {Object} options  
-  	 */  
-  	move: function (options) {  
-  		this._y = this.y;  
-  		this._dy = options.y - this.y;  
-  		this._x = this.x;  
-  		this._dx = options.x - this.x;  
-  		this._scale = this.scale;  
-  		this._dscale = options.scale - this.scale;  
-  		if (this._dy || this._dx || this._dscale) {  
-  			this.transitionProps = ['y', 'x', 'scale'];  
-  			this.transition(options);  
-  		}  
-  	},  
-    
-  	/**  
-  	 * Render svg version  
-  	 * @param {SVGElement} element  
-  	 */  
-  	renderSVG: function (element) {  
-  		svg.appendChild(  
-  			element,  
-  			'use',  
-  			this.getUseAttributes('#moon')  
-  		);  
-  	},  
-    
-  	/**  
-  	 * Render canvas version  
-  	 * @param {CanvasContext} ctx  
-  	 */  
-  	renderCanvas: function (ctx) {  
-  		ctx.save();  
-  		this.transformCanvas(ctx);  
-  		ctx.globalAlpha = this.opacity;  
-    
-  		ctx.fillStyle = FILL_COLOUR;  
-  		ctx.beginPath();  
-  		ctx.moveTo(23,20);  
-  		ctx.bezierCurveTo(23,12.322,25.89,5.3,30.631,0);  
-  		ctx.bezierCurveTo(30.421,0.012,30.212,0,30,0);  
-  		ctx.bezierCurveTo(13.432,0,0,13.432,0,30);  
-  		ctx.bezierCurveTo(0,46.568,13.432,60,30,60);  
-  		ctx.bezierCurveTo(38.891,60,46.875,56.129,52.369,49.984);  
-  		ctx.bezierCurveTo(36.093,49.646,23,36.356,23,20);  
-  		ctx.closePath();  
-  		ctx.fill();  
-  		ctx.restore();  
-  	}  
-  });  
-    
-  module.exports = function () {  
-  	return Trait.compose(  
-  		TPrimitive,  
-  		TMoonPrimitive  
-  	).create();  
+require.register('primitives/CelestialPrimitive', function(module, exports, require) {
+  var svg = require('svg')
+  	, colours = require('yr-colours')
+  	, Trait = require('trait')
+  	, TPrimitive = require('primitives/TPrimitive')
+  
+  	, SUN_RAY_COLOUR = colours.SUN_RAY
+  	, SUN_CENTER_COLOUR = colours.SUN_CENTRE
+  	, SUN_HORIZON_COLOUR = colours.SUN_HORIZON
+  	, MOON_FILL_COLOUR = colours.MOON
+  
+  	, TCelestialPrimitive;
+  
+  TCelestialPrimitive = Trait({
+  	/**
+  	 * Animate instance based on 'action'
+  	 * @param {String} action
+  	 * @param {Object} options
+  	 * @returns {Boolean}
+  	 */
+  	animate: function (action, options) {
+  		if (action == 'show') {
+  			this._y = options.y + this.OFFSET;
+  			this._dy = -this.OFFSET;
+  			this._opacity = 0;
+  			this._dopacity = 1;
+  			this.animationProps = ['y', 'opacity'];
+  			return true;
+  		} else if (action == 'hide') {
+  			this._y = this.y;
+  			this._dy = this.OFFSET;
+  			this._opacity = 1;
+  			this._dopacity = -1;
+  			this.animationProps = ['y', 'opacity'];
+  			return true;
+  		} else if (action == 'move') {
+  			this._y = this.y;
+  			this._dy = options.y - this.y;
+  			this._x = this.x;
+  			this._dx = options.x - this.x;
+  			this._scale = this.scale;
+  			this._dscale = options.scale - this.scale;
+  			this.animationProps = ['y', 'x', 'scale'];
+  			return !!(this._dy || this._dx || this._dscale);
+  		}
+  	},
+  
+  	/**
+  	 * Render svg version
+  	 * @param {SVGElement} element
+  	 */
+  	renderSVG: function (element) {
+  		svg.appendChild(
+  			element,
+  			'use',
+  			this.getUseAttributes(this.primitive == 'moon'
+  				? '#moon'
+  				: (this.winter ? '#sunWinter' : '#sun'))
+  		);
+  	},
+  
+  	/**
+  	 * Render canvas version
+  	 * @param {CanvasContext} ctx
+  	 */
+  	renderCanvas: function (ctx) {
+  		ctx.save();
+  		this.transformCanvas(ctx);
+  		ctx.globalAlpha = this.opacity;
+  
+  		if (this.primitive == 'moon') {
+  			ctx.fillStyle = MOON_FILL_COLOUR;
+  			ctx.beginPath();
+  			ctx.moveTo(23,20);
+  			ctx.bezierCurveTo(23,12.322,25.89,5.3,30.631,0);
+  			ctx.bezierCurveTo(30.421,0.012,30.212,0,30,0);
+  			ctx.bezierCurveTo(13.432,0,0,13.432,0,30);
+  			ctx.bezierCurveTo(0,46.568,13.432,60,30,60);
+  			ctx.bezierCurveTo(38.891,60,46.875,56.129,52.369,49.984);
+  			ctx.bezierCurveTo(36.093,49.646,23,36.356,23,20);
+  			ctx.closePath();
+  			ctx.fill();
+  
+  		} else {
+  			if (this.winter) {
+  				// Horizon
+  				ctx.fillStyle = SUN_HORIZON_COLOUR;
+  				ctx.beginPath();
+  				ctx.moveTo(2.5,0);
+  				ctx.lineTo(87.6,0);
+  				ctx.bezierCurveTo(88.9,0,90,0.9,90,2);
+  				ctx.lineTo(90,2);
+  				ctx.bezierCurveTo(90,3.1,88.9,4,87.5,4);
+  				ctx.lineTo(2.5,4);
+  				ctx.bezierCurveTo(1.1,4,0,3.1,0,2);
+  				ctx.lineTo(0,2);
+  				ctx.bezierCurveTo(0,0.9,1.1,0,2.5,0);
+  				ctx.fill();
+  				ctx.closePath();
+  
+  				// Rays
+  				ctx.fillStyle = SUN_RAY_COLOUR;
+  				ctx.beginPath();
+  				ctx.moveTo(23.6,19.8);
+  				ctx.lineTo(13.6,36.8);
+  				ctx.bezierCurveTo(12.6,38.6,14.6,40.6,16.3,39.5);
+  				ctx.lineTo(33.3,29.5);
+  				ctx.bezierCurveTo(29.2,27.3,25.8,23.9,23.6,19.8);
+  				ctx.moveTo(66.6,19.8);
+  				ctx.bezierCurveTo(64.4,23.9,61,27.3,56.9,29.5);
+  				ctx.lineTo(73.9,39.5);
+  				ctx.bezierCurveTo(75.7,40.5,77.7,38.5,76.6,36.8);
+  				ctx.lineTo(66.6,19.8);
+  				ctx.moveTo(45.1,32.6);
+  				ctx.bezierCurveTo(42.7,32.6,40.4,32.3,38.2,31.6);
+  				ctx.lineTo(43.2,50.7);
+  				ctx.bezierCurveTo(43.7,52.7,46.5,52.7,47.1,50.7);
+  				ctx.lineTo(52.1,31.6);
+  				ctx.bezierCurveTo(49.8,32.2,47.5,32.6,45.1,32.6);
+  				ctx.moveTo(69.6,8);
+  				ctx.bezierCurveTo(69.6,8,69.6,8,69.6,8);
+  				ctx.bezierCurveTo(69.6,10.5,69.3,12.8,68.6,15);
+  				ctx.lineTo(87.7,10);
+  				ctx.bezierCurveTo(88.7,9.7,89.2,8.9,89.2,8);
+  				ctx.lineTo(69.6,8);
+  				ctx.moveTo(20.6,8);
+  				ctx.lineTo(1,8);
+  				ctx.bezierCurveTo(1,8.9,1.5,9.7,2.5,10);
+  				ctx.lineTo(21.6,15);
+  				ctx.bezierCurveTo(20.9,12.8,20.6,10.5,20.6,8);
+  				ctx.bezierCurveTo(20.6,8,20.6,8,20.6,8);
+  				ctx.closePath();
+  				ctx.fill();
+  
+  				// Center fill
+  				ctx.fillStyle = SUN_CENTER_COLOUR;
+  				ctx.beginPath();
+  				ctx.moveTo(24.6,8);
+  				ctx.bezierCurveTo(24.6,8,24.6,8,24.6,8);
+  				ctx.bezierCurveTo(24.6,19.4,33.8,28.6,45.1,28.6);
+  				ctx.bezierCurveTo(56.4,28.6,65.6,19.4,65.6,8.1);
+  				ctx.bezierCurveTo(65.6,8.1,65.6,8.1,65.6,8);
+  				ctx.lineTo(24.6,8);
+  				ctx.closePath();
+  				ctx.fill();
+  
+  			} else {
+  				// Rays
+  				ctx.fillStyle = SUN_RAY_COLOUR;
+  				ctx.beginPath();
+  				ctx.moveTo(23.5,33.2);
+  				ctx.bezierCurveTo(25.7,29.1,29.1,25.7,33.2,23.5);
+  				ctx.lineTo(16.2,13.5);
+  				ctx.bezierCurveTo(14.4,12.5,12.4,14.5,13.5,16.2);
+  				ctx.lineTo(23.5,33.2);
+  				ctx.moveTo(45,20.5);
+  				ctx.bezierCurveTo(47.4,20.5,49.7,20.8,51.9,21.5);
+  				ctx.lineTo(46.9,2.4);
+  				ctx.bezierCurveTo(46.4,0.4,43.6,0.4,43,2.4);
+  				ctx.lineTo(38,21.5);
+  				ctx.bezierCurveTo(40.3,20.8,42.6,20.5,45,20.5);
+  				ctx.moveTo(87.6,43.1);
+  				ctx.lineTo(68.5,38.1);
+  				ctx.bezierCurveTo(69.1,40.3,69.5,42.6,69.5,45);
+  				ctx.bezierCurveTo(69.5,47.4,69.2,49.7,68.5,51.9);
+  				ctx.lineTo(87.6,46.9);
+  				ctx.bezierCurveTo(89.6,46.4,89.6,43.6,87.6,43.1);
+  				ctx.moveTo(20.5,45);
+  				ctx.bezierCurveTo(20.5,42.6,20.8,40.3,21.5,38.1);
+  				ctx.lineTo(2.4,43.1);
+  				ctx.bezierCurveTo(0.4,43.6,0.4,46.4,2.4,47);
+  				ctx.lineTo(21.5,52);
+  				ctx.bezierCurveTo(20.8,49.7,20.5,47.4,20.5,45);
+  				ctx.moveTo(66.5,33.2);
+  				ctx.lineTo(76.5,16.2);
+  				ctx.bezierCurveTo(77.5,14.4,75.5,12.4,73.8,13.5);
+  				ctx.lineTo(56.8,23.5);
+  				ctx.bezierCurveTo(60.9,25.8,64.2,29.1,66.5,33.2);
+  				ctx.moveTo(23.5,56.8);
+  				ctx.lineTo(13.5,73.8);
+  				ctx.bezierCurveTo(12.5,75.6,14.5,77.6,16.2,76.5);
+  				ctx.lineTo(33.2,66.5);
+  				ctx.bezierCurveTo(29.1,64.2,25.8,60.9,23.5,56.8);
+  				ctx.moveTo(66.5,56.8);
+  				ctx.bezierCurveTo(64.3,60.9,60.9,64.3,56.8,66.5);
+  				ctx.lineTo(73.8,76.5);
+  				ctx.bezierCurveTo(75.6,77.5,77.6,75.5,76.5,73.8);
+  				ctx.lineTo(66.5,56.8);
+  				ctx.moveTo(45,69.5);
+  				ctx.bezierCurveTo(42.6,69.5,40.3,69.2,38.1,68.5);
+  				ctx.lineTo(43.1,87.6);
+  				ctx.bezierCurveTo(43.6,89.6,46.4,89.6,47,87.6);
+  				ctx.lineTo(52,68.5);
+  				ctx.bezierCurveTo(49.7,69.2,47.4,69.5,45,69.5);
+  				ctx.closePath();
+  				ctx.fill();
+  
+  				// Center fill
+  				ctx.fillStyle = SUN_CENTER_COLOUR;
+  				ctx.beginPath();
+  				ctx.arc(45,45,20.5,0,this.TWO_PI,true);
+  				ctx.closePath();
+  				ctx.fill();
+  			}
+  		}
+  
+  		ctx.restore();
+  	}
+  });
+  
+  module.exports = function () {
+  	return Trait.compose(
+  		TPrimitive,
+  		TCelestialPrimitive
+  	).create();
   };
 });
 require.register('primitives/CloudPrimitive', function(module, exports, require) {
@@ -3221,43 +3193,33 @@ require.register('primitives/CloudPrimitive', function(module, exports, require)
     
   TCloudPrimitive = Trait({  
   	/**  
-  	 * Show transition  
-  	 * @params {Object} options  
+  	 * Animate instance based on 'action'  
+  	 * @param {String} action  
+  	 * @param {Object} options  
+  	 * @returns {Boolean}  
   	 */  
-  	show: function (options) {  
-  		var offset = options.flip ? this.OFFSET : -this.OFFSET;  
-  		this._x = options.x - offset;  
-  		this._dx = offset;  
-  		this._opacity = 0;  
-  		this._dopacity = 1;  
-  		this.transitionProps = ['x', 'opacity'];  
-  		this.transition(options);  
-  	},  
-    
-  	/**  
-  	 * Hide transition  
-  	 * @params {Object} options  
-  	 */  
-  	hide: function (options) {  
-  		var offset = this.flip ? -this.OFFSET : this.OFFSET;  
-  		this._x = this.x;  
-  		this._dx = offset;  
-  		this._opacity = this.opacity;  
-  		this._dopacity = -1;  
-  		this.transitionProps = ['x', 'opacity'];  
-  		this.transition(options);  
-  	},  
-    
-  	/**  
-  	 * Move transition  
-  	 * @params {Object} options  
-  	 */  
-  	move: function (options) {  
-  		this._tint = this.tint;  
-  		this._dtint = options.tint - this.tint;  
-  		if (this._dtint) {  
-  			this.transitionProps = ['tint'];  
-  			this.transition(options);  
+  	animate: function (action, options) {  
+  		if (action == 'show') {  
+  			var offset = options.flip ? this.OFFSET : -this.OFFSET;  
+  			this._x = options.x - offset;  
+  			this._dx = offset;  
+  			this._opacity = 0;  
+  			this._dopacity = 1;  
+  			this.animationProps = ['x', 'opacity'];  
+  			return true;  
+  		} else if (action == 'hide') {  
+  			var offset = this.flip ? -this.OFFSET : this.OFFSET;  
+  			this._x = this.x;  
+  			this._dx = offset;  
+  			this._opacity = this.opacity;  
+  			this._dopacity = -1;  
+  			this.animationProps = ['x', 'opacity'];  
+  			return true;  
+  		} else if (action == 'move') {  
+  			this._tint = this.tint;  
+  			this._dtint = options.tint - this.tint;  
+  			this.animationProps = ['tint'];  
+  			return !!(this._dtint);  
   		}  
   	},  
     
@@ -3282,6 +3244,7 @@ require.register('primitives/CloudPrimitive', function(module, exports, require)
     
   		ctx.save();  
   		this.transformCanvas(ctx);  
+  		ctx.globalAlpha = this.opacity;  
     
   		// Mask  
   		ctx.save();  
@@ -3290,12 +3253,15 @@ require.register('primitives/CloudPrimitive', function(module, exports, require)
   		ctx.restore();  
     
   		// Fill  
-  		ctx.globalAlpha = this.opacity;  
   		ctx.fillStyle = 'rgb(' + tint	+ ',' + tint + ',' + tint + ')';  
   		this.renderCanvasFillShape(ctx);  
   		ctx.restore();  
   	},  
     
+  	/**  
+  	 * Transform canvas 'ctx'  
+  	 * @param {CanvasContext} ctx  
+  	 */  
   	transformCanvas: function (ctx) {  
   		if (this.flip) {  
   			ctx.translate((this.MAX_WIDTH * this.scale) + this.x, this.y)  
@@ -3356,124 +3322,43 @@ require.register('primitives/CloudPrimitive', function(module, exports, require)
   	).create();  
   };
 });
-require.register('primitives/RaindropPrimitive', function(module, exports, require) {
-  var svg = require('svg')  
-  	, Trait = require('trait')  
-  	, TPrimitive = require('primitives/TPrimitive')  
-    
-  	, FILL_COLOUR = require('yr-colours').RAIN  
-    
-  	, TRaindropPrimitive;  
-    
-  TRaindropPrimitive = Trait({  
-  	/**  
-  	 * Show transition  
-  	 * @params {Object} options  
-  	 */  
-  	show: function (options) {  
-  		this._opacity = 0;  
-  		this._dopacity = 1;  
-  		this.transitionProps = ['opacity'];  
-  		this.transition(options);  
-  	},  
-    
-  	/**  
-  	 * Hide transition  
-  	 * @params {Object} options  
-  	 */  
-  	hide: function (options) {  
-  		this._y = this.y;  
-  		this._dy = this.OFFSET;  
-  		this._opacity = 1;  
-  		this._dopacity = -1;  
-  		this.transitionProps = ['y', 'opacity'];  
-  		this.transition(options);  
-  	},  
-    
-  	/**  
-  	 * Render svg version  
-  	 * @param {SVGElement} element  
-  	 */  
-  	renderSVG: function (element) {  
-  		svg.appendChild(  
-  			element,  
-  			'use',  
-  			this.getUseAttributes('#raindrop')  
-  		);  
-  	},  
-    
-  	/**  
-  	 * Render canvas version  
-  	 * @param {CanvasContext} ctx  
-  	 */  
-  	renderCanvas: function (ctx) {  
-  		ctx.save();  
-  		this.transformCanvas(ctx);  
-    
-  		// Background  
-  		ctx.fillStyle = this.bg;  
-  		ctx.save();  
-  		ctx.globalCompositeOperation = 'destination-out';  
-  		ctx.beginPath();  
-  		ctx.arc(9,9,9,0,this.TWO_PI,true);  
-  		ctx.closePath();  
-  		ctx.fill();  
-  		ctx.restore();  
-    
-  		// Fill  
-  		ctx.globalAlpha = this.opacity;  
-  		ctx.fillStyle = FILL_COLOUR;  
-  		ctx.beginPath();  
-  		ctx.moveTo(20,16.8);  
-  		ctx.bezierCurveTo(20,20.2,17.3,23,14,23);  
-  		ctx.bezierCurveTo(10.7,23,8,20.2,8,16.8);  
-  		ctx.bezierCurveTo(8,14.9,8,6,8,6);  
-  		ctx.bezierCurveTo(13.5,11.5,20,11.2,20,16.8);  
-  		ctx.closePath();  
-  		ctx.fill();  
-  		ctx.restore();  
-  	}  
-  });  
-    
-  module.exports = function () {  
-  	return Trait.compose(  
-  		TPrimitive,  
-  		TRaindropPrimitive  
-  	).create();  
-  };
-});
-require.register('primitives/SleetPrimitive', function(module, exports, require) {
+require.register('primitives/PrecipPrimitive', function(module, exports, require) {
   var svg = require('svg')
+  	, colours = require('yr-colours')
   	, Trait = require('trait')
   	, TPrimitive = require('primitives/TPrimitive')
   
-  	, FILL_COLOUR = require('yr-colours').SLEET
+  	, RAIN_FILL_COLOUR = colours.RAIN
+  	, SLEET_FILL_COLOUR = colours.SLEET
+  	, SNOW_FILL_COLOUR = colours.SNOW
   
-  	, TSleetPrimitive;
+  	, TPrecipPrimitive;
   
-  TSleetPrimitive = Trait({
+  TPrecipPrimitive = Trait({
   	/**
-  	 * Show transition
-  	 * @params {Object} options
+  	 * Animate instance based on 'action'
+  	 * @param {String} action
+  	 * @param {Object} options
+  	 * @returns {Boolean}
   	 */
-  	show: function (options) {
-  		this._opacity = 0;
-  		this._dopacity = 1;
-  		this.transitionProps = ['opacity'];
-  		this.transition(options);
-  	},
-  
-  	/**
-  	 * Hide transition
-  	 * @params {Object} options
-  	 */
-  	hide: function (options) {
-  		this._y = this.y;
-  		this._dy = this.OFFSET;
-  		this._opacity = 1;
-  		this._dopacity = -1;
-  		this.transitionProps = ['y', 'opacity'];
-  		this.transition(options);
+  	animate: function (action, options) {
+  		if (action == 'show') {
+  			this._opacity = 0.75;
+  			this._dopacity = 1;
+  			this.animationProps = ['opacity'];
+  			return true;
+  		} else if (action == 'hide') {
+  			this._x = this.x;
+  			this._dx = this.OFFSET * 0.5;
+  			this._y = this.y;
+  			this._dy = this.OFFSET;
+  			this._opacity = 1;
+  			this._dopacity = -1;
+  			this.animationProps = ['x', 'y', 'opacity'];
+  			return true;
+  		} else if (action == 'move') {
+  			return false;
+  		}
   	},
   
   	/**
@@ -3484,7 +3369,7 @@ require.register('primitives/SleetPrimitive', function(module, exports, require)
   		svg.appendChild(
   			element,
   			'use',
-  			this.getUseAttributes('#sleet')
+  			this.getUseAttributes('#' + this.primitive)
   		);
   	},
   
@@ -3495,6 +3380,7 @@ require.register('primitives/SleetPrimitive', function(module, exports, require)
   	renderCanvas: function (ctx) {
   		ctx.save();
   		this.transformCanvas(ctx);
+  		ctx.globalAlpha = this.opacity;
   
   		// Background
   		ctx.fillStyle = this.bg;
@@ -3507,8 +3393,39 @@ require.register('primitives/SleetPrimitive', function(module, exports, require)
   		ctx.restore();
   
   		// Fill
-  		ctx.globalAlpha = this.opacity;
-  		ctx.fillStyle = FILL_COLOUR;
+  		if (this.primitive == 'raindrop') {
+  			this.renderCanvasRaindropShape(ctx);
+  		} else if (this.primitive == 'sleet') {
+  			this.renderCanvasSleetShape(ctx);
+  		} else {
+  			this.renderCanvasSnowflakeShape(ctx);
+  		}
+  
+  		ctx.restore();
+  	},
+  
+  	/**
+  	 * Render canvas raindrop shape
+  	 * @param {Context} ctx
+  	 */
+  	renderCanvasRaindropShape: function (ctx) {
+  		ctx.fillStyle = RAIN_FILL_COLOUR;
+  		ctx.beginPath();
+  		ctx.moveTo(20,16.8);
+  		ctx.bezierCurveTo(20,20.2,17.3,23,14,23);
+  		ctx.bezierCurveTo(10.7,23,8,20.2,8,16.8);
+  		ctx.bezierCurveTo(8,14.9,8,6,8,6);
+  		ctx.bezierCurveTo(13.5,11.5,20,11.2,20,16.8);
+  		ctx.closePath();
+  		ctx.fill();
+  	},
+  
+  	/**
+  	 * Render canvas sleet shape
+  	 * @param {Context} ctx
+  	 */
+  	renderCanvasSleetShape: function (ctx) {
+  		ctx.fillStyle = SLEET_FILL_COLOUR;
   		ctx.beginPath();
   		ctx.moveTo(19.9,16.6);
   		ctx.bezierCurveTo(18.1,18.9,16.5,22.1,16,25.5);
@@ -3520,134 +3437,64 @@ require.register('primitives/SleetPrimitive', function(module, exports, require)
   		ctx.bezierCurveTo(20,15.8,20.1,16.3,19.9,16.6);
   		ctx.closePath();
   		ctx.fill();
-  		ctx.restore();
+  	},
+  
+  	/**
+  	 * Render canvas snowflake shape
+  	 * @param {Context} ctx
+  	 */
+  	renderCanvasSnowflakeShape: function (ctx) {
+  		ctx.fillStyle = SNOW_FILL_COLOUR;
+  		ctx.beginPath();
+  		ctx.moveTo(6.2,6.9);
+  		ctx.lineTo(7.3,10.7);
+  		ctx.bezierCurveTo(7,10.9,6.7,11.2,6.4,11.5);
+  		ctx.bezierCurveTo(6,11.7,5.8,12,5.6,12.4);
+  		ctx.lineTo(1.8,11.4);
+  		ctx.bezierCurveTo(1,11.2,0.2,11.7,0,12.5);
+  		ctx.bezierCurveTo(-0.2,13.3,0.3,14.1,1.1,14.3);
+  		ctx.lineTo(4.9,15.3);
+  		ctx.bezierCurveTo(4.9,16.1,5.2,16.9,5.5,17.6);
+  		ctx.lineTo(2.8,20.4);
+  		ctx.bezierCurveTo(2.2,21,2.2,21.9,2.8,22.5);
+  		ctx.bezierCurveTo(3.4,23.1,4.3,23.1,4.9,22.5);
+  		ctx.lineTo(7.6,19.7);
+  		ctx.bezierCurveTo(8.3,20.1,9.1,20.3,9.9,20.3);
+  		ctx.lineTo(10.9,24.1);
+  		ctx.bezierCurveTo(11.1,24.9,11.9,25.3,12.7,25.1);
+  		ctx.bezierCurveTo(13.5,24.9,13.9,24.1,13.7,23.3);
+  		ctx.lineTo(12.6,19.5);
+  		ctx.bezierCurveTo(12.9,19.3,13.3,19.1,13.6,18.8);
+  		ctx.bezierCurveTo(13.9,18.5,14.1,18.2,14.3,17.8);
+  		ctx.lineTo(18.1,18.8);
+  		ctx.bezierCurveTo(18.9,19,19.7,18.5,19.9,17.7);
+  		ctx.bezierCurveTo(20.1,16.9,19.6,16.1,18.8,15.9);
+  		ctx.lineTo(15,14.9);
+  		ctx.bezierCurveTo(15,14.1,14.7,13.3,14.3,12.6);
+  		ctx.lineTo(17,9.8);
+  		ctx.bezierCurveTo(17.6,9.2,17.5,8.3,17,7.7);
+  		ctx.bezierCurveTo(16.4,7.1,15.5,7.1,14.9,7.7);
+  		ctx.lineTo(12.2,10.5);
+  		ctx.bezierCurveTo(11.5,10.1,10.7,9.9,9.9,9.9);
+  		ctx.lineTo(9,6.1);
+  		ctx.bezierCurveTo(8.8,5.3,8,4.9,7.2,5.1);
+  		ctx.bezierCurveTo(6.5,5.3,6,6.1,6.2,6.9);
+  		ctx.closePath();
+  		ctx.moveTo(11.8,13.2);
+  		ctx.bezierCurveTo(12.8,14.2,12.8,15.8,11.8,16.8);
+  		ctx.bezierCurveTo(10.8,17.8,9.2,17.8,8.2,16.8);
+  		ctx.bezierCurveTo(7.2,15.8,7.2,14.2,8.2,13.2);
+  		ctx.bezierCurveTo(9.2,12.2,10.8,12.2,11.8,13.2);
+  		ctx.closePath();
+  		ctx.fill();
   	}
   });
   
   module.exports = function () {
   	return Trait.compose(
-  		TPrimitive.resolve({}),
-  		TSleetPrimitive
+  		TPrimitive,
+  		TPrecipPrimitive
   	).create();
-  };
-});
-require.register('primitives/SnowflakePrimitive', function(module, exports, require) {
-  var svg = require('svg')  
-  	, Trait = require('trait')  
-  	, TPrimitive = require('primitives/TPrimitive')  
-    
-  	, FILL_COLOUR = require('yr-colours').SNOW  
-    
-  	, TSnowflakePrimitive;  
-    
-  TSnowflakePrimitive = Trait({  
-  	/**  
-  	 * Show transition  
-  	 * @params {Object} options  
-  	 */  
-  	show: function (options) {  
-  		this._opacity = 0;  
-  		this._dopacity = 1;  
-  		this.transitionProps = ['opacity'];  
-  		this.transition(options);  
-  	},  
-    
-  	/**  
-  	 * Hide transition  
-  	 * @params {Object} options  
-  	 */  
-  	hide: function (options) {  
-  		this._y = this.y;  
-  		this._dy = this.OFFSET;  
-  		this._opacity = 1;  
-  		this._dopacity = -1;  
-  		this.transitionProps = ['y', 'opacity'];  
-  		this.transition(options);  
-  	},  
-    
-  	/**  
-  	 * Render svg version  
-  	 * @param {SVGElement} element  
-  	 */  
-  	renderSVG: function (element) {  
-  		svg.appendChild(  
-  			element,  
-  			'use',  
-  			this.getUseAttributes('#snowflake')  
-  		);  
-  	},  
-    
-  	/**  
-  	 * Render canvas version  
-  	 * @param {CanvasContext} ctx  
-  	 */  
-  	renderCanvas: function (ctx) {  
-  		ctx.save();  
-  		this.transformCanvas(ctx);  
-    
-  		// Background  
-  		ctx.fillStyle = this.bg;  
-  		ctx.save();  
-  		ctx.globalCompositeOperation = 'destination-out';  
-  		ctx.beginPath();  
-  		ctx.arc(9,9,9,0,this.TWO_PI,true);  
-  		ctx.closePath();  
-  		ctx.fill();  
-  		ctx.restore();  
-    
-  		// Fill  
-  		ctx.fillStyle = FILL_COLOUR;  
-  		ctx.beginPath();  
-  		ctx.moveTo(6.2,6.9);  
-  		ctx.lineTo(7.3,10.7);  
-  		ctx.bezierCurveTo(7,10.9,6.7,11.2,6.4,11.5);  
-  		ctx.bezierCurveTo(6,11.7,5.8,12,5.6,12.4);  
-  		ctx.lineTo(1.8,11.4);  
-  		ctx.bezierCurveTo(1,11.2,0.2,11.7,0,12.5);  
-  		ctx.bezierCurveTo(-0.2,13.3,0.3,14.1,1.1,14.3);  
-  		ctx.lineTo(4.9,15.3);  
-  		ctx.bezierCurveTo(4.9,16.1,5.2,16.9,5.5,17.6);  
-  		ctx.lineTo(2.8,20.4);  
-  		ctx.bezierCurveTo(2.2,21,2.2,21.9,2.8,22.5);  
-  		ctx.bezierCurveTo(3.4,23.1,4.3,23.1,4.9,22.5);  
-  		ctx.lineTo(7.6,19.7);  
-  		ctx.bezierCurveTo(8.3,20.1,9.1,20.3,9.9,20.3);  
-  		ctx.lineTo(10.9,24.1);  
-  		ctx.bezierCurveTo(11.1,24.9,11.9,25.3,12.7,25.1);  
-  		ctx.bezierCurveTo(13.5,24.9,13.9,24.1,13.7,23.3);  
-  		ctx.lineTo(12.6,19.5);  
-  		ctx.bezierCurveTo(12.9,19.3,13.3,19.1,13.6,18.8);  
-  		ctx.bezierCurveTo(13.9,18.5,14.1,18.2,14.3,17.8);  
-  		ctx.lineTo(18.1,18.8);  
-  		ctx.bezierCurveTo(18.9,19,19.7,18.5,19.9,17.7);  
-  		ctx.bezierCurveTo(20.1,16.9,19.6,16.1,18.8,15.9);  
-  		ctx.lineTo(15,14.9);  
-  		ctx.bezierCurveTo(15,14.1,14.7,13.3,14.3,12.6);  
-  		ctx.lineTo(17,9.8);  
-  		ctx.bezierCurveTo(17.6,9.2,17.5,8.3,17,7.7);  
-  		ctx.bezierCurveTo(16.4,7.1,15.5,7.1,14.9,7.7);  
-  		ctx.lineTo(12.2,10.5);  
-  		ctx.bezierCurveTo(11.5,10.1,10.7,9.9,9.9,9.9);  
-  		ctx.lineTo(9,6.1);  
-  		ctx.bezierCurveTo(8.8,5.3,8,4.9,7.2,5.1);  
-  		ctx.bezierCurveTo(6.5,5.3,6,6.1,6.2,6.9);  
-  		ctx.closePath();  
-  		ctx.moveTo(11.8,13.2);  
-  		ctx.bezierCurveTo(12.8,14.2,12.8,15.8,11.8,16.8);  
-  		ctx.bezierCurveTo(10.8,17.8,9.2,17.8,8.2,16.8);  
-  		ctx.bezierCurveTo(7.2,15.8,7.2,14.2,8.2,13.2);  
-  		ctx.bezierCurveTo(9.2,12.2,10.8,12.2,11.8,13.2);  
-  		ctx.closePath();  
-  		ctx.fill();  
-  		ctx.restore();  
-  	}  
-  });  
-    
-  module.exports = function () {  
-  	return Trait.compose(  
-  		TPrimitive.resolve({}),  
-  		TSnowflakePrimitive  
-  	).create();  
   };
 });
 require.register('primitives/LightningPrimitive', function(module, exports, require) {
@@ -3661,27 +3508,25 @@ require.register('primitives/LightningPrimitive', function(module, exports, requ
     
   TLightningPrimitive = Trait({  
   	/**  
-  	 * Show transition  
-  	 * @params {Object} options  
+  	 * Animate instance based on 'action'  
+  	 * @param {String} action  
+  	 * @param {Object} options  
+  	 * @returns {Boolean}  
   	 */  
-  	show: function (options) {  
-  		this._opacity = 0;  
-  		this._dopacity = 1;  
-  		this.transitionProps = ['opacity'];  
-  		this.transition(options);  
-  	},  
-    
-  	/**  
-  	 * Hide transition  
-  	 * @params {Object} options  
-  	 */  
-  	hide: function (options) {  
-  		this._y = this.y;  
-  		this._dy = this.OFFSET;  
-  		this._opacity = 1;  
-  		this._dopacity = -1;  
-  		this.transitionProps = ['y', 'opacity'];  
-  		this.transition(options);  
+  	animate: function (action, options) {  
+  		if (action == 'show') {  
+  			this._opacity = 0;  
+  			this._dopacity = 1;  
+  			return true;  
+  		} else if (action == 'hide') {  
+  			this._y = this.y;  
+  			this._dy = this.OFFSET;  
+  			this._opacity = 1;  
+  			this._dopacity = -1;  
+  			return true;  
+  		} else if (action == 'move') {  
+  			return false;  
+  		}  
   	},  
     
   	/**  
@@ -3737,25 +3582,23 @@ require.register('primitives/FogPrimitive', function(module, exports, require) {
     
   TFogPrimitive = Trait({  
   	/**  
-  	 * Show transition  
-  	 * @params {Object} options  
+  	 * Animate instance based on 'action'  
+  	 * @param {String} action  
+  	 * @param {Object} options  
+  	 * @returns {Boolean}  
   	 */  
-  	show: function (options) {  
-  		this._opacity = 0;  
-  		this._dopacity = 1;  
-  		this.transitionProps = ['opacity'];  
-  		this.transition(options);  
-  	},  
-    
-  	/**  
-  	 * Hide transition  
-  	 * @params {Object} options  
-  	 */  
-  	hide: function (options) {  
-  		this._opacity = 1;  
-  		this._dopacity = -1;  
-  		this.transitionProps = ['opacity'];  
-  		this.transition(options);  
+  	animate: function (action, options) {  
+  		if (action == 'show') {  
+  			this._opacity = 0;  
+  			this._dopacity = 1;  
+  			return true;  
+  		} else if (action == 'hide') {  
+  			this._opacity = 1;  
+  			this._dopacity = -1;  
+  			return true;  
+  		} else if (action == 'move') {  
+  			return false;  
+  		}  
   	},  
     
   	/**  
@@ -3837,15 +3680,120 @@ require.register('primitives/FogPrimitive', function(module, exports, require) {
   	).create();  
   };
 });
+require.register('number-utils', function(module, exports, require) {
+  exports.TWO_PI = (function() {
+  	return Math.PI * 2;
+  })();
+  
+  exports.HALF_PI = (function() {
+  	return Math.PI * 0.5;
+  })();
+  
+  /**
+   * Converts a given value in degrees to radians
+   * @param {Number} deg
+   * @returns {Number}
+   */
+  exports.degreesToRadians = function(deg) {
+  	return (deg * Math.PI) / 180;
+  };
+  
+  /**
+   * Converts a given value in radians to degrees
+   * @param {Number} rad
+   * @returns {Number}
+   */
+  exports.radiansToDegrees = function(rad) {
+  	return (180 * rad) / Math.PI;
+  };
+  
+  /**
+   * Takes a 'value' within a given range and converts it to a number between 0 and 1.
+   * @param {Number} value
+   * @param {Number} minimum
+   * @param {Number} maximum
+   * @returns {Number}
+   */
+  var normalize = exports.normalize = function(value, min, max) {
+  	if (min === max) {
+  		return 1;
+  	} else {
+  		return (value - min) / (max - min);
+  	}
+  };
+  
+  /**
+   * Takes a normalized value and a range and returns the actual value in that range.
+   * @param {Number} normValue
+   * @param {Number} minimum
+   * @param {Number} maximum
+   * @returns {Number}
+   */
+  var interplate = exports.interpolate = function(normValue, min, max) {
+  	return min + (max - min) * normValue;
+  };
+  
+  /**
+   * Takes a value in a given range (min1, max1) and finds the corresonding value in the next range (min2, max2).
+   * @param {Number} value
+   * @param {Number} min1
+   * @param {Number} max1
+   * @param {Number} min2
+   * @param {Number} max2
+   * @returns {Number}
+   */
+  var map = exports.map = function(value, min1, max1, min2, max2) {
+  	return interplate(normalize(value, min1, max1), min2, max2);
+  };
+  
+  /**
+   * Takes a value and limits it to fall within a given range.
+   * @param {Number} value
+   * @param {Number} minimum
+   * @param {Number} maximum
+   * @returns {Number}
+   */
+  var limit = exports.limit = function(value, min, max) {
+  	return Math.min(Math.max(min, value), max);
+  };
+  
+  /**
+   * Generates a random number between a given range.
+   * @param {Number} low
+   * @param {Number} high
+   * @returns {Number}
+   */
+  var rangedRandom = exports.rangedRandom = function(low, high) {
+  	return map(Math.random(), 0, 1, low, high);
+  };
+  
+  /**
+   * Rounds a value to the number of specified decimal places
+   * @param {Number} value
+   * @param {Number} decimalPlaces
+   * @returns {Number}
+   */
+  exports.round = function (value, decimalPlaces) {
+  	var places = Math.pow(10, (decimalPlaces || 0));
+  	return Math.round(value * places) / places;
+  };
+});
 require.register('animator', function(module, exports, require) {
-  var anims = {}
+  var CelestialPrimitive = require('primitives/CelestialPrimitive')
+  	, CloudPrimitive = require('primitives/CloudPrimitive')
+  	, PrecipPrimitive = require('primitives/PrecipPrimitive')
+  	, LightningPrimitive = require('primitives/LightningPrimitive')
+  	, FogPrimitive = require('primitives/FogPrimitive')
+  	, random = require('number-utils').rangedRandom
+  
+  	, anims = {}
   	, length = 0
   	, uid = 1
   	, last = 0
   	, running = false
   
   	, FRAME_DURATION = 2000
-  	, TRANSITION_DURATION = 250;
+  	, TRANSITION_DURATION = 500;;
   
   module.exports = function (ctx, frames, options) {
   	if (!ctx) return;
@@ -3882,86 +3830,151 @@ require.register('animator', function(module, exports, require) {
   		, tick;
   
   	// Reset
-  	if (last == 0) last = now;
-  
-  	if ((tick = now - last) >= FRAME_DURATION) {
-  		// Force reset when frame duration ellapsed
-  		last = 0;
-  		// Clamp to frame duration
-  		tick = FRAME_DURATION;
-  	}
+  	if (!last) last = now;
+  	tick = now - last;
   
   	// Render anims
   	for (var id in anims) {
   		if (anims[id].running) render(anims[id], tick);
   	}
   
+  	last = now;
+  
   	// Loop
   	if (running) window.requestAnimationFrame(onTick);
-  };
+  }
   
   /**
-   * Render 'anim'
+   * Render 'anim' at frame 'tick'
    * @param {Anim} anim
-   * @param {Number} time
+   * @param {Number} tick
    */
-  function render (anim, time) {
-  	var newFrame = (time == 0)
-  		, transitioning = (time <= TRANSITION_DURATION) || (time >= FRAME_DURATION - TRANSITION_DURATION)
-  		, options = {time: time}
-  		, opts, layer, nextOpts;
+  function render (anim, tick) {
+  	var time = (anim.time + tick) % anim.duration
+  		, last = time - tick
+  		, layer, options;
   
-  	// Loop frame count
-  	if (newFrame) {
-  		anim.frame = (anim.frame + 1) % anim.frames.length;
+  	anim.time = time;
+  
+  	// Trigger keyframe
+  	for (var keyframe in anim.timeline) {
+  		if (keyframe == time
+  			|| keyframe > last && time > keyframe) {
+  				for (var i = 0, n = anim.timeline[keyframe].length; i < n; i++) {
+  					layer = anim.timeline[keyframe][i];
+  					layer.instance[layer.action](layer.duration, layer.options);
+  				}
+  		}
   	}
   
   	// Clear canvas
   	anim.ctx.clearRect(0, 0, anim.width, anim.height);
   
-  	// Loop through frame layers
-  	for (var i = 0, n = anim.frames[anim.frame].length; i < n; i++) {
-  		opts = anim.frames[anim.frame][i];
-  		// Get layer instance
-  		layer = anim.layers[opts.layer];
-  		// Start new frame
-  		if (newFrame) {
-  			// Show if first frame or if layer in previous frame
-  			if (anim.frame == 0 || !contains(anim.frames[anim.frame - 1], opts.layer)) {
-  					opts.time = 0;
-  					layer.show(opts);
-  			}
-  		// End frame
-  		} else if (!anim.transitioning && transitioning) {
-  			// Move if not last frame
-  			if (anim.frame < anim.frames.length - 1
-  				// ...and sun/moon/cloud
-  				&& parseInt(opts.layer.slice(-1), 10) < 4
-  				// ...and if layer in next frame
-  				&& (nextOpts = contains(anim.frames[anim.frame + 1], opts.layer))) {
-  					// Force time to ensure transition doesn't last longer than the frame
-  					nextOpts.time = FRAME_DURATION - TRANSITION_DURATION;
-  					layer.move(nextOpts);
-  			// Hide
-  			} else {
-  				layer.hide(options);
-  			}
-  		}
-  		layer.render(anim.ctx, options);
+  	// Update all layers
+  	for (var i = 0, n = anim.layers.length; i < n; i++) {
+  		layer = anim.layers[i]
+  		layer.update(tick);
+  		layer.render(anim.ctx);
   	}
-  
-  	anim.transitioning = transitioning;
-  };
+  }
   
   /**
-   * Determine if 'layer' in 'layers'
+   * Generate a timeline from 'frames'
+   * @param {Object} frames
+   * @param {Object} layers
+   * @returns {Object}
+   */
+  function generateTimeline (frames, layers) {
+  	var timeline = {}
+  		, time = 0
+  		, layer, prevLayer, nextLayer;
+  
+  	for (var i = 0, n = frames.length; i < n; i++) {
+  		for (var j = 0, k = frames[i].length; j < k; j++) {
+  			layer = frames[i][j];
+  			// Sun/Moon/Clouds/Fog
+  			if (layer.idx <= 4) {
+  				// Determine if layer active in previous and next frame
+  				prevLayer = contains(frames[(i == 0) ? n - 1: i - 1], layer.idx);
+  				nextLayer = contains(frames[(i + 1) % n], layer.idx);
+  				// Show at beginning of frame
+  				generateKeyframe(timeline, time, {
+  					instance: layers[layer.idx],
+  					action: 'show',
+  					duration: TRANSITION_DURATION,
+  					options: layer
+  				})
+  				// Move if in next frame
+  				if (nextLayer) {
+  					generateKeyframe(timeline, time + FRAME_DURATION - TRANSITION_DURATION, {
+  						instance: layers[layer.idx],
+  						action: 'move',
+  						duration: TRANSITION_DURATION,
+  						options: nextLayer
+  					})
+  				// Hide with overlap
+  				} else {
+  					generateKeyframe(timeline, time + FRAME_DURATION - (TRANSITION_DURATION * 0.5), {
+  						instance: layers[layer.idx],
+  						action: 'hide',
+  						duration: TRANSITION_DURATION,
+  						options: layer
+  					})
+  				}
+  			// Rain/Sleet/Snow/Lightning
+  			} else {
+  				generateKeyframe(timeline, time + (TRANSITION_DURATION * random(0.3, 0.5)), {
+  					instance: layers[layer.idx],
+  					action: 'show',
+  					duration: TRANSITION_DURATION * random(0.4, 0.6),
+  					options: layer
+  				})
+  				generateKeyframe(timeline, time + (TRANSITION_DURATION * random(1.3, 1.5)), {
+  					instance: layers[layer.idx],
+  					action: 'hide',
+  					duration: TRANSITION_DURATION * random(0.4, 0.6),
+  					options: layer
+  				})
+  				generateKeyframe(timeline, time + (TRANSITION_DURATION * random(2.3, 2.5)), {
+  					instance: layers[layer.idx],
+  					action: 'show',
+  					duration: TRANSITION_DURATION * random(0.4, 0.6),
+  					options: layer
+  				})
+  				generateKeyframe(timeline, time + (TRANSITION_DURATION * random(3.3, 3.5)), {
+  					instance: layers[layer.idx],
+  					action: 'hide',
+  					duration: TRANSITION_DURATION * random(0.4, 0.6),
+  					options: layer
+  				})
+  			}
+  		}
+  		time += FRAME_DURATION;
+  	}
+  
+  	return timeline;
+  }
+  
+  /**
+   * Generate keyframe for 'timeline' at 'time' with 'data'
+   * @param {Object} timeline
+   * @param {time} time
+   * @param {Object} data
+   */
+  function generateKeyframe (timeline, time, data) {
+  	if (timeline[time] == null) timeline[time] = [];
+  	timeline[time].push(data);
+  }
+  
+  /**
+   * Determine if 'idx' in 'layers'
    * @param {Array} layers
-   * @param {String} layer
+   * @param {Number} idx
    * @returns {Object|false}
    */
-  function contains (layers, layer) {
+  function contains (layers, idx) {
   	for (var i = 0, n = layers.length; i < n; i++) {
-  		if (layers[i].layer === layer) return layers[i];
+  		if (layers[i].idx === idx) return layers[i];
   	}
   	return false;
   }
@@ -3974,37 +3987,47 @@ require.register('animator', function(module, exports, require) {
    * @param {Object} options
    */
   function Anim (id, ctx, frames, options) {
-  	var layerOptions = {
-  		transitionDuration: TRANSITION_DURATION
-  	};
-  
   	this.id = id;
   	this.ctx = ctx;
-  	this.frame = -1;
   	this.frames = frames;
   	this.width = options.width;
   	this.height = options.height;
   	this.running = false;
-  	this.transitioning = false;
-  	this.last = 0;
+  	this.duration = this.frames.length * FRAME_DURATION;
+  	this.time = 0;
   	// Layer instances
-  	this.layers = {
-  		layer0: require('primitives/SunPrimitive')().initialize(layerOptions),
-  		layer1: require('primitives/MoonPrimitive')().initialize(layerOptions),
-  		layer2: require('primitives/CloudPrimitive')().initialize(layerOptions),
-  		layer3: require('./primitives/CloudPrimitive')().initialize(layerOptions),
-  		layer4: require('primitives/RaindropPrimitive')().initialize(layerOptions),
-  		layer5: require('./primitives/RaindropPrimitive')().initialize(layerOptions),
-  		layer6: require('./primitives/RaindropPrimitive')().initialize(layerOptions),
-  		layer7: require('primitives/SleetPrimitive')().initialize(layerOptions),
-  		layer8: require('./primitives/SleetPrimitive')().initialize(layerOptions),
-  		layer9: require('./primitives/SleetPrimitive')().initialize(layerOptions),
-  		layer10: require('primitives/SnowflakePrimitive')().initialize(layerOptions),
-  		layer11: require('./primitives/SnowflakePrimitive')().initialize(layerOptions),
-  		layer12: require('./primitives/SnowflakePrimitive')().initialize(layerOptions),
-  		layer13: require('primitives/LightningPrimitive')().initialize(layerOptions),
-  		layer14: require('primitives/FogPrimitive')().initialize(layerOptions),
-  	}
+  	this.layers = [
+  		// Sun
+  		CelestialPrimitive().initialize(),
+  		// Moon
+  		CelestialPrimitive().initialize(),
+  		// Cloud back
+  		CloudPrimitive().initialize(),
+  		// Cloud front
+  		CloudPrimitive().initialize(),
+  		// Fog
+  		FogPrimitive().initialize(),
+  		// Raindrop 1
+  		PrecipPrimitive().initialize(),
+  		// Raindrop 2
+  		PrecipPrimitive().initialize(),
+  		// Raindrop 3
+  		PrecipPrimitive().initialize(),
+  		// Sleet 1
+  		PrecipPrimitive().initialize(),
+  		// Sleet 2
+  		PrecipPrimitive().initialize(),
+  		// Sleet 3
+  		PrecipPrimitive().initialize(),
+  		// Snowflake 1
+  		PrecipPrimitive().initialize(),
+  		// Snowflake 2
+  		PrecipPrimitive().initialize(),
+  		// Snowflake 3
+  		PrecipPrimitive().initialize(),
+  		// Lightning
+  		LightningPrimitive().initialize()
+  	]
   
   	// Store layer instance key in layer object for all frames
   	for (var i = 0, n = this.frames.length; i < n; i++) {
@@ -4012,34 +4035,33 @@ require.register('animator', function(module, exports, require) {
   			var layer = this.frames[i][j];
   			switch (layer.primitive) {
   				case 'sun':
-  					layer.layer = 'layer0';
+  					layer.idx = 0;
   					break;
   				case 'moon':
-  					layer.layer = 'layer1';
+  					layer.idx = 1;
   					break;
   				case 'cloud':
-  					layer.layer = layer.flip ? 'layer2' : 'layer3';
-  					break;
-  				case 'raindrop':
-  					layer.layer = 'layer' + (j + 2);
-  					break;
-  				case 'sleet':
-  					layer.layer = 'layer' + (j + 5);
-  					break;
-  				case 'snowflake':
-  					layer.layer = 'layer' + (j + 8);
-  					break;
-  				case 'lightning':
-  					layer.layer = 'layer13';
+  					layer.idx = layer.flip ? 2 : 3;
   					break;
   				case 'fog':
-  					layer.layer = 'layer14';
+  					layer.idx = 4;
+  					break;
+  				case 'raindrop':
+  					layer.idx = j + 3;
+  					break;
+  				case 'sleet':
+  					layer.idx = j + 6;
+  					break;
+  				case 'snowflake':
+  					layer.idx = j + 9;
+  					break;
+  				case 'lightning':
+  					layer.idx = 14;
   					break;
   			}
   		}
   	}
-  
-  	console.dir(this.frames)
+  	this.timeline = generateTimeline(this.frames, this.layers);
   }
   
   Anim.prototype.start = function () {
@@ -4064,12 +4086,12 @@ require.register('weatherSymbol', function(module, exports, require) {
   	, clone = require('lodash.clone')
   	, animator = require('animator')
   	, primitives = {
-  			sun: require('primitives/SunPrimitive')(),
-  			moon: require('primitives/MoonPrimitive')(),
+  			sun: require('primitives/CelestialPrimitive')(),
+  			moon: require('./primitives/CelestialPrimitive')(),
   			cloud: require('primitives/CloudPrimitive')(),
-  			raindrop: require('primitives/RaindropPrimitive')(),
-  			sleet: require('primitives/SleetPrimitive')(),
-  			snowflake: require('primitives/SnowflakePrimitive')(),
+  			raindrop: require('primitives/PrecipPrimitive')(),
+  			sleet: require('./primitives/PrecipPrimitive')(),
+  			snowflake: require('./primitives/PrecipPrimitive')(),
   			fog: require('primitives/FogPrimitive')(),
   			lightning: require('primitives/LightningPrimitive')()
   		}
@@ -4101,6 +4123,7 @@ require.register('weatherSymbol', function(module, exports, require) {
   		, h = container.offsetHeight
   		// Common layer properties
   		, layerOptions = {
+  				visible: true,
   				type: type,
   				width: w * capabilities.backingRatio,
   				height: h * capabilities.backingRatio,
@@ -4144,8 +4167,8 @@ require.register('weatherSymbol', function(module, exports, require) {
   			if (formula = formulae[id]) {
   				// Render layers
   				for (var i = 0, n = formula.length; i < n; i++) {
-  					primitives[formula[i].primitive].render((type == CANVAS) ? element.getContext('2d') : element,
-  						getLayerOptions(formula[i], clone(layerOptions)));
+  					primitives[formula[i].primitive].update(getLayerOptions(formula[i], clone(layerOptions)));
+  					primitives[formula[i].primitive].render((type == CANVAS) ? element.getContext('2d') : element);
   				}
   			}
   		}
