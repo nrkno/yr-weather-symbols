@@ -2,21 +2,19 @@
   "name": "yr-weather-symbols",
   "version": "0.11.1",
   "dependencies": {
-    "trait": "git://github.com/YR/trait",
+    "trait": "git://github.com/YR/trait#0.1.1",
     "svg": "git+ssh://git@github.com:yr/svg.git#0.1.1",
     "capabilities": "git+ssh://git@github.com:yr/capabilities.git#0.1.0",
     "ease": "git+ssh://git@github.com:yr/ease.git#0.2.0",
     "number-utilities": "git+ssh://git@github.com:yr/number-utils.git#0.2.1",
     "yr-colours": "git://github.com/YR/yr-colours",
-    "lodash.map": "~2.4.0",
-    "lodash.clone": "~2.4.0"
+    "lodash-node": "~2.4.0"
   },
   "devDependencies": {
     "requestAnimationFrame": "git://github.com/YR/requestAnimationFrame",
-    "classlist": "git+ssh://git@github.com:yr/classlist.git#0.3.1",
-    "style": "git+ssh://git@github.com:yr/style.git#0.8.1",
-    "lodash.foreach": "~2.4.0",
     "nunjucks": "~1.0.5",
+    "classlist": "git+ssh://git@github.com:yr/classlist.git#0.4.0",
+    "style": "git+ssh://git@github.com:yr/style.git#0.8.2",
     "buddy": "~1.0.0",
     "casperjs": "~1.1.0-beta3",
     "mocha": "*",
@@ -68,8 +66,12 @@
         "sources": ["src/html"],
         "targets": [
           {
-            "input": "src/html/",
+            "input": "src/html/index.nunjs",
             "output": "."
+          },
+          {
+            "input": "src/html/weatherSymbolsDefs.nunjs",
+            "output": "./weatherSymbolsDefs.html"
           }
         ]
       }

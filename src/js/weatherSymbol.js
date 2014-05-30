@@ -2,8 +2,8 @@
 
 var svg = require('svg')
 	, capabilities = require('capabilities')
-	, map = require('lodash.map')
-	, clone = require('lodash.clone')
+	, map = require('lodash-node/compat/collections/map')
+	, clone = require('lodash-node/compat/objects/clone')
 	, animator = require('./animator')
 	, primitives = {
 			sun: require('./primitives/CelestialPrimitive')(),
@@ -15,7 +15,7 @@ var svg = require('svg')
 			fog: require('./primitives/FogPrimitive')(),
 			lightning: require('./primitives/LightningPrimitive')()
 		}
-	, formulae = require('../../yresources/weatherSymbols.json')
+	, formulae = require('../../weatherSymbols.json')
 
 	, DEFAULT_BG = '#ffffff'
 	, SVG = 'svg'

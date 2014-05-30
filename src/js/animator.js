@@ -12,7 +12,7 @@ var CelestialPrimitive = require('./primitives/CelestialPrimitive')
 	, running = false
 
 	, FRAME_DURATION = 2000
-	, TRANSITION_DURATION = 500;;
+	, TRANSITION_DURATION = 500;
 
 module.exports = function (ctx, frames, options) {
 	if (!ctx) return;
