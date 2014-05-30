@@ -13,10 +13,10 @@
   },
   "devDependencies": {
     "requestAnimationFrame": "git://github.com/YR/requestAnimationFrame",
-    "dustjs-linkedin": "~2.3.3",
     "classlist": "git+ssh://git@github.com:yr/classlist.git#0.3.1",
     "style": "git+ssh://git@github.com:yr/style.git#0.8.1",
     "lodash.foreach": "~2.4.0",
+    "nunjucks": "~1.0.5",
     "buddy": "~1.0.0",
     "casperjs": "~1.1.0-beta3",
     "mocha": "*",
@@ -44,7 +44,7 @@
             "boilerplate": true,
             "bootstrap": true,
             "alias": {
-              "dust": "./node_modules/dustjs-linkedin/dist/dust-core.js"
+              "nunjucks": "./node_modules/nunjucks/browser/nunjucks-slim.js"
             }
           },
           {

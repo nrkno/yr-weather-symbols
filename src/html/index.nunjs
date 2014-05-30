@@ -85,6 +85,7 @@
 	<link rel="stylesheet" type="text/css" href="symbols.css">
 </head>
 <body>
+{% include "weatherSymbolsDefs" %}
  	<div id="viewport">
 		<section>
 			<header>
