@@ -2,7 +2,7 @@
   "name": "yr-weather-symbols",
   "version": "0.13.0",
   "dependencies": {
-    "trait": "git://github.com/YR/trait#0.3.0",
+    "trait": "git://github.com/YR/trait#0.4.0",
     "svg": "git+ssh://git@github.com:yr/svg.git#0.1.1",
     "capabilities": "git+ssh://git@github.com:yr/capabilities.git#0.1.0",
     "ease": "git+ssh://git@github.com:yr/ease.git#0.2.0",
