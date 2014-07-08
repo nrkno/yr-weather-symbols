@@ -4,7 +4,7 @@ var svg = require('svg')
 	, capabilities = require('capabilities')
 	, map = require('lodash-node/compat/collections/map')
 	, clone = require('lodash-node/compat/objects/clone')
-	, animator = require('./animator')
+	, animator = require('./animated/animator')
 	, primitives = {
 			sun: require('./primitives/CelestialPrimitive')(),
 			moon: require('./primitives/CelestialPrimitive')(),

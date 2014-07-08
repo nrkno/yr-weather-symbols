@@ -1,8 +1,8 @@
-var CelestialPrimitive = require('./primitives/CelestialPrimitive')
-	, CloudPrimitive = require('./primitives/CloudPrimitive')
-	, PrecipPrimitive = require('./primitives/PrecipPrimitive')
-	, LightningPrimitive = require('./primitives/LightningPrimitive')
-	, FogPrimitive = require('./primitives/FogPrimitive')
+var CelestialPrimitive = require('../primitives/CelestialPrimitive')
+	, CloudPrimitive = require('../primitives/CloudPrimitive')
+	, PrecipPrimitive = require('../primitives/PrecipPrimitive')
+	, LightningPrimitive = require('../primitives/LightningPrimitive')
+	, FogPrimitive = require('../primitives/FogPrimitive')
 	, random = require('number-utils').rangedRandom
 
 	, anims = {}

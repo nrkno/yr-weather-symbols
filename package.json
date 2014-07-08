@@ -7,7 +7,8 @@
     "capabilities": "git+ssh://git@github.com:yr/capabilities.git#0.1.0",
     "ease": "git+ssh://git@github.com:yr/ease.git#0.2.0",
     "number-utilities": "git+ssh://git@github.com:yr/number-utils.git#0.2.1",
-    "yr-colours": "git://github.com/YR/yr-colours",
+    "yr-colours": "git://github.com/YR/yr-colours#0.2.0",
+    "runtime": "git://github.com/YR/runtime#0.1.0",
     "lodash-node": "~2.4.0"
   },
   "devDependencies": {
@@ -15,7 +16,7 @@
     "nunjucks": "~1.0.5",
     "classlist": "git+ssh://git@github.com:yr/classlist.git#0.4.0",
     "style": "git+ssh://git@github.com:yr/style.git#0.8.2",
-    "buddy": "~1.0.0",
+    "buddy": "git://github.com/popeindustries/buddy",
     "casperjs": "~1.1.0-beta3",
     "mocha": "*",
     "expect.js": "*",
@@ -34,11 +35,11 @@
   "buddy": {
     "build": {
       "js": {
-        "sources": ["src/js"],
+        "sources": ["src/js", "src/js-preview"],
         "targets": [
           {
-            "input": "src/js/index.js",
-            "output": "index.js",
+            "input": "src/js-preview/index.js",
+            "output": "./index.js",
             "boilerplate": true,
             "bootstrap": true,
             "alias": {
@@ -54,31 +55,29 @@
         ]
       },
       "css": {
-        "sources": ["src/css"],
         "targets": [
           {
             "input": "src/css",
-            "output": "."
+            "output": "./"
           }
         ]
       },
       "html": {
-        "sources": ["src/html"],
         "targets": [
           {
             "input": "src/html/index.nunjs",
-            "output": "."
+            "output": "./"
           },
           {
             "input": "src/html/weatherSymbolsDefs.nunjs",
-            "output": "./weatherSymbolsDefs.html"
+            "output": "./"
           }
         ]
       }
     },
     "settings": {
       "server": {
-        "directory": ".",
+        "directory": "./",
         "port": 8080
       }
     }
