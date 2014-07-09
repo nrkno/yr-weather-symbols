@@ -9,7 +9,8 @@
     "number-utilities": "git+ssh://git@github.com:yr/number-utils.git#0.2.1",
     "yr-colours": "git://github.com/YR/yr-colours#0.2.0",
     "runtime": "git://github.com/YR/runtime#0.1.0",
-    "lodash-node": "~2.4.0"
+    "lodash-node": "~2.4.0",
+    "react": "~0.10.0"
   },
   "devDependencies": {
     "requestAnimationFrame": "git://github.com/YR/requestAnimationFrame",
@@ -20,15 +21,17 @@
     "casperjs": "~1.1.0-beta3",
     "mocha": "*",
     "expect.js": "*",
+    "should": "3.3.2",
     "mocha-sauce": "git://github.com/pbakaus/mocha-sauce.git",
     "term-canvas": "*"
   },
   "scripts": {
     "convert": "mkdir temp && casperjs src/convert.js temp && pngcrush -d dist/png temp/* && rm -Rf temp && cd dist && zip -r png.zip png ",
-    "test": "buddy build && mocha-phantomjs test/test-runner.html",
+    "test": "NODE_ENV=test mocha test/server-test.js --reporter spec --require should",
+    "test-client": "mocha-phantomjs test/test-runner.html",
     "sauce": "node test/sauce.js"
   },
-  "main": "src/js/weatherSymbol",
+  "main": "src/js/weatherSymbolComponent",
   "repository": "https://github.com/YR/yr-weather-symbols.git",
   "license": "MIT",
   "private": true,
@@ -47,8 +50,8 @@
             }
           },
           {
-            "input": "src/js/weatherSymbol.js",
-            "output": "test/weatherSymbol.js",
+            "input": "src/js/weatherSymbolElement.js",
+            "output": "test/weatherSymbolElement.js",
             "boilerplate": true,
             "bootstrap": true
           }

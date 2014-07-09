@@ -1,8 +1,8 @@
-var Trait = require('trait')
+var trait = require('trait')
 	, easeOut = require('ease/lib/quad').outQuad.js
 	, easeIn = require('ease/lib/quad').inOutQuad.js;
 
-module.exports = Trait({
+module.exports = trait({
 	TWO_PI: Math.PI * 2,
 	MAX_WIDTH: 100,
 	OFFSET: 10,
@@ -194,7 +194,7 @@ module.exports = Trait({
 		}
 	},
 
-	renderSVG: Trait.required,
-	renderCanvas: Trait.required,
-	animate: Trait.required
+	renderSVG: trait.required,
+	renderCanvas: trait.required,
+	animate: trait.required
 });
