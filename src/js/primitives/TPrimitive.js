@@ -96,7 +96,7 @@ module.exports = trait({
 			, str = '<use';
 
 		for (var prop in props) {
-			str += ' ' + prop + ':"' + props[prop] + '"';
+			str += ' ' + prop + '="' + props[prop] + '"';
 		}
 		str += '></use>';
 

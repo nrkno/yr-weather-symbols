@@ -7,7 +7,7 @@ describe('weather symbol', function () {
 			React.renderComponentToStaticMarkup(symbol()({
 				type: 'svg',
 				id: '01d'
-			})).should.eql('<svg><use xlink:href:"#sun" x:"0" y:"0" width:"100" height:"100" transform:"translate(5,5) scale(1)"></use></svg>');
+			})).should.eql('<svg><use xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(5,5) scale(1)"></use></svg>');
 		});
 		it('should render a symbol as <canvas> markup', function () {
 			React.renderComponentToStaticMarkup(symbol()({
