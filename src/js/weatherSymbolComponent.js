@@ -75,7 +75,7 @@ T = trait({
 					for (i = 0; i < n; i++) {
 						html += primitives[formula[i].primitive].render();
 					}
-					return el.svg({dangerouslySetInnerHTML: {__html: html}});
+					return el.svg({x: 0, y: 0, viewBox: '0 0 100 100', dangerouslySetInnerHTML: {__html: html}});
 				} else {
 					// TODO: handle width/height
 					return el.canvas({width: capabilities.backingRatio * 100, height: capabilities.backingRatio * 100, ref: 'canvas'});
