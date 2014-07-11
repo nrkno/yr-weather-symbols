@@ -66,15 +66,18 @@ T = trait({
 		if (formula) {
 			if (type != 'img') {
 				// Update layers
+				var html = ''
+					, f, l;
 				for (var i = 0, n = formula.length; i < n; i++) {
-					primitives[formula[i].primitive].initialize(layer.get(type, formula[i]));
+					f = formula[i];
+					l = layer.get(type, f);
+					primitives[f.primitive].initialize(l);
+					// Until react supports <use>, concat strings
+					if (type == 'svg') {
+						html += primitives[f.primitive].render();
+					}
 				}
 				if (type == 'svg') {
-					// Until react supports <use>, concat strings
-					var html = '';
-					for (i = 0; i < n; i++) {
-						html += primitives[formula[i].primitive].render();
-					}
 					return el.svg({x: 0, y: 0, viewBox: '0 0 100 100', dangerouslySetInnerHTML: {__html: html}});
 				} else {
 					// TODO: handle width/height

@@ -3,11 +3,17 @@ var symbol = require('../src/js/weatherSymbolComponent')
 
 describe('weather symbol', function () {
 	describe('component', function () {
-		it('should render a symbol as <svg> markup', function () {
+		it('should render a simple symbol as <svg> markup', function () {
 			React.renderComponentToStaticMarkup(symbol()({
 				type: 'svg',
 				id: '01d'
-			})).should.eql('<svg><use xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(5,5) scale(1)"></use></svg>');
+			})).should.eql('<svg x="0" y="0" viewBox="0 0 100 100"><use xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(5,5) scale(1)"></use></svg>');
+		});
+		it('should render a complex symbol as <svg> markup', function () {
+			React.renderComponentToStaticMarkup(symbol()({
+				type: 'svg',
+				id: '10'
+			})).should.eql('<svg x="0" y="0" viewBox="0 0 100 100"><use xlink:href="#cloud-40" x="0" y="0" width="100" height="100" transform="translate(85,10) scale(-0.8, 0.8)"></use><use xlink:href="#cloud-50" x="0" y="0" width="100" height="100" transform="translate(7,22) scale(1)"></use><use xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(65,72) scale(1)"></use><use xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(49,72) scale(1)"></use><use xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(33,68) scale(1)"></use></svg>');
 		});
 		it('should render a symbol as <canvas> markup', function () {
 			React.renderComponentToStaticMarkup(symbol()({
