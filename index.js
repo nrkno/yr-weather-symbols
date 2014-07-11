@@ -744,7 +744,7 @@ require.register('primitives/TPrimitive', function(module, exports, require) {
   			, str = '<use';
   
   		for (var prop in props) {
-  			str += ' ' + prop + ':"' + props[prop] + '"';
+  			str += ' ' + prop + '="' + props[prop] + '"';
   		}
   		str += '></use>';
   
