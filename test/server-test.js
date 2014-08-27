@@ -32,7 +32,7 @@ describe('weather symbol', function () {
 				type: 'img',
 				id: '01d',
 				imagePath: '/foo/'
-			})).should.eql('<img src="&#x2f;foo&#x2f;01d.png">');
+			})).should.eql('<img src="/foo/01d.png">');
 		});
 	});
 });
