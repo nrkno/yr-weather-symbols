@@ -97,5 +97,7 @@ T = trait({
  * @returns {Object}
  */
 module.exports = function () {
-	return React.createClass(T.create());
+	return React.createFactory(
+		React.createClass(T.create())
+	);
 };
