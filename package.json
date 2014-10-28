@@ -5,7 +5,7 @@
     "capabilities": "git+ssh://git@github.com:yr/capabilities.git#0.1.0",
     "ease": "git+ssh://git@github.com:yr/ease.git#0.2.0",
     "lodash-node": "2.4.1",
-    "number-utilities": "git+ssh://git@github.com:yr/number-utils.git#0.2.1",
+    "number-utilities": "git://github.com/YR/number-utils.git#0.2.1",
     "react": "0.12.0-rc1",
     "runtime": "git://github.com/YR/runtime#0.1.0",
     "svg": "git+ssh://git@github.com:yr/svg.git#0.1.1",
