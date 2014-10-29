@@ -1,12 +1,12 @@
 {
   "name": "yr-weather-symbols",
-  "version": "0.14.6-beta",
+  "version": "0.14.7-beta",
   "dependencies": {
     "capabilities": "git+ssh://git@github.com:yr/capabilities.git#0.1.0",
     "ease": "git+ssh://git@github.com:yr/ease.git#0.2.0",
     "lodash-node": "2.4.1",
     "number-utils": "YR/number-utils#0.2.2",
-    "react": "0.12.0-rc1",
+    "react": "0.12.0",
     "runtime": "YR/runtime#0.1.0",
     "svg": "git+ssh://git@github.com:yr/svg.git#0.1.1",
     "trait": "YR/trait#0.4.0",
