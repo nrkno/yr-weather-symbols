@@ -1,6 +1,6 @@
 {
   "name": "yr-weather-symbols",
-  "version": "0.14.7-beta",
+  "version": "0.14.8-beta",
   "dependencies": {
     "capabilities": "git+ssh://git@github.com:yr/capabilities.git#0.1.0",
     "ease": "git+ssh://git@github.com:yr/ease.git#0.2.0",
@@ -10,7 +10,7 @@
     "runtime": "YR/runtime#0.1.0",
     "svg": "git+ssh://git@github.com:yr/svg.git#0.1.1",
     "trait": "YR/trait#0.4.0",
-    "yr-colours": "YR/yr-colours#0.3.0"
+    "yr-colours": "YR/yr-colours#1.1.0"
   },
   "devDependencies": {
     "buddy": "popeindustries/buddy",
