@@ -1,6 +1,6 @@
 {
   "name": "yr-weather-symbols",
-  "version": "0.14.8-beta",
+  "version": "0.14.9",
   "dependencies": {
     "capabilities": "git+https://aa5f2bb713ef8a8323fc4a621fc2965d76c06698:x-oauth-basic@github.com/yr/capabilities.git#0.1.0",
     "ease": "git+https://aa5f2bb713ef8a8323fc4a621fc2965d76c06698:x-oauth-basic@github.com/yr/ease.git#0.2.0",
