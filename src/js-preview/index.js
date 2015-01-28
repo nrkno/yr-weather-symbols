@@ -5,7 +5,7 @@ var svg = require('svg')
 	, template = require('./symbolGroup')
 	, weatherSymbol = require('../js/weatherSymbolElement')
 	, classList = require('classlist')
-	, forEach = require('lodash-node/compat/collections/forEach')
+	, forEach = require('lodash-compat/collection/forEach')
 	, el = document.getElementById('symbols')
 	, slice = Array.prototype.slice;
 
