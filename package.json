@@ -4,12 +4,12 @@
   "dependencies": {
     "capabilities": "git+https://aa5f2bb713ef8a8323fc4a621fc2965d76c06698:x-oauth-basic@github.com/yr/capabilities.git#0.1.0",
     "ease": "git+https://aa5f2bb713ef8a8323fc4a621fc2965d76c06698:x-oauth-basic@github.com/yr/ease.git#0.2.0",
-    "lodash-compat": "3.0.0",
+    "lodash-compat": "3.1.0",
     "number-utils": "YR/number-utils#0.2.2",
-    "react": "0.12.1",
+    "react": "0.12.2",
     "runtime": "git+https://aa5f2bb713ef8a8323fc4a621fc2965d76c06698:x-oauth-basic@github.com/YR/runtime#0.1.0",
     "svg": "git+https://aa5f2bb713ef8a8323fc4a621fc2965d76c06698:x-oauth-basic@github.com/yr/svg.git#1.0.0",
-    "trait": "YR/trait#1.1.0",
+    "trait": "YR/trait#1.1.1",
     "yr-colours": "git+https://aa5f2bb713ef8a8323fc4a621fc2965d76c06698:x-oauth-basic@github.com/YR/yr-colours#1.1.0"
   },
   "devDependencies": {
@@ -17,12 +17,12 @@
     "casperjs": "1.1.0-beta3",
     "classlist": "git+ssh://git@github.com:yr/classlist.git#0.4.0",
     "expect.js": "0.3.1",
-    "mocha": "1.21.4",
+    "mocha": "*",
     "mocha-sauce": "pbakaus/mocha-sauce",
     "nunjucks": "popeindustries/nunjucks",
     "requestAnimationFrame": "YR/requestAnimationFrame",
-    "should": "3.3.2",
-    "style": "git+ssh://git@github.com:yr/style.git#0.8.2",
+    "should": "4.6.3",
+    "style": "git+ssh://git@github.com:yr/style.git#0.9.1",
     "term-canvas": "*"
   },
   "scripts": {
