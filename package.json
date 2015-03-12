@@ -4,9 +4,9 @@
   "dependencies": {
     "capabilities": "git+https://aa5f2bb713ef8a8323fc4a621fc2965d76c06698:x-oauth-basic@github.com/yr/capabilities.git#0.1.0",
     "ease": "git+https://aa5f2bb713ef8a8323fc4a621fc2965d76c06698:x-oauth-basic@github.com/yr/ease.git#0.2.0",
-    "lodash-compat": "3.1.0",
+    "lodash-compat": "3.5.0",
     "number-utils": "YR/number-utils#0.2.2",
-    "react": "0.12.2",
+    "react": "0.13.0",
     "runtime": "git+https://aa5f2bb713ef8a8323fc4a621fc2965d76c06698:x-oauth-basic@github.com/YR/runtime#0.1.0",
     "svg": "git+https://aa5f2bb713ef8a8323fc4a621fc2965d76c06698:x-oauth-basic@github.com/yr/svg.git#1.0.0",
     "trait": "YR/trait#1.1.1",
