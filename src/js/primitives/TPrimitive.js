@@ -1,4 +1,4 @@
-var trait = require('trait')
+var trait = require('simple-traits')
 	, easeOut = require('ease/lib/quad').outQuad.js
 	, easeIn = require('ease/lib/quad').inOutQuad.js;
 

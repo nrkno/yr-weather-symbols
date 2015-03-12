@@ -1,4 +1,4 @@
-var trait = require('trait');
+var trait = require('simple-traits');
 
 module.exports = trait.compose(
 	require('../TCelestialPrimitive')

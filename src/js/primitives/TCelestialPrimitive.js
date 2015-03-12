@@ -1,4 +1,4 @@
-var trait = require('trait')
+var trait = require('simple-traits')
 	, colours = require('yr-colours')
 
 	, SUN_RAY_COLOUR = colours.SUN_RAY

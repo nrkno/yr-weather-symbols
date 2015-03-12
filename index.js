@@ -331,8 +331,6 @@ require.register('lodash-compat/string/escapeRegExp', function(module, exports, 
   
 });
 require.register('lodash-compat/internal/isHostObject', function(module, exports, require) {
-  var baseToString = require('lodash-compat/internal/baseToString');
-  
   /**
    * Checks if `value` is a host object in IE < 9.
    *
@@ -342,7 +340,7 @@ require.register('lodash-compat/internal/isHostObject', function(module, exports
    */
   var isHostObject = (function() {
     try {
-      baseToString({ 'toString': 0 });
+      Object({ 'toString': 0 } + '');
     } catch(e) {
       return function() { return false; };
     }
@@ -674,13 +672,17 @@ require.register('lodash-compat/internal/baseFor', function(module, exports, req
 require.register('lodash-compat/internal/isLength', function(module, exports, require) {
   /**
    * Used as the maximum length of an array-like value.
-   * See the [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength)
+   * See the [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
    * for more details.
    */
   var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;
   
   /**
    * Checks if `value` is a valid array-like length.
+   *
+   * **Note:** This function is based on ES `ToLength`. See the
+   * [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength)
+   * for more details.
    *
    * @private
    * @param {*} value The value to check.
@@ -727,7 +729,7 @@ require.register('lodash-compat/lang/isArguments', function(module, exports, req
    * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
    * @example
    *
-   * (function() { return _.isArguments(arguments); })();
+   * _.isArguments(function() { return arguments; }());
    * // => true
    *
    * _.isArguments([1, 2, 3]);
@@ -783,7 +785,7 @@ require.register('lodash-compat/lang/isArray', function(module, exports, require
    * _.isArray([1, 2, 3]);
    * // => true
    *
-   * (function() { return _.isArray(arguments); })();
+   * _.isArray(function() { return arguments; }());
    * // => false
    */
   var isArray = nativeIsArray || function(value) {
@@ -796,7 +798,7 @@ require.register('lodash-compat/lang/isArray', function(module, exports, require
 require.register('lodash-compat/internal/isIndex', function(module, exports, require) {
   /**
    * Used as the maximum length of an array-like value.
-   * See the [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength)
+   * See the [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
    * for more details.
    */
   var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;
@@ -818,10 +820,75 @@ require.register('lodash-compat/internal/isIndex', function(module, exports, req
   module.exports = isIndex;
   
 });
+require.register('lodash-compat/internal/baseIsFunction', function(module, exports, require) {
+  /**
+   * The base implementation of `_.isFunction` without support for environments
+   * with incorrect `typeof` results.
+   *
+   * @private
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+   */
+  function baseIsFunction(value) {
+    // Avoid a Chakra JIT bug in compatibility modes of IE 11.
+    // See https://github.com/jashkenas/underscore/issues/1621 for more details.
+    return typeof value == 'function' || false;
+  }
+  
+  module.exports = baseIsFunction;
+  
+});
+require.register('lodash-compat/lang/isFunction', function(module, exports, require) {
+  var baseIsFunction = require('lodash-compat/internal/baseIsFunction'),
+      isNative = require('lodash-compat/lang/isNative');
+  
+  /** `Object#toString` result references. */
+  var funcTag = '[object Function]';
+  
+  /** Used for native method references. */
+  var objectProto = Object.prototype;
+  
+  /**
+   * Used to resolve the `toStringTag` of values.
+   * See the [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
+   * for more details.
+   */
+  var objToString = objectProto.toString;
+  
+  /** Native method references. */
+  var Uint8Array = isNative(Uint8Array = global.Uint8Array) && Uint8Array;
+  
+  /**
+   * Checks if `value` is classified as a `Function` object.
+   *
+   * @static
+   * @memberOf _
+   * @category Lang
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+   * @example
+   *
+   * _.isFunction(_);
+   * // => true
+   *
+   * _.isFunction(/abc/);
+   * // => false
+   */
+  var isFunction = !(baseIsFunction(/x/) || (Uint8Array && !baseIsFunction(Uint8Array))) ? baseIsFunction : function(value) {
+    // The use of `Object#toString` avoids issues with the `typeof` operator
+    // in older versions of Chrome and Safari which return 'function' for regexes
+    // and Safari 8 equivalents which return 'object' for typed array constructors.
+    return objToString.call(value) == funcTag;
+  };
+  
+  module.exports = isFunction;
+  
+});
 require.register('lodash-compat/object/keysIn', function(module, exports, require) {
   var arrayEach = require('lodash-compat/internal/arrayEach'),
       isArguments = require('lodash-compat/lang/isArguments'),
       isArray = require('lodash-compat/lang/isArray'),
+      isFunction = require('lodash-compat/lang/isFunction'),
       isIndex = require('lodash-compat/internal/isIndex'),
       isLength = require('lodash-compat/internal/isLength'),
       isObject = require('lodash-compat/lang/isObject'),
@@ -913,12 +980,12 @@ require.register('lodash-compat/object/keysIn', function(module, exports, requir
   
     var Ctor = object.constructor,
         index = -1,
-        proto = (typeof Ctor == 'function' && Ctor.prototype) || objectProto,
+        proto = (isFunction(Ctor) && Ctor.prototype) || objectProto,
         isProto = proto === object,
         result = Array(length),
         skipIndexes = length > 0,
         skipErrorProps = support.enumErrorProps && (object === errorProto || object instanceof Error),
-        skipProto = support.enumPrototypes && typeof object == 'function';
+        skipProto = support.enumPrototypes && isFunction(object);
   
     while (++index < length) {
       result[index] = (index + '');
@@ -936,7 +1003,7 @@ require.register('lodash-compat/object/keysIn', function(module, exports, requir
       }
     }
     if (support.nonEnumShadows && object !== objectProto) {
-      var tag = object === stringProto ? stringTag : object === errorProto ? errorTag : objToString.call(object),
+      var tag = object === stringProto ? stringTag : (object === errorProto ? errorTag : objToString.call(object)),
           nonEnums = nonEnumProps[tag] || nonEnumProps[objectTag];
   
       if (tag == objectTag) {
@@ -1048,7 +1115,7 @@ require.register('lodash-compat/object/keys', function(module, exports, require)
           length = object.length;
     }
     if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
-       (typeof object == 'function' ? support.enumPrototypes : (length && isLength(length)))) {
+        (typeof object == 'function' ? support.enumPrototypes : (length && isLength(length)))) {
       return shimKeys(object);
     }
     return isObject(object) ? nativeKeys(object) : [];
@@ -1122,6 +1189,7 @@ require.register('lodash-compat/utility/identity', function(module, exports, req
    * @example
    *
    * var object = { 'user': 'fred' };
+   *
    * _.identity(object) === object;
    * // => true
    */
@@ -1200,10 +1268,14 @@ require.register('lodash-compat/collection/forEach', function(module, exports, r
    * @returns {Array|Object|string} Returns `collection`.
    * @example
    *
-   * _([1, 2, 3]).forEach(function(n) { console.log(n); });
+   * _([1, 2]).forEach(function(n) {
+   *   console.log(n);
+   * }).value();
    * // => logs each value from left to right and returns the array
    *
-   * _.forEach({ 'one': 1, 'two': 2, 'three': 3 }, function(n, key) { console.log(n, key); });
+   * _.forEach({ 'a': 1, 'b': 2 }, function(n, key) {
+   *   console.log(n, key);
+   * });
    * // => logs each value-key pair and returns the object (iteration order is not guaranteed)
    */
   function forEach(collection, iteratee, thisArg) {
@@ -1237,7 +1309,8 @@ require.register('lodash-compat/internal/baseSlice', function(module, exports, r
     if (end < 0) {
       end += length;
     }
-    length = start > end ? 0 : (end - start);
+    length = start > end ? 0 : ((end - start) >>> 0);
+    start >>>= 0;
   
     var result = Array(length);
     while (++index < length) {
@@ -1349,7 +1422,8 @@ require.register('lodash-compat/internal/createBindWrapper', function(module, ex
     var Ctor = createCtorWrapper(func);
   
     function wrapper() {
-      return (this instanceof wrapper ? Ctor : func).apply(thisArg, arguments);
+      var fn = (this && this !== global && this instanceof wrapper) ? Ctor : func;
+      return fn.apply(thisArg, arguments);
     }
     return wrapper;
   }
@@ -1618,7 +1692,8 @@ require.register('lodash-compat/internal/createHybridWrapper', function(module, 
       if (isAry && ary < args.length) {
         args.length = ary;
       }
-      return (this instanceof wrapper ? (Ctor || createCtorWrapper(func)) : func).apply(thisBinding, args);
+      var fn = (this && this !== global && this instanceof wrapper) ? (Ctor || createCtorWrapper(func)) : func;
+      return fn.apply(thisBinding, args);
     }
     return wrapper;
   }
@@ -1663,7 +1738,8 @@ require.register('lodash-compat/internal/createPartialWrapper', function(module,
       while (argsLength--) {
         args[leftIndex++] = arguments[++argsIndex];
       }
-      return (this instanceof wrapper ? Ctor : func).apply(isBind ? thisArg : this, args);
+      var fn = (this && this !== global && this instanceof wrapper) ? Ctor : func;
+      return fn.apply(isBind ? thisArg : this, args);
     }
     return wrapper;
   }
@@ -1673,7 +1749,8 @@ require.register('lodash-compat/internal/createPartialWrapper', function(module,
 });
 require.register('lodash-compat/utility/noop', function(module, exports, require) {
   /**
-   * A no-operation function.
+   * A no-operation function which returns `undefined` regardless of the
+   * arguments it receives.
    *
    * @static
    * @memberOf _
@@ -1681,6 +1758,7 @@ require.register('lodash-compat/utility/noop', function(module, exports, require
    * @example
    *
    * var object = { 'user': 'fred' };
+   *
    * _.noop(object) === undefined;
    * // => true
    */
@@ -1707,59 +1785,6 @@ require.register('lodash-compat/internal/getData', function(module, exports, req
   };
   
   module.exports = getData;
-  
-});
-require.register('lodash-compat/lang/isFunction', function(module, exports, require) {
-  var isNative = require('lodash-compat/lang/isNative');
-  
-  /** `Object#toString` result references. */
-  var funcTag = '[object Function]';
-  
-  /** Used for native method references. */
-  var objectProto = Object.prototype;
-  
-  /**
-   * Used to resolve the `toStringTag` of values.
-   * See the [ES spec](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.prototype.tostring)
-   * for more details.
-   */
-  var objToString = objectProto.toString;
-  
-  /** Native method references. */
-  var Uint8Array = isNative(Uint8Array = global.Uint8Array) && Uint8Array;
-  
-  /**
-   * Checks if `value` is classified as a `Function` object.
-   *
-   * @static
-   * @memberOf _
-   * @category Lang
-   * @param {*} value The value to check.
-   * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
-   * @example
-   *
-   * _.isFunction(_);
-   * // => true
-   *
-   * _.isFunction(/abc/);
-   * // => false
-   */
-  function isFunction(value) {
-    // Avoid a Chakra JIT bug in compatibility modes of IE 11.
-    // See https://github.com/jashkenas/underscore/issues/1621 for more details.
-    return typeof value == 'function' || false;
-  }
-  // Fallback for environments that return incorrect `typeof` operator results.
-  if (isFunction(/x/) || (Uint8Array && !isFunction(Uint8Array))) {
-    isFunction = function(value) {
-      // The use of `Object#toString` avoids issues with the `typeof` operator
-      // in older versions of Chrome and Safari which return 'function' for regexes
-      // and Safari 8 equivalents which return 'object' for typed array constructors.
-      return objToString.call(value) == funcTag;
-    };
-  }
-  
-  module.exports = isFunction;
   
 });
 require.register('lodash-compat/internal/mergeData', function(module, exports, require) {
@@ -1879,7 +1904,9 @@ require.register('lodash-compat/date/now', function(module, exports, require) {
    * @category Date
    * @example
    *
-   * _.defer(function(stamp) { console.log(_.now() - stamp); }, _.now());
+   * _.defer(function(stamp) {
+   *   console.log(_.now() - stamp);
+   * }, _.now());
    * // => logs the number of milliseconds it took for the deferred function to be invoked
    */
   var now = nativeNow || function() {
@@ -1939,7 +1966,6 @@ require.register('lodash-compat/internal/createWrapper', function(module, export
       createHybridWrapper = require('lodash-compat/internal/createHybridWrapper'),
       createPartialWrapper = require('lodash-compat/internal/createPartialWrapper'),
       getData = require('lodash-compat/internal/getData'),
-      isFunction = require('lodash-compat/lang/isFunction'),
       mergeData = require('lodash-compat/internal/mergeData'),
       setData = require('lodash-compat/internal/setData');
   
@@ -1982,7 +2008,7 @@ require.register('lodash-compat/internal/createWrapper', function(module, export
    */
   function createWrapper(func, bitmask, thisArg, partials, holders, argPos, ary, arity) {
     var isBindKey = bitmask & BIND_KEY_FLAG;
-    if (!isBindKey && !isFunction(func)) {
+    if (!isBindKey && typeof func != 'function') {
       throw new TypeError(FUNC_ERROR_TEXT);
     }
     var length = partials ? partials.length : 0;
@@ -2012,9 +2038,9 @@ require.register('lodash-compat/internal/createWrapper', function(module, export
     if (bitmask == BIND_FLAG) {
       var result = createBindWrapper(newData[0], newData[2]);
     } else if ((bitmask == PARTIAL_FLAG || bitmask == (BIND_FLAG | PARTIAL_FLAG)) && !newData[4].length) {
-      result = createPartialWrapper.apply(null, newData);
+      result = createPartialWrapper.apply(undefined, newData);
     } else {
-      result = createHybridWrapper.apply(null, newData);
+      result = createHybridWrapper.apply(undefined, newData);
     }
     var setter = data ? baseSetData : setData;
     return setter(result, newData);
@@ -2084,7 +2110,7 @@ require.register('lodash-compat/function/bind', function(module, exports, requir
   module.exports = bind;
   
 });
-require.register('trait', function(module, exports, require) {
+require.register('simple-traits', function(module, exports, require) {
   var forEach = require('lodash-compat/collection/forEach')
   	, bind = require('lodash-compat/function/bind')
   	, keys = require('lodash-compat/object/keys')
@@ -2826,7 +2852,7 @@ require.register('ease/lib/quad', function(module, exports, require) {
   
 });
 require.register('primitives/TPrimitive', function(module, exports, require) {
-  var trait = require('trait')
+  var trait = require('simple-traits')
   	, easeOut = require('ease/lib/quad').outQuad.js
   	, easeIn = require('ease/lib/quad').inOutQuad.js;
   
@@ -2944,7 +2970,7 @@ require.register('primitives/TPrimitive', function(module, exports, require) {
   
 });
 require.register('primitives/TCelestialPrimitive', function(module, exports, require) {
-  var trait = require('trait')
+  var trait = require('simple-traits')
   	, colours = require('yr-colours')
   
   	, SUN_RAY_COLOUR = colours.SUN_RAY
@@ -3106,7 +3132,7 @@ require.register('primitives/TCelestialPrimitive', function(module, exports, req
   );
 });
 require.register('primitives/TCelestialPrimitiveElement', function(module, exports, require) {
-  var trait = require('trait')
+  var trait = require('simple-traits')
   	, svg = require('svg');
   
   module.exports = trait({
@@ -3126,7 +3152,7 @@ require.register('primitives/TCelestialPrimitiveElement', function(module, expor
   });
 });
 require.register('primitives/TCloudPrimitive', function(module, exports, require) {
-  var trait = require('trait');
+  var trait = require('simple-traits');
   
   module.exports = trait.compose(
   	require('primitives/TPrimitive').resolve({transformCanvas: null}),
@@ -3213,7 +3239,7 @@ require.register('primitives/TCloudPrimitive', function(module, exports, require
   );
 });
 require.register('primitives/TCloudPrimitiveElement', function(module, exports, require) {
-  var trait = require('trait')
+  var trait = require('simple-traits')
   	, svg = require('svg');
   
   module.exports = trait({
@@ -3231,7 +3257,7 @@ require.register('primitives/TCloudPrimitiveElement', function(module, exports, 
   });
 });
 require.register('primitives/TPrecipPrimitive', function(module, exports, require) {
-  var trait = require('trait');
+  var trait = require('simple-traits');
   
   module.exports = trait.compose(
   	require('primitives/TPrimitive'),
@@ -3355,7 +3381,7 @@ require.register('primitives/TPrecipPrimitive', function(module, exports, requir
   );
 });
 require.register('primitives/TPrecipPrimitiveElement', function(module, exports, require) {
-  var trait = require('trait')
+  var trait = require('simple-traits')
   	, svg = require('svg');
   
   module.exports = trait({
@@ -3373,7 +3399,7 @@ require.register('primitives/TPrecipPrimitiveElement', function(module, exports,
   });
 });
 require.register('primitives/TFogPrimitive', function(module, exports, require) {
-  var trait = require('trait');
+  var trait = require('simple-traits');
   
   module.exports = trait.compose(
   	require('primitives/TPrimitive'),
@@ -3440,7 +3466,7 @@ require.register('primitives/TFogPrimitive', function(module, exports, require) 
   );
 });
 require.register('primitives/TFogPrimitiveElement', function(module, exports, require) {
-  var trait = require('trait')
+  var trait = require('simple-traits')
   	, svg = require('svg');
   
   module.exports = trait({
@@ -3458,7 +3484,7 @@ require.register('primitives/TFogPrimitiveElement', function(module, exports, re
   });
 });
 require.register('primitives/TLightningPrimitive', function(module, exports, require) {
-  var trait = require('trait');
+  var trait = require('simple-traits');
   
   module.exports = trait.compose(
   	require('primitives/TPrimitive'),
@@ -3490,7 +3516,7 @@ require.register('primitives/TLightningPrimitive', function(module, exports, req
   );
 });
 require.register('primitives/TLightningPrimitiveElement', function(module, exports, require) {
-  var trait = require('trait')
+  var trait = require('simple-traits')
   	, svg = require('svg');
   
   module.exports = trait({
@@ -3508,7 +3534,7 @@ require.register('primitives/TLightningPrimitiveElement', function(module, expor
   });
 });
 require.register('weatherSymbolElement', function(module, exports, require) {
-  var trait = require('trait')
+  var trait = require('simple-traits')
   	, svg = require('svg')
   	, layer = require('utils/layer')
   	, validate = require('utils/validate')

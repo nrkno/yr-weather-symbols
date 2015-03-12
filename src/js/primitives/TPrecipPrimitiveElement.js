@@ -1,4 +1,4 @@
-var trait = require('trait')
+var trait = require('simple-traits')
 	, svg = require('svg');
 
 module.exports = trait({

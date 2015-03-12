@@ -1,4 +1,4 @@
-var trait = require('trait')
+var trait = require('simple-traits')
 	, layer = require('./utils/layer')
 	, validate = require('./utils/validate')
 	, capabilities = require('./utils/capabilities')
