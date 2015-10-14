@@ -7,7 +7,6 @@
 
 const celestialPrimitive = require('./primitives/celestial')
   , cloudPrimitive = require('./primitives/cloud')
-  , component = require('../component')
   , fogPrimitive = require('./primitives/fog')
   , lightningPrimitive = require('./primitives/lightning')
   , precipitationPrimitive = require('./primitives/precipitation')
@@ -30,7 +29,7 @@ const celestialPrimitive = require('./primitives/celestial')
 exports.create = function (options) {
   options = options || {};
 
-  return component({
+  const comp = React.createClass({
     displayName: 'weatherSymbolComponent',
 
     /**
@@ -68,4 +67,8 @@ exports.create = function (options) {
       }
     }
   }, { efficientUpdate: false });
+
+  return function createElement (props) {
+    return React.createElement(comp, props);
+  };
 };
