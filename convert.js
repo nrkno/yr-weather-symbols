@@ -3,13 +3,16 @@
 const webshot = require('webshot')
   , async = require('async')
   , React = require('react')
+  , path = require('path')
   , ReactDOMServer = require('react-dom/server')
   , weatherSymbolComponent = require('./src/js/index')
   , el = React.DOM
   , weatherSymbol = weatherSymbolComponent.create()
   , recipes = require('./src/js/recipes')
-  , fs = require('fs');
+  , fs = require('fs')
+  , stylus = require('stylus');
 
+const dest = process.argv[2] || 'dist/';
 
 // lag klasse for å generere webside og ta screenshot
 // Iterer alle ID'er
@@ -23,25 +26,30 @@ function createSymbol (id) {
   ));
 }
 
-function createMarkup (svg) {
-  let html, style, symbolDefs;
+function createMarkup (svg, cb) {
+  const stylusFileName = 'src/css/index.styl';
+  const stylusCss = fs.readFileSync(stylusFileName).toString();
 
-  style = '* { padding: 0; margin: 0; }\n';
-  style += '.iconContainer { height: 51px; width: 51px; }\n';
+  let boilerplateCss = '* { padding: 0; margin: 0; }\n';
 
-  // TODO: FIx this
-  style += require('fs').readFileSync('src/css/index.styl').toString();
+  boilerplateCss += '.iconContainer { height: 51px; width: 51px; }\n';
 
-  symbolDefs = require('fs').readFileSync('src/html/symbolDefs.html').toString();
+  stylus.render(stylusCss, { filename: stylusFileName }, function (err, css) {
+    if (err) throw err;
 
-  html = '<!DOCTYPE html><html><head><style>';
-  html += style;
-  html += '</style></head><body>';
-  html += symbolDefs;
-  html += '<div class="iconContainer">';
-  html += svg;
-  html += '</div></body></html>';
-  return html;
+    const symbolDefs = fs.readFileSync('src/html/symbolDefs.html').toString();
+
+    let html = '<!DOCTYPE html><html><head><style>';
+    html += boilerplateCss;
+    html += css;
+    html += '</style></head><body>';
+    html += symbolDefs;
+    html += '<div class="iconContainer">';
+    html += svg;
+    html += '</div></body></html>';
+
+    cb(html);
+  });
 }
 
 const options = {
@@ -52,18 +60,23 @@ const options = {
   }
 };
 
-async.forEachOfLimit(recipes, 10, function (recipe, id, callback) {
-  const pngFileName = 'dist/png/' + id + '.png';
+async.forEachOfLimit(recipes, 10, function (recipe, id, asyncCallback) {
+  const pngFileName = path.join(dest, 'png', id + '.png')
+    , svgFileName = path.join(dest, 'svg', id + '.svg');
 
   const svg = createSymbol(id);
-  const html = createMarkup(svg);
 
-  webshot(html, pngFileName, options, function (err) {
-    if (err) {
-      console.log(err.message);
-    } else {
-      console.log('Created ' + pngFileName);
-    }
-    callback();
+  createMarkup(svg, function (html) {
+    webshot(html, pngFileName, options, function (err) {
+      if (err) {
+        console.log(err.message);
+      } else {
+        console.log('Created ' + pngFileName);
+
+        fs.writeFileSync(svgFileName, svg);
+        console.log('Created ' + svgFileName);
+        asyncCallback();
+      }
+    });
   });
 });
