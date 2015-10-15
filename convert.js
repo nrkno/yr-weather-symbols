@@ -4,10 +4,10 @@ const webshot = require('webshot')
   , async = require('async')
   , React = require('react')
   , ReactDOMServer = require('react-dom/server')
-  , weatherSymbolComponent = require('./symbols')
+  , weatherSymbolComponent = require('./src/js/index')
   , el = React.DOM
   , weatherSymbol = weatherSymbolComponent.create()
-  , recipes = require('./symbols/recipes')
+  , recipes = require('./src/js/recipes')
   , fs = require('fs');
 
 
@@ -30,9 +30,9 @@ function createMarkup (svg) {
   style += '.iconContainer { height: 51px; width: 51px; }\n';
 
   // TODO: FIx this
-  style += require('fs').readFileSync('symbols/index.styl').toString();
+  style += require('fs').readFileSync('src/css/index.styl').toString();
 
-  symbolDefs = require('fs').readFileSync('symbols/symbolDefs.html').toString();
+  symbolDefs = require('fs').readFileSync('src/html/symbolDefs.html').toString();
 
   html = '<!DOCTYPE html><html><head><style>';
   html += style;
@@ -53,7 +53,7 @@ const options = {
 };
 
 async.forEachOfLimit(recipes, 10, function (recipe, id, callback) {
-  const pngFileName = 'png/' + id + '.png';
+  const pngFileName = 'dist/png/' + id + '.png';
 
   const svg = createSymbol(id);
   const html = createMarkup(svg);
@@ -62,7 +62,7 @@ async.forEachOfLimit(recipes, 10, function (recipe, id, callback) {
     if (err) {
       console.log(err.message);
     } else {
-      console.log('Created ' + id + '.png');
+      console.log('Created ' + pngFileName);
     }
     callback();
   });
