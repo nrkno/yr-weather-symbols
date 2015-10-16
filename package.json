@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "prepublish": "buddy build && npm run convert",
+    "build": "buddy build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "convert": "bin/convert",
     "create-static": "bin/create-static"
