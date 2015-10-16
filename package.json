@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "prepublish": "buddy build && node convert.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublish": "buddy build && npm run convert",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "convert": "bin/convert"
   },
   "repository": {
     "type": "git",

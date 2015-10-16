@@ -1,19 +1,18 @@
+#!/usr/bin/env node
 'use strict';
 
 const webshot = require('webshot')
   , async = require('async')
   , path = require('path')
   , ReactDOMServer = require('react-dom/server')
-  , weatherSymbolComponent = require('./index')
+  , weatherSymbolComponent = require('../index')
   , weatherSymbol = weatherSymbolComponent.create()
-  , recipes = require('./lib/recipes')
+  , recipes = require('../lib/recipes')
   , fs = require('fs')
   , stylus = require('stylus');
 
 const dest = process.argv[2] || 'dist/';
 
-// lag klasse for å generere webside og ta screenshot
-// Iterer alle ID'er
 
 function createSymbol (id) {
   return ReactDOMServer.renderToString(
@@ -23,6 +22,7 @@ function createSymbol (id) {
     }
   ));
 }
+
 
 function createMarkup (svg, cb) {
   const stylusFileName = 'src/css/index.styl';
@@ -51,6 +51,7 @@ function createMarkup (svg, cb) {
   });
 }
 
+
 const options = {
   siteType: 'html',
   windowSize: {
@@ -58,6 +59,7 @@ const options = {
     height: 51
   }
 };
+
 
 async.forEachOfLimit(recipes, 10, function (recipe, id, asyncCallback) {
   const pngFileName = path.join(dest, 'png', id + '.png')
