@@ -1,0 +1,44 @@
+{
+  "name": "@yr/weather-symbols",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "scripts": {
+    "prepublish": "buddy build && node convert.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YR/weather-symbols.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/YR/weather-symbols/issues"
+  },
+  "homepage": "https://github.com/YR/weather-symbols#readme",
+  "devDependencies": {
+    "async": "^1.4.2",
+    "buddy": "3.0.2",
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0",
+    "stylus": "^0.52.4",
+    "transfigure-babel": "5.8.23",
+    "webshot": "^0.16.0"
+  },
+    "browser": {
+  },
+  "buddy": {
+    "build": {
+      "sources": [
+        "src/js"
+      ],
+      "targets": [
+        {
+          "input": "src/js",
+          "output": ".",
+          "modular": false
+        }
+      ]
+    }
+  }
+}
