@@ -20,14 +20,14 @@
   "devDependencies": {
     "async": "^1.4.2",
     "buddy": "3.0.2",
+    "nunjucks": "^2.1.0",
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
     "stylus": "^0.52.4",
     "transfigure-babel": "5.8.23",
     "webshot": "^0.16.0"
   },
-    "browser": {
-  },
+  "browser": {},
   "buddy": {
     "build": {
       "sources": [

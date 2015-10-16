@@ -9,7 +9,8 @@ const webshot = require('webshot')
   , weatherSymbol = weatherSymbolComponent.create()
   , recipes = require('../lib/recipes')
   , fs = require('fs')
-  , stylus = require('stylus');
+  , stylus = require('stylus')
+  , nunjucks = require('nunjucks');
 
 const dest = process.argv[2] || 'dist/';
 
@@ -24,30 +25,24 @@ function createSymbol (id) {
 }
 
 
-function createMarkup (svg, cb) {
+function createMarkup (svg, env, markupCallback) {
   const stylusFileName = 'src/css/index.styl';
   const stylusCss = fs.readFileSync(stylusFileName).toString();
+  const symbolDefs = fs.readFileSync('src/html/symbolDefs.html').toString();
 
-  let boilerplateCss = '* { padding: 0; margin: 0; }\n';
-
-  boilerplateCss += '.iconContainer { height: 51px; width: 51px; }\n';
-
-  stylus.render(stylusCss, { filename: stylusFileName }, function (err, css) {
+  stylus.render(stylusCss, { filename: stylusFileName }, function (err, symbolsCSS) {
     if (err) throw err;
 
-    const symbolDefs = fs.readFileSync('src/html/symbolDefs.html').toString();
+    var nunjucksCallback = function (err, html) {
+      if (err) {
+        console.log(err.message);
+        throw err.message;
+      } else {
+        markupCallback(html);
+      }
+    };
 
-    let html = '<!DOCTYPE html><html><head><style>';
-
-    html += boilerplateCss;
-    html += css;
-    html += '</style></head><body>';
-    html += symbolDefs;
-    html += '<div class="iconContainer">';
-    html += svg;
-    html += '</div></body></html>';
-
-    cb(html);
+    env.render('svgcontainer.nunjs', { svg, symbolsCSS, symbolDefs }, nunjucksCallback);
   });
 }
 
@@ -61,16 +56,21 @@ const options = {
 };
 
 
+const env = new nunjucks.Environment(new nunjucks.FileSystemLoader('bin/templates'),
+                                   { autoescape: false });
+
+
 async.forEachOfLimit(recipes, 10, function (recipe, id, asyncCallback) {
   const pngFileName = path.join(dest, 'png', id + '.png')
     , svgFileName = path.join(dest, 'svg', id + '.svg');
 
   const svg = createSymbol(id);
 
-  createMarkup(svg, function (html) {
+  createMarkup(svg, env, function (html) {
     webshot(html, pngFileName, options, function (err) {
       if (err) {
         console.log(err.message);
+        throw err.message;
       } else {
         console.log('Created ' + pngFileName);
 
