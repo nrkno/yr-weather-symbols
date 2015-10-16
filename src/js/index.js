@@ -29,6 +29,10 @@ const celestialPrimitive = require('./lib/primitives/celestial')
 exports.create = function (options) {
   options = options || {};
 
+  if (typeof options.fallback === 'undefined') {
+    options.fallback = true;
+  }
+
   const comp = React.createClass({
     displayName: 'weatherSymbolComponent',
 
@@ -53,7 +57,9 @@ exports.create = function (options) {
           html += primitives[opts.primitive](opts);
         }
 
-        html += '<image src="' + this.props.rootPath + '/symbols/' + id + '.png" xlink:href=""/>';
+        if (options.fallback) {
+          html += '<image src="' + this.props.rootPath + '/symbols/' + id + '.png" xlink:href=""/>';
+        }
 
         return el.svg({
           key: id,
