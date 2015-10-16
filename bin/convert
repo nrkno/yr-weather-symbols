@@ -15,7 +15,7 @@ const dest = process.argv[2] || 'dist/';
 
 
 function createSymbol (id) {
-  return ReactDOMServer.renderToString(
+  return ReactDOMServer.renderToStaticMarkup(
     weatherSymbol({
       type: 'svg',
       id
