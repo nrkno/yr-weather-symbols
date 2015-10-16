@@ -5,7 +5,8 @@
   "scripts": {
     "prepublish": "buddy build && npm run convert",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "convert": "bin/convert"
+    "convert": "bin/convert",
+    "create-static": "bin/create-static"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+'use strict';
+
+const nunjucks = require('nunjucks')
+  , path = require('path')
+  , fs = require('fs')
+  , stylus = require('stylus');
+
+
+const dest = process.argv[2] || 'dist/'
+  , env = new nunjucks.Environment(new nunjucks.FileSystemLoader('bin/templates'),
+                                   { autoescape: false });
+
+
+var nunjucksCallback = function (err, html) {
+  if (err) {
+    console.log(err.message);
+    throw err.message;
+  } else {
+    fs.writeFileSync(path.join(dest, 'symbols.html'), html);
+  }
+};
+
+// Iterate dist folder, to get all icons
+let symbols = [];
+
+const pngs = fs.readdirSync('dist/png').filter(
+  function (file) { return file.substr(-4) === '.png';});
+
+
+pngs.forEach(function (png) {
+  const id = png.substr(0, png.length - 4);
+
+  symbols.push({
+    png: png,
+    svg: fs.readFileSync('dist/svg/' + id + '.svg')
+  });
+});
+
+
+const stylusFileName = 'src/css/index.styl';
+
+const stylusCss = fs.readFileSync(stylusFileName).toString();
+const symbolDefs = fs.readFileSync('src/html/symbolDefs.html').toString();
+
+
+stylus.render(stylusCss, { filename: stylusFileName }, function (err, symbolsCSS) {
+  if (err) throw err;
+
+  env.render('static.nunjs', { symbols, symbolDefs, symbolsCSS }, nunjucksCallback);
+});

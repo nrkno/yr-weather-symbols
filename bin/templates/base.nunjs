@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      {% block css %}
+      {% endblock %}
+    </style>
+  </head>
+  <body>
+    {% block body %}
+    {% endblock %}
+  </body>
+</html>
