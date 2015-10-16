@@ -53,6 +53,8 @@ exports.create = function (options) {
           html += primitives[opts.primitive](opts);
         }
 
+        html += '<image src="' + this.props.rootPath + '/symbols/' + id + '.png" xlink:href=""/>';
+
         return el.svg({
           key: id,
           x: 0,
