@@ -1,0 +1,75 @@
+'use strict';
+
+/**
+ * Weather symbol component.
+ * Used by both server and client.
+ */
+
+var celestialPrimitive = require('./lib/primitives/celestial'),
+    cloudPrimitive = require('./lib/primitives/cloud'),
+    fogPrimitive = require('./lib/primitives/fog'),
+    lightningPrimitive = require('./lib/primitives/lightning'),
+    precipitationPrimitive = require('./lib/primitives/precipitation'),
+    utils = require('./lib/utils'),
+    recipes = require('./lib/recipes'),
+    React = require('react'),
+    el = React.DOM,
+    primitives = {
+  cloud: cloudPrimitive,
+  fog: fogPrimitive,
+  lightning: lightningPrimitive,
+  moon: celestialPrimitive,
+  raindrop: precipitationPrimitive,
+  snowflake: precipitationPrimitive,
+  sun: celestialPrimitive
+};
+
+// Export
+exports.create = function (options) {
+  options = options || {};
+
+  var comp = React.createClass({
+    displayName: 'weatherSymbolComponent',
+
+    /**
+     * React: render
+     * @returns {React}
+     */
+    render: function () {
+      var type = this.props.type,
+          id = this.props.id,
+          recipe = recipes[id];
+
+      if (!recipe) return null;
+
+      if (type == 'svg') {
+        var html = '';
+
+        for (var i = 0, n = recipe.length; i < n; i++) {
+          var opts = utils.parse(recipe[i]);
+
+          // Until react supports <use>, concat strings
+          html += primitives[opts.primitive](opts);
+        }
+
+        html += '<image src="' + this.props.rootPath + '/symbols/' + id + '.png" xlink:href=""/>';
+
+        return el.svg({
+          key: id,
+          x: 0,
+          y: 0,
+          viewBox: '0 0 100 100',
+          dangerouslySetInnerHTML: { __html: html }
+        });
+
+        // Image
+      } else if (type == 'img') {
+          return el.img({ src: (this.props.imagePath || '') + id + '.png' });
+        }
+    }
+  }, { efficientUpdate: false });
+
+  return function createElement(props) {
+    return React.createElement(comp, props);
+  };
+};
