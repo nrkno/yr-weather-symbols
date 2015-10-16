@@ -2,13 +2,11 @@
 
 const webshot = require('webshot')
   , async = require('async')
-  , React = require('react')
   , path = require('path')
   , ReactDOMServer = require('react-dom/server')
-  , weatherSymbolComponent = require('./src/js/index')
-  , el = React.DOM
+  , weatherSymbolComponent = require('./index')
   , weatherSymbol = weatherSymbolComponent.create()
-  , recipes = require('./src/js/recipes')
+  , recipes = require('./lib/recipes')
   , fs = require('fs')
   , stylus = require('stylus');
 
@@ -40,6 +38,7 @@ function createMarkup (svg, cb) {
     const symbolDefs = fs.readFileSync('src/html/symbolDefs.html').toString();
 
     let html = '<!DOCTYPE html><html><head><style>';
+
     html += boilerplateCss;
     html += css;
     html += '</style></head><body>';

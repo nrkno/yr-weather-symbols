@@ -5,15 +5,15 @@
  * Used by both server and client.
  */
 
-const celestialPrimitive = require('./primitives/celestial')
-  , cloudPrimitive = require('./primitives/cloud')
-  , fogPrimitive = require('./primitives/fog')
-  , lightningPrimitive = require('./primitives/lightning')
-  , precipitationPrimitive = require('./primitives/precipitation')
-  , utils = require('./utils')
-  , React = require('react')
-  , recipes = require('./recipes')
+const celestialPrimitive = require('./lib/primitives/celestial')
+  , cloudPrimitive = require('./lib/primitives/cloud')
+  , fogPrimitive = require('./lib/primitives/fog')
+  , lightningPrimitive = require('./lib/primitives/lightning')
+  , precipitationPrimitive = require('./lib/primitives/precipitation')
+  , utils = require('./lib/utils')
+  , recipes = require('./lib/recipes')
 
+  , React = require('react')
   , el = React.DOM
   , primitives = {
       cloud: cloudPrimitive,
