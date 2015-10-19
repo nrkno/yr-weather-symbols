@@ -15,6 +15,11 @@ const webshot = require('webshot')
 const dest = process.argv[2] || 'dist/';
 
 
+/**
+ * Create an SVG symbol from an ID
+ * @param {Number} id
+ * @returns {String}
+ */
 function createSymbol (id) {
   return ReactDOMServer.renderToStaticMarkup(
     weatherSymbol({
@@ -25,29 +30,40 @@ function createSymbol (id) {
 }
 
 
-function createMarkup (svg, env, markupCallback) {
+/**
+ * Create markup and styling for wrapping an SVG so that it renders nicely.
+ * @param {String} svg SVG code as string
+ * @param {Object} env Nunjucks envrionment
+ * @param {Function} markupCallback Callback, takes an HTML string as argument.
+ */
+function createSVGWrapperMarkup (svg, env, markupCallback) {
   const stylusFileName = 'src/css/index.styl';
   const stylusCss = fs.readFileSync(stylusFileName).toString();
   const symbolDefs = fs.readFileSync('src/html/symbolDefs.html').toString();
 
-  stylus.render(stylusCss, { filename: stylusFileName }, function (err, symbolsCSS) {
+  const stylusCallback = function (err, symbolsCSS) {
     if (err) throw err;
 
-    var nunjucksCallback = function (err, html) {
-      if (err) {
-        console.log(err.message);
-        throw err.message;
-      } else {
-        markupCallback(html);
-      }
+    const nunjucksCallback = function (err, html) {
+      if (err) throw err;
+      markupCallback(html);
     };
 
     env.render('svgcontainer.nunjs', { svg, symbolsCSS, symbolDefs }, nunjucksCallback);
-  });
+  };
+
+  stylus.render(stylusCss, { filename: stylusFileName }, stylusCallback);
 }
 
 
-const options = {
+// Set up Nunjucks environment
+const env = new nunjucks.Environment(
+  new nunjucks.FileSystemLoader('bin/templates'),
+  { autoescape: false });
+
+
+// Options for Webshot
+const webshotOptions = {
   siteType: 'html',
   windowSize: {
     width: 51,
@@ -56,18 +72,15 @@ const options = {
 };
 
 
-const env = new nunjucks.Environment(new nunjucks.FileSystemLoader('bin/templates'),
-                                   { autoescape: false });
-
-
+// Loop through SVG recipes, dump PNG screenshots to disk
 async.forEachOfLimit(recipes, 10, function (recipe, id, asyncCallback) {
   const pngFileName = path.join(dest, 'png', id + '.png')
     , svgFileName = path.join(dest, 'svg', id + '.svg');
 
   const svg = createSymbol(id);
 
-  createMarkup(svg, env, function (html) {
-    webshot(html, pngFileName, options, function (err) {
+  createSVGWrapperMarkup(svg, env, function (html) {
+    webshot(html, pngFileName, webshotOptions, function (err) {
       if (err) {
         console.log(err.message);
         throw err.message;
