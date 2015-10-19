@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/Usr/bin/env node
 'use strict';
 
 const webshot = require('webshot')
