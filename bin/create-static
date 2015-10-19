@@ -32,8 +32,7 @@ pngs.forEach(function (png) {
   const id = png.substr(0, png.length - 4);
 
   symbols.push({
-    png: png,
-    svg: fs.readFileSync('dist/svg/' + id + '.svg')
+    id, png, svg: fs.readFileSync('dist/svg/' + id + '.svg')
   });
 });
 

@@ -5,6 +5,14 @@
     padding: 0;
     margin: 0;
   }
+  table {
+    margin: 1em 2em;
+    border-collapse: collapse;
+  }
+  td, th {
+    border: 1px solid #eee;
+    padding: 0.7em;
+  }
   .iconContainer {
     height: 51px;
     width: 51px;
@@ -16,11 +24,13 @@
   {{ symbolDefs }}
     <table>
     <tr>
+    <th>ID</th>
     <th>PNG</th>
     <th>SVG</th>
     </tr>
       {% for symbol in symbols %}
       <tr>
+        <td>{{ symbol.id }}</td>
         <td class="iconContainer">
           <img src="png/{{ symbol.png }}" alt="Weather symbol">
         </td>
