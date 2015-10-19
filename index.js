@@ -42,7 +42,8 @@ exports.create = function (options) {
     render: function () {
       var type = this.props.type,
           id = this.props.id,
-          recipe = recipes[id];
+          recipe = recipes[id],
+          staticImagesPath = this.props.staticImagesPath;
 
       if (!recipe) return null;
 
@@ -57,7 +58,7 @@ exports.create = function (options) {
         }
 
         if (options.fallback) {
-          html += '<image src="' + this.props.rootPath + '/symbols/' + id + '.png" xlink:href=""/>';
+          html += '<image src="' + staticImagesPath + '/symbols/' + id + '.png" xlink:href=""/>';
         }
 
         return el.svg({
