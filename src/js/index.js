@@ -28,23 +28,22 @@ const celestialPrimitive = require('./lib/primitives/celestial')
 // Export
 exports.create = function (options) {
   options = options || {};
-
-  if (typeof options.fallback === 'undefined') {
-    options.fallback = true;
-  }
+  if (!('fallback' in options)) options.fallback = true;
 
   const comp = React.createClass({
     displayName: 'weatherSymbolComponent',
 
     /**
      * React: render
+     * @param {Object} props
      * @returns {React}
      */
-    render () {
-      const type = this.props.type
-        , id = this.props.id
+    render (props) {
+      const type = props.type
+        , id = props.id
         , recipe = recipes[id]
-        , staticImagesPath = this.props.staticImagesPath;
+        , staticImagesPath = props.staticImagesPath
+        , fallback = 'fallback' in props ? props.fallback : options.fallback;
 
       if (!recipe) return null;
 
@@ -58,7 +57,7 @@ exports.create = function (options) {
           html += primitives[opts.primitive](opts);
         }
 
-        if (options.fallback) {
+        if (fallback) {
           html += '<image src="' + staticImagesPath + '/symbols/' + id + '.png" xlink:href=""/>';
         }
 
@@ -72,12 +71,12 @@ exports.create = function (options) {
 
       // Image
       } else if (type == 'img') {
-        return el.img({ src: (this.props.imagePath || '') + id + '.png' });
+        return el.img({ src: (props.imagePath || '') + id + '.png' });
       }
     }
   }, { efficientUpdate: false });
 
-  return function createElement (props) {
-    return React.createElement(comp, props);
+  return function renderStateless (props) {
+    return comp.render(props);
   };
 };
