@@ -1,47 +1,62 @@
 {
   "name": "@yr/weather-symbols",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Yr weather symbols",
+  "author": "alexander.pope@nrk.no",
+  "dependencies": {
+    "react": "0.14.2"
+  },
+  "devDependencies": {
+    "buddy": "3.1.0",
+    "react-dom": "0.14.2",
+    "simpler-browser-require": "1.0.0",
+    "transfigure-babel": "6.1.4",
+    "transfigure-nunjucks": "2.1.0",
+    "webshot": "^0.16.0"
+  },
+  "optionalDependencies": {
+    "buddy-server": "1.0.0"
+  },
+  "main": "src/index.js",
   "scripts": {
-    "prepublish": "buddy build && npm run convert",
     "build": "buddy build",
+    "watch": "buddy --reload --serve watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "convert": "bin/convert",
     "create-static": "bin/create-static"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/YR/weather-symbols.git"
-  },
-  "author": "",
+  "repository": "https://github.com/YR/weather-symbols.git",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/YR/weather-symbols/issues"
   },
   "homepage": "https://github.com/YR/weather-symbols#readme",
-  "devDependencies": {
-    "async": "^1.4.2",
-    "buddy": "3.0.2",
-    "nunjucks": "^2.1.0",
-    "react": "^0.14.0",
-    "react-dom": "^0.14.0",
-    "stylus": "^0.52.4",
-    "transfigure-babel": "5.8.23",
-    "webshot": "^0.16.0"
-  },
-  "browser": {},
+  "browser": "index.js",
   "buddy": {
     "build": {
-      "sources": [
-        "src/js"
-      ],
       "targets": [
         {
-          "input": "src/js",
-          "output": ".",
+          "input": "src/index.js",
+          "output": "index.js",
           "modular": false
+        },
+        {
+          "input": "src/preview.js",
+          "output": "preview.js",
+          "bootstrap": true
+        },
+        {
+          "input": "src/index.styl",
+          "output": "index.css"
+        },
+        {
+          "input": "src/index.nunjs",
+          "output": "index.html"
         }
       ]
+    },
+    "server": {
+      "port": 3000
     }
   }
 }

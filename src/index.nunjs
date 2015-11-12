@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Yr weather symbols</title>
+  <link rel="stylesheet" href="index.css">
+  <script inline src="../node_modules/simpler-browser-require/require.js"></script>
+  <style>
+    .symbol {
+      display: inline-block;
+      height: 6em;
+      width: 6em;
+    }
+  </style>
+</head>
+<body>
+  <img inline src="./symbolDefs.svg">
+  <div id="viewport"></div>
+  <script src="preview.js"></script>
+</body>
+</html>

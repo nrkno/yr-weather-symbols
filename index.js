@@ -1,10 +1,11 @@
-'use strict';
+'use strict'
 
 /**
  * Weather symbol component.
  * Used by both server and client.
  */
 
+;
 var celestialPrimitive = require('./lib/primitives/celestial'),
     cloudPrimitive = require('./lib/primitives/cloud'),
     fogPrimitive = require('./lib/primitives/fog'),
@@ -27,23 +28,22 @@ var celestialPrimitive = require('./lib/primitives/celestial'),
 // Export
 exports.create = function (options) {
   options = options || {};
+  if (!('fallback' in options)) options.fallback = true;
 
-  if (typeof options.fallback === 'undefined') {
-    options.fallback = true;
-  }
-
-  var comp = React.createClass({
+  var comp = {
     displayName: 'weatherSymbolComponent',
 
     /**
      * React: render
+     * @param {Object} props
      * @returns {React}
      */
-    render: function () {
-      var type = this.props.type,
-          id = this.props.id,
+    render: function render(props) {
+      var type = props.type,
+          id = props.id,
           recipe = recipes[id],
-          staticImagesPath = this.props.staticImagesPath;
+          staticImagesPath = props.staticImagesPath,
+          fallback = 'fallback' in props ? props.fallback : options.fallback;
 
       if (!recipe) return null;
 
@@ -57,7 +57,7 @@ exports.create = function (options) {
           html += primitives[opts.primitive](opts);
         }
 
-        if (options.fallback) {
+        if (fallback) {
           html += '<image src="' + staticImagesPath + '/symbols/' + id + '.png" xlink:href=""/>';
         }
 
@@ -71,12 +71,12 @@ exports.create = function (options) {
 
         // Image
       } else if (type == 'img') {
-          return el.img({ src: (this.props.imagePath || '') + id + '.png' });
+          return el.img({ src: (props.imagePath || '') + id + '.png' });
         }
     }
-  }, { efficientUpdate: false });
+  };
 
-  return function createElement(props) {
-    return React.createElement(comp, props);
+  return function renderStateless(props) {
+    return comp.render(props);
   };
 };
