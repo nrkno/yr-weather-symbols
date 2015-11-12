@@ -127,14 +127,13 @@ require.register('src/lib/primitives/celestial.js', function(require, module, ex
     };
 });
 require.register('src/index.js', function(require, module, exports) {
-    'use strict'
+    'use strict';
     
     /**
      * Weather symbol component.
      * Used by both server and client.
      */
     
-    ;
     var celestialPrimitive = require('src/lib/primitives/celestial.js'),
         cloudPrimitive = require('src/lib/primitives/cloud.js'),
         fogPrimitive = require('src/lib/primitives/fog.js'),
@@ -200,7 +199,7 @@ require.register('src/index.js', function(require, module, exports) {
     
             // Image
           } else if (type == 'img') {
-              return el.img({ src: (props.imagePath || '') + id + '.png' });
+              return el.img({ src: '' + (props.imagePath || '') + id + '.png' });
             }
         }
       };
@@ -19745,7 +19744,7 @@ require.register('src/preview.js', function(require, module, exports) {
           }
     
           return React.DOM.div({ children: ids.map(function (id) {
-              return React.DOM.div({ className: 'symbol', id: id }, symbol({ id: id, type: 'svg' }));
+              return React.DOM.div({ className: 'symbol', id: 'symbol-' + id }, symbol({ id: id, type: 'svg' }));
             }) });
         }
       });

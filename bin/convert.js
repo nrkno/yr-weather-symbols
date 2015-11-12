@@ -37,6 +37,8 @@ const express = require('express')
   , rootPath = process.cwd()
   , outputPath = path.resolve(rootPath, process.argv[2]);
 
+require('events').defaultMaxListeners = 0;
+
 if (!fs.existsSync(outputPath)) throw new Error(`output path doesn't exist: ${outputPath}`);
 
 app.use(serve(rootPath));
@@ -44,18 +46,19 @@ app.use(serve(rootPath));
 app.listen(3000, () => {
   console.log('listening on 3000');
 
-  vo(function* run () {
-    const nightmare = Nightmare({ show: true });
+  const nightmare = Nightmare({ show: true })
+    , page = nightmare.goto('http://localhost:3000/');
 
-    const rects = yield nightmare
-      .goto('http://localhost:3000/')
-      .wait('.symbol')
+  function* calcRects () {
+    return yield page
+      .wait(1000)
       .evaluate(function () {
         var rects = Array.prototype.slice.call(document.querySelectorAll('.symbol'))
           .map(function (el) {
             var rect = el.getBoundingClientRect();
 
             return {
+              id: el.getAttribute('id'),
               x: rect.left,
               y: rect.top,
               width: rect.width,
@@ -65,11 +68,20 @@ app.listen(3000, () => {
 
         return rects;
       });
+  }
 
-    yield nightmare
-      .goto('http://localhost:3000/')
-      .wait(2000)
-      .screenshot(path.resolve(outputPath, 'temp.png'), rects[0]);
+  function* screenshot (rect) {
+    const imgPath = path.resolve(outputPath, rect.id + '.png');
+
+    console.log('saved: ' + path.basename(imgPath));
+
+    return yield page.screenshot(imgPath, rect);
+  }
+
+  vo(function* run () {
+    yield page.wait(1000);
+    const rects = yield calcRects();
+    // yield rects.slice(0, 10).map(screenshot);
 
     yield nightmare.end();
   })((err) => {

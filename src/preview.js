@@ -19,7 +19,7 @@ function createGrid () {
       }
 
       return React.DOM.div({ children: ids.map((id) => {
-        return React.DOM.div({ className: 'symbol', `symbol-${id}` },
+        return React.DOM.div({ className: 'symbol', id: `symbol-${id}` },
           symbol({ id, type: 'svg' })
         );
       }) });

@@ -1,18 +1,17 @@
-'use strict'
+'use strict';
 
 /**
  * Weather symbol component.
  * Used by both server and client.
  */
 
-;
-var celestialPrimitive = require('./lib/primitives/celestial'),
-    cloudPrimitive = require('./lib/primitives/cloud'),
-    fogPrimitive = require('./lib/primitives/fog'),
-    lightningPrimitive = require('./lib/primitives/lightning'),
-    precipitationPrimitive = require('./lib/primitives/precipitation'),
-    utils = require('./lib/utils'),
-    recipes = require('./lib/recipes'),
+var celestialPrimitive = require('./lib/primitives/celestial.js'),
+    cloudPrimitive = require('./lib/primitives/cloud.js'),
+    fogPrimitive = require('./lib/primitives/fog.js'),
+    lightningPrimitive = require('./lib/primitives/lightning.js'),
+    precipitationPrimitive = require('./lib/primitives/precipitation.js'),
+    utils = require('./lib/utils.js'),
+    recipes = require('./lib/recipes.js'),
     React = require('react'),
     el = React.DOM,
     primitives = {
@@ -71,7 +70,7 @@ exports.create = function (options) {
 
         // Image
       } else if (type == 'img') {
-          return el.img({ src: (props.imagePath || '') + id + '.png' });
+          return el.img({ src: '' + (props.imagePath || '') + id + '.png' });
         }
     }
   };
