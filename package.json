@@ -8,21 +8,24 @@
   },
   "devDependencies": {
     "buddy": "3.1.0",
+    "express": "4.13.3",
+    "nightmare": "2.0.7",
     "react-dom": "0.14.2",
+    "serve-static": "1.10.0",
     "simpler-browser-require": "1.0.0",
     "transfigure-babel": "6.1.4",
     "transfigure-nunjucks": "2.1.0",
-    "webshot": "^0.16.0"
+    "vo": "^1.0.3"
   },
   "optionalDependencies": {
     "buddy-server": "1.0.0"
   },
   "main": "src/index.js",
   "scripts": {
+    "convert": "node bin/convert.js dist/temp",
     "build": "buddy build",
     "watch": "buddy --reload --serve watch",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "convert": "bin/convert",
     "create-static": "bin/create-static"
   },
   "repository": "https://github.com/YR/weather-symbols.git",
