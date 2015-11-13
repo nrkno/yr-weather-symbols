@@ -1,0 +1,85 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const fs = require('fs')
+  , path = require('path')
+  , primitives = require('../src/lib/primitives')
+  , recipes = require('../src/lib/recipes')
+  , svgToPng = require('svg-to-png')
+  , utils = require('../src/lib/utils')
+
+  , RE_SYMBOL = /(<symbol id="([a-zA-Z]+)">[\S\s]*?<\/symbol>)/gm
+  , RE_STYLE = /(\.([a-zA-Z0-9\-]+)\s{\s*[\S\s]*?})/gm
+
+  , svg = fs.readFileSync(path.resolve('src/symbolDefs.svg'), 'utf8')
+  , css = fs.readFileSync(path.resolve('src/index.styl'), 'utf8')
+  , rootPath = process.cwd()
+  , pngRootPath = path.resolve(rootPath, process.argv[2], 'png')
+  , svgRootPath = path.resolve(rootPath, process.argv[2], 'svg');
+
+let symbols = {}
+  , styles = {}
+  , match;
+
+// Parse and store svg symbols
+while (match = RE_SYMBOL.exec(svg)) {
+  symbols[match[2]] = match[1];
+}
+
+// Parse and store styles
+while (match = RE_STYLE.exec(css)) {
+  styles[match[2]] = match[1];
+}
+
+console.log('saving svg files to: %s', path.relative(process.cwd(), svgRootPath));
+
+for (const id in recipes) {
+  const recipe = recipes[id]
+    , svgPath = path.resolve(svgRootPath, id + '.svg');
+
+  let html = '<svg x="0" y="0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style type="text/css"><![CDATA['
+    , use = ''
+    , styleRefs = []
+    , symbolRefs = [];
+
+  recipe.forEach((recipe) => {
+    const opts = utils.parse(recipe);
+
+    let symbol = opts.primitive;
+
+    if (opts.winter) symbol += 'Winter';
+
+    if (!~styleRefs.indexOf(opts.class)) styleRefs.push(opts.class);
+    if (!~symbolRefs.indexOf(symbol)) symbolRefs.push(symbol);
+
+    use += primitives[opts.primitive](opts);
+  });
+
+  // Add styles
+  styleRefs.forEach((style) => {
+    html += styles[style];
+  });
+  html += ']]></style>';
+
+  // Add symbols
+  symbolRefs.forEach((symbol) => {
+    html += symbols[symbol];
+  });
+  html += use + '</svg>';
+
+  fs.writeFileSync(svgPath, html);
+}
+
+console.log('saving png files to: %s', path.relative(process.cwd(), pngRootPath));
+
+const svgFiles = fs.readdirSync(svgRootPath)
+  .filter((filename) => { return path.extname(filename) == '.svg'; })
+  .map((filename) => { return path.resolve(svgRootPath, filename); });
+
+svgToPng.convert(svgFiles, pngRootPath, {
+  defaultWidth: '100px',
+  defaultHeight: '100px'
+}).then(() => {
+  process.exit();
+});

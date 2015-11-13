@@ -1,86 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 17.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="symbol" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#FABA2F;}
-	.st1{fill:#E88D15;}
-	.st2{clip-path:url(#SVGID_2_);fill:#E88D15;}
-	.st3{clip-path:url(#SVGID_2_);fill:#FABA2F;}
-	.st4{fill:#4D4D4D;}
-	.st5{fill:#E6E6E6;}
-	.st6{clip-path:url(#SVGID_4_);fill:#E88D15;}
-	.st7{clip-path:url(#SVGID_4_);fill:#FABA2F;}
-	.st8{clip-path:url(#SVGID_6_);fill:#FABA2F;}
-	.st9{clip-path:url(#SVGID_6_);fill:#E88D15;}
-	.st10{display:none;}
-	.st11{display:inline;fill:#E6E6E6;stroke:#FFFFFF;stroke-width:4;stroke-miterlimit:10;}
-	.st12{fill:#AFC1C9;}
-	.st13{fill:#D9D9D9;}
-	.st14{fill:#B3B3B3;}
-	.st15{fill:#1671CC;}
-	.st16{clip-path:url(#SVGID_8_);fill:#E88D15;}
-	.st17{clip-path:url(#SVGID_8_);fill:#FABA2F;}
-	.st18{fill:#999999;}
-	.st19{clip-path:url(#SVGID_10_);fill:#E88D15;}
-	.st20{clip-path:url(#SVGID_10_);fill:#FABA2F;}
-	.st21{fill:#808080;}
-	.st22{clip-path:url(#SVGID_12_);fill:#E88D15;}
-	.st23{clip-path:url(#SVGID_12_);fill:#FABA2F;}
-	.st24{fill:#1EB9D8;}
-	.st25{clip-path:url(#SVGID_14_);fill:#E88D15;}
-	.st26{clip-path:url(#SVGID_14_);fill:#FABA2F;}
-	.st27{clip-path:url(#SVGID_16_);fill:#E88D15;}
-	.st28{clip-path:url(#SVGID_16_);fill:#FABA2F;}
-	.st29{clip-path:url(#SVGID_18_);fill:#E88D15;}
-	.st30{clip-path:url(#SVGID_18_);fill:#FABA2F;}
-	.st31{fill:#54BFE3;}
-	.st32{clip-path:url(#SVGID_20_);fill:#E88D15;}
-	.st33{clip-path:url(#SVGID_20_);fill:#FABA2F;}
-	.st34{clip-path:url(#SVGID_22_);fill:#E88D15;}
-	.st35{clip-path:url(#SVGID_22_);fill:#FABA2F;}
-	.st36{clip-path:url(#SVGID_24_);fill:#E88D15;}
-	.st37{clip-path:url(#SVGID_24_);fill:#FABA2F;}
-	.st38{fill:#C9AF16;}
-	.st39{clip-path:url(#SVGID_26_);fill:#E88D15;}
-	.st40{clip-path:url(#SVGID_26_);fill:#FABA2F;}
-	.st41{clip-path:url(#SVGID_28_);fill:#E88D15;}
-	.st42{clip-path:url(#SVGID_28_);fill:#FABA2F;}
-	.st43{clip-path:url(#SVGID_30_);fill:#E88D15;}
-	.st44{clip-path:url(#SVGID_30_);fill:#FABA2F;}
-	.st45{clip-path:url(#SVGID_32_);fill:#E88D15;}
-	.st46{clip-path:url(#SVGID_32_);fill:#FABA2F;}
-	.st47{clip-path:url(#SVGID_34_);fill:#E88D15;}
-	.st48{clip-path:url(#SVGID_34_);fill:#FABA2F;}
-	.st49{clip-path:url(#SVGID_36_);fill:#E88D15;}
-	.st50{clip-path:url(#SVGID_36_);fill:#FABA2F;}
-	.st51{clip-path:url(#SVGID_38_);fill:#E88D15;}
-	.st52{clip-path:url(#SVGID_38_);fill:#FABA2F;}
-	.st53{clip-path:url(#SVGID_40_);fill:#E88D15;}
-	.st54{clip-path:url(#SVGID_40_);fill:#FABA2F;}
-	.st55{clip-path:url(#SVGID_42_);fill:#E88D15;}
-	.st56{clip-path:url(#SVGID_42_);fill:#FABA2F;}
-</style>
-<symbol  id="sun_21_" viewBox="0 -88.1 88.1 88.1">
-	<path class="st0" d="M64.6-44.1c0-11.3-9.2-20.5-20.5-20.5c-11.3,0-20.5,9.2-20.5,20.5c0,11.3,9.2,20.5,20.5,20.5
-		C55.4-23.6,64.6-32.7,64.6-44.1z"/>
-	<path class="st1" d="M22.6-32.3c2.2,4.1,5.6,7.5,9.7,9.7l-17,10c-1.8,1-3.8-1-2.7-2.7L22.6-32.3z"/>
-	<path class="st1" d="M44.1-19.6c2.4,0,4.7-0.3,6.9-1L46-1.5c-0.5,2-3.3,2-3.9,0l-5-19.1C39.4-19.9,41.7-19.6,44.1-19.6z"/>
-	<path class="st1" d="M86.6-42.1l-19.1,5c0.6-2.2,1-4.5,1-6.9c0-2.4-0.3-4.7-1-6.9l19.1,5C88.6-45.5,88.6-42.7,86.6-42.1z"/>
-	<path class="st1" d="M19.6-44.1c0,2.4,0.3,4.7,1,6.9l-19.1-5c-2-0.5-2-3.3,0-3.9l19.1-5C19.9-48.8,19.6-46.5,19.6-44.1z"/>
-	<path class="st1" d="M65.6-32.3l10,17c1,1.8-1,3.8-2.7,2.7l-17-10C59.9-24.8,63.3-28.2,65.6-32.3z"/>
-	<path class="st1" d="M22.6-55.8l-10-17c-1-1.8,1-3.8,2.7-2.7l17,10C28.2-63.3,24.8-59.9,22.6-55.8z"/>
-	<path class="st1" d="M65.6-55.8c-2.2-4.1-5.6-7.5-9.7-9.7l17-10c1.8-1,3.8,1,2.7,2.7L65.6-55.8z"/>
-	<path class="st1" d="M44.1-68.6c-2.4,0-4.7,0.3-6.9,1l5-19.1c0.5-2,3.3-2,3.9,0l5,19.1C48.8-68.2,46.5-68.6,44.1-68.6z"/>
-</symbol>
-<g id="sun-winter">
-</g>
-<use xlink:href="#sun_21_"  width="88.1" height="88.1" id="XMLID_15_" x="0" y="-88.1" transform="matrix(1 0 0 -1 6 6)" style="overflow:visible;"/>
-<g id="lightning_16_">
-</g>
-<g id="sleet_29_">
-</g>
-<g id="sleet_28_">
-</g>
-</svg>
+<svg x="0" y="0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style type="text/css"><![CDATA[.sun-primitive {
+  color: #ffee8a;
+  fill: #fbbe40;
+  stroke: #f5b93f;
+}]]></style><symbol id="sun">
+		<circle fill="currentColor" opacity="0.5" stroke-width="0" stroke-opacity="0" cx="45" cy="45" r="45"/>
+		<circle fill="currentColor" opacity="0.95" stroke-width="0" stroke-opacity="0" cx="45" cy="45" r="37.8"/>
+		<circle stroke-width="2" stroke-miterlimit="10" cx="45" cy="45" r="31.5"/>
+	</symbol><use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(5,0) scale(1, 1)"></use></svg>
