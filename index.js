@@ -5,24 +5,11 @@
  * Used by both server and client.
  */
 
-var celestialPrimitive = require('./lib/primitives/celestial.js'),
-    cloudPrimitive = require('./lib/primitives/cloud.js'),
-    fogPrimitive = require('./lib/primitives/fog.js'),
-    lightningPrimitive = require('./lib/primitives/lightning.js'),
-    precipitationPrimitive = require('./lib/primitives/precipitation.js'),
-    utils = require('./lib/utils.js'),
-    recipes = require('./lib/recipes.js'),
+var primitives = require('./lib/primitives'),
     React = require('react'),
-    el = React.DOM,
-    primitives = {
-  cloud: cloudPrimitive,
-  fog: fogPrimitive,
-  lightning: lightningPrimitive,
-  moon: celestialPrimitive,
-  raindrop: precipitationPrimitive,
-  snowflake: precipitationPrimitive,
-  sun: celestialPrimitive
-};
+    recipes = require('./lib/recipes'),
+    utils = require('./lib/utils'),
+    el = React.DOM;
 
 // Export
 exports.create = function (options) {
@@ -41,10 +28,13 @@ exports.create = function (options) {
       var type = props.type,
           id = props.id,
           recipe = recipes[id],
-          staticImagesPath = props.staticImagesPath,
           fallback = 'fallback' in props ? props.fallback : options.fallback;
 
+      var rootImagePath = props.rootImagePath || options.rootImagePath || '';
+
       if (!recipe) return null;
+
+      if (rootImagePath && rootImagePath.charAt(rootImagePath.length - 1) != '/') rootImagePath += '/';
 
       if (type == 'svg') {
         var html = '';
@@ -57,7 +47,7 @@ exports.create = function (options) {
         }
 
         if (fallback) {
-          html += '<image src="' + staticImagesPath + '/symbols/' + id + '.png" xlink:href=""/>';
+          html += '<image src="' + rootImagePath + id + '.png" xlink:href=""/>';
         }
 
         return el.svg({
@@ -70,7 +60,7 @@ exports.create = function (options) {
 
         // Image
       } else if (type == 'img') {
-          return el.img({ src: '' + (props.imagePath || '') + id + '.png' });
+          return el.img({ src: '' + rootImagePath + id + '.png' });
         }
     }
   };

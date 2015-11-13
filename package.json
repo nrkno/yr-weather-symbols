@@ -8,25 +8,22 @@
   },
   "devDependencies": {
     "buddy": "3.1.0",
-    "express": "4.13.3",
-    "nightmare": "2.0.7",
     "react-dom": "0.14.2",
-    "serve-static": "1.10.0",
     "simpler-browser-require": "1.0.0",
+    "svg-to-png": "^2.0.1",
     "transfigure-babel": "6.1.4",
-    "transfigure-nunjucks": "2.1.0",
-    "vo": "^1.0.3"
+    "transfigure-nunjucks": "2.1.0"
   },
   "optionalDependencies": {
     "buddy-server": "1.0.0"
   },
   "main": "src/index.js",
   "scripts": {
-    "convert": "node bin/convert.js dist/temp",
     "build": "buddy build",
-    "watch": "buddy --reload --serve watch",
+    "convert": "node bin/convert dist",
+    "prepublish": "buddy build && node bin/convert dist",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "create-static": "bin/create-static"
+    "watch": "buddy --reload --serve watch"
   },
   "repository": "https://github.com/YR/weather-symbols.git",
   "license": "MIT",
@@ -39,22 +36,14 @@
     "build": {
       "targets": [
         {
-          "input": "src/index.js",
-          "output": "index.js",
+          "input": "src",
+          "output": ".",
           "modular": false
         },
         {
           "input": "src/preview.js",
           "output": "preview.js",
           "bootstrap": true
-        },
-        {
-          "input": "src/index.styl",
-          "output": "index.css"
-        },
-        {
-          "input": "src/index.nunjs",
-          "output": "index.html"
         }
       ]
     },

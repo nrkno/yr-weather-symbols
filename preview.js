@@ -61,55 +61,60 @@ require.register('src/lib/utils.js', function(require, module, exports) {
     
     var MAX_WIDTH = 100;
     
-    /**
-     * Parse 'options'
-     * @param {Object} options
-     * @returns {Object}
-     */
-    exports.parse = function (options) {
-      var opts = {};
+    module.exports = {
+      /**
+       * Parse 'options'
+       * @param {Object} options
+       * @returns {Object}
+       */
     
-      opts.visible = true;
-      // opts.scale = (type == 'canvas') ? capabilities.backingRatio : 1;
-      opts.scaleX = 1;
-      opts.scaleY = 1;
-      opts.primitive = options.primitive;
-      opts.x = Math.round(options.x * opts.scaleX);
-      opts.y = Math.round(options.y * opts.scaleY);
-      opts.scaleX = (options.scaleX || 1) * opts.scaleX;
-      opts.scaleY = (options.scaleY || 1) * opts.scaleY;
-      opts.flip = options.flip;
-      opts.tint = options.tint || 1;
-      opts.winter = options.winter;
-      opts.variation = options.variation != null ? '' + options.variation : '';
+      parse: function parse(options) {
+        var opts = {};
     
-      return opts;
-    };
+        opts.visible = true;
+        // opts.scale = (type == 'canvas') ? capabilities.backingRatio : 1;
+        opts.scaleX = 1;
+        opts.scaleY = 1;
+        opts.primitive = options.primitive;
+        opts.x = Math.round(options.x * opts.scaleX);
+        opts.y = Math.round(options.y * opts.scaleY);
+        opts.scaleX = (options.scaleX || 1) * opts.scaleX;
+        opts.scaleY = (options.scaleY || 1) * opts.scaleY;
+        opts.flip = options.flip;
+        opts.tint = options.tint || 1;
+        opts.winter = options.winter;
+        opts.variation = options.variation != null ? '' + options.variation : '';
+        opts.class = opts.primitive + opts.variation + '-primitive';
     
-    /**
-     * Retrieve stringified attribute object for <use>
-     * @param {String} link
-     * @param {Object} options
-     * @returns {String}
-     */
-    exports.getUseElementString = function (link, options) {
-      var props = {
-        class: options.primitive + options.variation + '-primitive',
-        'xlink:href': link,
-        x: '0',
-        y: '0',
-        width: '100',
-        height: '100',
-        transform: options.flip ? 'translate(' + (MAX_WIDTH * options.scaleX + options.x) + ',' + options.scaleY * options.y + ') scale(' + -1 * options.scaleX + ', ' + options.scaleY + ')' : 'translate(' + options.x + ',' + options.y + ') scale(' + options.scaleX + ', ' + options.scaleY + ')'
+        return opts;
       },
-          str = '<use';
     
-      for (var prop in props) {
-        str += ' ' + prop + '="' + props[prop] + '"';
+      /**
+       * Retrieve stringified attribute object for <use>
+       * @param {String} link
+       * @param {Object} options
+       * @returns {String}
+       */
+      getUseElementString: function getUseElementString(link, options) {
+        var props = {
+          class: options.class,
+          'xlink:href': link,
+          x: '0',
+          y: '0',
+          width: '100',
+          height: '100',
+          transform: options.flip ? 'translate(' + (MAX_WIDTH * options.scaleX + options.x) + ',' + options.scaleY * options.y + ') scale(' + -1 * options.scaleX + ', ' + options.scaleY + ')' : 'translate(' + options.x + ',' + options.y + ') scale(' + options.scaleX + ', ' + options.scaleY + ')'
+        };
+    
+        var str = '<use';
+    
+        for (var prop in props) {
+          str += ' ' + prop + '="' + props[prop] + '"';
+        }
+        str += '></use>';
+    
+        return str;
       }
-      str += '></use>';
-    
-      return str;
     };
 });
 require.register('src/lib/primitives/celestial.js', function(require, module, exports) {
@@ -126,6 +131,25 @@ require.register('src/lib/primitives/celestial.js', function(require, module, ex
       return utils.getUseElementString(options.primitive == 'moon' ? '#moon' : options.winter ? '#sunWinter' : '#sun', options);
     };
 });
+require.register('src/lib/primitives/index.js', function(require, module, exports) {
+    'use strict';
+    
+    var celestial = require('src/lib/primitives/celestial.js'),
+        cloud = require('src/lib/primitives/cloud.js'),
+        fog = require('src/lib/primitives/fog.js'),
+        lightning = require('src/lib/primitives/lightning.js'),
+        precipitation = require('src/lib/primitives/precipitation.js');
+    
+    module.exports = {
+      cloud: cloud,
+      fog: fog,
+      lightning: lightning,
+      moon: celestial,
+      raindrop: precipitation,
+      snowflake: precipitation,
+      sun: celestial
+    };
+});
 require.register('src/index.js', function(require, module, exports) {
     'use strict';
     
@@ -134,24 +158,11 @@ require.register('src/index.js', function(require, module, exports) {
      * Used by both server and client.
      */
     
-    var celestialPrimitive = require('src/lib/primitives/celestial.js'),
-        cloudPrimitive = require('src/lib/primitives/cloud.js'),
-        fogPrimitive = require('src/lib/primitives/fog.js'),
-        lightningPrimitive = require('src/lib/primitives/lightning.js'),
-        precipitationPrimitive = require('src/lib/primitives/precipitation.js'),
-        utils = require('src/lib/utils.js'),
-        recipes = require('src/lib/recipes.js'),
+    var primitives = require('src/lib/primitives/index.js'),
         React = require('react/react.js#0.14.2'),
-        el = React.DOM,
-        primitives = {
-      cloud: cloudPrimitive,
-      fog: fogPrimitive,
-      lightning: lightningPrimitive,
-      moon: celestialPrimitive,
-      raindrop: precipitationPrimitive,
-      snowflake: precipitationPrimitive,
-      sun: celestialPrimitive
-    };
+        recipes = require('src/lib/recipes.js'),
+        utils = require('src/lib/utils.js'),
+        el = React.DOM;
     
     // Export
     exports.create = function (options) {
@@ -170,10 +181,13 @@ require.register('src/index.js', function(require, module, exports) {
           var type = props.type,
               id = props.id,
               recipe = recipes[id],
-              staticImagesPath = props.staticImagesPath,
               fallback = 'fallback' in props ? props.fallback : options.fallback;
     
+          var rootImagePath = props.rootImagePath || options.rootImagePath || '';
+    
           if (!recipe) return null;
+    
+          if (rootImagePath && rootImagePath.charAt(rootImagePath.length - 1) != '/') rootImagePath += '/';
     
           if (type == 'svg') {
             var html = '';
@@ -186,7 +200,7 @@ require.register('src/index.js', function(require, module, exports) {
             }
     
             if (fallback) {
-              html += '<image src="' + staticImagesPath + '/symbols/' + id + '.png" xlink:href=""/>';
+              html += '<image src="' + rootImagePath + id + '.png" xlink:href=""/>';
             }
     
             return el.svg({
@@ -199,7 +213,7 @@ require.register('src/index.js', function(require, module, exports) {
     
             // Image
           } else if (type == 'img') {
-              return el.img({ src: '' + (props.imagePath || '') + id + '.png' });
+              return el.img({ src: '' + rootImagePath + id + '.png' });
             }
         }
       };
@@ -19731,7 +19745,7 @@ require.register('src/preview.js', function(require, module, exports) {
         recipes = require('src/lib/recipes.js'),
         symbolComponent = require('src/index.js'),
         el = document.getElementById('viewport'),
-        symbol = symbolComponent.create({ fallback: false });
+        symbol = symbolComponent.create({ rootImagePath: 'dist/png' });
     
     function createGrid() {
       var comp = React.createClass({
@@ -19744,7 +19758,7 @@ require.register('src/preview.js', function(require, module, exports) {
           }
     
           return React.DOM.div({ children: ids.map(function (id) {
-              return React.DOM.div({ className: 'symbol', id: 'symbol-' + id }, symbol({ id: id, type: 'svg' }));
+              return React.DOM.div({ className: 'symbol', id: 'symbol-' + id }, React.DOM.h2({}, id), React.DOM.span({ className: 'symbol-group' }, symbol({ id: id, type: 'svg', fallback: true }), React.DOM.h3({}, 'svg')), React.DOM.span({ className: 'symbol-group' }, symbol({ id: id, type: 'img' }), React.DOM.h3({}, 'png')));
             }) });
         }
       });

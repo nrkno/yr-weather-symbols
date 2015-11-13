@@ -6,7 +6,7 @@ const React = require('react')
   , symbolComponent = require('./index')
 
   , el = document.getElementById('viewport')
-  , symbol = symbolComponent.create({ fallback: false });
+  , symbol = symbolComponent.create({ rootImagePath: 'dist/png' });
 
 function createGrid () {
   const comp = React.createClass({
@@ -20,7 +20,15 @@ function createGrid () {
 
       return React.DOM.div({ children: ids.map((id) => {
         return React.DOM.div({ className: 'symbol', id: `symbol-${id}` },
-          symbol({ id, type: 'svg' })
+          React.DOM.h2({}, id),
+          React.DOM.span({ className: 'symbol-group' },
+            symbol({ id, type: 'svg', fallback: true }),
+            React.DOM.h3({}, 'svg')
+          ),
+          React.DOM.span({ className: 'symbol-group' },
+            symbol({ id, type: 'img' }),
+            React.DOM.h3({}, 'png')
+          )
         );
       }) });
     }

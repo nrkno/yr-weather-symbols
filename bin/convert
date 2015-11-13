@@ -1,96 +1,85 @@
-#!/Usr/bin/env node
+#!/usr/bin/env node
+
 'use strict';
 
-const webshot = require('webshot')
-  , async = require('async')
+const fs = require('fs')
   , path = require('path')
-  , ReactDOMServer = require('react-dom/server')
-  , weatherSymbolComponent = require('../index')
-  , weatherSymbol = weatherSymbolComponent.create({ fallback: false })
-  , recipes = require('../lib/recipes')
-  , fs = require('fs')
-  , stylus = require('stylus')
-  , nunjucks = require('nunjucks');
+  , primitives = require('../src/lib/primitives')
+  , recipes = require('../src/lib/recipes')
+  , svgToPng = require('svg-to-png')
+  , utils = require('../src/lib/utils')
 
-const dest = process.argv[2] || 'dist/';
+  , RE_SYMBOL = /(<symbol id="([a-zA-Z]+)">[\S\s]*?<\/symbol>)/gm
+  , RE_STYLE = /(\.([a-zA-Z0-9\-]+)\s{\s*[\S\s]*?})/gm
 
+  , svg = fs.readFileSync(path.resolve('src/symbolDefs.svg'), 'utf8')
+  , css = fs.readFileSync(path.resolve('src/index.styl'), 'utf8')
+  , rootPath = process.cwd()
+  , pngRootPath = path.resolve(rootPath, process.argv[2], 'png')
+  , svgRootPath = path.resolve(rootPath, process.argv[2], 'svg');
 
-/**
- * Create an SVG symbol from an ID
- * @param {Number} id
- * @returns {String}
- */
-function createSymbol (id) {
-  return ReactDOMServer.renderToStaticMarkup(
-    weatherSymbol({
-      type: 'svg',
-      id
-    }
-  ));
+let symbols = {}
+  , styles = {}
+  , match;
+
+// Parse and store svg symbols
+while (match = RE_SYMBOL.exec(svg)) {
+  symbols[match[2]] = match[1];
 }
 
-
-/**
- * Create markup and styling for wrapping an SVG so that it renders nicely.
- * @param {String} svg SVG code as string
- * @param {Object} env Nunjucks envrionment
- * @param {Function} markupCallback Callback, takes an HTML string as argument.
- */
-function createSVGWrapperMarkup (svg, env, markupCallback) {
-  const stylusFileName = 'src/css/index.styl';
-  const stylusCss = fs.readFileSync(stylusFileName).toString();
-  const symbolDefs = fs.readFileSync('src/html/symbolDefs.html').toString();
-
-  const stylusCallback = function (err, symbolsCSS) {
-    if (err) throw err;
-
-    const nunjucksCallback = function (err, html) {
-      if (err) throw err;
-      markupCallback(html);
-    };
-
-    env.render('svgcontainer.nunjs', { svg, symbolsCSS, symbolDefs }, nunjucksCallback);
-  };
-
-  stylus.render(stylusCss, { filename: stylusFileName }, stylusCallback);
+// Parse and store styles
+while (match = RE_STYLE.exec(css)) {
+  styles[match[2]] = match[1];
 }
 
+console.log('saving svg files to: %s', path.relative(process.cwd(), svgRootPath));
 
-// Set up Nunjucks environment
-const env = new nunjucks.Environment(
-  new nunjucks.FileSystemLoader('bin/templates'),
-  { autoescape: false });
+for (const id in recipes) {
+  const recipe = recipes[id]
+    , svgPath = path.resolve(svgRootPath, id + '.svg');
 
+  let html = '<svg x="0" y="0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style type="text/css"><![CDATA['
+    , use = ''
+    , styleRefs = []
+    , symbolRefs = [];
 
-// Options for Webshot
-const webshotOptions = {
-  siteType: 'html',
-  windowSize: {
-    width: 51,
-    height: 51
-  }
-};
+  recipe.forEach((recipe) => {
+    const opts = utils.parse(recipe);
 
+    let symbol = opts.primitive;
 
-// Loop through SVG recipes, dump PNG screenshots to disk
-async.forEachOfLimit(recipes, 10, function (recipe, id, asyncCallback) {
-  const pngFileName = path.join(dest, 'png', id + '.png')
-    , svgFileName = path.join(dest, 'svg', id + '.svg');
+    if (opts.winter) symbol += 'Winter';
 
-  const svg = createSymbol(id);
+    if (!~styleRefs.indexOf(opts.class)) styleRefs.push(opts.class);
+    if (!~symbolRefs.indexOf(symbol)) symbolRefs.push(symbol);
 
-  createSVGWrapperMarkup(svg, env, function (html) {
-    webshot(html, pngFileName, webshotOptions, function (err) {
-      if (err) {
-        console.log(err.message);
-        throw err.message;
-      } else {
-        console.log('Created ' + pngFileName);
-
-        fs.writeFileSync(svgFileName, svg);
-        console.log('Created ' + svgFileName);
-        asyncCallback();
-      }
-    });
+    use += primitives[opts.primitive](opts);
   });
+
+  // Add styles
+  styleRefs.forEach((style) => {
+    html += styles[style];
+  });
+  html += ']]></style>';
+
+  // Add symbols
+  symbolRefs.forEach((symbol) => {
+    html += symbols[symbol];
+  });
+  html += use + '</svg>';
+
+  fs.writeFileSync(svgPath, html);
+}
+
+console.log('saving png files to: %s', path.relative(process.cwd(), pngRootPath));
+
+const svgFiles = fs.readdirSync(svgRootPath)
+  .filter((filename) => { return path.extname(filename) == '.svg'; })
+  .map((filename) => { return path.resolve(svgRootPath, filename); });
+
+svgToPng.convert(svgFiles, pngRootPath, {
+  defaultWidth: '100px',
+  defaultHeight: '100px'
+}).then(() => {
+  process.exit();
 });
