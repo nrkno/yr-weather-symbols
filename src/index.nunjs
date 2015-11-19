@@ -5,6 +5,7 @@
   <title>Yr weather symbols</title>
   <script inline src="../node_modules/simpler-browser-require/require.js"></script>
   <link inline href="../node_modules/@yr/graphics-component/src/previewGrid.styl">
+  <link rel="stylesheet" type="text/css" href="index.css">
 </head>
 <body>
   <img inline src="./graphicsDefs.svg">

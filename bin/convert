@@ -5,62 +5,32 @@
 const convert = require('@yr/graphics-component/bin/convert')
   , primitives = require('../src/lib/primitives')
   , recipes = require('../src/lib/recipes')
+  , utils = require('../src/lib/utils')
 
   , dir = process.argv[2];
 
 const graphics = [];
 
-// ICONS.forEach((id) => {
-//   graphics.push({
-//     id: `${id}`,
-//     styles: [],
-//     symbols: [id],
-//     uses: [`<use xlink:href="#${id}" x="0" y="0" width="100" height="100"></use>`]
-//   },
-//   {
-//     id: `${id}-light`,
-//     styles: ['light'],
-//     symbols: [id],
-//     uses: [`<use class="light" xlink:href="#${id}" x="0" y="0" width="100" height="100"></use>`]
-//   });
-// });
+for (const id in recipes) {
+  const recipe = recipes[id];
 
-// convert.run(dir, graphics);
+  let styles = []
+    , symbols = []
+    , uses = [];
 
+  recipe.forEach((recipe) => {
+    const opts = utils.parse(recipe);
 
-// for (const id in recipes) {
-//   const recipe = recipes[id]
-//     , svgPath = path.resolve(svgRootPath, id + '.svg');
+    let symbol = opts.primitive;
 
-//   let html = '<svg x="0" y="0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style type="text/css"><![CDATA['
-//     , use = ''
-//     , styleRefs = []
-//     , symbolRefs = [];
+    if (opts.winter) symbol += 'Winter';
 
-//   recipe.forEach((recipe) => {
-//     const opts = utils.parse(recipe);
+    styles.push(opts.class);
+    symbols.push(symbol);
+    uses.push(primitives[opts.primitive](opts));
+  });
 
-//     let symbol = opts.primitive;
+  graphics.push({ id, styles, symbols, uses });
+}
 
-//     if (opts.winter) symbol += 'Winter';
-
-//     if (!~styleRefs.indexOf(opts.class)) styleRefs.push(opts.class);
-//     if (!~symbolRefs.indexOf(symbol)) symbolRefs.push(symbol);
-
-//     use += primitives[opts.primitive](opts);
-//   });
-
-//   // Add styles
-//   styleRefs.forEach((style) => {
-//     html += styles[style];
-//   });
-//   html += ']]></style>';
-
-//   // Add symbols
-//   symbolRefs.forEach((symbol) => {
-//     html += symbols[symbol];
-//   });
-//   html += use + '</svg>';
-
-//   fs.writeFileSync(svgPath, html);
-// }
+convert.run(dir, graphics);
