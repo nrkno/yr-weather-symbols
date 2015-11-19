@@ -3,7 +3,6 @@
 <head>
   <meta charset="utf-8">
   <title>Yr weather symbols</title>
-  <link rel="stylesheet" href="index.css">
   <script>(function(root) {
 	/**
 	 * Load or retrieve cached version of requested module with id 'path' or 'path/index'
@@ -77,43 +76,7 @@
 	root.require = require;
 
 })((typeof window !== 'undefined') ? window : global);</script>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-    }
-    html {
-      background-color: #eee;
-      color: #333;
-    }
-    body {
-      font-family: sans-serif;
-      text-align: center;
-    }
-    h2 {
-      font-weight: 400;
-      margin: 0 0 0.5em;
-    }
-    h3 {
-      font-weight: 400;
-      margin: 0;
-    }
-    .symbol {
-      background-color: white;
-      display: inline-block;
-      margin: 1em 0.5em 0;
-      padding: 1em;
-    }
-    .symbol-group {
-      display: inline-block;
-    }
-    .symbol svg,
-    .symbol png {
-      display: inline-block;
-      height: 100px;
-      width: 100px;
-    }
-  </style>
+  <link inline href="../node_modules/@yr/graphics-component/src/previewGrid.styl">
 </head>
 <body>
   <svg x="0" y="0" viewBox="0 0 100 100" id="symbolDefs" style="display:none;">
