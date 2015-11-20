@@ -247,6 +247,7 @@ require.register('src/index.js', function(require, module, exports) {
        */
     
       create: function create(options) {
+        options = options || {};
         options.renderInnerSvg = renderInnerSvg;
     
         return graphicsComponent.create(options);

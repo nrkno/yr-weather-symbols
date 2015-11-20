@@ -16,6 +16,7 @@ module.exports = {
    * @returns {Function}
    */
   create (options) {
+    options = options || {};
     options.renderInnerSvg = renderInnerSvg;
 
     return graphicsComponent.create(options);
