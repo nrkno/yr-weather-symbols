@@ -150,7 +150,7 @@ require.register('src/lib/primitives/index.js', function(require, module, export
       sun: celestial
     };
 });
-require.register('@yr/graphics-component/index.js#1.0.0', function(require, module, exports) {
+require.register('@yr/graphics-component/index.js#1.0.1', function(require, module, exports) {
     'use strict'
     
     /**
@@ -234,7 +234,7 @@ require.register('src/index.js', function(require, module, exports) {
      */
     
     ;
-    var graphicsComponent = require('@yr/graphics-component/index.js#1.0.0'),
+    var graphicsComponent = require('@yr/graphics-component/index.js#1.0.1'),
         primitives = require('src/lib/primitives/index.js'),
         recipes = require('src/lib/recipes.js'),
         utils = require('src/lib/utils.js');
@@ -20585,36 +20585,25 @@ require.register('@yr/component/index.js#1.0.1', function(require, module, expor
       });
     }
 });
-require.register('@yr/graphics-component/src/previewGrid.js#1.0.0', function(require, module, exports) {
+require.register('@yr/graphics-component/previewGrid.js#1.0.1', function(require, module, exports) {
     'use strict';
     
-    const component = require('@yr/component/index.js#1.0.1')
-      , React = require('react/react.js#0.14.3')
-    
-      , el = React.DOM;
+    var component = require('@yr/component/index.js#1.0.1'),
+        React = require('react/react.js#0.14.3'),
+        el = React.DOM;
     
     module.exports = component.stateless({
-      render (props) {
-        return el.div({ children: props.ids.map((id) => {
-          return el.div({ className: 'graphic', id: `graphic-${id}` },
-            el.h2({}, id),
-            el.span({ className: 'graphics-group' },
-              props.graphic({ id, type: 'svg', fallback: true }),
-              el.h3({}, 'svg')
-            ),
-            el.span({ className: 'graphics-group' },
-              props.graphic({ id, type: 'img' }),
-              el.h3({}, 'png')
-            )
-          );
-        }) });
+      render: function render(props) {
+        return el.div({ children: props.ids.map(function (id) {
+            return el.div({ className: 'graphic', id: 'graphic-' + id }, el.h2({}, id), el.span({ className: 'graphics-group' }, props.graphic({ id: id, type: 'svg', fallback: true }), el.h3({}, 'svg')), el.span({ className: 'graphics-group' }, props.graphic({ id: id, type: 'img' }), el.h3({}, 'png')));
+          }) });
       }
     });
 });
 require.register('src/preview.js', function(require, module, exports) {
     'use strict';
     
-    var grid = require('@yr/graphics-component/src/previewGrid.js#1.0.0'),
+    var grid = require('@yr/graphics-component/previewGrid.js#1.0.1'),
         ReactDOM = require('react-dom/index.js#0.14.3'),
         recipes = require('src/lib/recipes.js'),
         symbolComponent = require('src/index.js'),

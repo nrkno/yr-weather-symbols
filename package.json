@@ -4,7 +4,7 @@
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no",
   "dependencies": {
-    "@yr/graphics-component": "1.0.0"
+    "@yr/graphics-component": "1.0.1"
   },
   "devDependencies": {
     "buddy": "3.1.0",

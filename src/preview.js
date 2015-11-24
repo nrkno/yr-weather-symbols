@@ -1,6 +1,6 @@
 'use strict';
 
-const grid = require('@yr/graphics-component/src/previewGrid')
+const grid = require('@yr/graphics-component/previewGrid')
   , ReactDOM = require('react-dom')
   , recipes = require('./lib/recipes')
   , symbolComponent = require('./index')
