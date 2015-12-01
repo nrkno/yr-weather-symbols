@@ -150,7 +150,7 @@ require.register('src/lib/primitives/index.js', function(require, module, export
       sun: celestial
     };
 });
-require.register('@yr/graphics-component/index.js#1.0.1', function(require, module, exports) {
+require.register('@yr/graphics-component/index.js#1.0.2', function(require, module, exports) {
     'use strict'
     
     /**
@@ -158,7 +158,7 @@ require.register('@yr/graphics-component/index.js#1.0.1', function(require, modu
      */
     
     ;
-    var component = require('@yr/component/index.js#1.0.1'),
+    var component = require('@yr/component/index.js#1.0.2'),
         React = require('react/react.js#0.14.3'),
         TYPE_IMG = 'img',
         TYPE_SVG = 'svg',
@@ -234,7 +234,7 @@ require.register('src/index.js', function(require, module, exports) {
      */
     
     ;
-    var graphicsComponent = require('@yr/graphics-component/index.js#1.0.1'),
+    var graphicsComponent = require('@yr/graphics-component/index.js#1.0.2'),
         primitives = require('src/lib/primitives/index.js'),
         recipes = require('src/lib/recipes.js'),
         utils = require('src/lib/utils.js');
@@ -20435,7 +20435,7 @@ require.register('object-assign/index.js#4.0.1', function(require, module, expor
     };
     
 });
-require.register('@yr/component/index.js#1.0.1', function(require, module, exports) {
+require.register('@yr/component/index.js#1.0.2', function(require, module, exports) {
     'use strict';
     
     var assign = require('object-assign/index.js#4.0.1'),
@@ -20443,6 +20443,7 @@ require.register('@yr/component/index.js#1.0.1', function(require, module, expor
         isEqual = require('@yr/is-equal/index.js#1.0.0'),
         React = require('react/react.js#0.14.3'),
         DEFAULT_TRANSITION_DURATION = 250,
+        TIMEOUT = 10,
         debug = Debug('yr:component'),
         isDev = undefined == 'development';
     
@@ -20555,7 +20556,7 @@ require.register('@yr/component/index.js#1.0.1', function(require, module, expor
       state.visibility = !state.visibility ? 1 : 2;
       component.__timerID = setTimeout(function () {
         isTransitioning(component);
-      }, 0);
+      }, TIMEOUT);
     }
     
     /**
@@ -20585,10 +20586,10 @@ require.register('@yr/component/index.js#1.0.1', function(require, module, expor
       });
     }
 });
-require.register('@yr/graphics-component/previewGrid.js#1.0.1', function(require, module, exports) {
+require.register('@yr/graphics-component/previewGrid.js#1.0.2', function(require, module, exports) {
     'use strict';
     
-    var component = require('@yr/component/index.js#1.0.1'),
+    var component = require('@yr/component/index.js#1.0.2'),
         React = require('react/react.js#0.14.3'),
         el = React.DOM;
     
@@ -20603,7 +20604,7 @@ require.register('@yr/graphics-component/previewGrid.js#1.0.1', function(require
 require.register('src/preview.js', function(require, module, exports) {
     'use strict';
     
-    var grid = require('@yr/graphics-component/previewGrid.js#1.0.1'),
+    var grid = require('@yr/graphics-component/previewGrid.js#1.0.2'),
         ReactDOM = require('react-dom/index.js#0.14.3'),
         recipes = require('src/lib/recipes.js'),
         symbolComponent = require('src/index.js'),
