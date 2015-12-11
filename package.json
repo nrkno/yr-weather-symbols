@@ -18,7 +18,8 @@
   "scripts": {
     "build": "buddy build",
     "convert": "node bin/convert dist",
-    "prepublish": "buddy build && node bin/convert dist"
+    "prepublish": "buddy build && node bin/convert dist",
+    "watch": "buddy -rs watch"
   },
   "repository": "https://github.com/YR/weather-symbols.git",
   "license": "MIT",

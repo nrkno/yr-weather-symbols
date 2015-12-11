@@ -332,7 +332,7 @@ require.register('src/lib/recipes.js', function(require, module, exports) {
       '02': [{
         primitive: 'cloud',
         x: 35,
-        y: 40,
+        y: 38,
         scaleX: 0.714285714,
         scaleY: 0.714285714,
         variation: 1
