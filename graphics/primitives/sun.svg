@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 18.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!-- Generator: Adobe Illustrator 19.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
 <circle opacity="0.5" cx="45" cy="45" r="45"/>
-<circle opacity="0.95" cx="45" cy="45" r="37.8"/>
-<circle stroke="#000000" stroke-width="2" stroke-miterlimit="10" cx="45" cy="45" r="31.5"/>
+<circle opacity="0.95" cx="45" cy="45" r="39"/>
+<path d="M45,12.5c-17.9,0-32.5,14.6-32.5,32.5c0,17.9,14.6,32.5,32.5,32.5c17.9,0,32.5-14.6,32.5-32.5C77.5,27.1,62.9,12.5,45,12.5z
+	"/>
 </svg>
