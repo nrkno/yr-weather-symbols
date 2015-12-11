@@ -77,7 +77,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 35,
-      y: 38,
+      y: 37.5,
       scaleX: 0.714285714,
       scaleY: 0.714285714,
       variation: 1

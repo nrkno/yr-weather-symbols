@@ -11,7 +11,8 @@
     "react-dom": "0.14.3",
     "simpler-browser-require": "1.0.0",
     "svg-to-png": "2.0.1",
-    "transfigure-babel": "6.1.4",
+    "transfigure-babel": "6.2.x",
+    "transfigure-stylus": "*",
     "transfigure-nunjucks": "2.1.0"
   },
   "main": "src/index.js",
