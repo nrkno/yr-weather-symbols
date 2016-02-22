@@ -1,12 +1,12 @@
 <svg x="0" y="0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style type="text/css"><![CDATA[.moon-primitive {
-  fill: #193e44;
+  fill: #354246;
 }.cloud2-primitive {
-  color: #727272;
+  color: #828282;
   fill: #cccccc;
 }.snowflake-primitive {
   fill: #47c0e3;
 }.raindrop-primitive {
-  fill: #2874ba;
+  fill: #0062bf;
 }]]></style><symbol id="moon">
 		<path d="M34.9,0c3,5.2,4.8,11.2,4.8,17.6C39.7,37,24,52.8,4.5,52.8c-1.5,0-3-0.1-4.5-0.3C6.1,62.9,17.4,70,30.4,70 c19.4,0,35.2-15.7,35.2-35.2C65.6,17,52.2,2.2,34.9,0z"/>
 	</symbol><symbol id="cloud">

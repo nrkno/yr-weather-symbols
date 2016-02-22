@@ -1,9 +1,9 @@
 <svg x="0" y="0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style type="text/css"><![CDATA[.sun-primitive {
   color: #ffee8a;
-  fill: #fbbe40;
-  stroke: #f5b93f;
+  fill: #ffaf22;
+  stroke: #ffaf22;
 }]]></style><symbol id="sun">
 		<circle fill="currentColor" opacity="0.5" stroke-width="0" stroke-opacity="0" cx="45" cy="45" r="45"/>
-		<circle fill="currentColor" opacity="0.95" stroke-width="0" stroke-opacity="0" cx="45" cy="45" r="37.8"/>
+		<circle fill="currentColor" opacity="0.95" stroke-width="0" stroke-opacity="0" cx="45" cy="45" r="39"/>
 		<circle stroke-width="2" stroke-miterlimit="10" cx="45" cy="45" r="31.5"/>
 	</symbol><use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(5,0) scale(1, 1)"></use></svg>

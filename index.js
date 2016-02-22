@@ -1,10 +1,12 @@
-'use strict'
+'use strict';
 
 /**
- * Weather symbol component.
+ * Yr weather symbols
+ * https://github.com/yr/weather-symbols
+ * @copyright Yr
+ * @license MIT
  */
 
-;
 var graphicsComponent = require('@yr/graphics-component'),
     primitives = require('./lib/primitives'),
     recipes = require('./lib/recipes'),

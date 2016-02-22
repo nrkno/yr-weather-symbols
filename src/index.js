@@ -1,7 +1,10 @@
 'use strict';
 
 /**
- * Weather symbol component.
+ * Yr weather symbols
+ * https://github.com/yr/weather-symbols
+ * @copyright Yr
+ * @license MIT
  */
 
 const graphicsComponent = require('@yr/graphics-component')

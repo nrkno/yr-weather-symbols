@@ -1,12 +1,12 @@
 <svg x="0" y="0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style type="text/css"><![CDATA[.sun-primitive {
   color: #ffee8a;
-  fill: #fbbe40;
-  stroke: #f5b93f;
+  fill: #ffaf22;
+  stroke: #ffaf22;
 }.cloud3-primitive {
-  color: #595959;
+  color: #696969;
   fill: #b2b2b2;
 }.raindrop-primitive {
-  fill: #2874ba;
+  fill: #0062bf;
 }.lightning-primitive {
   fill: #ffdd15;
 }]]></style><symbol id="sunWinter">

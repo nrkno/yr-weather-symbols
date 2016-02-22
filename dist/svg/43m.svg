@@ -1,14 +1,14 @@
 <svg x="0" y="0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style type="text/css"><![CDATA[.sun-primitive {
   color: #ffee8a;
-  fill: #fbbe40;
-  stroke: #f5b93f;
+  fill: #ffaf22;
+  stroke: #ffaf22;
 }.cloud4-primitive {
-  color: #323232;
+  color: #424242;
   fill: #999999;
 }.snowflake-primitive {
   fill: #47c0e3;
 }.raindrop-primitive {
-  fill: #2874ba;
+  fill: #0062bf;
 }]]></style><symbol id="sunWinter">
 		<path fill="currentColor" opacity="0.5" stroke-width="0" stroke-opacity="0" d="M85.5,1.8c0,22.4-18.1,40.5-40.5,40.5S4.5,24.2,4.5,1.8H85.5z"/>
 		<path fill="currentColor" opacity="0.95" stroke-width="0" stroke-opacity="0" d="M79,1.8c0,18.8-15.2,34-34,34s-34-15.2-34-34H79z"/>

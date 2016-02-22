@@ -1,12 +1,12 @@
 <svg x="0" y="0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style type="text/css"><![CDATA[.moon-primitive {
-  fill: #193e44;
+  fill: #354246;
 }.cloud4-primitive {
-  color: #323232;
+  color: #424242;
   fill: #999999;
 }.snowflake-primitive {
   fill: #47c0e3;
 }.raindrop-primitive {
-  fill: #2874ba;
+  fill: #0062bf;
 }.lightning-primitive {
   fill: #ffdd15;
 }]]></style><symbol id="moon">
