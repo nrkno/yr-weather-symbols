@@ -1,17 +1,17 @@
 {
   "name": "@yr/weather-symbols",
-  "version": "3.1.0-beta-2",
+  "version": "3.0.1",
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no",
   "dependencies": {
-    "@yr/graphics-component": "2.1.0-beta-2"
+    "@yr/graphics-component": "2.0.4"
   },
   "devDependencies": {
     "buddy": "4.1.x",
     "buddy-plugin-babel": "6.7.x",
     "buddy-plugin-stylus": "*",
     "buddy-plugin-nunjucks": "*",
-    "react-dom": "15.0.0-rc.2",
+    "react-dom": "0.14.8",
     "simpler-browser-require": "*",
     "svg-to-png": "2.0.1"
   },
