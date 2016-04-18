@@ -34,11 +34,11 @@ module.exports = {
 function renderInnerSvg (id) {
   const recipe = recipes[id];
 
-  if (!recipe) return '';
+  if (!recipe) return null;
 
-  return recipe.reduce((html, r) => {
-    const opts = utils.parse(r);
+  return recipe.map((item) => {
+    const options = utils.parse(item);
 
-    return html += primitives[opts.primitive](opts);
-  }, '');
+    return primitives[options.primitive](options);
+  });
 }

@@ -20,4 +20,4 @@
 			<path d="M75.7,11H1.3C0.6,11,0,10.3,0,9.5S0.6,8,1.3,8h74.4C76.4,8,77,8.7,77,9.5S76.4,11,75.7,11z"/>
 			<path d="M86.7,19H12.3c-0.7,0-1.3-0.7-1.3-1.5s0.6-1.5,1.3-1.5h74.4c0.7,0,1.3,0.7,1.3,1.5S87.4,19,86.7,19z"/>
 		</g>
-	</symbol><use class="cloud1-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(5,25) scale(1, 1)"></use><use class="fog-primitive" xlink:href="#fog" x="0" y="0" width="100" height="100" transform="translate(0,76) scale(1, 1)"></use></svg>
+	</symbol><use xlink:href="#cloud" class="cloud1-primitive" x="0" y="0" width="100" height="100" transform="translate(5,25) scale(1, 1)"></use><use xlink:href="#fog" class="fog-primitive" x="0" y="0" width="100" height="100" transform="translate(0,76) scale(1, 1)"></use></svg>

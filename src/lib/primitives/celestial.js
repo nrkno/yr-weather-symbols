@@ -8,7 +8,7 @@ const utils = require('../utils');
  * @returns {String}
  */
 module.exports = function render (options) {
-  return utils.getUseElementString(options.primitive == 'moon'
+  return utils.getElement(options.primitive == 'moon'
       ? '#moon'
       : (options.winter ? '#sunWinter' : '#sun'), options);
 };

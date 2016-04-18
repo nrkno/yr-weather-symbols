@@ -8,5 +8,5 @@ const utils = require('../utils');
  * @returns {String}
  */
 module.exports = function render (options) {
-  return utils.getUseElementString('#fog', options);
+  return utils.getElement('#fog', options);
 };

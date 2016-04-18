@@ -8,5 +8,5 @@ const utils = require('../utils');
  * @returns {String}
  */
 module.exports = function render (options) {
-  return utils.getUseElementString(`#${options.primitive}`, options);
+  return utils.getElement(`#${options.primitive}`, options);
 };

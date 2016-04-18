@@ -1,6 +1,8 @@
 'use strict';
 
-const MAX_WIDTH = 100;
+const component = require('@yr/component')
+
+  , MAX_WIDTH = 100;
 
 module.exports = {
   /**
@@ -32,19 +34,19 @@ module.exports = {
   },
 
   /**
-   * Retrieve stringified attribute object for <use>
+   * Retrieve React 'use' element for 'link'
    * @param {String} link
    * @param {Object} options
-   * @returns {String}
+   * @returns {React}
    */
-  getUseElementString (link, options) {
-    const props = {
-      class: options.class,
-      'xlink:href': link,
-      x: '0',
-      y: '0',
-      width: '100',
-      height: '100',
+  getElement (link, options) {
+    return component.el('use', {
+      className: options.class,
+      xlinkHref: link,
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
       transform: options.flip
         ? 'translate('
           + ((MAX_WIDTH * options.scaleX) + options.x)
@@ -64,15 +66,6 @@ module.exports = {
           + ', '
           + options.scaleY
           + ')'
-    };
-
-    let str = '<use';
-
-    for (const prop in props) {
-      str += ` ${prop}="${props[prop]}"`;
-    }
-    str += '></use>';
-
-    return str;
+    });
   }
 };

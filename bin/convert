@@ -19,7 +19,8 @@ for (const id in recipes) {
     , uses = [];
 
   recipe.forEach((recipe) => {
-    const opts = utils.parse(recipe);
+    const opts = utils.parse(recipe)
+      , elProps = primitives[opts.primitive](opts).props;
 
     let symbol = opts.primitive;
 
@@ -27,7 +28,7 @@ for (const id in recipes) {
 
     styles.push(opts.class);
     symbols.push(symbol);
-    uses.push(primitives[opts.primitive](opts));
+    uses.push(`<use xlink:href="${elProps.xlinkHref}" class="${elProps.className}" x="0" y="0" width="100" height="100" transform="${elProps.transform}"></use>`);
   });
 
   graphics.push({ id, styles, symbols, uses });
