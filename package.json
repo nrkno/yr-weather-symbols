@@ -8,12 +8,11 @@
     "@yr/graphics-component": "3.0.x"
   },
   "devDependencies": {
-    "buddy": "4.1.x",
+    "buddy": "5.0.x",
     "buddy-plugin-babel": "6.7.x",
     "buddy-plugin-stylus": "*",
     "buddy-plugin-nunjucks": "*",
     "react-dom": "15.0.1",
-    "simpler-browser-require": "*",
     "svg-to-png": "2.0.1"
   },
   "main": "src/index.js",
@@ -35,10 +34,9 @@
           "modular": false
         },
         {
-          "input": "src/preview.js",
-          "output": "preview.js",
-          "label": "dev",
-          "bootstrap": true
+          "input": ["src/preview.js", "src/index.styl", "src/index.nunjs"],
+          "output": ".",
+          "label": "dev"
         }
       ]
     },
