@@ -5548,7 +5548,7 @@ _m_['src/lib/primitives/index.js']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['@yr/graphics-component/index.js#3.0.2']=(function(module,exports){
+_m_['@yr/graphics-component/index.js#3.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   'use strict';
@@ -5645,7 +5645,7 @@ _m_['src/index.js']=(function(module,exports){
    * @license MIT
    */
   
-  var graphicsComponent = _m_['@yr/graphics-component/index.js#3.0.2'],
+  var graphicsComponent = _m_['@yr/graphics-component/index.js#3.1.0'],
       primitives = _m_['src/lib/primitives/index.js'],
       recipes = _m_['src/lib/recipes.js'],
       utils = _m_['src/lib/utils.js'];
@@ -22169,7 +22169,7 @@ _m_['react-dom/index.js#15.0.1']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['@yr/graphics-component/previewGrid.js#3.0.2']=(function(module,exports){
+_m_['@yr/graphics-component/previewGrid.js#3.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   'use strict';
@@ -22192,7 +22192,7 @@ _m_['src/preview.js']=(function(module,exports){
 
   'use strict';
   
-  var grid = _m_['@yr/graphics-component/previewGrid.js#3.0.2'],
+  var grid = _m_['@yr/graphics-component/previewGrid.js#3.1.0'],
       ReactDOM = _m_['react-dom/index.js#15.0.1'],
       recipes = _m_['src/lib/recipes.js'],
       symbolComponent = _m_['src/index.js'],
