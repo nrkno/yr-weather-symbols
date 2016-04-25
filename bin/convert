@@ -34,4 +34,4 @@ for (const id in recipes) {
   graphics.push({ id, styles, symbols, uses });
 }
 
-convert.run(dir, graphics);
+convert.run(dir, graphics, [30, 38, 48, 100, 200]);

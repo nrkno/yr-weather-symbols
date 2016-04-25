@@ -5,7 +5,7 @@
   "author": "alexander.pope@nrk.no",
   "dependencies": {
     "@yr/component": "3.0.x",
-    "@yr/graphics-component": "3.0.x"
+    "@yr/graphics-component": "3.1.x"
   },
   "devDependencies": {
     "buddy": "5.0.x",
