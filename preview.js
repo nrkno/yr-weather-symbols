@@ -3,7 +3,7 @@ if (window._m_ == null) window._m_ = {};
 if (window.require == null) {
   window.require = function require (id) {
     if (!_m_[id]) return;
-    return (_m_[id].exports == null) ? _m_[id]() : _m_[id];
+    return (_m_[id].boot) ? _m_[id]() : _m_[id];
   };
 }
 var global = window.global = window;
@@ -4817,8 +4817,9 @@ _m_['src/lib/utils.js']=(function(module,exports){
 
   'use strict';
   
-  var component = _m_['@yr/component/index.js#3.0.0'],
-      MAX_WIDTH = 100;
+  var component = _m_['@yr/component/index.js#3.0.0'];
+  
+  var MAX_WIDTH = 100;
   
   module.exports = {
     /**
@@ -5519,7 +5520,9 @@ _m_['src/lib/primitives/celestial.js']=(function(module,exports){
    * @param {Object} options
    * @returns {String}
    */
-  module.exports = function render(options) {
+  module.exports = function render() {
+    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+  
     return utils.getElement(options.primitive == 'moon' ? '#moon' : options.winter ? '#sunWinter' : '#sun', options);
   };
 
@@ -5530,11 +5533,11 @@ _m_['src/lib/primitives/index.js']=(function(module,exports){
 
   'use strict';
   
-  var celestial = _m_['src/lib/primitives/celestial.js'],
-      cloud = _m_['src/lib/primitives/cloud.js'],
-      fog = _m_['src/lib/primitives/fog.js'],
-      lightning = _m_['src/lib/primitives/lightning.js'],
-      precipitation = _m_['src/lib/primitives/precipitation.js'];
+  var celestial = _m_['src/lib/primitives/celestial.js'];
+  var cloud = _m_['src/lib/primitives/cloud.js'];
+  var fog = _m_['src/lib/primitives/fog.js'];
+  var lightning = _m_['src/lib/primitives/lightning.js'];
+  var precipitation = _m_['src/lib/primitives/precipitation.js'];
   
   module.exports = {
     cloud: cloud,
@@ -5645,10 +5648,10 @@ _m_['src/index.js']=(function(module,exports){
    * @license MIT
    */
   
-  var graphicsComponent = _m_['@yr/graphics-component/index.js#3.1.0'],
-      primitives = _m_['src/lib/primitives/index.js'],
-      recipes = _m_['src/lib/recipes.js'],
-      utils = _m_['src/lib/utils.js'];
+  var graphicsComponent = _m_['@yr/graphics-component/index.js#3.1.0'];
+  var primitives = _m_['src/lib/primitives/index.js'];
+  var recipes = _m_['src/lib/recipes.js'];
+  var utils = _m_['src/lib/utils.js'];
   
   module.exports = {
     /**
@@ -5657,8 +5660,9 @@ _m_['src/index.js']=(function(module,exports){
      * @returns {Function}
      */
   
-    create: function create(options) {
-      options = options || {};
+    create: function create() {
+      var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+  
       options.renderInnerSvg = renderInnerSvg;
   
       return graphicsComponent.create(options);
@@ -22197,7 +22201,7 @@ _m_['src/preview.js']=(function(module,exports){
       recipes = _m_['src/lib/recipes.js'],
       symbolComponent = _m_['src/index.js'],
       el = document.getElementById('viewport'),
-      symbol = symbolComponent.create({ rootImagePath: 'dist/png' });
+      symbol = symbolComponent.create({ rootImagePath: 'dist/png/100' });
   
   ReactDOM.render(grid({
     ids: Object.keys(recipes),

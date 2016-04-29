@@ -1,10 +1,10 @@
 'use strict';
 
-const celestial = require('./celestial')
-  , cloud = require('./cloud')
-  , fog = require('./fog')
-  , lightning = require('./lightning')
-  , precipitation = require('./precipitation');
+const celestial = require('./celestial');
+const cloud = require('./cloud');
+const fog = require('./fog');
+const lightning = require('./lightning');
+const precipitation = require('./precipitation');
 
 module.exports = {
   cloud,

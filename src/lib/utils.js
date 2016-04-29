@@ -1,8 +1,8 @@
 'use strict';
 
-const component = require('@yr/component')
+const component = require('@yr/component');
 
-  , MAX_WIDTH = 100;
+const MAX_WIDTH = 100;
 
 module.exports = {
   /**

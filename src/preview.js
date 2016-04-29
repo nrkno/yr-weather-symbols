@@ -6,7 +6,7 @@ const grid = require('@yr/graphics-component/previewGrid')
   , symbolComponent = require('./index')
 
   , el = document.getElementById('viewport')
-  , symbol = symbolComponent.create({ rootImagePath: 'dist/png' });
+  , symbol = symbolComponent.create({ rootImagePath: 'dist/png/100' });
 
 ReactDOM.render(grid({
   ids: Object.keys(recipes),
