@@ -7,10 +7,10 @@
  * @license MIT
  */
 
-var graphicsComponent = require('@yr/graphics-component'),
-    primitives = require('./lib/primitives'),
-    recipes = require('./lib/recipes'),
-    utils = require('./lib/utils');
+var graphicsComponent = require('@yr/graphics-component');
+var primitives = require('./lib/primitives');
+var recipes = require('./lib/recipes');
+var utils = require('./lib/utils');
 
 module.exports = {
   /**
@@ -19,8 +19,9 @@ module.exports = {
    * @returns {Function}
    */
 
-  create: function create(options) {
-    options = options || {};
+  create: function create() {
+    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
     options.renderInnerSvg = renderInnerSvg;
 
     return graphicsComponent.create(options);
