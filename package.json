@@ -10,6 +10,7 @@
   "devDependencies": {
     "buddy": "5.0.x",
     "buddy-plugin-babel": "6.7.x",
+    "buddy-plugin-imagemin": "*",
     "buddy-plugin-stylus": "*",
     "buddy-plugin-nunjucks": "*",
     "react-dom": "15.0.x",
@@ -17,9 +18,10 @@
   },
   "main": "src/index.js",
   "scripts": {
-    "build": "buddy build",
-    "convert": "node bin/convert dist",
-    "prepublish": "buddy build && node bin/convert dist",
+    "build": "buddy build -i -g images",
+    "build-images": "buddy deploy -g images",
+    "convert": "node bin/convert temp && npm run build-images && rm -rf temp",
+    "prepublish": "npm run build && npm run convert",
     "watch": "buddy -rs -g dev watch"
   },
   "repository": "https://github.com/YR/weather-symbols.git",
@@ -34,9 +36,14 @@
           "modular": false
         },
         {
-          "input": ["src/preview.js", "src/index.styl", "src/index.nunjs"],
+          "input": ["src/preview.js", "src/index.css", "src/index.nunjs"],
           "output": ".",
           "label": "dev"
+        },
+        {
+          "input": "temp",
+          "output": "dist",
+          "label": "images"
         }
       ]
     },

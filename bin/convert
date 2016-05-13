@@ -2,26 +2,23 @@
 
 'use strict';
 
-const convert = require('@yr/graphics-component/bin/convert')
-  , primitives = require('../src/lib/primitives')
-  , recipes = require('../src/lib/recipes')
-  , utils = require('../src/lib/utils')
+const convert = require('@yr/graphics-component/bin/convert');
+const primitives = require('../src/lib/primitives');
+const recipes = require('../src/lib/recipes');
+const utils = require('../src/lib/utils');
 
-  , dir = process.argv[2];
-
+const dir = process.argv[2];
 const graphics = [];
 
 for (const id in recipes) {
   const recipe = recipes[id];
-
-  let styles = []
-    , symbols = []
-    , uses = [];
+  let styles = [];
+  let symbols = [];
+  let uses = [];
 
   recipe.forEach((recipe) => {
-    const opts = utils.parse(recipe)
-      , elProps = primitives[opts.primitive](opts).props;
-
+    const opts = utils.parse(recipe);
+    const elProps = primitives[opts.primitive](opts).props;
     let symbol = opts.primitive;
 
     if (opts.winter) symbol += 'Winter';
