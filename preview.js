@@ -107,7 +107,7 @@ var global = window.global = window;
     }));
   };
 })(typeof global === "undefined" ? self : global);
-_m_['fbjs/lib/emptyFunction.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/emptyFunction.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   "use strict";
@@ -120,6 +120,7 @@ _m_['fbjs/lib/emptyFunction.js#0.8.2']=(function(module,exports){
    * LICENSE file in the root directory of this source tree. An additional grant
    * of patent rights can be found in the PATENTS file in the same directory.
    *
+   * 
    */
   
   function makeEmptyFunction(arg) {
@@ -133,7 +134,7 @@ _m_['fbjs/lib/emptyFunction.js#0.8.2']=(function(module,exports){
    * primarily useful idiomatically for overridable function endpoints which
    * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
    */
-  function emptyFunction() {}
+  var emptyFunction = function emptyFunction() {};
   
   emptyFunction.thatReturns = makeEmptyFunction;
   emptyFunction.thatReturnsFalse = makeEmptyFunction(false);
@@ -150,7 +151,7 @@ _m_['fbjs/lib/emptyFunction.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/warning.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/warning.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -165,7 +166,7 @@ _m_['fbjs/lib/warning.js#0.8.2']=(function(module,exports){
   
   'use strict';
   
-  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.2'];
+  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.3'];
   
   /**
    * Similar to invariant but only logs a warning if the condition is not met.
@@ -177,7 +178,7 @@ _m_['fbjs/lib/warning.js#0.8.2']=(function(module,exports){
   var warning = emptyFunction;
   
   if (undefined !== 'production') {
-    warning = function (condition, format) {
+    warning = function warning(condition, format) {
       for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
         args[_key - 2] = arguments[_key];
       }
@@ -212,7 +213,7 @@ _m_['fbjs/lib/warning.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/invariant.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/invariant.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -267,7 +268,7 @@ _m_['fbjs/lib/invariant.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/canDefineProperty.js#15.0.2']=(function(module,exports){
+_m_['react/lib/canDefineProperty.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -297,7 +298,7 @@ _m_['react/lib/canDefineProperty.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactCurrentOwner.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactCurrentOwner.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -424,7 +425,7 @@ _m_['object-assign/index.js#4.1.0']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactElement.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactElement.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -442,10 +443,10 @@ _m_['react/lib/ReactElement.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var ReactCurrentOwner = _m_['react/lib/ReactCurrentOwner.js#15.0.2'];
+  var ReactCurrentOwner = _m_['react/lib/ReactCurrentOwner.js#15.1.0'];
   
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
-  var canDefineProperty = _m_['react/lib/canDefineProperty.js#15.0.2'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
+  var canDefineProperty = _m_['react/lib/canDefineProperty.js#15.1.0'];
   
   // The Symbol used to tag the ReactElement type. If there is no native Symbol
   // nor polyfill, then a plain number is used for performance.
@@ -542,6 +543,10 @@ _m_['react/lib/ReactElement.js#15.0.2']=(function(module,exports){
     return element;
   };
   
+  /**
+   * Create and return a new ReactElement of the given type.
+   * See https://facebook.github.io/react/docs/top-level-api.html#react.createelement
+   */
   ReactElement.createElement = function (type, config, children) {
     var propName;
   
@@ -555,6 +560,11 @@ _m_['react/lib/ReactElement.js#15.0.2']=(function(module,exports){
   
     if (config != null) {
       if (undefined !== 'production') {
+        undefined !== 'production' ? warning(
+        /* eslint-disable no-proto */
+        config.__proto__ == null || config.__proto__ === Object.prototype,
+        /* eslint-enable no-proto */
+        'React.createElement(...): Expected props argument to be a plain object. ' + 'Properties defined in its prototype chain will be ignored.') : void 0;
         ref = !config.hasOwnProperty('ref') || Object.getOwnPropertyDescriptor(config, 'ref').get ? null : config.ref;
         key = !config.hasOwnProperty('key') || Object.getOwnPropertyDescriptor(config, 'key').get ? null : '' + config.key;
       } else {
@@ -626,6 +636,10 @@ _m_['react/lib/ReactElement.js#15.0.2']=(function(module,exports){
     return ReactElement(type, key, ref, self, source, ReactCurrentOwner.current, props);
   };
   
+  /**
+   * Return a function that produces ReactElements of a given type.
+   * See https://facebook.github.io/react/docs/top-level-api.html#react.createfactory
+   */
   ReactElement.createFactory = function (type) {
     var factory = ReactElement.createElement.bind(null, type);
     // Expose the type on the factory and the prototype so that it can be
@@ -643,6 +657,10 @@ _m_['react/lib/ReactElement.js#15.0.2']=(function(module,exports){
     return newElement;
   };
   
+  /**
+   * Clone and return a new ReactElement using element as the starting point.
+   * See https://facebook.github.io/react/docs/top-level-api.html#react.cloneelement
+   */
   ReactElement.cloneElement = function (element, config, children) {
     var propName;
   
@@ -663,6 +681,13 @@ _m_['react/lib/ReactElement.js#15.0.2']=(function(module,exports){
     var owner = element._owner;
   
     if (config != null) {
+      if (undefined !== 'production') {
+        undefined !== 'production' ? warning(
+        /* eslint-disable no-proto */
+        config.__proto__ == null || config.__proto__ === Object.prototype,
+        /* eslint-enable no-proto */
+        'React.cloneElement(...): Expected props argument to be a plain object. ' + 'Properties defined in its prototype chain will be ignored.') : void 0;
+      }
       if (config.ref !== undefined) {
         // Silently steal the ref from the parent.
         ref = config.ref;
@@ -705,6 +730,8 @@ _m_['react/lib/ReactElement.js#15.0.2']=(function(module,exports){
   };
   
   /**
+   * Verifies the object is a ReactElement.
+   * See https://facebook.github.io/react/docs/top-level-api.html#react.isvalidelement
    * @param {?object} object
    * @return {boolean} True if `object` is a valid component.
    * @final
@@ -717,7 +744,7 @@ _m_['react/lib/ReactElement.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/onlyChild.js#15.0.2']=(function(module,exports){
+_m_['react/lib/onlyChild.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -732,16 +759,19 @@ _m_['react/lib/onlyChild.js#15.0.2']=(function(module,exports){
    */
   'use strict';
   
-  var ReactElement = _m_['react/lib/ReactElement.js#15.0.2'];
+  var ReactElement = _m_['react/lib/ReactElement.js#15.1.0'];
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   /**
    * Returns the first child in a collection of children and verifies that there
-   * is only one child in the collection. The current implementation of this
-   * function assumes that a single child gets passed without a wrapper, but the
-   * purpose of this helper function is to abstract away the particular structure
-   * of children.
+   * is only one child in the collection.
+   *
+   * See https://facebook.github.io/react/docs/top-level-api.html#react.children.only
+   *
+   * The current implementation of this function assumes that a single child gets
+   * passed without a wrapper, but the purpose of this helper function is to
+   * abstract away the particular structure of children.
    *
    * @param {?object} children Child collection structure.
    * @return {ReactElement} The first and only `ReactElement` contained in the
@@ -756,7 +786,7 @@ _m_['react/lib/onlyChild.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactVersion.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactVersion.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -772,11 +802,11 @@ _m_['react/lib/ReactVersion.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  module.exports = '15.0.2';
+  module.exports = '15.1.0';
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/getIteratorFn.js#15.0.2']=(function(module,exports){
+_m_['react/lib/getIteratorFn.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -822,7 +852,7 @@ _m_['react/lib/getIteratorFn.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactPropTypeLocationNames.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactPropTypeLocationNames.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -852,7 +882,7 @@ _m_['react/lib/ReactPropTypeLocationNames.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactPropTypes.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactPropTypes.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -868,11 +898,11 @@ _m_['react/lib/ReactPropTypes.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactElement = _m_['react/lib/ReactElement.js#15.0.2'];
-  var ReactPropTypeLocationNames = _m_['react/lib/ReactPropTypeLocationNames.js#15.0.2'];
+  var ReactElement = _m_['react/lib/ReactElement.js#15.1.0'];
+  var ReactPropTypeLocationNames = _m_['react/lib/ReactPropTypeLocationNames.js#15.1.0'];
   
-  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.2'];
-  var getIteratorFn = _m_['react/lib/getIteratorFn.js#15.0.2'];
+  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.3'];
+  var getIteratorFn = _m_['react/lib/getIteratorFn.js#15.1.0'];
   
   /**
    * Collection of methods that allow declaration and validation of props that are
@@ -1238,7 +1268,7 @@ _m_['react/lib/ReactPropTypes.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/keyMirror.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/keyMirror.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -1254,7 +1284,7 @@ _m_['fbjs/lib/keyMirror.js#0.8.2']=(function(module,exports){
   
   'use strict';
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   /**
    * Constructs an enumeration with keys equal to their value.
@@ -1274,7 +1304,7 @@ _m_['fbjs/lib/keyMirror.js#0.8.2']=(function(module,exports){
    * @param {object} obj
    * @return {object}
    */
-  var keyMirror = function (obj) {
+  var keyMirror = function keyMirror(obj) {
     var ret = {};
     var key;
     !(obj instanceof Object && !Array.isArray(obj)) ? undefined !== 'production' ? invariant(false, 'keyMirror(...): Argument must be an object.') : invariant(false) : void 0;
@@ -1291,7 +1321,7 @@ _m_['fbjs/lib/keyMirror.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactPropTypeLocations.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactPropTypeLocations.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -1307,7 +1337,7 @@ _m_['react/lib/ReactPropTypeLocations.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var keyMirror = _m_['fbjs/lib/keyMirror.js#0.8.2'];
+  var keyMirror = _m_['fbjs/lib/keyMirror.js#0.8.3'];
   
   var ReactPropTypeLocations = keyMirror({
     prop: null,
@@ -1319,7 +1349,7 @@ _m_['react/lib/ReactPropTypeLocations.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactElementValidator.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactElementValidator.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -1342,15 +1372,15 @@ _m_['react/lib/ReactElementValidator.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactElement = _m_['react/lib/ReactElement.js#15.0.2'];
-  var ReactPropTypeLocations = _m_['react/lib/ReactPropTypeLocations.js#15.0.2'];
-  var ReactPropTypeLocationNames = _m_['react/lib/ReactPropTypeLocationNames.js#15.0.2'];
-  var ReactCurrentOwner = _m_['react/lib/ReactCurrentOwner.js#15.0.2'];
+  var ReactElement = _m_['react/lib/ReactElement.js#15.1.0'];
+  var ReactPropTypeLocations = _m_['react/lib/ReactPropTypeLocations.js#15.1.0'];
+  var ReactPropTypeLocationNames = _m_['react/lib/ReactPropTypeLocationNames.js#15.1.0'];
+  var ReactCurrentOwner = _m_['react/lib/ReactCurrentOwner.js#15.1.0'];
   
-  var canDefineProperty = _m_['react/lib/canDefineProperty.js#15.0.2'];
-  var getIteratorFn = _m_['react/lib/getIteratorFn.js#15.0.2'];
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var canDefineProperty = _m_['react/lib/canDefineProperty.js#15.1.0'];
+  var getIteratorFn = _m_['react/lib/getIteratorFn.js#15.1.0'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   function getDeclarationErrorAddendum() {
     if (ReactCurrentOwner.current) {
@@ -1606,7 +1636,7 @@ _m_['react/lib/ReactElementValidator.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/mapObject.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/mapObject.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -1662,7 +1692,7 @@ _m_['fbjs/lib/mapObject.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMFactories.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMFactories.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -1678,10 +1708,10 @@ _m_['react/lib/ReactDOMFactories.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactElement = _m_['react/lib/ReactElement.js#15.0.2'];
-  var ReactElementValidator = _m_['react/lib/ReactElementValidator.js#15.0.2'];
+  var ReactElement = _m_['react/lib/ReactElement.js#15.1.0'];
+  var ReactElementValidator = _m_['react/lib/ReactElementValidator.js#15.1.0'];
   
-  var mapObject = _m_['fbjs/lib/mapObject.js#0.8.2'];
+  var mapObject = _m_['fbjs/lib/mapObject.js#0.8.3'];
   
   /**
    * Create a factory that creates HTML tag elements.
@@ -1844,7 +1874,7 @@ _m_['react/lib/ReactDOMFactories.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/keyOf.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/keyOf.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   "use strict";
@@ -1869,7 +1899,7 @@ _m_['fbjs/lib/keyOf.js#0.8.2']=(function(module,exports){
    * 'xa12' in that case. Resolve keys you want to use once at startup time, then
    * reuse those resolutions.
    */
-  var keyOf = function (oneKeyObj) {
+  var keyOf = function keyOf(oneKeyObj) {
     var key;
     for (key in oneKeyObj) {
       if (!oneKeyObj.hasOwnProperty(key)) {
@@ -1884,7 +1914,7 @@ _m_['fbjs/lib/keyOf.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/emptyObject.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/emptyObject.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -1909,7 +1939,7 @@ _m_['fbjs/lib/emptyObject.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactNoopUpdateQueue.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactNoopUpdateQueue.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -1925,7 +1955,7 @@ _m_['react/lib/ReactNoopUpdateQueue.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   function warnTDZ(publicInstance, callerName) {
     if (undefined !== 'production') {
@@ -2010,7 +2040,201 @@ _m_['react/lib/ReactNoopUpdateQueue.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactInvalidSetStateWarningDevTool.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactComponentTreeDevtool.js#15.1.0']=(function(module,exports){
+  module=this;exports=module.exports;
+
+  /**
+   * Copyright 2016-present, Facebook, Inc.
+   * All rights reserved.
+   *
+   * This source code is licensed under the BSD-style license found in the
+   * LICENSE file in the root directory of this source tree. An additional grant
+   * of patent rights can be found in the PATENTS file in the same directory.
+   *
+   * @providesModule ReactComponentTreeDevtool
+   */
+  
+  'use strict';
+  
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  
+  var tree = {};
+  var rootIDs = [];
+  
+  function updateTree(id, update) {
+    if (!tree[id]) {
+      tree[id] = {
+        parentID: null,
+        ownerID: null,
+        text: null,
+        childIDs: [],
+        displayName: 'Unknown',
+        isMounted: false,
+        updateCount: 0
+      };
+    }
+    update(tree[id]);
+  }
+  
+  function purgeDeep(id) {
+    var item = tree[id];
+    if (item) {
+      var childIDs = item.childIDs;
+  
+      delete tree[id];
+      childIDs.forEach(purgeDeep);
+    }
+  }
+  
+  var ReactComponentTreeDevtool = {
+    onSetDisplayName: function (id, displayName) {
+      updateTree(id, function (item) {
+        return item.displayName = displayName;
+      });
+    },
+    onSetChildren: function (id, nextChildIDs) {
+      updateTree(id, function (item) {
+        var prevChildIDs = item.childIDs;
+        item.childIDs = nextChildIDs;
+  
+        nextChildIDs.forEach(function (nextChildID) {
+          var nextChild = tree[nextChildID];
+          !nextChild ? undefined !== 'production' ? invariant(false, 'Expected devtool events to fire for the child ' + 'before its parent includes it in onSetChildren().') : invariant(false) : void 0;
+          !(nextChild.displayName != null) ? undefined !== 'production' ? invariant(false, 'Expected onSetDisplayName() to fire for the child ' + 'before its parent includes it in onSetChildren().') : invariant(false) : void 0;
+          !(nextChild.childIDs != null || nextChild.text != null) ? undefined !== 'production' ? invariant(false, 'Expected onSetChildren() or onSetText() to fire for the child ' + 'before its parent includes it in onSetChildren().') : invariant(false) : void 0;
+          !nextChild.isMounted ? undefined !== 'production' ? invariant(false, 'Expected onMountComponent() to fire for the child ' + 'before its parent includes it in onSetChildren().') : invariant(false) : void 0;
+  
+          if (prevChildIDs.indexOf(nextChildID) === -1) {
+            nextChild.parentID = id;
+          }
+        });
+      });
+    },
+    onSetOwner: function (id, ownerID) {
+      updateTree(id, function (item) {
+        return item.ownerID = ownerID;
+      });
+    },
+    onSetText: function (id, text) {
+      updateTree(id, function (item) {
+        return item.text = text;
+      });
+    },
+    onMountComponent: function (id) {
+      updateTree(id, function (item) {
+        return item.isMounted = true;
+      });
+    },
+    onMountRootComponent: function (id) {
+      rootIDs.push(id);
+    },
+    onUpdateComponent: function (id) {
+      updateTree(id, function (item) {
+        return item.updateCount++;
+      });
+    },
+    onUnmountComponent: function (id) {
+      updateTree(id, function (item) {
+        return item.isMounted = false;
+      });
+      rootIDs = rootIDs.filter(function (rootID) {
+        return rootID !== id;
+      });
+    },
+    purgeUnmountedComponents: function () {
+      if (ReactComponentTreeDevtool._preventPurging) {
+        // Should only be used for testing.
+        return;
+      }
+  
+      Object.keys(tree).filter(function (id) {
+        return !tree[id].isMounted;
+      }).forEach(purgeDeep);
+    },
+    isMounted: function (id) {
+      var item = tree[id];
+      return item ? item.isMounted : false;
+    },
+    getChildIDs: function (id) {
+      var item = tree[id];
+      return item ? item.childIDs : [];
+    },
+    getDisplayName: function (id) {
+      var item = tree[id];
+      return item ? item.displayName : 'Unknown';
+    },
+    getOwnerID: function (id) {
+      var item = tree[id];
+      return item ? item.ownerID : null;
+    },
+    getParentID: function (id) {
+      var item = tree[id];
+      return item ? item.parentID : null;
+    },
+    getText: function (id) {
+      var item = tree[id];
+      return item ? item.text : null;
+    },
+    getUpdateCount: function (id) {
+      var item = tree[id];
+      return item ? item.updateCount : 0;
+    },
+    getRootIDs: function () {
+      return rootIDs;
+    },
+    getRegisteredIDs: function () {
+      return Object.keys(tree);
+    }
+  };
+  
+  module.exports = ReactComponentTreeDevtool;
+
+  return module.exports;
+}).call({exports:{}});
+_m_['react/lib/ReactNativeOperationHistoryDevtool.js#15.1.0']=(function(module,exports){
+  module=this;exports=module.exports;
+
+  /**
+   * Copyright 2016-present, Facebook, Inc.
+   * All rights reserved.
+   *
+   * This source code is licensed under the BSD-style license found in the
+   * LICENSE file in the root directory of this source tree. An additional grant
+   * of patent rights can be found in the PATENTS file in the same directory.
+   *
+   * @providesModule ReactNativeOperationHistoryDevtool
+   */
+  
+  'use strict';
+  
+  var history = [];
+  
+  var ReactNativeOperationHistoryDevtool = {
+    onNativeOperation: function (debugID, type, payload) {
+      history.push({
+        instanceID: debugID,
+        type: type,
+        payload: payload
+      });
+    },
+    clearHistory: function () {
+      if (ReactNativeOperationHistoryDevtool._preventClearing) {
+        // Should only be used for tests.
+        return;
+      }
+  
+      history = [];
+    },
+    getHistory: function () {
+      return history;
+    }
+  };
+  
+  module.exports = ReactNativeOperationHistoryDevtool;
+
+  return module.exports;
+}).call({exports:{}});
+_m_['react/lib/ReactInvalidSetStateWarningDevTool.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -2026,7 +2250,7 @@ _m_['react/lib/ReactInvalidSetStateWarningDevTool.js#15.0.2']=(function(module,e
   
   'use strict';
   
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   if (undefined !== 'production') {
     var processingChildContext = false;
@@ -2052,7 +2276,115 @@ _m_['react/lib/ReactInvalidSetStateWarningDevTool.js#15.0.2']=(function(module,e
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDebugTool.js#15.0.2']=(function(module,exports){
+_m_['fbjs/lib/ExecutionEnvironment.js#0.8.3']=(function(module,exports){
+  module=this;exports=module.exports;
+
+  /**
+   * Copyright (c) 2013-present, Facebook, Inc.
+   * All rights reserved.
+   *
+   * This source code is licensed under the BSD-style license found in the
+   * LICENSE file in the root directory of this source tree. An additional grant
+   * of patent rights can be found in the PATENTS file in the same directory.
+   *
+   */
+  
+  'use strict';
+  
+  var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+  
+  /**
+   * Simple, lightweight module assisting with the detection and context of
+   * Worker. Helps avoid circular dependencies and allows code to reason about
+   * whether or not they are in a Worker, even if they never include the main
+   * `ReactWorker` dependency.
+   */
+  var ExecutionEnvironment = {
+  
+    canUseDOM: canUseDOM,
+  
+    canUseWorkers: typeof Worker !== 'undefined',
+  
+    canUseEventListeners: canUseDOM && !!(window.addEventListener || window.attachEvent),
+  
+    canUseViewport: canUseDOM && !!window.screen,
+  
+    isInWorker: !canUseDOM // For now, this is true - might change in the future.
+  
+  };
+  
+  module.exports = ExecutionEnvironment;
+
+  return module.exports;
+}).call({exports:{}});
+_m_['fbjs/lib/performance.js#0.8.3']=(function(module,exports){
+  module=this;exports=module.exports;
+
+  /**
+   * Copyright (c) 2013-present, Facebook, Inc.
+   * All rights reserved.
+   *
+   * This source code is licensed under the BSD-style license found in the
+   * LICENSE file in the root directory of this source tree. An additional grant
+   * of patent rights can be found in the PATENTS file in the same directory.
+   *
+   * @typechecks
+   */
+  
+  'use strict';
+  
+  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
+  
+  var performance;
+  
+  if (ExecutionEnvironment.canUseDOM) {
+    performance = window.performance || window.msPerformance || window.webkitPerformance;
+  }
+  
+  module.exports = performance || {};
+
+  return module.exports;
+}).call({exports:{}});
+_m_['fbjs/lib/performanceNow.js#0.8.3']=(function(module,exports){
+  module=this;exports=module.exports;
+
+  'use strict';
+  
+  /**
+   * Copyright (c) 2013-present, Facebook, Inc.
+   * All rights reserved.
+   *
+   * This source code is licensed under the BSD-style license found in the
+   * LICENSE file in the root directory of this source tree. An additional grant
+   * of patent rights can be found in the PATENTS file in the same directory.
+   *
+   * @typechecks
+   */
+  
+  var performance = _m_['fbjs/lib/performance.js#0.8.3'];
+  
+  var performanceNow;
+  
+  /**
+   * Detect if we can use `window.performance.now()` and gracefully fallback to
+   * `Date.now()` if it doesn't exist. We need to support Firefox < 15 for now
+   * because of Facebook's testing infrastructure.
+   */
+  if (performance.now) {
+    performanceNow = function performanceNow() {
+      return performance.now();
+    };
+  } else {
+    performanceNow = function performanceNow() {
+      return Date.now();
+    };
+  }
+  
+  module.exports = performanceNow;
+
+  return module.exports;
+}).call({exports:{}});
+_m_['react/lib/ReactDebugTool.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -2068,8 +2400,10 @@ _m_['react/lib/ReactDebugTool.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactInvalidSetStateWarningDevTool = _m_['react/lib/ReactInvalidSetStateWarningDevTool.js#15.0.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
+  
+  var performanceNow = _m_['fbjs/lib/performanceNow.js#0.8.3'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var eventHandlers = [];
   var handlerDoesThrowForEvent = {};
@@ -2089,6 +2423,70 @@ _m_['react/lib/ReactDebugTool.js#15.0.2']=(function(module,exports){
     }
   }
   
+  var isProfiling = false;
+  var flushHistory = [];
+  var currentFlushNesting = 0;
+  var currentFlushMeasurements = null;
+  var currentFlushStartTime = null;
+  var currentTimerDebugID = null;
+  var currentTimerStartTime = null;
+  var currentTimerType = null;
+  
+  function clearHistory() {
+    ReactComponentTreeDevtool.purgeUnmountedComponents();
+    ReactNativeOperationHistoryDevtool.clearHistory();
+  }
+  
+  function getTreeSnapshot(registeredIDs) {
+    return registeredIDs.reduce(function (tree, id) {
+      var ownerID = ReactComponentTreeDevtool.getOwnerID(id);
+      var parentID = ReactComponentTreeDevtool.getParentID(id);
+      tree[id] = {
+        displayName: ReactComponentTreeDevtool.getDisplayName(id),
+        text: ReactComponentTreeDevtool.getText(id),
+        updateCount: ReactComponentTreeDevtool.getUpdateCount(id),
+        childIDs: ReactComponentTreeDevtool.getChildIDs(id),
+        // Text nodes don't have owners but this is close enough.
+        ownerID: ownerID || ReactComponentTreeDevtool.getOwnerID(parentID),
+        parentID: parentID
+      };
+      return tree;
+    }, {});
+  }
+  
+  function resetMeasurements() {
+    if (undefined !== 'production') {
+      var previousStartTime = currentFlushStartTime;
+      var previousMeasurements = currentFlushMeasurements || [];
+      var previousOperations = ReactNativeOperationHistoryDevtool.getHistory();
+  
+      if (!isProfiling || currentFlushNesting === 0) {
+        currentFlushStartTime = null;
+        currentFlushMeasurements = null;
+        clearHistory();
+        return;
+      }
+  
+      if (previousMeasurements.length || previousOperations.length) {
+        var registeredIDs = ReactComponentTreeDevtool.getRegisteredIDs();
+        flushHistory.push({
+          duration: performanceNow() - previousStartTime,
+          measurements: previousMeasurements || [],
+          operations: previousOperations || [],
+          treeSnapshot: getTreeSnapshot(registeredIDs)
+        });
+      }
+  
+      clearHistory();
+      currentFlushStartTime = performanceNow();
+      currentFlushMeasurements = [];
+    }
+  }
+  
+  function checkDebugID(debugID) {
+    undefined !== 'production' ? warning(debugID, 'ReactDebugTool: debugID may not be empty.') : void 0;
+  }
+  
   var ReactDebugTool = {
     addDevtool: function (devtool) {
       eventHandlers.push(devtool);
@@ -2101,36 +2499,148 @@ _m_['react/lib/ReactDebugTool.js#15.0.2']=(function(module,exports){
         }
       }
     },
+    beginProfiling: function () {
+      if (undefined !== 'production') {
+        if (isProfiling) {
+          return;
+        }
+  
+        isProfiling = true;
+        flushHistory.length = 0;
+        resetMeasurements();
+      }
+    },
+    endProfiling: function () {
+      if (undefined !== 'production') {
+        if (!isProfiling) {
+          return;
+        }
+  
+        isProfiling = false;
+        resetMeasurements();
+      }
+    },
+    getFlushHistory: function () {
+      if (undefined !== 'production') {
+        return flushHistory;
+      }
+    },
+    onBeginFlush: function () {
+      if (undefined !== 'production') {
+        currentFlushNesting++;
+        resetMeasurements();
+      }
+      emitEvent('onBeginFlush');
+    },
+    onEndFlush: function () {
+      if (undefined !== 'production') {
+        resetMeasurements();
+        currentFlushNesting--;
+      }
+      emitEvent('onEndFlush');
+    },
+    onBeginLifeCycleTimer: function (debugID, timerType) {
+      checkDebugID(debugID);
+      emitEvent('onBeginLifeCycleTimer', debugID, timerType);
+      if (undefined !== 'production') {
+        if (isProfiling && currentFlushNesting > 0) {
+          undefined !== 'production' ? warning(!currentTimerType, 'There is an internal error in the React performance measurement code. ' + 'Did not expect %s timer to start while %s timer is still in ' + 'progress for %s instance.', timerType, currentTimerType || 'no', debugID === currentTimerDebugID ? 'the same' : 'another') : void 0;
+          currentTimerStartTime = performanceNow();
+          currentTimerDebugID = debugID;
+          currentTimerType = timerType;
+        }
+      }
+    },
+    onEndLifeCycleTimer: function (debugID, timerType) {
+      checkDebugID(debugID);
+      if (undefined !== 'production') {
+        if (isProfiling && currentFlushNesting > 0) {
+          undefined !== 'production' ? warning(currentTimerType === timerType, 'There is an internal error in the React performance measurement code. ' + 'We did not expect %s timer to stop while %s timer is still in ' + 'progress for %s instance. Please report this as a bug in React.', timerType, currentTimerType || 'no', debugID === currentTimerDebugID ? 'the same' : 'another') : void 0;
+          currentFlushMeasurements.push({
+            timerType: timerType,
+            instanceID: debugID,
+            duration: performanceNow() - currentTimerStartTime
+          });
+          currentTimerStartTime = null;
+          currentTimerDebugID = null;
+          currentTimerType = null;
+        }
+      }
+      emitEvent('onEndLifeCycleTimer', debugID, timerType);
+    },
+    onBeginReconcilerTimer: function (debugID, timerType) {
+      checkDebugID(debugID);
+      emitEvent('onBeginReconcilerTimer', debugID, timerType);
+    },
+    onEndReconcilerTimer: function (debugID, timerType) {
+      checkDebugID(debugID);
+      emitEvent('onEndReconcilerTimer', debugID, timerType);
+    },
     onBeginProcessingChildContext: function () {
       emitEvent('onBeginProcessingChildContext');
     },
     onEndProcessingChildContext: function () {
       emitEvent('onEndProcessingChildContext');
     },
+    onNativeOperation: function (debugID, type, payload) {
+      checkDebugID(debugID);
+      emitEvent('onNativeOperation', debugID, type, payload);
+    },
     onSetState: function () {
       emitEvent('onSetState');
     },
-    onMountRootComponent: function (internalInstance) {
-      emitEvent('onMountRootComponent', internalInstance);
+    onSetDisplayName: function (debugID, displayName) {
+      checkDebugID(debugID);
+      emitEvent('onSetDisplayName', debugID, displayName);
     },
-    onMountComponent: function (internalInstance) {
-      emitEvent('onMountComponent', internalInstance);
+    onSetChildren: function (debugID, childDebugIDs) {
+      checkDebugID(debugID);
+      emitEvent('onSetChildren', debugID, childDebugIDs);
     },
-    onUpdateComponent: function (internalInstance) {
-      emitEvent('onUpdateComponent', internalInstance);
+    onSetOwner: function (debugID, ownerDebugID) {
+      checkDebugID(debugID);
+      emitEvent('onSetOwner', debugID, ownerDebugID);
     },
-    onUnmountComponent: function (internalInstance) {
-      emitEvent('onUnmountComponent', internalInstance);
+    onSetText: function (debugID, text) {
+      checkDebugID(debugID);
+      emitEvent('onSetText', debugID, text);
+    },
+    onMountRootComponent: function (debugID) {
+      checkDebugID(debugID);
+      emitEvent('onMountRootComponent', debugID);
+    },
+    onMountComponent: function (debugID) {
+      checkDebugID(debugID);
+      emitEvent('onMountComponent', debugID);
+    },
+    onUpdateComponent: function (debugID) {
+      checkDebugID(debugID);
+      emitEvent('onUpdateComponent', debugID);
+    },
+    onUnmountComponent: function (debugID) {
+      checkDebugID(debugID);
+      emitEvent('onUnmountComponent', debugID);
     }
   };
   
-  ReactDebugTool.addDevtool(ReactInvalidSetStateWarningDevTool);
+  if (undefined !== 'production') {
+    var ReactInvalidSetStateWarningDevTool = _m_['react/lib/ReactInvalidSetStateWarningDevTool.js#15.1.0'];
+    var ReactNativeOperationHistoryDevtool = _m_['react/lib/ReactNativeOperationHistoryDevtool.js#15.1.0'];
+    var ReactComponentTreeDevtool = _m_['react/lib/ReactComponentTreeDevtool.js#15.1.0'];
+    ReactDebugTool.addDevtool(ReactInvalidSetStateWarningDevTool);
+    ReactDebugTool.addDevtool(ReactComponentTreeDevtool);
+    ReactDebugTool.addDevtool(ReactNativeOperationHistoryDevtool);
+    var url = ExecutionEnvironment.canUseDOM && window.location.href || '';
+    if (/[?&]react_perf\b/.test(url)) {
+      ReactDebugTool.beginProfiling();
+    }
+  }
   
   module.exports = ReactDebugTool;
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactInstrumentation.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactInstrumentation.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -2146,13 +2656,13 @@ _m_['react/lib/ReactInstrumentation.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactDebugTool = _m_['react/lib/ReactDebugTool.js#15.0.2'];
+  var ReactDebugTool = _m_['react/lib/ReactDebugTool.js#15.1.0'];
   
   module.exports = { debugTool: ReactDebugTool };
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactComponent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactComponent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -2168,13 +2678,13 @@ _m_['react/lib/ReactComponent.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactNoopUpdateQueue = _m_['react/lib/ReactNoopUpdateQueue.js#15.0.2'];
-  var ReactInstrumentation = _m_['react/lib/ReactInstrumentation.js#15.0.2'];
+  var ReactNoopUpdateQueue = _m_['react/lib/ReactNoopUpdateQueue.js#15.1.0'];
+  var ReactInstrumentation = _m_['react/lib/ReactInstrumentation.js#15.1.0'];
   
-  var canDefineProperty = _m_['react/lib/canDefineProperty.js#15.0.2'];
-  var emptyObject = _m_['fbjs/lib/emptyObject.js#0.8.2'];
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var canDefineProperty = _m_['react/lib/canDefineProperty.js#15.1.0'];
+  var emptyObject = _m_['fbjs/lib/emptyObject.js#0.8.3'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   /**
    * Base class helpers for the updating state of a component.
@@ -2279,7 +2789,7 @@ _m_['react/lib/ReactComponent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactClass.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactClass.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -2297,17 +2807,17 @@ _m_['react/lib/ReactClass.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var ReactComponent = _m_['react/lib/ReactComponent.js#15.0.2'];
-  var ReactElement = _m_['react/lib/ReactElement.js#15.0.2'];
-  var ReactPropTypeLocations = _m_['react/lib/ReactPropTypeLocations.js#15.0.2'];
-  var ReactPropTypeLocationNames = _m_['react/lib/ReactPropTypeLocationNames.js#15.0.2'];
-  var ReactNoopUpdateQueue = _m_['react/lib/ReactNoopUpdateQueue.js#15.0.2'];
+  var ReactComponent = _m_['react/lib/ReactComponent.js#15.1.0'];
+  var ReactElement = _m_['react/lib/ReactElement.js#15.1.0'];
+  var ReactPropTypeLocations = _m_['react/lib/ReactPropTypeLocations.js#15.1.0'];
+  var ReactPropTypeLocationNames = _m_['react/lib/ReactPropTypeLocationNames.js#15.1.0'];
+  var ReactNoopUpdateQueue = _m_['react/lib/ReactNoopUpdateQueue.js#15.1.0'];
   
-  var emptyObject = _m_['fbjs/lib/emptyObject.js#0.8.2'];
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
-  var keyMirror = _m_['fbjs/lib/keyMirror.js#0.8.2'];
-  var keyOf = _m_['fbjs/lib/keyOf.js#0.8.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var emptyObject = _m_['fbjs/lib/emptyObject.js#0.8.3'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  var keyMirror = _m_['fbjs/lib/keyMirror.js#0.8.3'];
+  var keyOf = _m_['fbjs/lib/keyOf.js#0.8.3'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var MIXINS_KEY = keyOf({ mixins: null });
   
@@ -2911,6 +3421,7 @@ _m_['react/lib/ReactClass.js#15.0.2']=(function(module,exports){
   
     /**
      * Creates a composite component class given a class specification.
+     * See https://facebook.github.io/react/docs/top-level-api.html#react.createclass
      *
      * @param {object} spec Class specification (which must define `render`).
      * @return {function} Component constructor function.
@@ -3008,7 +3519,7 @@ _m_['react/lib/ReactClass.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/KeyEscapeUtils.js#15.0.2']=(function(module,exports){
+_m_['react/lib/KeyEscapeUtils.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -3072,7 +3583,7 @@ _m_['react/lib/KeyEscapeUtils.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/traverseAllChildren.js#15.0.2']=(function(module,exports){
+_m_['react/lib/traverseAllChildren.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -3088,13 +3599,13 @@ _m_['react/lib/traverseAllChildren.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactCurrentOwner = _m_['react/lib/ReactCurrentOwner.js#15.0.2'];
-  var ReactElement = _m_['react/lib/ReactElement.js#15.0.2'];
+  var ReactCurrentOwner = _m_['react/lib/ReactCurrentOwner.js#15.1.0'];
+  var ReactElement = _m_['react/lib/ReactElement.js#15.1.0'];
   
-  var getIteratorFn = _m_['react/lib/getIteratorFn.js#15.0.2'];
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
-  var KeyEscapeUtils = _m_['react/lib/KeyEscapeUtils.js#15.0.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var getIteratorFn = _m_['react/lib/getIteratorFn.js#15.1.0'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  var KeyEscapeUtils = _m_['react/lib/KeyEscapeUtils.js#15.1.0'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var SEPARATOR = '.';
   var SUBSEPARATOR = ':';
@@ -3236,7 +3747,7 @@ _m_['react/lib/traverseAllChildren.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/PooledClass.js#15.0.2']=(function(module,exports){
+_m_['react/lib/PooledClass.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -3252,7 +3763,7 @@ _m_['react/lib/PooledClass.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   /**
    * Static poolers. Several custom versions for each potential number of
@@ -3361,7 +3872,7 @@ _m_['react/lib/PooledClass.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactChildren.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactChildren.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -3377,11 +3888,11 @@ _m_['react/lib/ReactChildren.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var PooledClass = _m_['react/lib/PooledClass.js#15.0.2'];
-  var ReactElement = _m_['react/lib/ReactElement.js#15.0.2'];
+  var PooledClass = _m_['react/lib/PooledClass.js#15.1.0'];
+  var ReactElement = _m_['react/lib/ReactElement.js#15.1.0'];
   
-  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.2'];
-  var traverseAllChildren = _m_['react/lib/traverseAllChildren.js#15.0.2'];
+  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.3'];
+  var traverseAllChildren = _m_['react/lib/traverseAllChildren.js#15.1.0'];
   
   var twoArgumentPooler = PooledClass.twoArgumentPooler;
   var fourArgumentPooler = PooledClass.fourArgumentPooler;
@@ -3420,6 +3931,8 @@ _m_['react/lib/ReactChildren.js#15.0.2']=(function(module,exports){
   
   /**
    * Iterates through children that are typically specified as `props.children`.
+   *
+   * See https://facebook.github.io/react/docs/top-level-api.html#react.children.foreach
    *
    * The provided forEachFunc(child, index) will be called for each
    * leaf child.
@@ -3496,7 +4009,9 @@ _m_['react/lib/ReactChildren.js#15.0.2']=(function(module,exports){
   /**
    * Maps children that are typically specified as `props.children`.
    *
-   * The provided mapFunction(child, index) will be called for each
+   * See https://facebook.github.io/react/docs/top-level-api.html#react.children.map
+   *
+   * The provided mapFunction(child, key, index) will be called for each
    * leaf child.
    *
    * @param {?*} children Children tree container.
@@ -3521,6 +4036,8 @@ _m_['react/lib/ReactChildren.js#15.0.2']=(function(module,exports){
    * Count the number of children that are typically specified as
    * `props.children`.
    *
+   * See https://facebook.github.io/react/docs/top-level-api.html#react.children.count
+   *
    * @param {?*} children Children tree container.
    * @return {number} The number of children.
    */
@@ -3531,6 +4048,8 @@ _m_['react/lib/ReactChildren.js#15.0.2']=(function(module,exports){
   /**
    * Flatten a children object (typically specified as `props.children`) and
    * return an array with appropriately re-keyed children.
+   *
+   * See https://facebook.github.io/react/docs/top-level-api.html#react.children.toarray
    */
   function toArray(children) {
     var result = [];
@@ -3550,7 +4069,7 @@ _m_['react/lib/ReactChildren.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/React.js#15.0.2']=(function(module,exports){
+_m_['react/lib/React.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -3568,17 +4087,17 @@ _m_['react/lib/React.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var ReactChildren = _m_['react/lib/ReactChildren.js#15.0.2'];
-  var ReactComponent = _m_['react/lib/ReactComponent.js#15.0.2'];
-  var ReactClass = _m_['react/lib/ReactClass.js#15.0.2'];
-  var ReactDOMFactories = _m_['react/lib/ReactDOMFactories.js#15.0.2'];
-  var ReactElement = _m_['react/lib/ReactElement.js#15.0.2'];
-  var ReactElementValidator = _m_['react/lib/ReactElementValidator.js#15.0.2'];
-  var ReactPropTypes = _m_['react/lib/ReactPropTypes.js#15.0.2'];
-  var ReactVersion = _m_['react/lib/ReactVersion.js#15.0.2'];
+  var ReactChildren = _m_['react/lib/ReactChildren.js#15.1.0'];
+  var ReactComponent = _m_['react/lib/ReactComponent.js#15.1.0'];
+  var ReactClass = _m_['react/lib/ReactClass.js#15.1.0'];
+  var ReactDOMFactories = _m_['react/lib/ReactDOMFactories.js#15.1.0'];
+  var ReactElement = _m_['react/lib/ReactElement.js#15.1.0'];
+  var ReactElementValidator = _m_['react/lib/ReactElementValidator.js#15.1.0'];
+  var ReactPropTypes = _m_['react/lib/ReactPropTypes.js#15.1.0'];
+  var ReactVersion = _m_['react/lib/ReactVersion.js#15.1.0'];
   
-  var onlyChild = _m_['react/lib/onlyChild.js#15.0.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var onlyChild = _m_['react/lib/onlyChild.js#15.1.0'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var createElement = ReactElement.createElement;
   var createFactory = ReactElement.createFactory;
@@ -3643,12 +4162,12 @@ _m_['react/lib/React.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/react.js#15.0.2']=(function(module,exports){
+_m_['react/react.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   'use strict';
   
-  module.exports = _m_['react/lib/React.js#15.0.2'];
+  module.exports = _m_['react/lib/React.js#15.1.0'];
   
 
   return module.exports;
@@ -4618,7 +5137,7 @@ _m_['@yr/clock/index.js#1.1.8']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['@yr/component/lib/Component.js#3.0.2']=(function(module,exports){
+_m_['@yr/component/lib/Component.js#3.0.4']=(function(module,exports){
   module=this;exports=module.exports;
 
   'use strict';
@@ -4627,17 +5146,18 @@ _m_['@yr/component/lib/Component.js#3.0.2']=(function(module,exports){
    * Base component class (client)
    */
   
+  var assign = _m_['object-assign/index.js#4.1.0'];
   var clock = _m_['@yr/clock/index.js#1.1.8'];
   var Debug = _m_['debug/browser.js#2.2.0'];
   var isEqual = _m_['@yr/is-equal/index.js#1.0.3'];
-  var React = _m_['react/react.js#15.0.2'];
+  var React = _m_['react/react.js#15.1.0'];
   
   var DEFAULT_TRANSITION_DURATION = 250;
   var TIMEOUT = 20;
   
   var debug = Debug('yr:component');
   
-  var Component = function (_React$Component) {
+  module.exports = function (_React$Component) {
     babelHelpers.inherits(Component, _React$Component);
   
     /**
@@ -4651,6 +5171,9 @@ _m_['@yr/component/lib/Component.js#3.0.2']=(function(module,exports){
       var _this = babelHelpers.possibleConstructorReturn(this, _React$Component.call(this, props));
   
       _this.__timerID = 0;
+      _this.__transitionDuration = 'getTransitionDuration' in _this ? _this.getTransitionDuration() : DEFAULT_TRANSITION_DURATION;
+      // Set up initial state
+      _this.state = assign({}, _this.__state);
       // Autobind mixin methods
       if (_this.__bindableMethods) {
         _this.__bindableMethods.forEach(function (method) {
@@ -4679,18 +5202,32 @@ _m_['@yr/component/lib/Component.js#3.0.2']=(function(module,exports){
   
   
     Component.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps, nextState) {
-      var propsChanged = 'isEqual' in nextProps ? !this.props.isEqual(nextProps) : !isEqual(nextProps, this.props, null, debug);
-      var stateChanged = !isEqual(nextState, this.state, null, debug);
-      var changed = propsChanged || stateChanged;
+      var changed = 'isEqual' in nextProps ? !this.props.isEqual(nextProps) : !isEqual(nextProps, this.props, null, debug);
   
-      if (propsChanged) debug('props changed %s', this.displayName);
-      if (stateChanged) debug('state changed %s', this.displayName);
+      if (!changed) {
+        changed = !isEqual(nextState, this.state, null, debug);
+        if (changed) debug('state changed for %s', this.displayName);
+      } else {
+        debug('props changed for %s', this.displayName);
+      }
   
-      if (changed && 'shouldComponentTransition' in this && this.shouldComponentTransition(nextProps, nextState)) {
+      if (changed && this.shouldComponentTransition(nextProps, nextState)) {
         this.willTransition(nextState);
       }
   
-      return propsChanged || stateChanged;
+      return changed;
+    };
+  
+    /**
+     * Determine if component should transition based on 'nextProps' or 'nextState'
+     * @param {Object} nextProps
+     * @param {Object} nextState
+     * @returns {Boolean}
+     */
+  
+  
+    Component.prototype.shouldComponentTransition = function shouldComponentTransition(nextProps, nextState) {
+      return false;
     };
   
     /**
@@ -4703,10 +5240,11 @@ _m_['@yr/component/lib/Component.js#3.0.2']=(function(module,exports){
       var _this2 = this;
   
       if (this.__timerID) clock.cancel(this.__timerID);
-      this.setState({
-        visibility: !state.visibility ? 1 : 2
-      });
-      // frame/immediate don't leave enough time for redraw between states
+  
+      // Generally a bad idea...
+      state.visibility = !state.visibility ? 1 : 2;
+  
+      // frame/immediate doesn't leave enough time for redraw between states
       this.__timerID = clock.timeout(TIMEOUT, function () {
         _this2.isTransitioning();
       });
@@ -4720,13 +5258,11 @@ _m_['@yr/component/lib/Component.js#3.0.2']=(function(module,exports){
     Component.prototype.isTransitioning = function isTransitioning() {
       var _this3 = this;
   
-      var duration = 'getTransitionDuration' in this ? this.getTransitionDuration() : DEFAULT_TRANSITION_DURATION;
-  
       this.setState({
         visibility: this.state.visibility == 1 ? 2 : 1
       });
   
-      this.__timerID = clock.timeout(duration, function () {
+      this.__timerID = clock.timeout(this.__transitionDuration, function () {
         _this3.didTransition();
       });
     };
@@ -4738,19 +5274,30 @@ _m_['@yr/component/lib/Component.js#3.0.2']=(function(module,exports){
   
     Component.prototype.didTransition = function didTransition() {
       this.__timerID = 0;
+  
       this.setState({
         visibility: this.state.visibility == 2 ? 3 : 0
       });
     };
   
+    /**
+     * React: componentWillUnmount
+     */
+  
+  
+    Component.prototype.componentWillUnmount = function componentWillUnmount() {
+      // Reset
+      if (this.state && this.state.visibility) this.state.visibility = 0;
+      if (this.__timerID) clock.cancel(this.__timerID);
+      if (this.__componentWillUnmount) this.__componentWillUnmount();
+    };
+  
     return Component;
   }(React.Component);
-  
-  module.exports = Component;
 
   return module.exports;
 }).call({exports:{}});
-_m_['@yr/component/index.js#3.0.2']=(function(module,exports){
+_m_['@yr/component/index.js#3.0.4']=(function(module,exports){
   module=this;exports=module.exports;
 
   'use strict';
@@ -4763,13 +5310,17 @@ _m_['@yr/component/index.js#3.0.2']=(function(module,exports){
    */
   
   var assign = _m_['object-assign/index.js#4.1.0'];
-  var Component = _m_['@yr/component/lib/Component.js#3.0.2'];
+  var Component = _m_['@yr/component/lib/Component.js#3.0.4'];
   var runtime = _m_['@yr/runtime/index.js#1.2.0'];
   // Use production build for server
   // Override with package.json "browser" field for client to enable debug during dev
-  var React = _m_['react/react.js#15.0.2'];
+  var React = _m_['react/react.js#15.1.0'];
   
-  var RESERVED_METHODS = ['render', 'componentWillMount', 'componentDidMount', 'componentWillReceiveProps', 'shouldComponentUpdate', 'componentWillUpdate', 'componentDidUpdate', 'componentWillUnmount', 'shouldComponentTransition', 'getTransitionDuration'];
+  var LIFECYCLE_METHODS = ['componentWillMount', 'componentDidMount', 'componentWillReceiveProps', 'componentWillUpdate', 'componentDidUpdate', 'componentWillUnmount'];
+  var PROXY_KEYS = ['componentWillUnmount', 'render', 'state'];
+  var RESERVED_METHODS = LIFECYCLE_METHODS.concat(['render', 'shouldComponentUpdate', 'shouldComponentTransition', 'getTransitionDuration']);
+  
+  var isProduction = undefined == 'production';
   
   module.exports = {
     NOT_TRANSITIONING: 0,
@@ -4803,37 +5354,28 @@ _m_['@yr/component/index.js#3.0.2']=(function(module,exports){
   
       // Handle mixins
       if (mixins && mixins.length) {
-        mixins.unshift({});
-        // Clone
-        mixins = assign.apply(null, mixins);
+        // Merge/clone
+        mixins = assign.apply(undefined, [{}].concat(mixins));
         // Store method names to autobind on instantiation
         specification.__bindableMethods = Object.keys(mixins).filter(function (key) {
           return ! ~RESERVED_METHODS.indexOf(key) && 'function' == typeof mixins[key];
         });
-      } else {
-        mixins = {};
+        specification = assign(specification, mixins);
       }
   
-      // Proxy render implementation to force sending 'state'
-      specification.__render = specification.render;
-      delete specification.render;
-  
+      // Rename select keys to prevent overwriting
+      proxyKeys(specification, PROXY_KEYS);
       // Copy to comp prototype
-      assign(comp.prototype, specification, mixins);
+      assign(comp.prototype, specification);
   
-      return function createElement(props /*, ...children*/) {
+      return function createElement(props) {
         processProps(props, specification);
   
-        // Non-leaky args conversion
-        var n = arguments.length;
-        var args = Array(n + 1);
-  
-        args[0] = comp;
-        for (var i = 0; i < n; i++) {
-          args[i + 1] = arguments[i];
+        for (var _len = arguments.length, children = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+          children[_key - 1] = arguments[_key];
         }
   
-        return React.createElement.apply(null, args);
+        return React.createElement.apply(React, [comp, props].concat(children));
       };
     },
   
@@ -4844,7 +5386,7 @@ _m_['@yr/component/index.js#3.0.2']=(function(module,exports){
      * @returns {Function}
      */
     stateless: function stateless(specification) {
-      return function renderStateless(props) {
+      return function createStatelessElement(props) {
         processProps(props, specification);
   
         // Send in initial state
@@ -4854,18 +5396,32 @@ _m_['@yr/component/index.js#3.0.2']=(function(module,exports){
   };
   
   /**
+   * Proxy 'keys' of 'obj'
+   * @param {Object} obj
+   * @param {Array} keys
+   */
+  function proxyKeys(obj, keys) {
+    keys.forEach(function (key) {
+      if (key in obj) {
+        obj['__' + key] = obj[key];
+        delete obj[key];
+      }
+    });
+  }
+  
+  /**
    * Process 'props'
    * @param {Props} props
    * @param {Object} specification
    */
   function processProps(props, specification) {
     props = props || {};
-  
     var data = specification.data;
     var defaultProps = specification.defaultProps;
     var displayName = specification.displayName;
   
     // Extract missing props defined in 'data'
+  
     if (data && props && 'extract' in props) props.extract(Object.keys(data));
   
     // Copy default props
@@ -4875,7 +5431,7 @@ _m_['@yr/component/index.js#3.0.2']=(function(module,exports){
       }
     }
   
-    if (undefined == 'production' || !data) return;
+    if (!isProduction || !data) return;
   
     // Validate prop types
     for (var key in data) {
@@ -4892,7 +5448,7 @@ _m_['src/lib/utils.js']=(function(module,exports){
 
   'use strict';
   
-  var component = _m_['@yr/component/index.js#3.0.2'];
+  var component = _m_['@yr/component/index.js#3.0.4'];
   
   var MAX_WIDTH = 100;
   
@@ -5638,7 +6194,7 @@ _m_['@yr/graphics-component/index.js#3.1.2']=(function(module,exports){
    * @license MIT
    */
   
-  var component = _m_['@yr/component/index.js#3.0.2'];
+  var component = _m_['@yr/component/index.js#3.0.4'];
   
   var TYPE_IMG = 'img';
   var TYPE_SVG = 'svg';
@@ -5770,48 +6326,7 @@ _m_['src/index.js']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/ExecutionEnvironment.js#0.8.2']=(function(module,exports){
-  module=this;exports=module.exports;
-
-  /**
-   * Copyright (c) 2013-present, Facebook, Inc.
-   * All rights reserved.
-   *
-   * This source code is licensed under the BSD-style license found in the
-   * LICENSE file in the root directory of this source tree. An additional grant
-   * of patent rights can be found in the PATENTS file in the same directory.
-   *
-   */
-  
-  'use strict';
-  
-  var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
-  
-  /**
-   * Simple, lightweight module assisting with the detection and context of
-   * Worker. Helps avoid circular dependencies and allows code to reason about
-   * whether or not they are in a Worker, even if they never include the main
-   * `ReactWorker` dependency.
-   */
-  var ExecutionEnvironment = {
-  
-    canUseDOM: canUseDOM,
-  
-    canUseWorkers: typeof Worker !== 'undefined',
-  
-    canUseEventListeners: canUseDOM && !!(window.addEventListener || window.attachEvent),
-  
-    canUseViewport: canUseDOM && !!window.screen,
-  
-    isInWorker: !canUseDOM // For now, this is true - might change in the future.
-  
-  };
-  
-  module.exports = ExecutionEnvironment;
-
-  return module.exports;
-}).call({exports:{}});
-_m_['react/lib/shouldUpdateReactComponent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/shouldUpdateReactComponent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -5859,7 +6374,7 @@ _m_['react/lib/shouldUpdateReactComponent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/createMicrosoftUnsafeLocalFunction.js#15.0.2']=(function(module,exports){
+_m_['react/lib/createMicrosoftUnsafeLocalFunction.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -5897,7 +6412,7 @@ _m_['react/lib/createMicrosoftUnsafeLocalFunction.js#15.0.2']=(function(module,e
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/setInnerHTML.js#15.0.2']=(function(module,exports){
+_m_['react/lib/setInnerHTML.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -5913,12 +6428,12 @@ _m_['react/lib/setInnerHTML.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
+  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
   
   var WHITESPACE_TEST = /^[ \r\n\t\f]/;
   var NONVISIBLE_TEST = /<(!--|link|noscript|meta|script|style)[ \r\n\t\f\/>]/;
   
-  var createMicrosoftUnsafeLocalFunction = _m_['react/lib/createMicrosoftUnsafeLocalFunction.js#15.0.2'];
+  var createMicrosoftUnsafeLocalFunction = _m_['react/lib/createMicrosoftUnsafeLocalFunction.js#15.1.0'];
   
   /**
    * Set the innerHTML property of a node, ensuring that whitespace is preserved
@@ -5985,7 +6500,7 @@ _m_['react/lib/setInnerHTML.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactNativeComponent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactNativeComponent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -6003,7 +6518,7 @@ _m_['react/lib/ReactNativeComponent.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   var autoGenerateWrapperClass = null;
   var genericComponentClass = null;
@@ -6086,7 +6601,7 @@ _m_['react/lib/ReactNativeComponent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactEmptyComponent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactEmptyComponent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -6122,7 +6637,7 @@ _m_['react/lib/ReactEmptyComponent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/Transaction.js#15.0.2']=(function(module,exports){
+_m_['react/lib/Transaction.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -6138,7 +6653,7 @@ _m_['react/lib/Transaction.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   /**
    * `Transaction` creates a black box that is able to wrap any method such that
@@ -6359,7 +6874,7 @@ _m_['react/lib/Transaction.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactOwner.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactOwner.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -6375,7 +6890,7 @@ _m_['react/lib/ReactOwner.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   /**
    * ReactOwners are capable of storing references to owned components.
@@ -6457,7 +6972,7 @@ _m_['react/lib/ReactOwner.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactRef.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactRef.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -6473,7 +6988,7 @@ _m_['react/lib/ReactRef.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactOwner = _m_['react/lib/ReactOwner.js#15.0.2'];
+  var ReactOwner = _m_['react/lib/ReactOwner.js#15.1.0'];
   
   var ReactRef = {};
   
@@ -6541,7 +7056,7 @@ _m_['react/lib/ReactRef.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactReconciler.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactReconciler.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -6557,8 +7072,10 @@ _m_['react/lib/ReactReconciler.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactRef = _m_['react/lib/ReactRef.js#15.0.2'];
-  var ReactInstrumentation = _m_['react/lib/ReactInstrumentation.js#15.0.2'];
+  var ReactRef = _m_['react/lib/ReactRef.js#15.1.0'];
+  var ReactInstrumentation = _m_['react/lib/ReactInstrumentation.js#15.1.0'];
+  
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   /**
    * Helper to call ReactRef.attachRefs with this composite component, split out
@@ -6582,12 +7099,20 @@ _m_['react/lib/ReactReconciler.js#15.0.2']=(function(module,exports){
      * @internal
      */
     mountComponent: function (internalInstance, transaction, nativeParent, nativeContainerInfo, context) {
+      if (undefined !== 'production') {
+        if (internalInstance._debugID !== 0) {
+          ReactInstrumentation.debugTool.onBeginReconcilerTimer(internalInstance._debugID, 'mountComponent');
+        }
+      }
       var markup = internalInstance.mountComponent(transaction, nativeParent, nativeContainerInfo, context);
       if (internalInstance._currentElement && internalInstance._currentElement.ref != null) {
         transaction.getReactMountReady().enqueue(attachRefs, internalInstance);
       }
       if (undefined !== 'production') {
-        ReactInstrumentation.debugTool.onMountComponent(internalInstance);
+        if (internalInstance._debugID !== 0) {
+          ReactInstrumentation.debugTool.onEndReconcilerTimer(internalInstance._debugID, 'mountComponent');
+          ReactInstrumentation.debugTool.onMountComponent(internalInstance._debugID);
+        }
       }
       return markup;
     },
@@ -6607,10 +7132,18 @@ _m_['react/lib/ReactReconciler.js#15.0.2']=(function(module,exports){
      * @internal
      */
     unmountComponent: function (internalInstance, safely) {
+      if (undefined !== 'production') {
+        if (internalInstance._debugID !== 0) {
+          ReactInstrumentation.debugTool.onBeginReconcilerTimer(internalInstance._debugID, 'unmountComponent');
+        }
+      }
       ReactRef.detachRefs(internalInstance, internalInstance._currentElement);
       internalInstance.unmountComponent(safely);
       if (undefined !== 'production') {
-        ReactInstrumentation.debugTool.onUnmountComponent(internalInstance);
+        if (internalInstance._debugID !== 0) {
+          ReactInstrumentation.debugTool.onEndReconcilerTimer(internalInstance._debugID, 'unmountComponent');
+          ReactInstrumentation.debugTool.onUnmountComponent(internalInstance._debugID);
+        }
       }
     },
   
@@ -6640,6 +7173,12 @@ _m_['react/lib/ReactReconciler.js#15.0.2']=(function(module,exports){
         return;
       }
   
+      if (undefined !== 'production') {
+        if (internalInstance._debugID !== 0) {
+          ReactInstrumentation.debugTool.onBeginReconcilerTimer(internalInstance._debugID, 'receiveComponent');
+        }
+      }
+  
       var refsChanged = ReactRef.shouldUpdateRefs(prevElement, nextElement);
   
       if (refsChanged) {
@@ -6653,7 +7192,10 @@ _m_['react/lib/ReactReconciler.js#15.0.2']=(function(module,exports){
       }
   
       if (undefined !== 'production') {
-        ReactInstrumentation.debugTool.onUpdateComponent(internalInstance);
+        if (internalInstance._debugID !== 0) {
+          ReactInstrumentation.debugTool.onEndReconcilerTimer(internalInstance._debugID, 'receiveComponent');
+          ReactInstrumentation.debugTool.onUpdateComponent(internalInstance._debugID);
+        }
       }
     },
   
@@ -6664,10 +7206,24 @@ _m_['react/lib/ReactReconciler.js#15.0.2']=(function(module,exports){
      * @param {ReactReconcileTransaction} transaction
      * @internal
      */
-    performUpdateIfNecessary: function (internalInstance, transaction) {
+    performUpdateIfNecessary: function (internalInstance, transaction, updateBatchNumber) {
+      if (internalInstance._updateBatchNumber !== updateBatchNumber) {
+        // The component's enqueued batch number should always be the current
+        // batch or the following one.
+        !(internalInstance._updateBatchNumber == null || internalInstance._updateBatchNumber === updateBatchNumber + 1) ? undefined !== 'production' ? invariant(false, 'performUpdateIfNecessary: Unexpected batch number (current %s, ' + 'pending %s)', updateBatchNumber, internalInstance._updateBatchNumber) : invariant(false) : void 0;
+        return;
+      }
+      if (undefined !== 'production') {
+        if (internalInstance._debugID !== 0) {
+          ReactInstrumentation.debugTool.onBeginReconcilerTimer(internalInstance._debugID, 'performUpdateIfNecessary');
+        }
+      }
       internalInstance.performUpdateIfNecessary(transaction);
       if (undefined !== 'production') {
-        ReactInstrumentation.debugTool.onUpdateComponent(internalInstance);
+        if (internalInstance._debugID !== 0) {
+          ReactInstrumentation.debugTool.onEndReconcilerTimer(internalInstance._debugID, 'performUpdateIfNecessary');
+          ReactInstrumentation.debugTool.onUpdateComponent(internalInstance._debugID);
+        }
       }
     }
   
@@ -6677,109 +7233,7 @@ _m_['react/lib/ReactReconciler.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactPerf.js#15.0.2']=(function(module,exports){
-  module=this;exports=module.exports;
-
-  /**
-   * Copyright 2013-present, Facebook, Inc.
-   * All rights reserved.
-   *
-   * This source code is licensed under the BSD-style license found in the
-   * LICENSE file in the root directory of this source tree. An additional grant
-   * of patent rights can be found in the PATENTS file in the same directory.
-   *
-   * @providesModule ReactPerf
-   */
-  
-  'use strict';
-  
-  /**
-   * ReactPerf is a general AOP system designed to measure performance. This
-   * module only has the hooks: see ReactDefaultPerf for the analysis tool.
-   */
-  
-  var ReactPerf = {
-    /**
-     * Boolean to enable/disable measurement. Set to false by default to prevent
-     * accidental logging and perf loss.
-     */
-    enableMeasure: false,
-  
-    /**
-     * Holds onto the measure function in use. By default, don't measure
-     * anything, but we'll override this if we inject a measure function.
-     */
-    storedMeasure: _noMeasure,
-  
-    /**
-     * @param {object} object
-     * @param {string} objectName
-     * @param {object<string>} methodNames
-     */
-    measureMethods: function (object, objectName, methodNames) {
-      if (undefined !== 'production') {
-        for (var key in methodNames) {
-          if (!methodNames.hasOwnProperty(key)) {
-            continue;
-          }
-          object[key] = ReactPerf.measure(objectName, methodNames[key], object[key]);
-        }
-      }
-    },
-  
-    /**
-     * Use this to wrap methods you want to measure. Zero overhead in production.
-     *
-     * @param {string} objName
-     * @param {string} fnName
-     * @param {function} func
-     * @return {function}
-     */
-    measure: function (objName, fnName, func) {
-      if (undefined !== 'production') {
-        var measuredFunc = null;
-        var wrapper = function () {
-          if (ReactPerf.enableMeasure) {
-            if (!measuredFunc) {
-              measuredFunc = ReactPerf.storedMeasure(objName, fnName, func);
-            }
-            return measuredFunc.apply(this, arguments);
-          }
-          return func.apply(this, arguments);
-        };
-        wrapper.displayName = objName + '_' + fnName;
-        return wrapper;
-      }
-      return func;
-    },
-  
-    injection: {
-      /**
-       * @param {function} measure
-       */
-      injectMeasure: function (measure) {
-        ReactPerf.storedMeasure = measure;
-      }
-    }
-  };
-  
-  /**
-   * Simply passes through the measured function, without measuring it.
-   *
-   * @param {string} objName
-   * @param {string} fnName
-   * @param {function} func
-   * @return {function}
-   */
-  function _noMeasure(objName, fnName, func) {
-    return func;
-  }
-  
-  module.exports = ReactPerf;
-
-  return module.exports;
-}).call({exports:{}});
-_m_['react/lib/ReactFeatureFlags.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactFeatureFlags.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -6806,7 +7260,7 @@ _m_['react/lib/ReactFeatureFlags.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/CallbackQueue.js#15.0.2']=(function(module,exports){
+_m_['react/lib/CallbackQueue.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -6824,9 +7278,9 @@ _m_['react/lib/CallbackQueue.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var PooledClass = _m_['react/lib/PooledClass.js#15.0.2'];
+  var PooledClass = _m_['react/lib/PooledClass.js#15.1.0'];
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   /**
    * A specialized pseudo-event module to help keep track of components waiting to
@@ -6917,7 +7371,7 @@ _m_['react/lib/CallbackQueue.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactUpdates.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactUpdates.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -6935,16 +7389,17 @@ _m_['react/lib/ReactUpdates.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var CallbackQueue = _m_['react/lib/CallbackQueue.js#15.0.2'];
-  var PooledClass = _m_['react/lib/PooledClass.js#15.0.2'];
-  var ReactFeatureFlags = _m_['react/lib/ReactFeatureFlags.js#15.0.2'];
-  var ReactPerf = _m_['react/lib/ReactPerf.js#15.0.2'];
-  var ReactReconciler = _m_['react/lib/ReactReconciler.js#15.0.2'];
-  var Transaction = _m_['react/lib/Transaction.js#15.0.2'];
+  var CallbackQueue = _m_['react/lib/CallbackQueue.js#15.1.0'];
+  var PooledClass = _m_['react/lib/PooledClass.js#15.1.0'];
+  var ReactFeatureFlags = _m_['react/lib/ReactFeatureFlags.js#15.1.0'];
+  var ReactInstrumentation = _m_['react/lib/ReactInstrumentation.js#15.1.0'];
+  var ReactReconciler = _m_['react/lib/ReactReconciler.js#15.1.0'];
+  var Transaction = _m_['react/lib/Transaction.js#15.1.0'];
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   var dirtyComponents = [];
+  var updateBatchNumber = 0;
   var asapCallbackQueue = CallbackQueue.getPooled();
   var asapEnqueued = false;
   
@@ -7039,6 +7494,13 @@ _m_['react/lib/ReactUpdates.js#15.0.2']=(function(module,exports){
     // them before their children by sorting the array.
     dirtyComponents.sort(mountOrderComparator);
   
+    // Any updates enqueued while reconciling must be performed after this entire
+    // batch. Otherwise, if dirtyComponents is [A, B] where A has children B and
+    // C, B could update twice in a single batch if C's render enqueues an update
+    // to B (since B would have already updated, we should skip it, and the only
+    // way we can know to do so is by checking the batch counter).
+    updateBatchNumber++;
+  
     for (var i = 0; i < len; i++) {
       // If a component is unmounted before pending changes apply, it will still
       // be here, but we assume that it has cleared its _pendingCallbacks and
@@ -7062,7 +7524,7 @@ _m_['react/lib/ReactUpdates.js#15.0.2']=(function(module,exports){
         console.time(markerName);
       }
   
-      ReactReconciler.performUpdateIfNecessary(component, transaction.reconcileTransaction);
+      ReactReconciler.performUpdateIfNecessary(component, transaction.reconcileTransaction, updateBatchNumber);
   
       if (markerName) {
         console.timeEnd(markerName);
@@ -7077,6 +7539,10 @@ _m_['react/lib/ReactUpdates.js#15.0.2']=(function(module,exports){
   }
   
   var flushBatchedUpdates = function () {
+    if (undefined !== 'production') {
+      ReactInstrumentation.debugTool.onBeginFlush();
+    }
+  
     // ReactUpdatesFlushTransaction's wrappers will clear the dirtyComponents
     // array and perform any updates enqueued by mount-ready handlers (i.e.,
     // componentDidUpdate) but we need to check here too in order to catch
@@ -7096,8 +7562,11 @@ _m_['react/lib/ReactUpdates.js#15.0.2']=(function(module,exports){
         CallbackQueue.release(queue);
       }
     }
+  
+    if (undefined !== 'production') {
+      ReactInstrumentation.debugTool.onEndFlush();
+    }
   };
-  flushBatchedUpdates = ReactPerf.measure('ReactUpdates', 'flushBatchedUpdates', flushBatchedUpdates);
   
   /**
    * Mark a component as needing a rerender, adding an optional callback to a
@@ -7118,6 +7587,9 @@ _m_['react/lib/ReactUpdates.js#15.0.2']=(function(module,exports){
     }
   
     dirtyComponents.push(component);
+    if (component._updateBatchNumber == null) {
+      component._updateBatchNumber = updateBatchNumber + 1;
+    }
   }
   
   /**
@@ -7164,7 +7636,7 @@ _m_['react/lib/ReactUpdates.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactInstanceMap.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactInstanceMap.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -7218,7 +7690,7 @@ _m_['react/lib/ReactInstanceMap.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactUpdateQueue.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactUpdateQueue.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -7234,12 +7706,12 @@ _m_['react/lib/ReactUpdateQueue.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactCurrentOwner = _m_['react/lib/ReactCurrentOwner.js#15.0.2'];
-  var ReactInstanceMap = _m_['react/lib/ReactInstanceMap.js#15.0.2'];
-  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.0.2'];
+  var ReactCurrentOwner = _m_['react/lib/ReactCurrentOwner.js#15.1.0'];
+  var ReactInstanceMap = _m_['react/lib/ReactInstanceMap.js#15.1.0'];
+  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.1.0'];
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   function enqueueUpdate(internalInstance) {
     ReactUpdates.enqueueUpdate(internalInstance);
@@ -7439,7 +7911,7 @@ _m_['react/lib/ReactUpdateQueue.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactNodeTypes.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactNodeTypes.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -7455,9 +7927,9 @@ _m_['react/lib/ReactNodeTypes.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactElement = _m_['react/lib/ReactElement.js#15.0.2'];
+  var ReactElement = _m_['react/lib/ReactElement.js#15.1.0'];
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   var ReactNodeTypes = {
     NATIVE: 0,
@@ -7482,7 +7954,7 @@ _m_['react/lib/ReactNodeTypes.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactErrorUtils.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactErrorUtils.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -7564,7 +8036,7 @@ _m_['react/lib/ReactErrorUtils.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactComponentEnvironment.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactComponentEnvironment.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -7580,7 +8052,7 @@ _m_['react/lib/ReactComponentEnvironment.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   var injected = false;
   
@@ -7621,7 +8093,7 @@ _m_['react/lib/ReactComponentEnvironment.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactCompositeComponent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -7639,23 +8111,22 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var ReactComponentEnvironment = _m_['react/lib/ReactComponentEnvironment.js#15.0.2'];
-  var ReactCurrentOwner = _m_['react/lib/ReactCurrentOwner.js#15.0.2'];
-  var ReactElement = _m_['react/lib/ReactElement.js#15.0.2'];
-  var ReactErrorUtils = _m_['react/lib/ReactErrorUtils.js#15.0.2'];
-  var ReactInstanceMap = _m_['react/lib/ReactInstanceMap.js#15.0.2'];
-  var ReactInstrumentation = _m_['react/lib/ReactInstrumentation.js#15.0.2'];
-  var ReactNodeTypes = _m_['react/lib/ReactNodeTypes.js#15.0.2'];
-  var ReactPerf = _m_['react/lib/ReactPerf.js#15.0.2'];
-  var ReactPropTypeLocations = _m_['react/lib/ReactPropTypeLocations.js#15.0.2'];
-  var ReactPropTypeLocationNames = _m_['react/lib/ReactPropTypeLocationNames.js#15.0.2'];
-  var ReactReconciler = _m_['react/lib/ReactReconciler.js#15.0.2'];
-  var ReactUpdateQueue = _m_['react/lib/ReactUpdateQueue.js#15.0.2'];
+  var ReactComponentEnvironment = _m_['react/lib/ReactComponentEnvironment.js#15.1.0'];
+  var ReactCurrentOwner = _m_['react/lib/ReactCurrentOwner.js#15.1.0'];
+  var ReactElement = _m_['react/lib/ReactElement.js#15.1.0'];
+  var ReactErrorUtils = _m_['react/lib/ReactErrorUtils.js#15.1.0'];
+  var ReactInstanceMap = _m_['react/lib/ReactInstanceMap.js#15.1.0'];
+  var ReactInstrumentation = _m_['react/lib/ReactInstrumentation.js#15.1.0'];
+  var ReactNodeTypes = _m_['react/lib/ReactNodeTypes.js#15.1.0'];
+  var ReactPropTypeLocations = _m_['react/lib/ReactPropTypeLocations.js#15.1.0'];
+  var ReactPropTypeLocationNames = _m_['react/lib/ReactPropTypeLocationNames.js#15.1.0'];
+  var ReactReconciler = _m_['react/lib/ReactReconciler.js#15.1.0'];
+  var ReactUpdateQueue = _m_['react/lib/ReactUpdateQueue.js#15.1.0'];
   
-  var emptyObject = _m_['fbjs/lib/emptyObject.js#0.8.2'];
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
-  var shouldUpdateReactComponent = _m_['react/lib/shouldUpdateReactComponent.js#15.0.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var emptyObject = _m_['fbjs/lib/emptyObject.js#0.8.3'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  var shouldUpdateReactComponent = _m_['react/lib/shouldUpdateReactComponent.js#15.1.0'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   function getDeclarationErrorAddendum(component) {
     var owner = component._currentElement._owner || null;
@@ -7679,6 +8150,28 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
   function warnIfInvalidElement(Component, element) {
     if (undefined !== 'production') {
       undefined !== 'production' ? warning(element === null || element === false || ReactElement.isValidElement(element), '%s(...): A valid React element (or null) must be returned. You may have ' + 'returned undefined, an array or some other invalid object.', Component.displayName || Component.name || 'Component') : void 0;
+    }
+  }
+  
+  function invokeComponentDidMountWithTimer() {
+    var publicInstance = this._instance;
+    if (this._debugID !== 0) {
+      ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentDidMount');
+    }
+    publicInstance.componentDidMount();
+    if (this._debugID !== 0) {
+      ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentDidMount');
+    }
+  }
+  
+  function invokeComponentDidUpdateWithTimer(prevProps, prevState, prevContext) {
+    var publicInstance = this._instance;
+    if (this._debugID !== 0) {
+      ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentDidUpdate');
+    }
+    publicInstance.componentDidUpdate(prevProps, prevState, prevContext);
+    if (this._debugID !== 0) {
+      ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentDidUpdate');
     }
   }
   
@@ -7741,6 +8234,7 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
       this._nativeContainerInfo = null;
   
       // See ReactUpdateQueue
+      this._updateBatchNumber = null;
       this._pendingElement = null;
       this._pendingStateQueue = null;
       this._pendingReplaceState = false;
@@ -7849,7 +8343,11 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
       }
   
       if (inst.componentDidMount) {
-        transaction.getReactMountReady().enqueue(inst.componentDidMount, inst);
+        if (undefined !== 'production') {
+          transaction.getReactMountReady().enqueue(invokeComponentDidMountWithTimer, this);
+        } else {
+          transaction.getReactMountReady().enqueue(inst.componentDidMount, inst);
+        }
       }
   
       return markup;
@@ -7870,11 +8368,35 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
   
     _constructComponentWithoutOwner: function (publicProps, publicContext) {
       var Component = this._currentElement.type;
+      var instanceOrElement;
       if (shouldConstruct(Component)) {
-        return new Component(publicProps, publicContext, ReactUpdateQueue);
+        if (undefined !== 'production') {
+          if (this._debugID !== 0) {
+            ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'ctor');
+          }
+        }
+        instanceOrElement = new Component(publicProps, publicContext, ReactUpdateQueue);
+        if (undefined !== 'production') {
+          if (this._debugID !== 0) {
+            ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'ctor');
+          }
+        }
       } else {
-        return Component(publicProps, publicContext, ReactUpdateQueue);
+        // This can still be an instance in case of factory components
+        // but we'll count this as time spent rendering as the more common case.
+        if (undefined !== 'production') {
+          if (this._debugID !== 0) {
+            ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'render');
+          }
+        }
+        instanceOrElement = Component(publicProps, publicContext, ReactUpdateQueue);
+        if (undefined !== 'production') {
+          if (this._debugID !== 0) {
+            ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'render');
+          }
+        }
       }
+      return instanceOrElement;
     },
   
     performInitialMountWithErrorHandling: function (renderedElement, nativeParent, nativeContainerInfo, transaction, context) {
@@ -7904,7 +8426,17 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
     performInitialMount: function (renderedElement, nativeParent, nativeContainerInfo, transaction, context) {
       var inst = this._instance;
       if (inst.componentWillMount) {
+        if (undefined !== 'production') {
+          if (this._debugID !== 0) {
+            ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentWillMount');
+          }
+        }
         inst.componentWillMount();
+        if (undefined !== 'production') {
+          if (this._debugID !== 0) {
+            ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentWillMount');
+          }
+        }
         // When mounting, calls to `setState` by `componentWillMount` will set
         // `this._pendingStateQueue` without triggering a re-render.
         if (this._pendingStateQueue) {
@@ -7921,6 +8453,12 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
       this._renderedComponent = this._instantiateReactComponent(renderedElement);
   
       var markup = ReactReconciler.mountComponent(this._renderedComponent, transaction, nativeParent, nativeContainerInfo, this._processChildContext(context));
+  
+      if (undefined !== 'production') {
+        if (this._debugID !== 0) {
+          ReactInstrumentation.debugTool.onSetChildren(this._debugID, this._renderedComponent._debugID !== 0 ? [this._renderedComponent._debugID] : []);
+        }
+      }
   
       return markup;
     },
@@ -7943,11 +8481,21 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
   
       if (inst.componentWillUnmount && !inst._calledComponentWillUnmount) {
         inst._calledComponentWillUnmount = true;
+        if (undefined !== 'production') {
+          if (this._debugID !== 0) {
+            ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentWillUnmount');
+          }
+        }
         if (safely) {
           var name = this.getName() + '.componentWillUnmount()';
           ReactErrorUtils.invokeGuardedCallback(name, inst.componentWillUnmount.bind(inst));
         } else {
           inst.componentWillUnmount();
+        }
+        if (undefined !== 'production') {
+          if (this._debugID !== 0) {
+            ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentWillUnmount');
+          }
         }
       }
   
@@ -8131,10 +8679,10 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
     performUpdateIfNecessary: function (transaction) {
       if (this._pendingElement != null) {
         ReactReconciler.receiveComponent(this, this._pendingElement, transaction, this._context);
-      }
-  
-      if (this._pendingStateQueue !== null || this._pendingForceUpdate) {
+      } else if (this._pendingStateQueue !== null || this._pendingForceUpdate) {
         this.updateComponent(transaction, this._currentElement, this._currentElement, this._context, this._context);
+      } else {
+        this._updateBatchNumber = null;
       }
     },
   
@@ -8181,17 +8729,41 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
       // _pendingStateQueue which will ensure that any state updates gets
       // immediately reconciled instead of waiting for the next batch.
       if (willReceive && inst.componentWillReceiveProps) {
+        if (undefined !== 'production') {
+          if (this._debugID !== 0) {
+            ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentWillReceiveProps');
+          }
+        }
         inst.componentWillReceiveProps(nextProps, nextContext);
+        if (undefined !== 'production') {
+          if (this._debugID !== 0) {
+            ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentWillReceiveProps');
+          }
+        }
       }
   
       var nextState = this._processPendingState(nextProps, nextContext);
+      var shouldUpdate = true;
   
-      var shouldUpdate = this._pendingForceUpdate || !inst.shouldComponentUpdate || inst.shouldComponentUpdate(nextProps, nextState, nextContext);
+      if (!this._pendingForceUpdate && inst.shouldComponentUpdate) {
+        if (undefined !== 'production') {
+          if (this._debugID !== 0) {
+            ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'shouldComponentUpdate');
+          }
+        }
+        shouldUpdate = inst.shouldComponentUpdate(nextProps, nextState, nextContext);
+        if (undefined !== 'production') {
+          if (this._debugID !== 0) {
+            ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'shouldComponentUpdate');
+          }
+        }
+      }
   
       if (undefined !== 'production') {
         undefined !== 'production' ? warning(shouldUpdate !== undefined, '%s.shouldComponentUpdate(): Returned undefined instead of a ' + 'boolean value. Make sure to return true or false.', this.getName() || 'ReactCompositeComponent') : void 0;
       }
   
+      this._updateBatchNumber = null;
       if (shouldUpdate) {
         this._pendingForceUpdate = false;
         // Will set `this.props`, `this.state` and `this.context`.
@@ -8257,7 +8829,17 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
       }
   
       if (inst.componentWillUpdate) {
+        if (undefined !== 'production') {
+          if (this._debugID !== 0) {
+            ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'componentWillUpdate');
+          }
+        }
         inst.componentWillUpdate(nextProps, nextState, nextContext);
+        if (undefined !== 'production') {
+          if (this._debugID !== 0) {
+            ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'componentWillUpdate');
+          }
+        }
       }
   
       this._currentElement = nextElement;
@@ -8269,7 +8851,11 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
       this._updateRenderedComponent(transaction, unmaskedContext);
   
       if (hasComponentDidUpdate) {
-        transaction.getReactMountReady().enqueue(inst.componentDidUpdate.bind(inst, prevProps, prevState, prevContext), inst);
+        if (undefined !== 'production') {
+          transaction.getReactMountReady().enqueue(invokeComponentDidUpdateWithTimer.bind(this, prevProps, prevState, prevContext), this);
+        } else {
+          transaction.getReactMountReady().enqueue(inst.componentDidUpdate.bind(inst, prevProps, prevState, prevContext), inst);
+        }
       }
     },
   
@@ -8291,8 +8877,16 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
   
         this._renderedNodeType = ReactNodeTypes.getType(nextRenderedElement);
         this._renderedComponent = this._instantiateReactComponent(nextRenderedElement);
+  
         var nextMarkup = ReactReconciler.mountComponent(this._renderedComponent, transaction, this._nativeParent, this._nativeContainerInfo, this._processChildContext(context));
-        this._replaceNodeWithMarkup(oldNativeNode, nextMarkup);
+  
+        if (undefined !== 'production') {
+          if (this._debugID !== 0) {
+            ReactInstrumentation.debugTool.onSetChildren(this._debugID, this._renderedComponent._debugID !== 0 ? [this._renderedComponent._debugID] : []);
+          }
+        }
+  
+        this._replaceNodeWithMarkup(oldNativeNode, nextMarkup, prevComponentInstance);
       }
     },
   
@@ -8301,8 +8895,8 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
      *
      * @protected
      */
-    _replaceNodeWithMarkup: function (oldNativeNode, nextMarkup) {
-      ReactComponentEnvironment.replaceNodeWithMarkup(oldNativeNode, nextMarkup);
+    _replaceNodeWithMarkup: function (oldNativeNode, nextMarkup, prevInstance) {
+      ReactComponentEnvironment.replaceNodeWithMarkup(oldNativeNode, nextMarkup, prevInstance);
     },
   
     /**
@@ -8310,7 +8904,19 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
      */
     _renderValidatedComponentWithoutOwnerOrContext: function () {
       var inst = this._instance;
+  
+      if (undefined !== 'production') {
+        if (this._debugID !== 0) {
+          ReactInstrumentation.debugTool.onBeginLifeCycleTimer(this._debugID, 'render');
+        }
+      }
       var renderedComponent = inst.render();
+      if (undefined !== 'production') {
+        if (this._debugID !== 0) {
+          ReactInstrumentation.debugTool.onEndLifeCycleTimer(this._debugID, 'render');
+        }
+      }
+  
       if (undefined !== 'production') {
         // We allow auto-mocks to proceed as if they're returning null.
         if (renderedComponent === undefined && inst.render._isMockFunction) {
@@ -8337,6 +8943,7 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
       !(
       // TODO: An `isValidNode` function would probably be more appropriate
       renderedComponent === null || renderedComponent === false || ReactElement.isValidElement(renderedComponent)) ? undefined !== 'production' ? invariant(false, '%s.render(): A valid React element (or null) must be returned. You may have ' + 'returned undefined, an array or some other invalid object.', this.getName() || 'ReactCompositeComponent') : invariant(false) : void 0;
+  
       return renderedComponent;
     },
   
@@ -8405,12 +9012,6 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
   
   };
   
-  ReactPerf.measureMethods(ReactCompositeComponentMixin, 'ReactCompositeComponent', {
-    mountComponent: 'mountComponent',
-    updateComponent: 'updateComponent',
-    _renderValidatedComponent: '_renderValidatedComponent'
-  });
-  
   var ReactCompositeComponent = {
   
     Mixin: ReactCompositeComponentMixin
@@ -8421,7 +9022,7 @@ _m_['react/lib/ReactCompositeComponent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/instantiateReactComponent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/instantiateReactComponent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -8439,12 +9040,13 @@ _m_['react/lib/instantiateReactComponent.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var ReactCompositeComponent = _m_['react/lib/ReactCompositeComponent.js#15.0.2'];
-  var ReactEmptyComponent = _m_['react/lib/ReactEmptyComponent.js#15.0.2'];
-  var ReactNativeComponent = _m_['react/lib/ReactNativeComponent.js#15.0.2'];
+  var ReactCompositeComponent = _m_['react/lib/ReactCompositeComponent.js#15.1.0'];
+  var ReactEmptyComponent = _m_['react/lib/ReactEmptyComponent.js#15.1.0'];
+  var ReactNativeComponent = _m_['react/lib/ReactNativeComponent.js#15.1.0'];
+  var ReactInstrumentation = _m_['react/lib/ReactInstrumentation.js#15.1.0'];
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   // To avoid a cyclic dependency, we create the final class in this module
   var ReactCompositeComponentWrapper = function (element) {
@@ -8464,6 +9066,21 @@ _m_['react/lib/instantiateReactComponent.js#15.0.2']=(function(module,exports){
     return '';
   }
   
+  function getDisplayName(instance) {
+    var element = instance._currentElement;
+    if (element == null) {
+      return '#empty';
+    } else if (typeof element === 'string' || typeof element === 'number') {
+      return '#text';
+    } else if (typeof element.type === 'string') {
+      return element.type;
+    } else if (instance.getName) {
+      return instance.getName() || 'Unknown';
+    } else {
+      return element.type.displayName || element.type.name || 'Unknown';
+    }
+  }
+  
   /**
    * Check if the type reference is a known internal type. I.e. not a user
    * provided composite type.
@@ -8475,6 +9092,8 @@ _m_['react/lib/instantiateReactComponent.js#15.0.2']=(function(module,exports){
     return typeof type === 'function' && typeof type.prototype !== 'undefined' && typeof type.prototype.mountComponent === 'function' && typeof type.prototype.receiveComponent === 'function';
   }
   
+  var nextDebugID = 1;
+  
   /**
    * Given a ReactNode, create an instance that will actually be mounted.
    *
@@ -8485,7 +9104,8 @@ _m_['react/lib/instantiateReactComponent.js#15.0.2']=(function(module,exports){
   function instantiateReactComponent(node) {
     var instance;
   
-    if (node === null || node === false) {
+    var isEmpty = node === null || node === false;
+    if (isEmpty) {
       instance = ReactEmptyComponent.create(instantiateReactComponent);
     } else if (typeof node === 'object') {
       var element = node;
@@ -8523,6 +9143,20 @@ _m_['react/lib/instantiateReactComponent.js#15.0.2']=(function(module,exports){
       instance._warnedAboutRefsInRender = false;
     }
   
+    if (undefined !== 'production') {
+      var debugID = isEmpty ? 0 : nextDebugID++;
+      instance._debugID = debugID;
+  
+      if (debugID !== 0) {
+        var displayName = getDisplayName(instance);
+        ReactInstrumentation.debugTool.onSetDisplayName(debugID, displayName);
+        var owner = node && node._owner;
+        if (owner) {
+          ReactInstrumentation.debugTool.onSetOwner(debugID, owner._debugID);
+        }
+      }
+    }
+  
     // Internal instances should fully constructed at this point, so they should
     // not get any new fields added to them at this point.
     if (undefined !== 'production') {
@@ -8538,7 +9172,7 @@ _m_['react/lib/instantiateReactComponent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/adler32.js#15.0.2']=(function(module,exports){
+_m_['react/lib/adler32.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -8587,7 +9221,7 @@ _m_['react/lib/adler32.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactMarkupChecksum.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactMarkupChecksum.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -8603,7 +9237,7 @@ _m_['react/lib/ReactMarkupChecksum.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var adler32 = _m_['react/lib/adler32.js#15.0.2'];
+  var adler32 = _m_['react/lib/adler32.js#15.1.0'];
   
   var TAG_END = /\/?>/;
   var COMMENT_START = /^<\!\-\-/;
@@ -8643,7 +9277,7 @@ _m_['react/lib/ReactMarkupChecksum.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMFeatureFlags.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMFeatureFlags.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -8667,7 +9301,7 @@ _m_['react/lib/ReactDOMFeatureFlags.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/validateDOMNesting.js#15.0.2']=(function(module,exports){
+_m_['react/lib/validateDOMNesting.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -8685,8 +9319,8 @@ _m_['react/lib/validateDOMNesting.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.3'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var validateDOMNesting = emptyFunction;
   
@@ -9042,7 +9676,7 @@ _m_['react/lib/validateDOMNesting.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMContainerInfo.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMContainerInfo.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -9058,7 +9692,7 @@ _m_['react/lib/ReactDOMContainerInfo.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var validateDOMNesting = _m_['react/lib/validateDOMNesting.js#15.0.2'];
+  var validateDOMNesting = _m_['react/lib/validateDOMNesting.js#15.1.0'];
   
   var DOC_NODE_TYPE = 9;
   
@@ -9081,7 +9715,7 @@ _m_['react/lib/ReactDOMContainerInfo.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMComponentFlags.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMComponentFlags.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -9105,7 +9739,7 @@ _m_['react/lib/ReactDOMComponentFlags.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/DOMProperty.js#15.0.2']=(function(module,exports){
+_m_['react/lib/DOMProperty.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -9121,7 +9755,7 @@ _m_['react/lib/DOMProperty.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   function checkMask(value, bitmask) {
     return (value & bitmask) === bitmask;
@@ -9324,7 +9958,7 @@ _m_['react/lib/DOMProperty.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMComponentTree.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMComponentTree.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -9340,10 +9974,10 @@ _m_['react/lib/ReactDOMComponentTree.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var DOMProperty = _m_['react/lib/DOMProperty.js#15.0.2'];
-  var ReactDOMComponentFlags = _m_['react/lib/ReactDOMComponentFlags.js#15.0.2'];
+  var DOMProperty = _m_['react/lib/DOMProperty.js#15.1.0'];
+  var ReactDOMComponentFlags = _m_['react/lib/ReactDOMComponentFlags.js#15.1.0'];
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   var ATTR_NAME = DOMProperty.ID_ATTRIBUTE_NAME;
   var Flags = ReactDOMComponentFlags;
@@ -9516,7 +10150,7 @@ _m_['react/lib/ReactDOMComponentTree.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/isEventSupported.js#15.0.2']=(function(module,exports){
+_m_['react/lib/isEventSupported.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -9532,7 +10166,7 @@ _m_['react/lib/isEventSupported.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
+  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
   
   var useHasFeature;
   if (ExecutionEnvironment.canUseDOM) {
@@ -9582,7 +10216,7 @@ _m_['react/lib/isEventSupported.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/getVendorPrefixedEventName.js#15.0.2']=(function(module,exports){
+_m_['react/lib/getVendorPrefixedEventName.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -9598,7 +10232,7 @@ _m_['react/lib/getVendorPrefixedEventName.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
+  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
   
   /**
    * Generate a mapping of standard vendor prefixes using the defined style property and event name.
@@ -9689,7 +10323,7 @@ _m_['react/lib/getVendorPrefixedEventName.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ViewportMetrics.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ViewportMetrics.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -9722,7 +10356,7 @@ _m_['react/lib/ViewportMetrics.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/forEachAccumulated.js#15.0.2']=(function(module,exports){
+_m_['react/lib/forEachAccumulated.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -9758,7 +10392,7 @@ _m_['react/lib/forEachAccumulated.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/accumulateInto.js#15.0.2']=(function(module,exports){
+_m_['react/lib/accumulateInto.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -9774,7 +10408,7 @@ _m_['react/lib/accumulateInto.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   /**
    *
@@ -9823,7 +10457,7 @@ _m_['react/lib/accumulateInto.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/EventConstants.js#15.0.2']=(function(module,exports){
+_m_['react/lib/EventConstants.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -9839,7 +10473,7 @@ _m_['react/lib/EventConstants.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var keyMirror = _m_['fbjs/lib/keyMirror.js#0.8.2'];
+  var keyMirror = _m_['fbjs/lib/keyMirror.js#0.8.3'];
   
   var PropagationPhases = keyMirror({ bubbled: null, captured: null });
   
@@ -9926,7 +10560,7 @@ _m_['react/lib/EventConstants.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/EventPluginUtils.js#15.0.2']=(function(module,exports){
+_m_['react/lib/EventPluginUtils.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -9942,11 +10576,11 @@ _m_['react/lib/EventPluginUtils.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var EventConstants = _m_['react/lib/EventConstants.js#15.0.2'];
-  var ReactErrorUtils = _m_['react/lib/ReactErrorUtils.js#15.0.2'];
+  var EventConstants = _m_['react/lib/EventConstants.js#15.1.0'];
+  var ReactErrorUtils = _m_['react/lib/ReactErrorUtils.js#15.1.0'];
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   /**
    * Injected dependencies:
@@ -10159,7 +10793,7 @@ _m_['react/lib/EventPluginUtils.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/EventPluginRegistry.js#15.0.2']=(function(module,exports){
+_m_['react/lib/EventPluginRegistry.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -10175,7 +10809,7 @@ _m_['react/lib/EventPluginRegistry.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   /**
    * Injectable ordering of event plugins.
@@ -10406,7 +11040,7 @@ _m_['react/lib/EventPluginRegistry.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/EventPluginHub.js#15.0.2']=(function(module,exports){
+_m_['react/lib/EventPluginHub.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -10422,13 +11056,13 @@ _m_['react/lib/EventPluginHub.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var EventPluginRegistry = _m_['react/lib/EventPluginRegistry.js#15.0.2'];
-  var EventPluginUtils = _m_['react/lib/EventPluginUtils.js#15.0.2'];
-  var ReactErrorUtils = _m_['react/lib/ReactErrorUtils.js#15.0.2'];
+  var EventPluginRegistry = _m_['react/lib/EventPluginRegistry.js#15.1.0'];
+  var EventPluginUtils = _m_['react/lib/EventPluginUtils.js#15.1.0'];
+  var ReactErrorUtils = _m_['react/lib/ReactErrorUtils.js#15.1.0'];
   
-  var accumulateInto = _m_['react/lib/accumulateInto.js#15.0.2'];
-  var forEachAccumulated = _m_['react/lib/forEachAccumulated.js#15.0.2'];
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var accumulateInto = _m_['react/lib/accumulateInto.js#15.1.0'];
+  var forEachAccumulated = _m_['react/lib/forEachAccumulated.js#15.1.0'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   /**
    * Internal store for event listeners
@@ -10647,7 +11281,7 @@ _m_['react/lib/EventPluginHub.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactEventEmitterMixin.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactEventEmitterMixin.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -10663,7 +11297,7 @@ _m_['react/lib/ReactEventEmitterMixin.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var EventPluginHub = _m_['react/lib/EventPluginHub.js#15.0.2'];
+  var EventPluginHub = _m_['react/lib/EventPluginHub.js#15.1.0'];
   
   function runEventQueueInBatch(events) {
     EventPluginHub.enqueueEvents(events);
@@ -10686,7 +11320,7 @@ _m_['react/lib/ReactEventEmitterMixin.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactBrowserEventEmitter.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactBrowserEventEmitter.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -10704,13 +11338,13 @@ _m_['react/lib/ReactBrowserEventEmitter.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var EventConstants = _m_['react/lib/EventConstants.js#15.0.2'];
-  var EventPluginRegistry = _m_['react/lib/EventPluginRegistry.js#15.0.2'];
-  var ReactEventEmitterMixin = _m_['react/lib/ReactEventEmitterMixin.js#15.0.2'];
-  var ViewportMetrics = _m_['react/lib/ViewportMetrics.js#15.0.2'];
+  var EventConstants = _m_['react/lib/EventConstants.js#15.1.0'];
+  var EventPluginRegistry = _m_['react/lib/EventPluginRegistry.js#15.1.0'];
+  var ReactEventEmitterMixin = _m_['react/lib/ReactEventEmitterMixin.js#15.1.0'];
+  var ViewportMetrics = _m_['react/lib/ViewportMetrics.js#15.1.0'];
   
-  var getVendorPrefixedEventName = _m_['react/lib/getVendorPrefixedEventName.js#15.0.2'];
-  var isEventSupported = _m_['react/lib/isEventSupported.js#15.0.2'];
+  var getVendorPrefixedEventName = _m_['react/lib/getVendorPrefixedEventName.js#15.1.0'];
+  var isEventSupported = _m_['react/lib/isEventSupported.js#15.1.0'];
   
   /**
    * Summary of `ReactBrowserEventEmitter` event handling:
@@ -11009,7 +11643,7 @@ _m_['react/lib/ReactBrowserEventEmitter.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/escapeTextContentForBrowser.js#15.0.2']=(function(module,exports){
+_m_['react/lib/escapeTextContentForBrowser.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -11053,7 +11687,7 @@ _m_['react/lib/escapeTextContentForBrowser.js#15.0.2']=(function(module,exports)
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/setTextContent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/setTextContent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -11069,9 +11703,9 @@ _m_['react/lib/setTextContent.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
-  var escapeTextContentForBrowser = _m_['react/lib/escapeTextContentForBrowser.js#15.0.2'];
-  var setInnerHTML = _m_['react/lib/setInnerHTML.js#15.0.2'];
+  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
+  var escapeTextContentForBrowser = _m_['react/lib/escapeTextContentForBrowser.js#15.1.0'];
+  var setInnerHTML = _m_['react/lib/setInnerHTML.js#15.1.0'];
   
   /**
    * Set the textContent property of a node, ensuring that whitespace is preserved
@@ -11099,7 +11733,33 @@ _m_['react/lib/setTextContent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/DOMLazyTree.js#15.0.2']=(function(module,exports){
+_m_['react/lib/DOMNamespaces.js#15.1.0']=(function(module,exports){
+  module=this;exports=module.exports;
+
+  /**
+   * Copyright 2013-present, Facebook, Inc.
+   * All rights reserved.
+   *
+   * This source code is licensed under the BSD-style license found in the
+   * LICENSE file in the root directory of this source tree. An additional grant
+   * of patent rights can be found in the PATENTS file in the same directory.
+   *
+   * @providesModule DOMNamespaces
+   */
+  
+  'use strict';
+  
+  var DOMNamespaces = {
+    html: 'http://www.w3.org/1999/xhtml',
+    mathml: 'http://www.w3.org/1998/Math/MathML',
+    svg: 'http://www.w3.org/2000/svg'
+  };
+  
+  module.exports = DOMNamespaces;
+
+  return module.exports;
+}).call({exports:{}});
+_m_['react/lib/DOMLazyTree.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -11115,8 +11775,13 @@ _m_['react/lib/DOMLazyTree.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var createMicrosoftUnsafeLocalFunction = _m_['react/lib/createMicrosoftUnsafeLocalFunction.js#15.0.2'];
-  var setTextContent = _m_['react/lib/setTextContent.js#15.0.2'];
+  var DOMNamespaces = _m_['react/lib/DOMNamespaces.js#15.1.0'];
+  
+  var createMicrosoftUnsafeLocalFunction = _m_['react/lib/createMicrosoftUnsafeLocalFunction.js#15.1.0'];
+  var setTextContent = _m_['react/lib/setTextContent.js#15.1.0'];
+  
+  var ELEMENT_NODE_TYPE = 1;
+  var DOCUMENT_FRAGMENT_NODE_TYPE = 11;
   
   /**
    * In IE (8-11) and Edge, appending nodes with no children is dramatically
@@ -11152,8 +11817,10 @@ _m_['react/lib/DOMLazyTree.js#15.0.2']=(function(module,exports){
     // DocumentFragments aren't actually part of the DOM after insertion so
     // appending children won't update the DOM. We need to ensure the fragment
     // is properly populated first, breaking out of our lazy approach for just
-    // this level.
-    if (tree.node.nodeType === 11) {
+    // this level. Also, some <object> plugins (like Flash Player) will read
+    // <param> nodes immediately upon insertion into the DOM, so <object>
+    // must also be populated prior to insertion into the DOM.
+    if (tree.node.nodeType === DOCUMENT_FRAGMENT_NODE_TYPE || tree.node.nodeType === ELEMENT_NODE_TYPE && tree.node.nodeName.toLowerCase() === 'object' && (tree.node.namespaceURI == null || tree.node.namespaceURI === DOMNamespaces.html)) {
       insertTreeChildren(tree);
       parentNode.insertBefore(tree.node, referenceNode);
     } else {
@@ -11191,12 +11858,17 @@ _m_['react/lib/DOMLazyTree.js#15.0.2']=(function(module,exports){
     }
   }
   
+  function toString() {
+    return this.node.nodeName;
+  }
+  
   function DOMLazyTree(node) {
     return {
       node: node,
       children: [],
       html: null,
-      text: null
+      text: null,
+      toString: toString
     };
   }
   
@@ -11210,7 +11882,7 @@ _m_['react/lib/DOMLazyTree.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactMount.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactMount.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -11226,28 +11898,27 @@ _m_['react/lib/ReactMount.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var DOMLazyTree = _m_['react/lib/DOMLazyTree.js#15.0.2'];
-  var DOMProperty = _m_['react/lib/DOMProperty.js#15.0.2'];
-  var ReactBrowserEventEmitter = _m_['react/lib/ReactBrowserEventEmitter.js#15.0.2'];
-  var ReactCurrentOwner = _m_['react/lib/ReactCurrentOwner.js#15.0.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var ReactDOMContainerInfo = _m_['react/lib/ReactDOMContainerInfo.js#15.0.2'];
-  var ReactDOMFeatureFlags = _m_['react/lib/ReactDOMFeatureFlags.js#15.0.2'];
-  var ReactElement = _m_['react/lib/ReactElement.js#15.0.2'];
-  var ReactFeatureFlags = _m_['react/lib/ReactFeatureFlags.js#15.0.2'];
-  var ReactInstrumentation = _m_['react/lib/ReactInstrumentation.js#15.0.2'];
-  var ReactMarkupChecksum = _m_['react/lib/ReactMarkupChecksum.js#15.0.2'];
-  var ReactPerf = _m_['react/lib/ReactPerf.js#15.0.2'];
-  var ReactReconciler = _m_['react/lib/ReactReconciler.js#15.0.2'];
-  var ReactUpdateQueue = _m_['react/lib/ReactUpdateQueue.js#15.0.2'];
-  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.0.2'];
+  var DOMLazyTree = _m_['react/lib/DOMLazyTree.js#15.1.0'];
+  var DOMProperty = _m_['react/lib/DOMProperty.js#15.1.0'];
+  var ReactBrowserEventEmitter = _m_['react/lib/ReactBrowserEventEmitter.js#15.1.0'];
+  var ReactCurrentOwner = _m_['react/lib/ReactCurrentOwner.js#15.1.0'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var ReactDOMContainerInfo = _m_['react/lib/ReactDOMContainerInfo.js#15.1.0'];
+  var ReactDOMFeatureFlags = _m_['react/lib/ReactDOMFeatureFlags.js#15.1.0'];
+  var ReactElement = _m_['react/lib/ReactElement.js#15.1.0'];
+  var ReactFeatureFlags = _m_['react/lib/ReactFeatureFlags.js#15.1.0'];
+  var ReactInstrumentation = _m_['react/lib/ReactInstrumentation.js#15.1.0'];
+  var ReactMarkupChecksum = _m_['react/lib/ReactMarkupChecksum.js#15.1.0'];
+  var ReactReconciler = _m_['react/lib/ReactReconciler.js#15.1.0'];
+  var ReactUpdateQueue = _m_['react/lib/ReactUpdateQueue.js#15.1.0'];
+  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.1.0'];
   
-  var emptyObject = _m_['fbjs/lib/emptyObject.js#0.8.2'];
-  var instantiateReactComponent = _m_['react/lib/instantiateReactComponent.js#15.0.2'];
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
-  var setInnerHTML = _m_['react/lib/setInnerHTML.js#15.0.2'];
-  var shouldUpdateReactComponent = _m_['react/lib/shouldUpdateReactComponent.js#15.0.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var emptyObject = _m_['fbjs/lib/emptyObject.js#0.8.3'];
+  var instantiateReactComponent = _m_['react/lib/instantiateReactComponent.js#15.1.0'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  var setInnerHTML = _m_['react/lib/setInnerHTML.js#15.1.0'];
+  var shouldUpdateReactComponent = _m_['react/lib/shouldUpdateReactComponent.js#15.1.0'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var ATTR_NAME = DOMProperty.ID_ATTRIBUTE_NAME;
   var ROOT_ATTR_NAME = DOMProperty.ROOT_ATTRIBUTE_NAME;
@@ -11475,6 +12146,10 @@ _m_['react/lib/ReactMount.js#15.0.2']=(function(module,exports){
      * @return {ReactComponent} nextComponent
      */
     _renderNewRootComponent: function (nextElement, container, shouldReuseMarkup, context) {
+      if (undefined !== 'production') {
+        ReactInstrumentation.debugTool.onBeginFlush();
+      }
+  
       // Various parts of our code (such as ReactCompositeComponent's
       // _renderValidatedComponent) assume that calls to render aren't nested;
       // verify that that's the case.
@@ -11484,6 +12159,12 @@ _m_['react/lib/ReactMount.js#15.0.2']=(function(module,exports){
   
       ReactBrowserEventEmitter.ensureScrollValueMonitoring();
       var componentInstance = instantiateReactComponent(nextElement);
+  
+      if (undefined !== 'production') {
+        // Mute future events from the top level wrapper.
+        // It is an implementation detail that devtools should not know about.
+        componentInstance._debugID = 0;
+      }
   
       // The initial render is synchronous but any updates that happen during
       // rendering, in componentWillMount or componentDidMount, will be batched
@@ -11495,7 +12176,9 @@ _m_['react/lib/ReactMount.js#15.0.2']=(function(module,exports){
       instancesByReactRootID[wrapperID] = componentInstance;
   
       if (undefined !== 'production') {
-        ReactInstrumentation.debugTool.onMountRootComponent(componentInstance);
+        // The instance here is TopLevelWrapper so we report mount for its child.
+        ReactInstrumentation.debugTool.onMountRootComponent(componentInstance._renderedComponent._debugID);
+        ReactInstrumentation.debugTool.onEndFlush();
       }
   
       return componentInstance;
@@ -11575,6 +12258,7 @@ _m_['react/lib/ReactMount.js#15.0.2']=(function(module,exports){
   
     /**
      * Renders a React component into the DOM in the supplied `container`.
+     * See https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
      *
      * If the React component was previously rendered into `container`, this will
      * perform an update on it and only mutate the DOM as necessary to reflect the
@@ -11591,6 +12275,7 @@ _m_['react/lib/ReactMount.js#15.0.2']=(function(module,exports){
   
     /**
      * Unmounts and destroys the React component rendered in the `container`.
+     * See https://facebook.github.io/react/docs/top-level-api.html#reactdom.unmountcomponentatnode
      *
      * @param {DOMElement} container DOM element containing a React component.
      * @return {boolean} True if a component was found in and unmounted from
@@ -11682,19 +12367,21 @@ _m_['react/lib/ReactMount.js#15.0.2']=(function(module,exports){
         setInnerHTML(container, markup);
         ReactDOMComponentTree.precacheNode(instance, container.firstChild);
       }
+  
+      if (undefined !== 'production') {
+        var nativeNode = ReactDOMComponentTree.getInstanceFromNode(container.firstChild);
+        if (nativeNode._debugID !== 0) {
+          ReactInstrumentation.debugTool.onNativeOperation(nativeNode._debugID, 'mount', markup.toString());
+        }
+      }
     }
   };
-  
-  ReactPerf.measureMethods(ReactMount, 'ReactMount', {
-    _renderNewRootComponent: '_renderNewRootComponent',
-    _mountImageIntoNode: '_mountImageIntoNode'
-  });
   
   module.exports = ReactMount;
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/renderSubtreeIntoContainer.js#15.0.2']=(function(module,exports){
+_m_['react/lib/renderSubtreeIntoContainer.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -11710,13 +12397,13 @@ _m_['react/lib/renderSubtreeIntoContainer.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactMount = _m_['react/lib/ReactMount.js#15.0.2'];
+  var ReactMount = _m_['react/lib/ReactMount.js#15.1.0'];
   
   module.exports = ReactMount.renderSubtreeIntoContainer;
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/getNativeComponentFromComposite.js#15.0.2']=(function(module,exports){
+_m_['react/lib/getNativeComponentFromComposite.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -11732,7 +12419,7 @@ _m_['react/lib/getNativeComponentFromComposite.js#15.0.2']=(function(module,expo
   
   'use strict';
   
-  var ReactNodeTypes = _m_['react/lib/ReactNodeTypes.js#15.0.2'];
+  var ReactNodeTypes = _m_['react/lib/ReactNodeTypes.js#15.1.0'];
   
   function getNativeComponentFromComposite(inst) {
     var type;
@@ -11752,7 +12439,7 @@ _m_['react/lib/getNativeComponentFromComposite.js#15.0.2']=(function(module,expo
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/findDOMNode.js#15.0.2']=(function(module,exports){
+_m_['react/lib/findDOMNode.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -11768,16 +12455,18 @@ _m_['react/lib/findDOMNode.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactCurrentOwner = _m_['react/lib/ReactCurrentOwner.js#15.0.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var ReactInstanceMap = _m_['react/lib/ReactInstanceMap.js#15.0.2'];
+  var ReactCurrentOwner = _m_['react/lib/ReactCurrentOwner.js#15.1.0'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var ReactInstanceMap = _m_['react/lib/ReactInstanceMap.js#15.1.0'];
   
-  var getNativeComponentFromComposite = _m_['react/lib/getNativeComponentFromComposite.js#15.0.2'];
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var getNativeComponentFromComposite = _m_['react/lib/getNativeComponentFromComposite.js#15.1.0'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   /**
    * Returns the DOM node rendered by this element.
+   *
+   * See https://facebook.github.io/react/docs/top-level-api.html#reactdom.finddomnode
    *
    * @param {ReactComponent|DOMElement} componentOrElement
    * @return {?DOMElement} The root node of this element.
@@ -11814,612 +12503,7 @@ _m_['react/lib/findDOMNode.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/performance.js#0.8.2']=(function(module,exports){
-  module=this;exports=module.exports;
-
-  /**
-   * Copyright (c) 2013-present, Facebook, Inc.
-   * All rights reserved.
-   *
-   * This source code is licensed under the BSD-style license found in the
-   * LICENSE file in the root directory of this source tree. An additional grant
-   * of patent rights can be found in the PATENTS file in the same directory.
-   *
-   * @typechecks
-   */
-  
-  'use strict';
-  
-  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
-  
-  var performance;
-  
-  if (ExecutionEnvironment.canUseDOM) {
-    performance = window.performance || window.msPerformance || window.webkitPerformance;
-  }
-  
-  module.exports = performance || {};
-
-  return module.exports;
-}).call({exports:{}});
-_m_['fbjs/lib/performanceNow.js#0.8.2']=(function(module,exports){
-  module=this;exports=module.exports;
-
-  'use strict';
-  
-  /**
-   * Copyright (c) 2013-present, Facebook, Inc.
-   * All rights reserved.
-   *
-   * This source code is licensed under the BSD-style license found in the
-   * LICENSE file in the root directory of this source tree. An additional grant
-   * of patent rights can be found in the PATENTS file in the same directory.
-   *
-   * @typechecks
-   */
-  
-  var performance = _m_['fbjs/lib/performance.js#0.8.2'];
-  
-  var performanceNow;
-  
-  /**
-   * Detect if we can use `window.performance.now()` and gracefully fallback to
-   * `Date.now()` if it doesn't exist. We need to support Firefox < 15 for now
-   * because of Facebook's testing infrastructure.
-   */
-  if (performance.now) {
-    performanceNow = function () {
-      return performance.now();
-    };
-  } else {
-    performanceNow = function () {
-      return Date.now();
-    };
-  }
-  
-  module.exports = performanceNow;
-
-  return module.exports;
-}).call({exports:{}});
-_m_['react/lib/ReactDefaultPerfAnalysis.js#15.0.2']=(function(module,exports){
-  module=this;exports=module.exports;
-
-  /**
-   * Copyright 2013-present, Facebook, Inc.
-   * All rights reserved.
-   *
-   * This source code is licensed under the BSD-style license found in the
-   * LICENSE file in the root directory of this source tree. An additional grant
-   * of patent rights can be found in the PATENTS file in the same directory.
-   *
-   * @providesModule ReactDefaultPerfAnalysis
-   */
-  
-  'use strict';
-  
-  // Don't try to save users less than 1.2ms (a number I made up)
-  
-  var _assign = _m_['object-assign/index.js#4.1.0'];
-  
-  var DONT_CARE_THRESHOLD = 1.2;
-  var DOM_OPERATION_TYPES = {
-    '_mountImageIntoNode': 'set innerHTML',
-    INSERT_MARKUP: 'set innerHTML',
-    MOVE_EXISTING: 'move',
-    REMOVE_NODE: 'remove',
-    SET_MARKUP: 'set innerHTML',
-    TEXT_CONTENT: 'set textContent',
-    'setValueForProperty': 'update attribute',
-    'setValueForAttribute': 'update attribute',
-    'deleteValueForProperty': 'remove attribute',
-    'setValueForStyles': 'update styles',
-    'replaceNodeWithMarkup': 'replace',
-    'replaceDelimitedText': 'replace'
-  };
-  
-  function getTotalTime(measurements) {
-    // TODO: return number of DOM ops? could be misleading.
-    // TODO: measure dropped frames after reconcile?
-    // TODO: log total time of each reconcile and the top-level component
-    // class that triggered it.
-    var totalTime = 0;
-    for (var i = 0; i < measurements.length; i++) {
-      var measurement = measurements[i];
-      totalTime += measurement.totalTime;
-    }
-    return totalTime;
-  }
-  
-  function getDOMSummary(measurements) {
-    var items = [];
-    measurements.forEach(function (measurement) {
-      Object.keys(measurement.writes).forEach(function (id) {
-        measurement.writes[id].forEach(function (write) {
-          items.push({
-            id: id,
-            type: DOM_OPERATION_TYPES[write.type] || write.type,
-            args: write.args
-          });
-        });
-      });
-    });
-    return items;
-  }
-  
-  function getExclusiveSummary(measurements) {
-    var candidates = {};
-    var displayName;
-  
-    for (var i = 0; i < measurements.length; i++) {
-      var measurement = measurements[i];
-      var allIDs = _assign({}, measurement.exclusive, measurement.inclusive);
-  
-      for (var id in allIDs) {
-        displayName = measurement.displayNames[id].current;
-  
-        candidates[displayName] = candidates[displayName] || {
-          componentName: displayName,
-          inclusive: 0,
-          exclusive: 0,
-          render: 0,
-          count: 0
-        };
-        if (measurement.render[id]) {
-          candidates[displayName].render += measurement.render[id];
-        }
-        if (measurement.exclusive[id]) {
-          candidates[displayName].exclusive += measurement.exclusive[id];
-        }
-        if (measurement.inclusive[id]) {
-          candidates[displayName].inclusive += measurement.inclusive[id];
-        }
-        if (measurement.counts[id]) {
-          candidates[displayName].count += measurement.counts[id];
-        }
-      }
-    }
-  
-    // Now make a sorted array with the results.
-    var arr = [];
-    for (displayName in candidates) {
-      if (candidates[displayName].exclusive >= DONT_CARE_THRESHOLD) {
-        arr.push(candidates[displayName]);
-      }
-    }
-  
-    arr.sort(function (a, b) {
-      return b.exclusive - a.exclusive;
-    });
-  
-    return arr;
-  }
-  
-  function getInclusiveSummary(measurements, onlyClean) {
-    var candidates = {};
-    var inclusiveKey;
-  
-    for (var i = 0; i < measurements.length; i++) {
-      var measurement = measurements[i];
-      var allIDs = _assign({}, measurement.exclusive, measurement.inclusive);
-      var cleanComponents;
-  
-      if (onlyClean) {
-        cleanComponents = getUnchangedComponents(measurement);
-      }
-  
-      for (var id in allIDs) {
-        if (onlyClean && !cleanComponents[id]) {
-          continue;
-        }
-  
-        var displayName = measurement.displayNames[id];
-  
-        // Inclusive time is not useful for many components without knowing where
-        // they are instantiated. So we aggregate inclusive time with both the
-        // owner and current displayName as the key.
-        inclusiveKey = displayName.owner + ' > ' + displayName.current;
-  
-        candidates[inclusiveKey] = candidates[inclusiveKey] || {
-          componentName: inclusiveKey,
-          time: 0,
-          count: 0
-        };
-  
-        if (measurement.inclusive[id]) {
-          candidates[inclusiveKey].time += measurement.inclusive[id];
-        }
-        if (measurement.counts[id]) {
-          candidates[inclusiveKey].count += measurement.counts[id];
-        }
-      }
-    }
-  
-    // Now make a sorted array with the results.
-    var arr = [];
-    for (inclusiveKey in candidates) {
-      if (candidates[inclusiveKey].time >= DONT_CARE_THRESHOLD) {
-        arr.push(candidates[inclusiveKey]);
-      }
-    }
-  
-    arr.sort(function (a, b) {
-      return b.time - a.time;
-    });
-  
-    return arr;
-  }
-  
-  function getUnchangedComponents(measurement) {
-    // For a given reconcile, look at which components did not actually
-    // render anything to the DOM and return a mapping of their ID to
-    // the amount of time it took to render the entire subtree.
-    var cleanComponents = {};
-    var writes = measurement.writes;
-    var hierarchy = measurement.hierarchy;
-    var dirtyComposites = {};
-    Object.keys(writes).forEach(function (id) {
-      writes[id].forEach(function (write) {
-        // Root mounting (innerHTML set) is recorded with an ID of ''
-        if (id !== '' && hierarchy.hasOwnProperty(id)) {
-          hierarchy[id].forEach(function (c) {
-            return dirtyComposites[c] = true;
-          });
-        }
-      });
-    });
-    var allIDs = _assign({}, measurement.exclusive, measurement.inclusive);
-  
-    for (var id in allIDs) {
-      var isDirty = false;
-      // See if any of the DOM operations applied to this component's subtree.
-      if (dirtyComposites[id]) {
-        isDirty = true;
-      }
-      // check if component newly created
-      if (measurement.created[id]) {
-        isDirty = true;
-      }
-      if (!isDirty && measurement.counts[id] > 0) {
-        cleanComponents[id] = true;
-      }
-    }
-    return cleanComponents;
-  }
-  
-  var ReactDefaultPerfAnalysis = {
-    getExclusiveSummary: getExclusiveSummary,
-    getInclusiveSummary: getInclusiveSummary,
-    getDOMSummary: getDOMSummary,
-    getTotalTime: getTotalTime
-  };
-  
-  module.exports = ReactDefaultPerfAnalysis;
-
-  return module.exports;
-}).call({exports:{}});
-_m_['react/lib/ReactDefaultPerf.js#15.0.2']=(function(module,exports){
-  module=this;exports=module.exports;
-
-  /**
-   * Copyright 2013-present, Facebook, Inc.
-   * All rights reserved.
-   *
-   * This source code is licensed under the BSD-style license found in the
-   * LICENSE file in the root directory of this source tree. An additional grant
-   * of patent rights can be found in the PATENTS file in the same directory.
-   *
-   * @providesModule ReactDefaultPerf
-   */
-  
-  'use strict';
-  
-  var DOMProperty = _m_['react/lib/DOMProperty.js#15.0.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var ReactDefaultPerfAnalysis = _m_['react/lib/ReactDefaultPerfAnalysis.js#15.0.2'];
-  var ReactMount = _m_['react/lib/ReactMount.js#15.0.2'];
-  var ReactPerf = _m_['react/lib/ReactPerf.js#15.0.2'];
-  
-  var performanceNow = _m_['fbjs/lib/performanceNow.js#0.8.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
-  
-  function roundFloat(val) {
-    return Math.floor(val * 100) / 100;
-  }
-  
-  function addValue(obj, key, val) {
-    obj[key] = (obj[key] || 0) + val;
-  }
-  
-  // Composite/text components don't have any built-in ID: we have to make our own
-  var compositeIDMap;
-  var compositeIDCounter = 17000;
-  function getIDOfComposite(inst) {
-    if (!compositeIDMap) {
-      compositeIDMap = new WeakMap();
-    }
-    if (compositeIDMap.has(inst)) {
-      return compositeIDMap.get(inst);
-    } else {
-      var id = compositeIDCounter++;
-      compositeIDMap.set(inst, id);
-      return id;
-    }
-  }
-  
-  function getID(inst) {
-    if (inst.hasOwnProperty('_rootNodeID')) {
-      return inst._rootNodeID;
-    } else {
-      return getIDOfComposite(inst);
-    }
-  }
-  
-  function stripComplexValues(key, value) {
-    if (typeof value !== 'object' || Array.isArray(value) || value == null) {
-      return value;
-    }
-    var prototype = Object.getPrototypeOf(value);
-    if (!prototype || prototype === Object.prototype) {
-      return value;
-    }
-    return '<not serializable>';
-  }
-  
-  // This implementation of ReactPerf is going away some time mid 15.x.
-  // While we plan to keep most of the API, the actual format of measurements
-  // will change dramatically. To signal this, we wrap them into an opaque-ish
-  // object to discourage reaching into it until the API stabilizes.
-  function wrapLegacyMeasurements(measurements) {
-    return { __unstable_this_format_will_change: measurements };
-  }
-  function unwrapLegacyMeasurements(measurements) {
-    return measurements && measurements.__unstable_this_format_will_change || measurements;
-  }
-  
-  var warnedAboutPrintDOM = false;
-  var warnedAboutGetMeasurementsSummaryMap = false;
-  
-  var ReactDefaultPerf = {
-    _allMeasurements: [], // last item in the list is the current one
-    _mountStack: [0],
-    _compositeStack: [],
-    _injected: false,
-  
-    start: function () {
-      if (!ReactDefaultPerf._injected) {
-        ReactPerf.injection.injectMeasure(ReactDefaultPerf.measure);
-      }
-  
-      ReactDefaultPerf._allMeasurements.length = 0;
-      ReactPerf.enableMeasure = true;
-    },
-  
-    stop: function () {
-      ReactPerf.enableMeasure = false;
-    },
-  
-    getLastMeasurements: function () {
-      return wrapLegacyMeasurements(ReactDefaultPerf._allMeasurements);
-    },
-  
-    printExclusive: function (measurements) {
-      measurements = unwrapLegacyMeasurements(measurements || ReactDefaultPerf._allMeasurements);
-      var summary = ReactDefaultPerfAnalysis.getExclusiveSummary(measurements);
-      console.table(summary.map(function (item) {
-        return {
-          'Component class name': item.componentName,
-          'Total inclusive time (ms)': roundFloat(item.inclusive),
-          'Exclusive mount time (ms)': roundFloat(item.exclusive),
-          'Exclusive render time (ms)': roundFloat(item.render),
-          'Mount time per instance (ms)': roundFloat(item.exclusive / item.count),
-          'Render time per instance (ms)': roundFloat(item.render / item.count),
-          'Instances': item.count
-        };
-      }));
-      // TODO: ReactDefaultPerfAnalysis.getTotalTime() does not return the correct
-      // number.
-    },
-  
-    printInclusive: function (measurements) {
-      measurements = unwrapLegacyMeasurements(measurements || ReactDefaultPerf._allMeasurements);
-      var summary = ReactDefaultPerfAnalysis.getInclusiveSummary(measurements);
-      console.table(summary.map(function (item) {
-        return {
-          'Owner > component': item.componentName,
-          'Inclusive time (ms)': roundFloat(item.time),
-          'Instances': item.count
-        };
-      }));
-      console.log('Total time:', ReactDefaultPerfAnalysis.getTotalTime(measurements).toFixed(2) + ' ms');
-    },
-  
-    getMeasurementsSummaryMap: function (measurements) {
-      undefined !== 'production' ? warning(warnedAboutGetMeasurementsSummaryMap, '`ReactPerf.getMeasurementsSummaryMap(...)` is deprecated. Use ' + '`ReactPerf.getWasted(...)` instead.') : void 0;
-      warnedAboutGetMeasurementsSummaryMap = true;
-      return ReactDefaultPerf.getWasted(measurements);
-    },
-  
-    getWasted: function (measurements) {
-      measurements = unwrapLegacyMeasurements(measurements);
-      var summary = ReactDefaultPerfAnalysis.getInclusiveSummary(measurements, true);
-      return summary.map(function (item) {
-        return {
-          'Owner > component': item.componentName,
-          'Wasted time (ms)': item.time,
-          'Instances': item.count
-        };
-      });
-    },
-  
-    printWasted: function (measurements) {
-      measurements = unwrapLegacyMeasurements(measurements || ReactDefaultPerf._allMeasurements);
-      console.table(ReactDefaultPerf.getWasted(measurements));
-      console.log('Total time:', ReactDefaultPerfAnalysis.getTotalTime(measurements).toFixed(2) + ' ms');
-    },
-  
-    printDOM: function (measurements) {
-      undefined !== 'production' ? warning(warnedAboutPrintDOM, '`ReactPerf.printDOM(...)` is deprecated. Use ' + '`ReactPerf.printOperations(...)` instead.') : void 0;
-      warnedAboutPrintDOM = true;
-      return ReactDefaultPerf.printOperations(measurements);
-    },
-  
-    printOperations: function (measurements) {
-      measurements = unwrapLegacyMeasurements(measurements || ReactDefaultPerf._allMeasurements);
-      var summary = ReactDefaultPerfAnalysis.getDOMSummary(measurements);
-      console.table(summary.map(function (item) {
-        var result = {};
-        result[DOMProperty.ID_ATTRIBUTE_NAME] = item.id;
-        result.type = item.type;
-        result.args = JSON.stringify(item.args, stripComplexValues);
-        return result;
-      }));
-      console.log('Total time:', ReactDefaultPerfAnalysis.getTotalTime(measurements).toFixed(2) + ' ms');
-    },
-  
-    _recordWrite: function (id, fnName, totalTime, args) {
-      // TODO: totalTime isn't that useful since it doesn't count paints/reflows
-      var entry = ReactDefaultPerf._allMeasurements[ReactDefaultPerf._allMeasurements.length - 1];
-      var writes = entry.writes;
-      writes[id] = writes[id] || [];
-      writes[id].push({
-        type: fnName,
-        time: totalTime,
-        args: args
-      });
-    },
-  
-    measure: function (moduleName, fnName, func) {
-      return function () {
-        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-          args[_key] = arguments[_key];
-        }
-  
-        var totalTime;
-        var rv;
-        var start;
-  
-        var entry = ReactDefaultPerf._allMeasurements[ReactDefaultPerf._allMeasurements.length - 1];
-  
-        if (fnName === '_renderNewRootComponent' || fnName === 'flushBatchedUpdates') {
-          // A "measurement" is a set of metrics recorded for each flush. We want
-          // to group the metrics for a given flush together so we can look at the
-          // components that rendered and the DOM operations that actually
-          // happened to determine the amount of "wasted work" performed.
-          ReactDefaultPerf._allMeasurements.push(entry = {
-            exclusive: {},
-            inclusive: {},
-            render: {},
-            counts: {},
-            writes: {},
-            displayNames: {},
-            hierarchy: {},
-            totalTime: 0,
-            created: {}
-          });
-          start = performanceNow();
-          rv = func.apply(this, args);
-          entry.totalTime = performanceNow() - start;
-          return rv;
-        } else if (fnName === '_mountImageIntoNode' || moduleName === 'ReactDOMIDOperations' || moduleName === 'CSSPropertyOperations' || moduleName === 'DOMChildrenOperations' || moduleName === 'DOMPropertyOperations' || moduleName === 'ReactComponentBrowserEnvironment') {
-          start = performanceNow();
-          rv = func.apply(this, args);
-          totalTime = performanceNow() - start;
-  
-          if (fnName === '_mountImageIntoNode') {
-            ReactDefaultPerf._recordWrite('', fnName, totalTime, args[0]);
-          } else if (fnName === 'dangerouslyProcessChildrenUpdates') {
-            // special format
-            args[1].forEach(function (update) {
-              var writeArgs = {};
-              if (update.fromIndex !== null) {
-                writeArgs.fromIndex = update.fromIndex;
-              }
-              if (update.toIndex !== null) {
-                writeArgs.toIndex = update.toIndex;
-              }
-              if (update.content !== null) {
-                writeArgs.content = update.content;
-              }
-              ReactDefaultPerf._recordWrite(args[0]._rootNodeID, update.type, totalTime, writeArgs);
-            });
-          } else {
-            // basic format
-            var id = args[0];
-            if (moduleName === 'EventPluginHub') {
-              id = id._rootNodeID;
-            } else if (fnName === 'replaceNodeWithMarkup') {
-              // Old node is already unmounted; can't get its instance
-              id = ReactDOMComponentTree.getInstanceFromNode(args[1].node)._rootNodeID;
-            } else if (fnName === 'replaceDelimitedText') {
-              id = getID(ReactDOMComponentTree.getInstanceFromNode(args[0]));
-            } else if (typeof id === 'object') {
-              id = getID(ReactDOMComponentTree.getInstanceFromNode(args[0]));
-            }
-            ReactDefaultPerf._recordWrite(id, fnName, totalTime, Array.prototype.slice.call(args, 1));
-          }
-          return rv;
-        } else if (moduleName === 'ReactCompositeComponent' && (fnName === 'mountComponent' || fnName === 'updateComponent' || // TODO: receiveComponent()?
-        fnName === '_renderValidatedComponent')) {
-  
-          if (this._currentElement.type === ReactMount.TopLevelWrapper) {
-            return func.apply(this, args);
-          }
-  
-          var rootNodeID = getIDOfComposite(this);
-          var isRender = fnName === '_renderValidatedComponent';
-          var isMount = fnName === 'mountComponent';
-  
-          var mountStack = ReactDefaultPerf._mountStack;
-  
-          if (isRender) {
-            addValue(entry.counts, rootNodeID, 1);
-          } else if (isMount) {
-            entry.created[rootNodeID] = true;
-            mountStack.push(0);
-          }
-  
-          ReactDefaultPerf._compositeStack.push(rootNodeID);
-  
-          start = performanceNow();
-          rv = func.apply(this, args);
-          totalTime = performanceNow() - start;
-  
-          ReactDefaultPerf._compositeStack.pop();
-  
-          if (isRender) {
-            addValue(entry.render, rootNodeID, totalTime);
-          } else if (isMount) {
-            var subMountTime = mountStack.pop();
-            mountStack[mountStack.length - 1] += totalTime;
-            addValue(entry.exclusive, rootNodeID, totalTime - subMountTime);
-            addValue(entry.inclusive, rootNodeID, totalTime);
-          } else {
-            addValue(entry.inclusive, rootNodeID, totalTime);
-          }
-  
-          entry.displayNames[rootNodeID] = {
-            current: this.getName(),
-            owner: this._currentElement._owner ? this._currentElement._owner.getName() : '<root>'
-          };
-  
-          return rv;
-        } else if ((moduleName === 'ReactDOMComponent' || moduleName === 'ReactDOMTextComponent') && (fnName === 'mountComponent' || fnName === 'receiveComponent')) {
-  
-          rv = func.apply(this, args);
-          entry.hierarchy[getID(this)] = ReactDefaultPerf._compositeStack.slice();
-          return rv;
-        } else {
-          return func.apply(this, args);
-        }
-      };
-    }
-  };
-  
-  module.exports = ReactDefaultPerf;
-
-  return module.exports;
-}).call({exports:{}});
-_m_['react/lib/getEventCharCode.js#15.0.2']=(function(module,exports){
+_m_['react/lib/getEventCharCode.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -12475,7 +12559,7 @@ _m_['react/lib/getEventCharCode.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/getEventModifierState.js#15.0.2']=(function(module,exports){
+_m_['react/lib/getEventModifierState.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -12524,7 +12608,7 @@ _m_['react/lib/getEventModifierState.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/getEventTarget.js#15.0.2']=(function(module,exports){
+_m_['react/lib/getEventTarget.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -12565,7 +12649,7 @@ _m_['react/lib/getEventTarget.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/SyntheticEvent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/SyntheticEvent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -12583,10 +12667,10 @@ _m_['react/lib/SyntheticEvent.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var PooledClass = _m_['react/lib/PooledClass.js#15.0.2'];
+  var PooledClass = _m_['react/lib/PooledClass.js#15.1.0'];
   
-  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.3'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var didWarnForAddedNewProperty = false;
   var isProxySupported = typeof Proxy === 'function';
@@ -12735,7 +12819,7 @@ _m_['react/lib/SyntheticEvent.js#15.0.2']=(function(module,exports){
         this[shouldBeReleasedProperties[i]] = null;
       }
       if (undefined !== 'production') {
-        var noop = _m_['fbjs/lib/emptyFunction.js#0.8.2'];
+        var noop = _m_['fbjs/lib/emptyFunction.js#0.8.3'];
         Object.defineProperty(this, 'nativeEvent', getPooledWarningPropertyDefinition('nativeEvent', null));
         Object.defineProperty(this, 'preventDefault', getPooledWarningPropertyDefinition('preventDefault', noop));
         Object.defineProperty(this, 'stopPropagation', getPooledWarningPropertyDefinition('stopPropagation', noop));
@@ -12832,7 +12916,7 @@ _m_['react/lib/SyntheticEvent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/SyntheticUIEvent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/SyntheticUIEvent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -12848,9 +12932,9 @@ _m_['react/lib/SyntheticUIEvent.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.0.2'];
+  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.1.0'];
   
-  var getEventTarget = _m_['react/lib/getEventTarget.js#15.0.2'];
+  var getEventTarget = _m_['react/lib/getEventTarget.js#15.1.0'];
   
   /**
    * @interface UIEvent
@@ -12897,7 +12981,7 @@ _m_['react/lib/SyntheticUIEvent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/SyntheticMouseEvent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/SyntheticMouseEvent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -12913,10 +12997,10 @@ _m_['react/lib/SyntheticMouseEvent.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var SyntheticUIEvent = _m_['react/lib/SyntheticUIEvent.js#15.0.2'];
-  var ViewportMetrics = _m_['react/lib/ViewportMetrics.js#15.0.2'];
+  var SyntheticUIEvent = _m_['react/lib/SyntheticUIEvent.js#15.1.0'];
+  var ViewportMetrics = _m_['react/lib/ViewportMetrics.js#15.1.0'];
   
-  var getEventModifierState = _m_['react/lib/getEventModifierState.js#15.0.2'];
+  var getEventModifierState = _m_['react/lib/getEventModifierState.js#15.1.0'];
   
   /**
    * @interface MouseEvent
@@ -12975,7 +13059,7 @@ _m_['react/lib/SyntheticMouseEvent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/SyntheticWheelEvent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/SyntheticWheelEvent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -12991,7 +13075,7 @@ _m_['react/lib/SyntheticWheelEvent.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var SyntheticMouseEvent = _m_['react/lib/SyntheticMouseEvent.js#15.0.2'];
+  var SyntheticMouseEvent = _m_['react/lib/SyntheticMouseEvent.js#15.1.0'];
   
   /**
    * @interface WheelEvent
@@ -13035,7 +13119,7 @@ _m_['react/lib/SyntheticWheelEvent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/SyntheticTransitionEvent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/SyntheticTransitionEvent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -13051,7 +13135,7 @@ _m_['react/lib/SyntheticTransitionEvent.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.0.2'];
+  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.1.0'];
   
   /**
    * @interface Event
@@ -13080,7 +13164,7 @@ _m_['react/lib/SyntheticTransitionEvent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/SyntheticTouchEvent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/SyntheticTouchEvent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -13096,9 +13180,9 @@ _m_['react/lib/SyntheticTouchEvent.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var SyntheticUIEvent = _m_['react/lib/SyntheticUIEvent.js#15.0.2'];
+  var SyntheticUIEvent = _m_['react/lib/SyntheticUIEvent.js#15.1.0'];
   
-  var getEventModifierState = _m_['react/lib/getEventModifierState.js#15.0.2'];
+  var getEventModifierState = _m_['react/lib/getEventModifierState.js#15.1.0'];
   
   /**
    * @interface TouchEvent
@@ -13131,7 +13215,7 @@ _m_['react/lib/SyntheticTouchEvent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/SyntheticDragEvent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/SyntheticDragEvent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -13147,7 +13231,7 @@ _m_['react/lib/SyntheticDragEvent.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var SyntheticMouseEvent = _m_['react/lib/SyntheticMouseEvent.js#15.0.2'];
+  var SyntheticMouseEvent = _m_['react/lib/SyntheticMouseEvent.js#15.1.0'];
   
   /**
    * @interface DragEvent
@@ -13173,7 +13257,7 @@ _m_['react/lib/SyntheticDragEvent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/getEventKey.js#15.0.2']=(function(module,exports){
+_m_['react/lib/getEventKey.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -13189,7 +13273,7 @@ _m_['react/lib/getEventKey.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var getEventCharCode = _m_['react/lib/getEventCharCode.js#15.0.2'];
+  var getEventCharCode = _m_['react/lib/getEventCharCode.js#15.1.0'];
   
   /**
    * Normalization of deprecated HTML5 `key` values
@@ -13281,7 +13365,7 @@ _m_['react/lib/getEventKey.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/SyntheticKeyboardEvent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/SyntheticKeyboardEvent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -13297,11 +13381,11 @@ _m_['react/lib/SyntheticKeyboardEvent.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var SyntheticUIEvent = _m_['react/lib/SyntheticUIEvent.js#15.0.2'];
+  var SyntheticUIEvent = _m_['react/lib/SyntheticUIEvent.js#15.1.0'];
   
-  var getEventCharCode = _m_['react/lib/getEventCharCode.js#15.0.2'];
-  var getEventKey = _m_['react/lib/getEventKey.js#15.0.2'];
-  var getEventModifierState = _m_['react/lib/getEventModifierState.js#15.0.2'];
+  var getEventCharCode = _m_['react/lib/getEventCharCode.js#15.1.0'];
+  var getEventKey = _m_['react/lib/getEventKey.js#15.1.0'];
+  var getEventModifierState = _m_['react/lib/getEventModifierState.js#15.1.0'];
   
   /**
    * @interface KeyboardEvent
@@ -13371,7 +13455,7 @@ _m_['react/lib/SyntheticKeyboardEvent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/SyntheticFocusEvent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/SyntheticFocusEvent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -13387,7 +13471,7 @@ _m_['react/lib/SyntheticFocusEvent.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var SyntheticUIEvent = _m_['react/lib/SyntheticUIEvent.js#15.0.2'];
+  var SyntheticUIEvent = _m_['react/lib/SyntheticUIEvent.js#15.1.0'];
   
   /**
    * @interface FocusEvent
@@ -13413,7 +13497,7 @@ _m_['react/lib/SyntheticFocusEvent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/SyntheticClipboardEvent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/SyntheticClipboardEvent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -13429,7 +13513,7 @@ _m_['react/lib/SyntheticClipboardEvent.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.0.2'];
+  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.1.0'];
   
   /**
    * @interface Event
@@ -13457,7 +13541,7 @@ _m_['react/lib/SyntheticClipboardEvent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/SyntheticAnimationEvent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/SyntheticAnimationEvent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -13473,7 +13557,7 @@ _m_['react/lib/SyntheticAnimationEvent.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.0.2'];
+  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.1.0'];
   
   /**
    * @interface Event
@@ -13502,7 +13586,7 @@ _m_['react/lib/SyntheticAnimationEvent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/EventPropagators.js#15.0.2']=(function(module,exports){
+_m_['react/lib/EventPropagators.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -13518,13 +13602,13 @@ _m_['react/lib/EventPropagators.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var EventConstants = _m_['react/lib/EventConstants.js#15.0.2'];
-  var EventPluginHub = _m_['react/lib/EventPluginHub.js#15.0.2'];
-  var EventPluginUtils = _m_['react/lib/EventPluginUtils.js#15.0.2'];
+  var EventConstants = _m_['react/lib/EventConstants.js#15.1.0'];
+  var EventPluginHub = _m_['react/lib/EventPluginHub.js#15.1.0'];
+  var EventPluginUtils = _m_['react/lib/EventPluginUtils.js#15.1.0'];
   
-  var accumulateInto = _m_['react/lib/accumulateInto.js#15.0.2'];
-  var forEachAccumulated = _m_['react/lib/forEachAccumulated.js#15.0.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var accumulateInto = _m_['react/lib/accumulateInto.js#15.1.0'];
+  var forEachAccumulated = _m_['react/lib/forEachAccumulated.js#15.1.0'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var PropagationPhases = EventConstants.PropagationPhases;
   var getListener = EventPluginHub.getListener;
@@ -13645,7 +13729,7 @@ _m_['react/lib/EventPropagators.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/EventListener.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/EventListener.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   'use strict';
@@ -13668,7 +13752,7 @@ _m_['fbjs/lib/EventListener.js#0.8.2']=(function(module,exports){
    * @typechecks
    */
   
-  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.2'];
+  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.3'];
   
   /**
    * Upstream version of event listener. Does not take into account specific
@@ -13683,18 +13767,18 @@ _m_['fbjs/lib/EventListener.js#0.8.2']=(function(module,exports){
      * @param {function} callback Callback function.
      * @return {object} Object with a `remove` method.
      */
-    listen: function (target, eventType, callback) {
+    listen: function listen(target, eventType, callback) {
       if (target.addEventListener) {
         target.addEventListener(eventType, callback, false);
         return {
-          remove: function () {
+          remove: function remove() {
             target.removeEventListener(eventType, callback, false);
           }
         };
       } else if (target.attachEvent) {
         target.attachEvent('on' + eventType, callback);
         return {
-          remove: function () {
+          remove: function remove() {
             target.detachEvent('on' + eventType, callback);
           }
         };
@@ -13709,11 +13793,11 @@ _m_['fbjs/lib/EventListener.js#0.8.2']=(function(module,exports){
      * @param {function} callback Callback function.
      * @return {object} Object with a `remove` method.
      */
-    capture: function (target, eventType, callback) {
+    capture: function capture(target, eventType, callback) {
       if (target.addEventListener) {
         target.addEventListener(eventType, callback, true);
         return {
-          remove: function () {
+          remove: function remove() {
             target.removeEventListener(eventType, callback, true);
           }
         };
@@ -13727,14 +13811,14 @@ _m_['fbjs/lib/EventListener.js#0.8.2']=(function(module,exports){
       }
     },
   
-    registerDefault: function () {}
+    registerDefault: function registerDefault() {}
   };
   
   module.exports = EventListener;
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/SimpleEventPlugin.js#15.0.2']=(function(module,exports){
+_m_['react/lib/SimpleEventPlugin.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -13750,26 +13834,26 @@ _m_['react/lib/SimpleEventPlugin.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var EventConstants = _m_['react/lib/EventConstants.js#15.0.2'];
-  var EventListener = _m_['fbjs/lib/EventListener.js#0.8.2'];
-  var EventPropagators = _m_['react/lib/EventPropagators.js#15.0.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var SyntheticAnimationEvent = _m_['react/lib/SyntheticAnimationEvent.js#15.0.2'];
-  var SyntheticClipboardEvent = _m_['react/lib/SyntheticClipboardEvent.js#15.0.2'];
-  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.0.2'];
-  var SyntheticFocusEvent = _m_['react/lib/SyntheticFocusEvent.js#15.0.2'];
-  var SyntheticKeyboardEvent = _m_['react/lib/SyntheticKeyboardEvent.js#15.0.2'];
-  var SyntheticMouseEvent = _m_['react/lib/SyntheticMouseEvent.js#15.0.2'];
-  var SyntheticDragEvent = _m_['react/lib/SyntheticDragEvent.js#15.0.2'];
-  var SyntheticTouchEvent = _m_['react/lib/SyntheticTouchEvent.js#15.0.2'];
-  var SyntheticTransitionEvent = _m_['react/lib/SyntheticTransitionEvent.js#15.0.2'];
-  var SyntheticUIEvent = _m_['react/lib/SyntheticUIEvent.js#15.0.2'];
-  var SyntheticWheelEvent = _m_['react/lib/SyntheticWheelEvent.js#15.0.2'];
+  var EventConstants = _m_['react/lib/EventConstants.js#15.1.0'];
+  var EventListener = _m_['fbjs/lib/EventListener.js#0.8.3'];
+  var EventPropagators = _m_['react/lib/EventPropagators.js#15.1.0'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var SyntheticAnimationEvent = _m_['react/lib/SyntheticAnimationEvent.js#15.1.0'];
+  var SyntheticClipboardEvent = _m_['react/lib/SyntheticClipboardEvent.js#15.1.0'];
+  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.1.0'];
+  var SyntheticFocusEvent = _m_['react/lib/SyntheticFocusEvent.js#15.1.0'];
+  var SyntheticKeyboardEvent = _m_['react/lib/SyntheticKeyboardEvent.js#15.1.0'];
+  var SyntheticMouseEvent = _m_['react/lib/SyntheticMouseEvent.js#15.1.0'];
+  var SyntheticDragEvent = _m_['react/lib/SyntheticDragEvent.js#15.1.0'];
+  var SyntheticTouchEvent = _m_['react/lib/SyntheticTouchEvent.js#15.1.0'];
+  var SyntheticTransitionEvent = _m_['react/lib/SyntheticTransitionEvent.js#15.1.0'];
+  var SyntheticUIEvent = _m_['react/lib/SyntheticUIEvent.js#15.1.0'];
+  var SyntheticWheelEvent = _m_['react/lib/SyntheticWheelEvent.js#15.1.0'];
   
-  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.2'];
-  var getEventCharCode = _m_['react/lib/getEventCharCode.js#15.0.2'];
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
-  var keyOf = _m_['fbjs/lib/keyOf.js#0.8.2'];
+  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.3'];
+  var getEventCharCode = _m_['react/lib/getEventCharCode.js#15.1.0'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  var keyOf = _m_['fbjs/lib/keyOf.js#0.8.3'];
   
   var topLevelTypes = EventConstants.topLevelTypes;
   
@@ -14367,7 +14451,7 @@ _m_['react/lib/SimpleEventPlugin.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/shallowEqual.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/shallowEqual.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -14439,7 +14523,7 @@ _m_['fbjs/lib/shallowEqual.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/isTextInputElement.js#15.0.2']=(function(module,exports){
+_m_['react/lib/isTextInputElement.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -14486,7 +14570,7 @@ _m_['react/lib/isTextInputElement.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/getActiveElement.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/getActiveElement.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   'use strict';
@@ -14526,7 +14610,7 @@ _m_['fbjs/lib/getActiveElement.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/focusNode.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/focusNode.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -14558,7 +14642,7 @@ _m_['fbjs/lib/focusNode.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/isNode.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/isNode.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   'use strict';
@@ -14586,7 +14670,7 @@ _m_['fbjs/lib/isNode.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/isTextNode.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/isTextNode.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   'use strict';
@@ -14602,7 +14686,7 @@ _m_['fbjs/lib/isTextNode.js#0.8.2']=(function(module,exports){
    * @typechecks
    */
   
-  var isNode = _m_['fbjs/lib/isNode.js#0.8.2'];
+  var isNode = _m_['fbjs/lib/isNode.js#0.8.3'];
   
   /**
    * @param {*} object The object to check.
@@ -14616,7 +14700,7 @@ _m_['fbjs/lib/isTextNode.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/containsNode.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/containsNode.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   'use strict';
@@ -14629,19 +14713,15 @@ _m_['fbjs/lib/containsNode.js#0.8.2']=(function(module,exports){
    * LICENSE file in the root directory of this source tree. An additional grant
    * of patent rights can be found in the PATENTS file in the same directory.
    *
-   * @typechecks
+   * 
    */
   
-  var isTextNode = _m_['fbjs/lib/isTextNode.js#0.8.2'];
+  var isTextNode = _m_['fbjs/lib/isTextNode.js#0.8.3'];
   
   /*eslint-disable no-bitwise */
   
   /**
    * Checks if a given DOM node contains or is another DOM node.
-   *
-   * @param {?DOMNode} outerNode Outer DOM node.
-   * @param {?DOMNode} innerNode Inner DOM node.
-   * @return {boolean} True if `outerNode` contains or is `innerNode`.
    */
   function containsNode(outerNode, innerNode) {
     if (!outerNode || !innerNode) {
@@ -14652,7 +14732,7 @@ _m_['fbjs/lib/containsNode.js#0.8.2']=(function(module,exports){
       return false;
     } else if (isTextNode(innerNode)) {
       return containsNode(outerNode, innerNode.parentNode);
-    } else if (outerNode.contains) {
+    } else if ('contains' in outerNode) {
       return outerNode.contains(innerNode);
     } else if (outerNode.compareDocumentPosition) {
       return !!(outerNode.compareDocumentPosition(innerNode) & 16);
@@ -14665,7 +14745,7 @@ _m_['fbjs/lib/containsNode.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/getTextContentAccessor.js#15.0.2']=(function(module,exports){
+_m_['react/lib/getTextContentAccessor.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -14681,7 +14761,7 @@ _m_['react/lib/getTextContentAccessor.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
+  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
   
   var contentKey = null;
   
@@ -14704,7 +14784,7 @@ _m_['react/lib/getTextContentAccessor.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/getNodeForCharacterOffset.js#15.0.2']=(function(module,exports){
+_m_['react/lib/getNodeForCharacterOffset.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -14784,7 +14864,7 @@ _m_['react/lib/getNodeForCharacterOffset.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMSelection.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMSelection.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -14800,10 +14880,10 @@ _m_['react/lib/ReactDOMSelection.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
+  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
   
-  var getNodeForCharacterOffset = _m_['react/lib/getNodeForCharacterOffset.js#15.0.2'];
-  var getTextContentAccessor = _m_['react/lib/getTextContentAccessor.js#15.0.2'];
+  var getNodeForCharacterOffset = _m_['react/lib/getNodeForCharacterOffset.js#15.1.0'];
+  var getTextContentAccessor = _m_['react/lib/getTextContentAccessor.js#15.1.0'];
   
   /**
    * While `isCollapsed` is available on the Selection object and `collapsed`
@@ -15002,7 +15082,7 @@ _m_['react/lib/ReactDOMSelection.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactInputSelection.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactInputSelection.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -15018,11 +15098,11 @@ _m_['react/lib/ReactInputSelection.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactDOMSelection = _m_['react/lib/ReactDOMSelection.js#15.0.2'];
+  var ReactDOMSelection = _m_['react/lib/ReactDOMSelection.js#15.1.0'];
   
-  var containsNode = _m_['fbjs/lib/containsNode.js#0.8.2'];
-  var focusNode = _m_['fbjs/lib/focusNode.js#0.8.2'];
-  var getActiveElement = _m_['fbjs/lib/getActiveElement.js#0.8.2'];
+  var containsNode = _m_['fbjs/lib/containsNode.js#0.8.3'];
+  var focusNode = _m_['fbjs/lib/focusNode.js#0.8.3'];
+  var getActiveElement = _m_['fbjs/lib/getActiveElement.js#0.8.3'];
   
   function isInDocument(node) {
     return containsNode(document.documentElement, node);
@@ -15132,7 +15212,7 @@ _m_['react/lib/ReactInputSelection.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/SelectEventPlugin.js#15.0.2']=(function(module,exports){
+_m_['react/lib/SelectEventPlugin.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -15148,17 +15228,17 @@ _m_['react/lib/SelectEventPlugin.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var EventConstants = _m_['react/lib/EventConstants.js#15.0.2'];
-  var EventPropagators = _m_['react/lib/EventPropagators.js#15.0.2'];
-  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var ReactInputSelection = _m_['react/lib/ReactInputSelection.js#15.0.2'];
-  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.0.2'];
+  var EventConstants = _m_['react/lib/EventConstants.js#15.1.0'];
+  var EventPropagators = _m_['react/lib/EventPropagators.js#15.1.0'];
+  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var ReactInputSelection = _m_['react/lib/ReactInputSelection.js#15.1.0'];
+  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.1.0'];
   
-  var getActiveElement = _m_['fbjs/lib/getActiveElement.js#0.8.2'];
-  var isTextInputElement = _m_['react/lib/isTextInputElement.js#15.0.2'];
-  var keyOf = _m_['fbjs/lib/keyOf.js#0.8.2'];
-  var shallowEqual = _m_['fbjs/lib/shallowEqual.js#0.8.2'];
+  var getActiveElement = _m_['fbjs/lib/getActiveElement.js#0.8.3'];
+  var isTextInputElement = _m_['react/lib/isTextInputElement.js#15.1.0'];
+  var keyOf = _m_['fbjs/lib/keyOf.js#0.8.3'];
+  var shallowEqual = _m_['fbjs/lib/shallowEqual.js#0.8.3'];
   
   var topLevelTypes = EventConstants.topLevelTypes;
   
@@ -15334,7 +15414,7 @@ _m_['react/lib/SelectEventPlugin.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/SVGDOMPropertyConfig.js#15.0.2']=(function(module,exports){
+_m_['react/lib/SVGDOMPropertyConfig.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -15640,7 +15720,7 @@ _m_['react/lib/SVGDOMPropertyConfig.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactReconcileTransaction.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactReconcileTransaction.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -15658,11 +15738,11 @@ _m_['react/lib/ReactReconcileTransaction.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var CallbackQueue = _m_['react/lib/CallbackQueue.js#15.0.2'];
-  var PooledClass = _m_['react/lib/PooledClass.js#15.0.2'];
-  var ReactBrowserEventEmitter = _m_['react/lib/ReactBrowserEventEmitter.js#15.0.2'];
-  var ReactInputSelection = _m_['react/lib/ReactInputSelection.js#15.0.2'];
-  var Transaction = _m_['react/lib/Transaction.js#15.0.2'];
+  var CallbackQueue = _m_['react/lib/CallbackQueue.js#15.1.0'];
+  var PooledClass = _m_['react/lib/PooledClass.js#15.1.0'];
+  var ReactBrowserEventEmitter = _m_['react/lib/ReactBrowserEventEmitter.js#15.1.0'];
+  var ReactInputSelection = _m_['react/lib/ReactInputSelection.js#15.1.0'];
+  var Transaction = _m_['react/lib/Transaction.js#15.1.0'];
   
   /**
    * Ensures that, when possible, the selection range (currently selected text
@@ -15808,7 +15888,7 @@ _m_['react/lib/ReactReconcileTransaction.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactInjection.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactInjection.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -15824,16 +15904,15 @@ _m_['react/lib/ReactInjection.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var DOMProperty = _m_['react/lib/DOMProperty.js#15.0.2'];
-  var EventPluginHub = _m_['react/lib/EventPluginHub.js#15.0.2'];
-  var EventPluginUtils = _m_['react/lib/EventPluginUtils.js#15.0.2'];
-  var ReactComponentEnvironment = _m_['react/lib/ReactComponentEnvironment.js#15.0.2'];
-  var ReactClass = _m_['react/lib/ReactClass.js#15.0.2'];
-  var ReactEmptyComponent = _m_['react/lib/ReactEmptyComponent.js#15.0.2'];
-  var ReactBrowserEventEmitter = _m_['react/lib/ReactBrowserEventEmitter.js#15.0.2'];
-  var ReactNativeComponent = _m_['react/lib/ReactNativeComponent.js#15.0.2'];
-  var ReactPerf = _m_['react/lib/ReactPerf.js#15.0.2'];
-  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.0.2'];
+  var DOMProperty = _m_['react/lib/DOMProperty.js#15.1.0'];
+  var EventPluginHub = _m_['react/lib/EventPluginHub.js#15.1.0'];
+  var EventPluginUtils = _m_['react/lib/EventPluginUtils.js#15.1.0'];
+  var ReactComponentEnvironment = _m_['react/lib/ReactComponentEnvironment.js#15.1.0'];
+  var ReactClass = _m_['react/lib/ReactClass.js#15.1.0'];
+  var ReactEmptyComponent = _m_['react/lib/ReactEmptyComponent.js#15.1.0'];
+  var ReactBrowserEventEmitter = _m_['react/lib/ReactBrowserEventEmitter.js#15.1.0'];
+  var ReactNativeComponent = _m_['react/lib/ReactNativeComponent.js#15.1.0'];
+  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.1.0'];
   
   var ReactInjection = {
     Component: ReactComponentEnvironment.injection,
@@ -15844,7 +15923,6 @@ _m_['react/lib/ReactInjection.js#15.0.2']=(function(module,exports){
     EventPluginUtils: EventPluginUtils.injection,
     EventEmitter: ReactBrowserEventEmitter.injection,
     NativeComponent: ReactNativeComponent.injection,
-    Perf: ReactPerf.injection,
     Updates: ReactUpdates.injection
   };
   
@@ -15852,7 +15930,7 @@ _m_['react/lib/ReactInjection.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/getUnboundedScrollPosition.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/getUnboundedScrollPosition.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -15896,7 +15974,7 @@ _m_['fbjs/lib/getUnboundedScrollPosition.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactEventListener.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactEventListener.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -15914,14 +15992,14 @@ _m_['react/lib/ReactEventListener.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var EventListener = _m_['fbjs/lib/EventListener.js#0.8.2'];
-  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
-  var PooledClass = _m_['react/lib/PooledClass.js#15.0.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.0.2'];
+  var EventListener = _m_['fbjs/lib/EventListener.js#0.8.3'];
+  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
+  var PooledClass = _m_['react/lib/PooledClass.js#15.1.0'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.1.0'];
   
-  var getEventTarget = _m_['react/lib/getEventTarget.js#15.0.2'];
-  var getUnboundedScrollPosition = _m_['fbjs/lib/getUnboundedScrollPosition.js#0.8.2'];
+  var getEventTarget = _m_['react/lib/getEventTarget.js#15.1.0'];
+  var getUnboundedScrollPosition = _m_['fbjs/lib/getUnboundedScrollPosition.js#0.8.3'];
   
   /**
    * Find the deepest React component completely containing the root of the
@@ -16059,7 +16137,7 @@ _m_['react/lib/ReactEventListener.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDefaultBatchingStrategy.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDefaultBatchingStrategy.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -16077,10 +16155,10 @@ _m_['react/lib/ReactDefaultBatchingStrategy.js#15.0.2']=(function(module,exports
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.0.2'];
-  var Transaction = _m_['react/lib/Transaction.js#15.0.2'];
+  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.1.0'];
+  var Transaction = _m_['react/lib/Transaction.js#15.1.0'];
   
-  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.2'];
+  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.3'];
   
   var RESET_BATCHED_UPDATES = {
     initialize: emptyFunction,
@@ -16133,7 +16211,7 @@ _m_['react/lib/ReactDefaultBatchingStrategy.js#15.0.2']=(function(module,exports
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactMultiChildUpdateTypes.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactMultiChildUpdateTypes.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -16149,7 +16227,7 @@ _m_['react/lib/ReactMultiChildUpdateTypes.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var keyMirror = _m_['fbjs/lib/keyMirror.js#0.8.2'];
+  var keyMirror = _m_['fbjs/lib/keyMirror.js#0.8.3'];
   
   /**
    * When a component's children are updated, a series of update configuration
@@ -16171,7 +16249,7 @@ _m_['react/lib/ReactMultiChildUpdateTypes.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/getMarkupWrap.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/getMarkupWrap.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   'use strict';
@@ -16188,9 +16266,9 @@ _m_['fbjs/lib/getMarkupWrap.js#0.8.2']=(function(module,exports){
   
   /*eslint-disable fb-www/unsafe-html */
   
-  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
+  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   /**
    * Dummy container used to detect which wraps are necessary.
@@ -16271,7 +16349,7 @@ _m_['fbjs/lib/getMarkupWrap.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/createArrayFromMixed.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/createArrayFromMixed.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   'use strict';
@@ -16287,7 +16365,7 @@ _m_['fbjs/lib/createArrayFromMixed.js#0.8.2']=(function(module,exports){
    * @typechecks
    */
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   /**
    * Convert array-like objects to arrays.
@@ -16403,7 +16481,7 @@ _m_['fbjs/lib/createArrayFromMixed.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/createNodesFromMarkup.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/createNodesFromMarkup.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   'use strict';
@@ -16421,11 +16499,11 @@ _m_['fbjs/lib/createNodesFromMarkup.js#0.8.2']=(function(module,exports){
   
   /*eslint-disable fb-www/unsafe-html*/
   
-  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
+  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
   
-  var createArrayFromMixed = _m_['fbjs/lib/createArrayFromMixed.js#0.8.2'];
-  var getMarkupWrap = _m_['fbjs/lib/getMarkupWrap.js#0.8.2'];
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var createArrayFromMixed = _m_['fbjs/lib/createArrayFromMixed.js#0.8.3'];
+  var getMarkupWrap = _m_['fbjs/lib/getMarkupWrap.js#0.8.3'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   /**
    * Dummy container used to render all markup.
@@ -16492,7 +16570,7 @@ _m_['fbjs/lib/createNodesFromMarkup.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/Danger.js#15.0.2']=(function(module,exports){
+_m_['react/lib/Danger.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -16508,13 +16586,13 @@ _m_['react/lib/Danger.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var DOMLazyTree = _m_['react/lib/DOMLazyTree.js#15.0.2'];
-  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
+  var DOMLazyTree = _m_['react/lib/DOMLazyTree.js#15.1.0'];
+  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
   
-  var createNodesFromMarkup = _m_['fbjs/lib/createNodesFromMarkup.js#0.8.2'];
-  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.2'];
-  var getMarkupWrap = _m_['fbjs/lib/getMarkupWrap.js#0.8.2'];
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var createNodesFromMarkup = _m_['fbjs/lib/createNodesFromMarkup.js#0.8.3'];
+  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.3'];
+  var getMarkupWrap = _m_['fbjs/lib/getMarkupWrap.js#0.8.3'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   var OPEN_TAG_NAME_EXP = /^(<[^ \/>]+)/;
   var RESULT_INDEX_ATTR = 'data-danger-index';
@@ -16642,7 +16720,7 @@ _m_['react/lib/Danger.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/DOMChildrenOperations.js#15.0.2']=(function(module,exports){
+_m_['react/lib/DOMChildrenOperations.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -16658,14 +16736,15 @@ _m_['react/lib/DOMChildrenOperations.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var DOMLazyTree = _m_['react/lib/DOMLazyTree.js#15.0.2'];
-  var Danger = _m_['react/lib/Danger.js#15.0.2'];
-  var ReactMultiChildUpdateTypes = _m_['react/lib/ReactMultiChildUpdateTypes.js#15.0.2'];
-  var ReactPerf = _m_['react/lib/ReactPerf.js#15.0.2'];
+  var DOMLazyTree = _m_['react/lib/DOMLazyTree.js#15.1.0'];
+  var Danger = _m_['react/lib/Danger.js#15.1.0'];
+  var ReactMultiChildUpdateTypes = _m_['react/lib/ReactMultiChildUpdateTypes.js#15.1.0'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var ReactInstrumentation = _m_['react/lib/ReactInstrumentation.js#15.1.0'];
   
-  var createMicrosoftUnsafeLocalFunction = _m_['react/lib/createMicrosoftUnsafeLocalFunction.js#15.0.2'];
-  var setInnerHTML = _m_['react/lib/setInnerHTML.js#15.0.2'];
-  var setTextContent = _m_['react/lib/setTextContent.js#15.0.2'];
+  var createMicrosoftUnsafeLocalFunction = _m_['react/lib/createMicrosoftUnsafeLocalFunction.js#15.1.0'];
+  var setInnerHTML = _m_['react/lib/setInnerHTML.js#15.1.0'];
+  var setTextContent = _m_['react/lib/setTextContent.js#15.1.0'];
   
   function getNodeAfter(parentNode, node) {
     // Special case for text components, which return [open, close] comments
@@ -16756,6 +16835,25 @@ _m_['react/lib/DOMChildrenOperations.js#15.0.2']=(function(module,exports){
         removeDelimitedText(parentNode, openingComment, closingComment);
       }
     }
+  
+    if (undefined !== 'production') {
+      ReactInstrumentation.debugTool.onNativeOperation(ReactDOMComponentTree.getInstanceFromNode(openingComment)._debugID, 'replace text', stringText);
+    }
+  }
+  
+  var dangerouslyReplaceNodeWithMarkup = Danger.dangerouslyReplaceNodeWithMarkup;
+  if (undefined !== 'production') {
+    dangerouslyReplaceNodeWithMarkup = function (oldChild, markup, prevInstance) {
+      Danger.dangerouslyReplaceNodeWithMarkup(oldChild, markup);
+      if (prevInstance._debugID !== 0) {
+        ReactInstrumentation.debugTool.onNativeOperation(prevInstance._debugID, 'replace with', markup.toString());
+      } else {
+        var nextInstance = ReactDOMComponentTree.getInstanceFromNode(markup.node);
+        if (nextInstance._debugID !== 0) {
+          ReactInstrumentation.debugTool.onNativeOperation(nextInstance._debugID, 'mount', markup.toString());
+        }
+      }
+    };
   }
   
   /**
@@ -16763,7 +16861,7 @@ _m_['react/lib/DOMChildrenOperations.js#15.0.2']=(function(module,exports){
    */
   var DOMChildrenOperations = {
   
-    dangerouslyReplaceNodeWithMarkup: Danger.dangerouslyReplaceNodeWithMarkup,
+    dangerouslyReplaceNodeWithMarkup: dangerouslyReplaceNodeWithMarkup,
   
     replaceDelimitedText: replaceDelimitedText,
   
@@ -16775,23 +16873,42 @@ _m_['react/lib/DOMChildrenOperations.js#15.0.2']=(function(module,exports){
      * @internal
      */
     processUpdates: function (parentNode, updates) {
+      if (undefined !== 'production') {
+        var parentNodeDebugID = ReactDOMComponentTree.getInstanceFromNode(parentNode)._debugID;
+      }
+  
       for (var k = 0; k < updates.length; k++) {
         var update = updates[k];
         switch (update.type) {
           case ReactMultiChildUpdateTypes.INSERT_MARKUP:
             insertLazyTreeChildAt(parentNode, update.content, getNodeAfter(parentNode, update.afterNode));
+            if (undefined !== 'production') {
+              ReactInstrumentation.debugTool.onNativeOperation(parentNodeDebugID, 'insert child', { toIndex: update.toIndex, content: update.content.toString() });
+            }
             break;
           case ReactMultiChildUpdateTypes.MOVE_EXISTING:
             moveChild(parentNode, update.fromNode, getNodeAfter(parentNode, update.afterNode));
+            if (undefined !== 'production') {
+              ReactInstrumentation.debugTool.onNativeOperation(parentNodeDebugID, 'move child', { fromIndex: update.fromIndex, toIndex: update.toIndex });
+            }
             break;
           case ReactMultiChildUpdateTypes.SET_MARKUP:
             setInnerHTML(parentNode, update.content);
+            if (undefined !== 'production') {
+              ReactInstrumentation.debugTool.onNativeOperation(parentNodeDebugID, 'replace children', update.content.toString());
+            }
             break;
           case ReactMultiChildUpdateTypes.TEXT_CONTENT:
             setTextContent(parentNode, update.content);
+            if (undefined !== 'production') {
+              ReactInstrumentation.debugTool.onNativeOperation(parentNodeDebugID, 'replace text', update.content.toString());
+            }
             break;
           case ReactMultiChildUpdateTypes.REMOVE_NODE:
             removeChild(parentNode, update.fromNode);
+            if (undefined !== 'production') {
+              ReactInstrumentation.debugTool.onNativeOperation(parentNodeDebugID, 'remove child', { fromIndex: update.fromIndex });
+            }
             break;
         }
       }
@@ -16799,15 +16916,11 @@ _m_['react/lib/DOMChildrenOperations.js#15.0.2']=(function(module,exports){
   
   };
   
-  ReactPerf.measureMethods(DOMChildrenOperations, 'DOMChildrenOperations', {
-    replaceDelimitedText: 'replaceDelimitedText'
-  });
-  
   module.exports = DOMChildrenOperations;
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMTextComponent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMTextComponent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -16825,14 +16938,14 @@ _m_['react/lib/ReactDOMTextComponent.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var DOMChildrenOperations = _m_['react/lib/DOMChildrenOperations.js#15.0.2'];
-  var DOMLazyTree = _m_['react/lib/DOMLazyTree.js#15.0.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var ReactPerf = _m_['react/lib/ReactPerf.js#15.0.2'];
+  var DOMChildrenOperations = _m_['react/lib/DOMChildrenOperations.js#15.1.0'];
+  var DOMLazyTree = _m_['react/lib/DOMLazyTree.js#15.1.0'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var ReactInstrumentation = _m_['react/lib/ReactInstrumentation.js#15.1.0'];
   
-  var escapeTextContentForBrowser = _m_['react/lib/escapeTextContentForBrowser.js#15.0.2'];
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
-  var validateDOMNesting = _m_['react/lib/validateDOMNesting.js#15.0.2'];
+  var escapeTextContentForBrowser = _m_['react/lib/escapeTextContentForBrowser.js#15.1.0'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  var validateDOMNesting = _m_['react/lib/validateDOMNesting.js#15.1.0'];
   
   /**
    * Text nodes violate a couple assumptions that React makes about components:
@@ -16876,6 +16989,8 @@ _m_['react/lib/ReactDOMTextComponent.js#15.0.2']=(function(module,exports){
      */
     mountComponent: function (transaction, nativeParent, nativeContainerInfo, context) {
       if (undefined !== 'production') {
+        ReactInstrumentation.debugTool.onSetText(this._debugID, this._stringText);
+  
         var parentInfo;
         if (nativeParent != null) {
           parentInfo = nativeParent._ancestorInfo;
@@ -16939,6 +17054,10 @@ _m_['react/lib/ReactDOMTextComponent.js#15.0.2']=(function(module,exports){
           this._stringText = nextStringText;
           var commentNodes = this.getNativeNode();
           DOMChildrenOperations.replaceDelimitedText(commentNodes[0], commentNodes[1], nextStringText);
+  
+          if (undefined !== 'production') {
+            ReactInstrumentation.debugTool.onSetText(this._debugID, nextStringText);
+          }
         }
       }
     },
@@ -16973,16 +17092,11 @@ _m_['react/lib/ReactDOMTextComponent.js#15.0.2']=(function(module,exports){
   
   });
   
-  ReactPerf.measureMethods(ReactDOMTextComponent.prototype, 'ReactDOMTextComponent', {
-    mountComponent: 'mountComponent',
-    receiveComponent: 'receiveComponent'
-  });
-  
   module.exports = ReactDOMTextComponent;
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMTreeTraversal.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMTreeTraversal.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -16998,7 +17112,7 @@ _m_['react/lib/ReactDOMTreeTraversal.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   /**
    * Return the lowest common ancestor of A and B, or null if they are in
@@ -17122,7 +17236,7 @@ _m_['react/lib/ReactDOMTreeTraversal.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMEmptyComponent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMEmptyComponent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -17140,8 +17254,8 @@ _m_['react/lib/ReactDOMEmptyComponent.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var DOMLazyTree = _m_['react/lib/DOMLazyTree.js#15.0.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
+  var DOMLazyTree = _m_['react/lib/DOMLazyTree.js#15.1.0'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
   
   var ReactDOMEmptyComponent = function (instantiate) {
     // ReactCompositeComponent uses this:
@@ -17188,7 +17302,86 @@ _m_['react/lib/ReactDOMEmptyComponent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/flattenChildren.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactServerRenderingTransaction.js#15.1.0']=(function(module,exports){
+  module=this;exports=module.exports;
+
+  /**
+   * Copyright 2014-present, Facebook, Inc.
+   * All rights reserved.
+   *
+   * This source code is licensed under the BSD-style license found in the
+   * LICENSE file in the root directory of this source tree. An additional grant
+   * of patent rights can be found in the PATENTS file in the same directory.
+   *
+   * @providesModule ReactServerRenderingTransaction
+   */
+  
+  'use strict';
+  
+  var _assign = _m_['object-assign/index.js#4.1.0'];
+  
+  var PooledClass = _m_['react/lib/PooledClass.js#15.1.0'];
+  var Transaction = _m_['react/lib/Transaction.js#15.1.0'];
+  
+  /**
+   * Executed within the scope of the `Transaction` instance. Consider these as
+   * being member methods, but with an implied ordering while being isolated from
+   * each other.
+   */
+  var TRANSACTION_WRAPPERS = [];
+  
+  var noopCallbackQueue = {
+    enqueue: function () {}
+  };
+  
+  /**
+   * @class ReactServerRenderingTransaction
+   * @param {boolean} renderToStaticMarkup
+   */
+  function ReactServerRenderingTransaction(renderToStaticMarkup) {
+    this.reinitializeTransaction();
+    this.renderToStaticMarkup = renderToStaticMarkup;
+    this.useCreateElement = false;
+  }
+  
+  var Mixin = {
+    /**
+     * @see Transaction
+     * @abstract
+     * @final
+     * @return {array} Empty list of operation wrap procedures.
+     */
+    getTransactionWrappers: function () {
+      return TRANSACTION_WRAPPERS;
+    },
+  
+    /**
+     * @return {object} The queue to collect `onDOMReady` callbacks with.
+     */
+    getReactMountReady: function () {
+      return noopCallbackQueue;
+    },
+  
+    /**
+     * `PooledClass` looks for this, and will invoke this before allowing this
+     * instance to be reused.
+     */
+    destructor: function () {},
+  
+    checkpoint: function () {},
+  
+    rollback: function () {}
+  };
+  
+  _assign(ReactServerRenderingTransaction.prototype, Transaction.Mixin, Mixin);
+  
+  PooledClass.addPoolingTo(ReactServerRenderingTransaction);
+  
+  module.exports = ReactServerRenderingTransaction;
+
+  return module.exports;
+}).call({exports:{}});
+_m_['react/lib/flattenChildren.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -17204,9 +17397,9 @@ _m_['react/lib/flattenChildren.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var KeyEscapeUtils = _m_['react/lib/KeyEscapeUtils.js#15.0.2'];
-  var traverseAllChildren = _m_['react/lib/traverseAllChildren.js#15.0.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var KeyEscapeUtils = _m_['react/lib/KeyEscapeUtils.js#15.1.0'];
+  var traverseAllChildren = _m_['react/lib/traverseAllChildren.js#15.1.0'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   /**
    * @param {function} traverseContext Context passed through traversal.
@@ -17243,7 +17436,7 @@ _m_['react/lib/flattenChildren.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactChildReconciler.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactChildReconciler.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -17259,13 +17452,13 @@ _m_['react/lib/ReactChildReconciler.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactReconciler = _m_['react/lib/ReactReconciler.js#15.0.2'];
+  var ReactReconciler = _m_['react/lib/ReactReconciler.js#15.1.0'];
   
-  var instantiateReactComponent = _m_['react/lib/instantiateReactComponent.js#15.0.2'];
-  var KeyEscapeUtils = _m_['react/lib/KeyEscapeUtils.js#15.0.2'];
-  var shouldUpdateReactComponent = _m_['react/lib/shouldUpdateReactComponent.js#15.0.2'];
-  var traverseAllChildren = _m_['react/lib/traverseAllChildren.js#15.0.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var instantiateReactComponent = _m_['react/lib/instantiateReactComponent.js#15.1.0'];
+  var KeyEscapeUtils = _m_['react/lib/KeyEscapeUtils.js#15.1.0'];
+  var shouldUpdateReactComponent = _m_['react/lib/shouldUpdateReactComponent.js#15.1.0'];
+  var traverseAllChildren = _m_['react/lib/traverseAllChildren.js#15.1.0'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   function instantiateChild(childInstances, child, name) {
     // We found a component instance.
@@ -17374,7 +17567,7 @@ _m_['react/lib/ReactChildReconciler.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactMultiChild.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactMultiChild.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -17390,15 +17583,17 @@ _m_['react/lib/ReactMultiChild.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactComponentEnvironment = _m_['react/lib/ReactComponentEnvironment.js#15.0.2'];
-  var ReactMultiChildUpdateTypes = _m_['react/lib/ReactMultiChildUpdateTypes.js#15.0.2'];
+  var ReactComponentEnvironment = _m_['react/lib/ReactComponentEnvironment.js#15.1.0'];
+  var ReactInstrumentation = _m_['react/lib/ReactInstrumentation.js#15.1.0'];
+  var ReactMultiChildUpdateTypes = _m_['react/lib/ReactMultiChildUpdateTypes.js#15.1.0'];
   
-  var ReactCurrentOwner = _m_['react/lib/ReactCurrentOwner.js#15.0.2'];
-  var ReactReconciler = _m_['react/lib/ReactReconciler.js#15.0.2'];
-  var ReactChildReconciler = _m_['react/lib/ReactChildReconciler.js#15.0.2'];
+  var ReactCurrentOwner = _m_['react/lib/ReactCurrentOwner.js#15.1.0'];
+  var ReactReconciler = _m_['react/lib/ReactReconciler.js#15.1.0'];
+  var ReactChildReconciler = _m_['react/lib/ReactChildReconciler.js#15.1.0'];
   
-  var flattenChildren = _m_['react/lib/flattenChildren.js#15.0.2'];
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
+  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.3'];
+  var flattenChildren = _m_['react/lib/flattenChildren.js#15.1.0'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
   
   /**
    * Make an update for markup to be rendered and inserted at a supplied index.
@@ -17513,6 +17708,15 @@ _m_['react/lib/ReactMultiChild.js#15.0.2']=(function(module,exports){
     ReactComponentEnvironment.processChildrenUpdates(inst, updateQueue);
   }
   
+  var setChildrenForInstrumentation = emptyFunction;
+  if (undefined !== 'production') {
+    setChildrenForInstrumentation = function (children) {
+      ReactInstrumentation.debugTool.onSetChildren(this._debugID, children ? Object.keys(children).map(function (key) {
+        return children[key]._debugID;
+      }) : []);
+    };
+  }
+  
   /**
    * ReactMultiChild are capable of reconciling multiple children.
    *
@@ -17574,6 +17778,7 @@ _m_['react/lib/ReactMultiChild.js#15.0.2']=(function(module,exports){
       mountChildren: function (nestedChildren, transaction, context) {
         var children = this._reconcilerInstantiateChildren(nestedChildren, transaction, context);
         this._renderedChildren = children;
+  
         var mountImages = [];
         var index = 0;
         for (var name in children) {
@@ -17584,6 +17789,11 @@ _m_['react/lib/ReactMultiChild.js#15.0.2']=(function(module,exports){
             mountImages.push(mountImage);
           }
         }
+  
+        if (undefined !== 'production') {
+          setChildrenForInstrumentation.call(this, children);
+        }
+  
         return mountImages;
       },
   
@@ -17690,6 +17900,10 @@ _m_['react/lib/ReactMultiChild.js#15.0.2']=(function(module,exports){
           processQueue(this, updates);
         }
         this._renderedChildren = nextChildren;
+  
+        if (undefined !== 'production') {
+          setChildrenForInstrumentation.call(this, nextChildren);
+        }
       },
   
       /**
@@ -17782,7 +17996,7 @@ _m_['react/lib/ReactMultiChild.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/LinkedValueUtils.js#15.0.2']=(function(module,exports){
+_m_['react/lib/LinkedValueUtils.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -17798,11 +18012,11 @@ _m_['react/lib/LinkedValueUtils.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactPropTypes = _m_['react/lib/ReactPropTypes.js#15.0.2'];
-  var ReactPropTypeLocations = _m_['react/lib/ReactPropTypeLocations.js#15.0.2'];
+  var ReactPropTypes = _m_['react/lib/ReactPropTypes.js#15.1.0'];
+  var ReactPropTypeLocations = _m_['react/lib/ReactPropTypeLocations.js#15.1.0'];
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var hasReadOnlyValue = {
     'button': true,
@@ -17921,7 +18135,7 @@ _m_['react/lib/LinkedValueUtils.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/quoteAttributeValueForBrowser.js#15.0.2']=(function(module,exports){
+_m_['react/lib/quoteAttributeValueForBrowser.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -17937,7 +18151,7 @@ _m_['react/lib/quoteAttributeValueForBrowser.js#15.0.2']=(function(module,export
   
   'use strict';
   
-  var escapeTextContentForBrowser = _m_['react/lib/escapeTextContentForBrowser.js#15.0.2'];
+  var escapeTextContentForBrowser = _m_['react/lib/escapeTextContentForBrowser.js#15.1.0'];
   
   /**
    * Escapes attribute value to prevent scripting attacks.
@@ -17953,7 +18167,7 @@ _m_['react/lib/quoteAttributeValueForBrowser.js#15.0.2']=(function(module,export
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMUnknownPropertyDevtool.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMUnknownPropertyDevtool.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -17969,10 +18183,10 @@ _m_['react/lib/ReactDOMUnknownPropertyDevtool.js#15.0.2']=(function(module,expor
   
   'use strict';
   
-  var DOMProperty = _m_['react/lib/DOMProperty.js#15.0.2'];
-  var EventPluginRegistry = _m_['react/lib/EventPluginRegistry.js#15.0.2'];
+  var DOMProperty = _m_['react/lib/DOMProperty.js#15.1.0'];
+  var EventPluginRegistry = _m_['react/lib/EventPluginRegistry.js#15.1.0'];
   
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   if (undefined !== 'production') {
     var reactProps = {
@@ -18023,7 +18237,7 @@ _m_['react/lib/ReactDOMUnknownPropertyDevtool.js#15.0.2']=(function(module,expor
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMDebugTool.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMDebugTool.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -18039,9 +18253,9 @@ _m_['react/lib/ReactDOMDebugTool.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactDOMUnknownPropertyDevtool = _m_['react/lib/ReactDOMUnknownPropertyDevtool.js#15.0.2'];
+  var ReactDOMUnknownPropertyDevtool = _m_['react/lib/ReactDOMUnknownPropertyDevtool.js#15.1.0'];
   
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var eventHandlers = [];
   var handlerDoesThrowForEvent = {};
@@ -18090,7 +18304,7 @@ _m_['react/lib/ReactDOMDebugTool.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMInstrumentation.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMInstrumentation.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -18106,13 +18320,13 @@ _m_['react/lib/ReactDOMInstrumentation.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactDOMDebugTool = _m_['react/lib/ReactDOMDebugTool.js#15.0.2'];
+  var ReactDOMDebugTool = _m_['react/lib/ReactDOMDebugTool.js#15.1.0'];
   
   module.exports = { debugTool: ReactDOMDebugTool };
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/DOMPropertyOperations.js#15.0.2']=(function(module,exports){
+_m_['react/lib/DOMPropertyOperations.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -18128,12 +18342,13 @@ _m_['react/lib/DOMPropertyOperations.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var DOMProperty = _m_['react/lib/DOMProperty.js#15.0.2'];
-  var ReactDOMInstrumentation = _m_['react/lib/ReactDOMInstrumentation.js#15.0.2'];
-  var ReactPerf = _m_['react/lib/ReactPerf.js#15.0.2'];
+  var DOMProperty = _m_['react/lib/DOMProperty.js#15.1.0'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var ReactDOMInstrumentation = _m_['react/lib/ReactDOMInstrumentation.js#15.1.0'];
+  var ReactInstrumentation = _m_['react/lib/ReactInstrumentation.js#15.1.0'];
   
-  var quoteAttributeValueForBrowser = _m_['react/lib/quoteAttributeValueForBrowser.js#15.0.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var quoteAttributeValueForBrowser = _m_['react/lib/quoteAttributeValueForBrowser.js#15.1.0'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var VALID_ATTRIBUTE_NAME_REGEX = new RegExp('^[' + DOMProperty.ATTRIBUTE_NAME_START_CHAR + '][' + DOMProperty.ATTRIBUTE_NAME_CHAR + ']*$');
   var illegalAttributeNameCache = {};
@@ -18238,9 +18453,6 @@ _m_['react/lib/DOMPropertyOperations.js#15.0.2']=(function(module,exports){
      * @param {*} value
      */
     setValueForProperty: function (node, name, value) {
-      if (undefined !== 'production') {
-        ReactDOMInstrumentation.debugTool.onSetValueForProperty(node, name, value);
-      }
       var propertyInfo = DOMProperty.properties.hasOwnProperty(name) ? DOMProperty.properties[name] : null;
       if (propertyInfo) {
         var mutationMethod = propertyInfo.mutationMethod;
@@ -18248,6 +18460,7 @@ _m_['react/lib/DOMPropertyOperations.js#15.0.2']=(function(module,exports){
           mutationMethod(node, value);
         } else if (shouldIgnoreValue(propertyInfo, value)) {
           this.deleteValueForProperty(node, name);
+          return;
         } else if (propertyInfo.mustUseProperty) {
           var propName = propertyInfo.propertyName;
           // Must explicitly cast values for HAS_SIDE_EFFECTS-properties to the
@@ -18272,6 +18485,14 @@ _m_['react/lib/DOMPropertyOperations.js#15.0.2']=(function(module,exports){
         }
       } else if (DOMProperty.isCustomAttribute(name)) {
         DOMPropertyOperations.setValueForAttribute(node, name, value);
+        return;
+      }
+  
+      if (undefined !== 'production') {
+        ReactDOMInstrumentation.debugTool.onSetValueForProperty(node, name, value);
+        var payload = {};
+        payload[name] = value;
+        ReactInstrumentation.debugTool.onNativeOperation(ReactDOMComponentTree.getInstanceFromNode(node)._debugID, 'update attribute', payload);
       }
     },
   
@@ -18284,6 +18505,12 @@ _m_['react/lib/DOMPropertyOperations.js#15.0.2']=(function(module,exports){
       } else {
         node.setAttribute(name, '' + value);
       }
+  
+      if (undefined !== 'production') {
+        var payload = {};
+        payload[name] = value;
+        ReactInstrumentation.debugTool.onNativeOperation(ReactDOMComponentTree.getInstanceFromNode(node)._debugID, 'update attribute', payload);
+      }
     },
   
     /**
@@ -18293,9 +18520,6 @@ _m_['react/lib/DOMPropertyOperations.js#15.0.2']=(function(module,exports){
      * @param {string} name
      */
     deleteValueForProperty: function (node, name) {
-      if (undefined !== 'production') {
-        ReactDOMInstrumentation.debugTool.onDeleteValueForProperty(node, name);
-      }
       var propertyInfo = DOMProperty.properties.hasOwnProperty(name) ? DOMProperty.properties[name] : null;
       if (propertyInfo) {
         var mutationMethod = propertyInfo.mutationMethod;
@@ -18317,21 +18541,20 @@ _m_['react/lib/DOMPropertyOperations.js#15.0.2']=(function(module,exports){
       } else if (DOMProperty.isCustomAttribute(name)) {
         node.removeAttribute(name);
       }
+  
+      if (undefined !== 'production') {
+        ReactDOMInstrumentation.debugTool.onDeleteValueForProperty(node, name);
+        ReactInstrumentation.debugTool.onNativeOperation(ReactDOMComponentTree.getInstanceFromNode(node)._debugID, 'remove attribute', name);
+      }
     }
   
   };
-  
-  ReactPerf.measureMethods(DOMPropertyOperations, 'DOMPropertyOperations', {
-    setValueForProperty: 'setValueForProperty',
-    setValueForAttribute: 'setValueForAttribute',
-    deleteValueForProperty: 'deleteValueForProperty'
-  });
   
   module.exports = DOMPropertyOperations;
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/DisabledInputUtils.js#15.0.2']=(function(module,exports){
+_m_['react/lib/DisabledInputUtils.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -18387,7 +18610,7 @@ _m_['react/lib/DisabledInputUtils.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMTextarea.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMTextarea.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -18405,14 +18628,14 @@ _m_['react/lib/ReactDOMTextarea.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var DisabledInputUtils = _m_['react/lib/DisabledInputUtils.js#15.0.2'];
-  var DOMPropertyOperations = _m_['react/lib/DOMPropertyOperations.js#15.0.2'];
-  var LinkedValueUtils = _m_['react/lib/LinkedValueUtils.js#15.0.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.0.2'];
+  var DisabledInputUtils = _m_['react/lib/DisabledInputUtils.js#15.1.0'];
+  var DOMPropertyOperations = _m_['react/lib/DOMPropertyOperations.js#15.1.0'];
+  var LinkedValueUtils = _m_['react/lib/LinkedValueUtils.js#15.1.0'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.1.0'];
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var didWarnValueLink = false;
   var didWarnValueNull = false;
@@ -18535,7 +18758,7 @@ _m_['react/lib/ReactDOMTextarea.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMSelect.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMSelect.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -18553,12 +18776,12 @@ _m_['react/lib/ReactDOMSelect.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var DisabledInputUtils = _m_['react/lib/DisabledInputUtils.js#15.0.2'];
-  var LinkedValueUtils = _m_['react/lib/LinkedValueUtils.js#15.0.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.0.2'];
+  var DisabledInputUtils = _m_['react/lib/DisabledInputUtils.js#15.1.0'];
+  var LinkedValueUtils = _m_['react/lib/LinkedValueUtils.js#15.1.0'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.1.0'];
   
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var didWarnValueLink = false;
   var didWarnValueNull = false;
@@ -18754,7 +18977,7 @@ _m_['react/lib/ReactDOMSelect.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMOption.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMOption.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -18772,11 +18995,11 @@ _m_['react/lib/ReactDOMOption.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var ReactChildren = _m_['react/lib/ReactChildren.js#15.0.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var ReactDOMSelect = _m_['react/lib/ReactDOMSelect.js#15.0.2'];
+  var ReactChildren = _m_['react/lib/ReactChildren.js#15.1.0'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var ReactDOMSelect = _m_['react/lib/ReactDOMSelect.js#15.1.0'];
   
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   /**
    * Implements an <option> native component that warns when `selected` is set.
@@ -18869,7 +19092,7 @@ _m_['react/lib/ReactDOMOption.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMInput.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMInput.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -18887,14 +19110,14 @@ _m_['react/lib/ReactDOMInput.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var DisabledInputUtils = _m_['react/lib/DisabledInputUtils.js#15.0.2'];
-  var DOMPropertyOperations = _m_['react/lib/DOMPropertyOperations.js#15.0.2'];
-  var LinkedValueUtils = _m_['react/lib/LinkedValueUtils.js#15.0.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.0.2'];
+  var DisabledInputUtils = _m_['react/lib/DisabledInputUtils.js#15.1.0'];
+  var DOMPropertyOperations = _m_['react/lib/DOMPropertyOperations.js#15.1.0'];
+  var LinkedValueUtils = _m_['react/lib/LinkedValueUtils.js#15.1.0'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.1.0'];
   
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var didWarnValueLink = false;
   var didWarnCheckedLink = false;
@@ -18959,6 +19182,8 @@ _m_['react/lib/ReactDOMInput.js#15.0.2']=(function(module,exports){
       if (undefined !== 'production') {
         LinkedValueUtils.checkPropTypes('input', props, inst._currentElement._owner);
   
+        var owner = inst._currentElement._owner;
+  
         if (props.valueLink !== undefined && !didWarnValueLink) {
           undefined !== 'production' ? warning(false, '`valueLink` prop on `input` is deprecated; set `value` and `onChange` instead.') : void 0;
           didWarnValueLink = true;
@@ -18968,11 +19193,11 @@ _m_['react/lib/ReactDOMInput.js#15.0.2']=(function(module,exports){
           didWarnCheckedLink = true;
         }
         if (props.checked !== undefined && props.defaultChecked !== undefined && !didWarnCheckedDefaultChecked) {
-          undefined !== 'production' ? warning(false, 'Input elements must be either controlled or uncontrolled ' + '(specify either the checked prop, or the defaultChecked prop, but not ' + 'both). Decide between using a controlled or uncontrolled input ' + 'element and remove one of these props. More info: ' + 'https://fb.me/react-controlled-components') : void 0;
+          undefined !== 'production' ? warning(false, '%s contains an input of type %s with both checked and defaultChecked props. ' + 'Input elements must be either controlled or uncontrolled ' + '(specify either the checked prop, or the defaultChecked prop, but not ' + 'both). Decide between using a controlled or uncontrolled input ' + 'element and remove one of these props. More info: ' + 'https://fb.me/react-controlled-components', owner && owner.getName() || 'A component', props.type) : void 0;
           didWarnCheckedDefaultChecked = true;
         }
         if (props.value !== undefined && props.defaultValue !== undefined && !didWarnValueDefaultValue) {
-          undefined !== 'production' ? warning(false, 'Input elements must be either controlled or uncontrolled ' + '(specify either the value prop, or the defaultValue prop, but not ' + 'both). Decide between using a controlled or uncontrolled input ' + 'element and remove one of these props. More info: ' + 'https://fb.me/react-controlled-components') : void 0;
+          undefined !== 'production' ? warning(false, '%s contains an input of type %s with both value and defaultValue props. ' + 'Input elements must be either controlled or uncontrolled ' + '(specify either the value prop, or the defaultValue prop, but not ' + 'both). Decide between using a controlled or uncontrolled input ' + 'element and remove one of these props. More info: ' + 'https://fb.me/react-controlled-components', owner && owner.getName() || 'A component', props.type) : void 0;
           didWarnValueDefaultValue = true;
         }
         warnIfValueIsNull(props);
@@ -19003,7 +19228,7 @@ _m_['react/lib/ReactDOMInput.js#15.0.2']=(function(module,exports){
         var owner = inst._currentElement._owner;
   
         if ((initialValue || !inst._wrapperState.controlled) && controlled && !didWarnUncontrolledToControlled) {
-          undefined !== 'production' ? warning(false, '%s is changing a uncontrolled input of type %s to be controlled. ' + 'Input elements should not switch from uncontrolled to controlled (or vice versa). ' + 'Decide between using a controlled or uncontrolled input ' + 'element for the lifetime of the component. More info: https://fb.me/react-controlled-components', owner && owner.getName() || 'A component', props.type) : void 0;
+          undefined !== 'production' ? warning(false, '%s is changing an uncontrolled input of type %s to be controlled. ' + 'Input elements should not switch from uncontrolled to controlled (or vice versa). ' + 'Decide between using a controlled or uncontrolled input ' + 'element for the lifetime of the component. More info: https://fb.me/react-controlled-components', owner && owner.getName() || 'A component', props.type) : void 0;
           didWarnUncontrolledToControlled = true;
         }
         if (inst._wrapperState.controlled && (defaultValue || !controlled) && !didWarnControlledToUncontrolled) {
@@ -19079,7 +19304,7 @@ _m_['react/lib/ReactDOMInput.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMButton.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMButton.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -19095,7 +19320,7 @@ _m_['react/lib/ReactDOMButton.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var DisabledInputUtils = _m_['react/lib/DisabledInputUtils.js#15.0.2'];
+  var DisabledInputUtils = _m_['react/lib/DisabledInputUtils.js#15.1.0'];
   
   /**
    * Implements a <button> native component that does not receive mouse events
@@ -19109,7 +19334,7 @@ _m_['react/lib/ReactDOMButton.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMIDOperations.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMIDOperations.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -19125,9 +19350,8 @@ _m_['react/lib/ReactDOMIDOperations.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var DOMChildrenOperations = _m_['react/lib/DOMChildrenOperations.js#15.0.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var ReactPerf = _m_['react/lib/ReactPerf.js#15.0.2'];
+  var DOMChildrenOperations = _m_['react/lib/DOMChildrenOperations.js#15.1.0'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
   
   /**
    * Operations used to process updates to DOM nodes.
@@ -19146,15 +19370,11 @@ _m_['react/lib/ReactDOMIDOperations.js#15.0.2']=(function(module,exports){
     }
   };
   
-  ReactPerf.measureMethods(ReactDOMIDOperations, 'ReactDOMIDOperations', {
-    dangerouslyProcessChildrenUpdates: 'dangerouslyProcessChildrenUpdates'
-  });
-  
   module.exports = ReactDOMIDOperations;
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactComponentBrowserEnvironment.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactComponentBrowserEnvironment.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -19170,9 +19390,8 @@ _m_['react/lib/ReactComponentBrowserEnvironment.js#15.0.2']=(function(module,exp
   
   'use strict';
   
-  var DOMChildrenOperations = _m_['react/lib/DOMChildrenOperations.js#15.0.2'];
-  var ReactDOMIDOperations = _m_['react/lib/ReactDOMIDOperations.js#15.0.2'];
-  var ReactPerf = _m_['react/lib/ReactPerf.js#15.0.2'];
+  var DOMChildrenOperations = _m_['react/lib/DOMChildrenOperations.js#15.1.0'];
+  var ReactDOMIDOperations = _m_['react/lib/ReactDOMIDOperations.js#15.1.0'];
   
   /**
    * Abstracts away all functionality of the reconciler that requires knowledge of
@@ -19196,41 +19415,11 @@ _m_['react/lib/ReactComponentBrowserEnvironment.js#15.0.2']=(function(module,exp
   
   };
   
-  ReactPerf.measureMethods(ReactComponentBrowserEnvironment, 'ReactComponentBrowserEnvironment', {
-    replaceNodeWithMarkup: 'replaceNodeWithMarkup'
-  });
-  
   module.exports = ReactComponentBrowserEnvironment;
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/DOMNamespaces.js#15.0.2']=(function(module,exports){
-  module=this;exports=module.exports;
-
-  /**
-   * Copyright 2013-present, Facebook, Inc.
-   * All rights reserved.
-   *
-   * This source code is licensed under the BSD-style license found in the
-   * LICENSE file in the root directory of this source tree. An additional grant
-   * of patent rights can be found in the PATENTS file in the same directory.
-   *
-   * @providesModule DOMNamespaces
-   */
-  
-  'use strict';
-  
-  var DOMNamespaces = {
-    html: 'http://www.w3.org/1999/xhtml',
-    mathml: 'http://www.w3.org/1998/Math/MathML',
-    svg: 'http://www.w3.org/2000/svg'
-  };
-  
-  module.exports = DOMNamespaces;
-
-  return module.exports;
-}).call({exports:{}});
-_m_['fbjs/lib/memoizeStringOnly.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/memoizeStringOnly.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -19241,6 +19430,7 @@ _m_['fbjs/lib/memoizeStringOnly.js#0.8.2']=(function(module,exports){
    * LICENSE file in the root directory of this source tree. An additional grant
    * of patent rights can be found in the PATENTS file in the same directory.
    *
+   * 
    * @typechecks static-only
    */
   
@@ -19248,9 +19438,6 @@ _m_['fbjs/lib/memoizeStringOnly.js#0.8.2']=(function(module,exports){
   
   /**
    * Memoizes the return value of a function that accepts one string argument.
-   *
-   * @param {function} callback
-   * @return {function}
    */
   
   function memoizeStringOnly(callback) {
@@ -19267,7 +19454,7 @@ _m_['fbjs/lib/memoizeStringOnly.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/hyphenate.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/hyphenate.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   'use strict';
@@ -19305,7 +19492,7 @@ _m_['fbjs/lib/hyphenate.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/hyphenateStyleName.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/hyphenateStyleName.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -19321,7 +19508,7 @@ _m_['fbjs/lib/hyphenateStyleName.js#0.8.2']=(function(module,exports){
   
   'use strict';
   
-  var hyphenate = _m_['fbjs/lib/hyphenate.js#0.8.2'];
+  var hyphenate = _m_['fbjs/lib/hyphenate.js#0.8.3'];
   
   var msPattern = /^ms-/;
   
@@ -19349,7 +19536,7 @@ _m_['fbjs/lib/hyphenateStyleName.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/CSSProperty.js#15.0.2']=(function(module,exports){
+_m_['react/lib/CSSProperty.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -19503,7 +19690,7 @@ _m_['react/lib/CSSProperty.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/dangerousStyleValue.js#15.0.2']=(function(module,exports){
+_m_['react/lib/dangerousStyleValue.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -19519,8 +19706,8 @@ _m_['react/lib/dangerousStyleValue.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var CSSProperty = _m_['react/lib/CSSProperty.js#15.0.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var CSSProperty = _m_['react/lib/CSSProperty.js#15.1.0'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var isUnitlessNumber = CSSProperty.isUnitlessNumber;
   var styleWarnings = {};
@@ -19586,7 +19773,7 @@ _m_['react/lib/dangerousStyleValue.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/camelize.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/camelize.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   "use strict";
@@ -19623,7 +19810,7 @@ _m_['fbjs/lib/camelize.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['fbjs/lib/camelizeStyleName.js#0.8.2']=(function(module,exports){
+_m_['fbjs/lib/camelizeStyleName.js#0.8.3']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -19639,7 +19826,7 @@ _m_['fbjs/lib/camelizeStyleName.js#0.8.2']=(function(module,exports){
   
   'use strict';
   
-  var camelize = _m_['fbjs/lib/camelize.js#0.8.2'];
+  var camelize = _m_['fbjs/lib/camelize.js#0.8.3'];
   
   var msPattern = /^-ms-/;
   
@@ -19668,7 +19855,7 @@ _m_['fbjs/lib/camelizeStyleName.js#0.8.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/CSSPropertyOperations.js#15.0.2']=(function(module,exports){
+_m_['react/lib/CSSPropertyOperations.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -19684,15 +19871,15 @@ _m_['react/lib/CSSPropertyOperations.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var CSSProperty = _m_['react/lib/CSSProperty.js#15.0.2'];
-  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
-  var ReactPerf = _m_['react/lib/ReactPerf.js#15.0.2'];
+  var CSSProperty = _m_['react/lib/CSSProperty.js#15.1.0'];
+  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
+  var ReactInstrumentation = _m_['react/lib/ReactInstrumentation.js#15.1.0'];
   
-  var camelizeStyleName = _m_['fbjs/lib/camelizeStyleName.js#0.8.2'];
-  var dangerousStyleValue = _m_['react/lib/dangerousStyleValue.js#15.0.2'];
-  var hyphenateStyleName = _m_['fbjs/lib/hyphenateStyleName.js#0.8.2'];
-  var memoizeStringOnly = _m_['fbjs/lib/memoizeStringOnly.js#0.8.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var camelizeStyleName = _m_['fbjs/lib/camelizeStyleName.js#0.8.3'];
+  var dangerousStyleValue = _m_['react/lib/dangerousStyleValue.js#15.1.0'];
+  var hyphenateStyleName = _m_['fbjs/lib/hyphenateStyleName.js#0.8.3'];
+  var memoizeStringOnly = _m_['fbjs/lib/memoizeStringOnly.js#0.8.3'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var processStyleName = memoizeStringOnly(function (styleName) {
     return hyphenateStyleName(styleName);
@@ -19840,6 +20027,10 @@ _m_['react/lib/CSSPropertyOperations.js#15.0.2']=(function(module,exports){
      * @param {ReactDOMComponent} component
      */
     setValueForStyles: function (node, styles, component) {
+      if (undefined !== 'production') {
+        ReactInstrumentation.debugTool.onNativeOperation(component._debugID, 'update styles', styles);
+      }
+  
       var style = node.style;
       for (var styleName in styles) {
         if (!styles.hasOwnProperty(styleName)) {
@@ -19871,15 +20062,11 @@ _m_['react/lib/CSSPropertyOperations.js#15.0.2']=(function(module,exports){
   
   };
   
-  ReactPerf.measureMethods(CSSPropertyOperations, 'CSSPropertyOperations', {
-    setValueForStyles: 'setValueForStyles'
-  });
-  
   module.exports = CSSPropertyOperations;
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/AutoFocusUtils.js#15.0.2']=(function(module,exports){
+_m_['react/lib/AutoFocusUtils.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -19895,9 +20082,9 @@ _m_['react/lib/AutoFocusUtils.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
   
-  var focusNode = _m_['fbjs/lib/focusNode.js#0.8.2'];
+  var focusNode = _m_['fbjs/lib/focusNode.js#0.8.3'];
   
   var AutoFocusUtils = {
     focusDOMComponent: function () {
@@ -19909,7 +20096,7 @@ _m_['react/lib/AutoFocusUtils.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOMComponent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOMComponent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -19929,34 +20116,36 @@ _m_['react/lib/ReactDOMComponent.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var AutoFocusUtils = _m_['react/lib/AutoFocusUtils.js#15.0.2'];
-  var CSSPropertyOperations = _m_['react/lib/CSSPropertyOperations.js#15.0.2'];
-  var DOMLazyTree = _m_['react/lib/DOMLazyTree.js#15.0.2'];
-  var DOMNamespaces = _m_['react/lib/DOMNamespaces.js#15.0.2'];
-  var DOMProperty = _m_['react/lib/DOMProperty.js#15.0.2'];
-  var DOMPropertyOperations = _m_['react/lib/DOMPropertyOperations.js#15.0.2'];
-  var EventConstants = _m_['react/lib/EventConstants.js#15.0.2'];
-  var EventPluginHub = _m_['react/lib/EventPluginHub.js#15.0.2'];
-  var EventPluginRegistry = _m_['react/lib/EventPluginRegistry.js#15.0.2'];
-  var ReactBrowserEventEmitter = _m_['react/lib/ReactBrowserEventEmitter.js#15.0.2'];
-  var ReactComponentBrowserEnvironment = _m_['react/lib/ReactComponentBrowserEnvironment.js#15.0.2'];
-  var ReactDOMButton = _m_['react/lib/ReactDOMButton.js#15.0.2'];
-  var ReactDOMComponentFlags = _m_['react/lib/ReactDOMComponentFlags.js#15.0.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var ReactDOMInput = _m_['react/lib/ReactDOMInput.js#15.0.2'];
-  var ReactDOMOption = _m_['react/lib/ReactDOMOption.js#15.0.2'];
-  var ReactDOMSelect = _m_['react/lib/ReactDOMSelect.js#15.0.2'];
-  var ReactDOMTextarea = _m_['react/lib/ReactDOMTextarea.js#15.0.2'];
-  var ReactMultiChild = _m_['react/lib/ReactMultiChild.js#15.0.2'];
-  var ReactPerf = _m_['react/lib/ReactPerf.js#15.0.2'];
+  var AutoFocusUtils = _m_['react/lib/AutoFocusUtils.js#15.1.0'];
+  var CSSPropertyOperations = _m_['react/lib/CSSPropertyOperations.js#15.1.0'];
+  var DOMLazyTree = _m_['react/lib/DOMLazyTree.js#15.1.0'];
+  var DOMNamespaces = _m_['react/lib/DOMNamespaces.js#15.1.0'];
+  var DOMProperty = _m_['react/lib/DOMProperty.js#15.1.0'];
+  var DOMPropertyOperations = _m_['react/lib/DOMPropertyOperations.js#15.1.0'];
+  var EventConstants = _m_['react/lib/EventConstants.js#15.1.0'];
+  var EventPluginHub = _m_['react/lib/EventPluginHub.js#15.1.0'];
+  var EventPluginRegistry = _m_['react/lib/EventPluginRegistry.js#15.1.0'];
+  var ReactBrowserEventEmitter = _m_['react/lib/ReactBrowserEventEmitter.js#15.1.0'];
+  var ReactComponentBrowserEnvironment = _m_['react/lib/ReactComponentBrowserEnvironment.js#15.1.0'];
+  var ReactDOMButton = _m_['react/lib/ReactDOMButton.js#15.1.0'];
+  var ReactDOMComponentFlags = _m_['react/lib/ReactDOMComponentFlags.js#15.1.0'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var ReactDOMInput = _m_['react/lib/ReactDOMInput.js#15.1.0'];
+  var ReactDOMOption = _m_['react/lib/ReactDOMOption.js#15.1.0'];
+  var ReactDOMSelect = _m_['react/lib/ReactDOMSelect.js#15.1.0'];
+  var ReactDOMTextarea = _m_['react/lib/ReactDOMTextarea.js#15.1.0'];
+  var ReactInstrumentation = _m_['react/lib/ReactInstrumentation.js#15.1.0'];
+  var ReactMultiChild = _m_['react/lib/ReactMultiChild.js#15.1.0'];
+  var ReactServerRenderingTransaction = _m_['react/lib/ReactServerRenderingTransaction.js#15.1.0'];
   
-  var escapeTextContentForBrowser = _m_['react/lib/escapeTextContentForBrowser.js#15.0.2'];
-  var invariant = _m_['fbjs/lib/invariant.js#0.8.2'];
-  var isEventSupported = _m_['react/lib/isEventSupported.js#15.0.2'];
-  var keyOf = _m_['fbjs/lib/keyOf.js#0.8.2'];
-  var shallowEqual = _m_['fbjs/lib/shallowEqual.js#0.8.2'];
-  var validateDOMNesting = _m_['react/lib/validateDOMNesting.js#15.0.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var emptyFunction = _m_['fbjs/lib/emptyFunction.js#0.8.3'];
+  var escapeTextContentForBrowser = _m_['react/lib/escapeTextContentForBrowser.js#15.1.0'];
+  var invariant = _m_['fbjs/lib/invariant.js#0.8.3'];
+  var isEventSupported = _m_['react/lib/isEventSupported.js#15.1.0'];
+  var keyOf = _m_['fbjs/lib/keyOf.js#0.8.3'];
+  var shallowEqual = _m_['fbjs/lib/shallowEqual.js#0.8.3'];
+  var validateDOMNesting = _m_['react/lib/validateDOMNesting.js#15.1.0'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   var Flags = ReactDOMComponentFlags;
   var deleteListener = EventPluginHub.deleteListener;
@@ -20068,6 +20257,9 @@ _m_['react/lib/ReactDOMComponent.js#15.0.2']=(function(module,exports){
   }
   
   function enqueuePutListener(inst, registrationName, listener, transaction) {
+    if (transaction instanceof ReactServerRenderingTransaction) {
+      return;
+    }
     if (undefined !== 'production') {
       // IE8 has no API for event capturing and the `onScroll` event doesn't
       // bubble.
@@ -20076,10 +20268,6 @@ _m_['react/lib/ReactDOMComponent.js#15.0.2']=(function(module,exports){
     var containerInfo = inst._nativeContainerInfo;
     var isDocumentFragment = containerInfo._node && containerInfo._node.nodeType === DOC_FRAGMENT_TYPE;
     var doc = isDocumentFragment ? containerInfo._node : containerInfo._ownerDocument;
-    if (!doc) {
-      // Server rendering.
-      return;
-    }
     listenTo(registrationName, doc);
     transaction.getReactMountReady().enqueue(putListener, {
       inst: inst,
@@ -20096,6 +20284,19 @@ _m_['react/lib/ReactDOMComponent.js#15.0.2']=(function(module,exports){
   function optionPostMount() {
     var inst = this;
     ReactDOMOption.postMountWrapper(inst);
+  }
+  
+  var setContentChildForInstrumentation = emptyFunction;
+  if (undefined !== 'production') {
+    setContentChildForInstrumentation = function (contentToUse) {
+      var debugID = this._debugID;
+      var contentDebugID = debugID + '#text';
+      this._contentDebugID = contentDebugID;
+      ReactInstrumentation.debugTool.onSetDisplayName(contentDebugID, '#text');
+      ReactInstrumentation.debugTool.onSetText(contentDebugID, '' + contentToUse);
+      ReactInstrumentation.debugTool.onMountComponent(contentDebugID);
+      ReactInstrumentation.debugTool.onSetChildren(debugID, [contentDebugID]);
+    };
   }
   
   // There are so many media events, it makes sense to just
@@ -20258,6 +20459,7 @@ _m_['react/lib/ReactDOMComponent.js#15.0.2']=(function(module,exports){
     this._flags = 0;
     if (undefined !== 'production') {
       this._ancestorInfo = null;
+      this._contentDebugID = null;
     }
   }
   
@@ -20373,7 +20575,7 @@ _m_['react/lib/ReactDOMComponent.js#15.0.2']=(function(module,exports){
             div.innerHTML = '<' + type + '></' + type + '>';
             el = div.removeChild(div.firstChild);
           } else {
-            el = ownerDocument.createElement(this._currentElement.type);
+            el = ownerDocument.createElement(this._currentElement.type, props.is || null);
           }
         } else {
           el = ownerDocument.createElementNS(namespaceURI, this._currentElement.type);
@@ -20503,6 +20705,9 @@ _m_['react/lib/ReactDOMComponent.js#15.0.2']=(function(module,exports){
         if (contentToUse != null) {
           // TODO: Validate that text is allowed as a child of this node
           ret = escapeTextContentForBrowser(contentToUse);
+          if (undefined !== 'production') {
+            setContentChildForInstrumentation.call(this, contentToUse);
+          }
         } else if (childrenToUse != null) {
           var mountImages = this.mountChildren(childrenToUse, transaction, context);
           ret = mountImages.join('');
@@ -20537,6 +20742,9 @@ _m_['react/lib/ReactDOMComponent.js#15.0.2']=(function(module,exports){
         var childrenToUse = contentToUse != null ? null : props.children;
         if (contentToUse != null) {
           // TODO: Validate that text is allowed as a child of this node
+          if (undefined !== 'production') {
+            setContentChildForInstrumentation.call(this, contentToUse);
+          }
           DOMLazyTree.queueText(lazyTree, contentToUse);
         } else if (childrenToUse != null) {
           var mountImages = this.mountChildren(childrenToUse, transaction, context);
@@ -20745,17 +20953,34 @@ _m_['react/lib/ReactDOMComponent.js#15.0.2']=(function(module,exports){
         this.updateChildren(null, transaction, context);
       } else if (lastHasContentOrHtml && !nextHasContentOrHtml) {
         this.updateTextContent('');
+        if (undefined !== 'production') {
+          ReactInstrumentation.debugTool.onSetChildren(this._debugID, []);
+        }
       }
   
       if (nextContent != null) {
         if (lastContent !== nextContent) {
           this.updateTextContent('' + nextContent);
+          if (undefined !== 'production') {
+            this._contentDebugID = this._debugID + '#text';
+            setContentChildForInstrumentation.call(this, nextContent);
+          }
         }
       } else if (nextHtml != null) {
         if (lastHtml !== nextHtml) {
           this.updateMarkup('' + nextHtml);
         }
+        if (undefined !== 'production') {
+          ReactInstrumentation.debugTool.onSetChildren(this._debugID, []);
+        }
       } else if (nextChildren != null) {
+        if (undefined !== 'production') {
+          if (this._contentDebugID) {
+            ReactInstrumentation.debugTool.onUnmountComponent(this._contentDebugID);
+            this._contentDebugID = null;
+          }
+        }
+  
         this.updateChildren(nextChildren, transaction, context);
       }
     },
@@ -20805,6 +21030,13 @@ _m_['react/lib/ReactDOMComponent.js#15.0.2']=(function(module,exports){
       this._rootNodeID = null;
       this._domID = null;
       this._wrapperState = null;
+  
+      if (undefined !== 'production') {
+        if (this._contentDebugID) {
+          ReactInstrumentation.debugTool.onUnmountComponent(this._contentDebugID);
+          this._contentDebugID = null;
+        }
+      }
     },
   
     getPublicInstance: function () {
@@ -20813,18 +21045,13 @@ _m_['react/lib/ReactDOMComponent.js#15.0.2']=(function(module,exports){
   
   };
   
-  ReactPerf.measureMethods(ReactDOMComponent.Mixin, 'ReactDOMComponent', {
-    mountComponent: 'mountComponent',
-    receiveComponent: 'receiveComponent'
-  });
-  
   _assign(ReactDOMComponent.prototype, ReactDOMComponent.Mixin, ReactMultiChild.Mixin);
   
   module.exports = ReactDOMComponent;
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/HTMLDOMPropertyConfig.js#15.0.2']=(function(module,exports){
+_m_['react/lib/HTMLDOMPropertyConfig.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -20840,7 +21067,7 @@ _m_['react/lib/HTMLDOMPropertyConfig.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var DOMProperty = _m_['react/lib/DOMProperty.js#15.0.2'];
+  var DOMProperty = _m_['react/lib/DOMProperty.js#15.1.0'];
   
   var MUST_USE_PROPERTY = DOMProperty.injection.MUST_USE_PROPERTY;
   var HAS_BOOLEAN_VALUE = DOMProperty.injection.HAS_BOOLEAN_VALUE;
@@ -21039,7 +21266,7 @@ _m_['react/lib/HTMLDOMPropertyConfig.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/EnterLeaveEventPlugin.js#15.0.2']=(function(module,exports){
+_m_['react/lib/EnterLeaveEventPlugin.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -21055,12 +21282,12 @@ _m_['react/lib/EnterLeaveEventPlugin.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var EventConstants = _m_['react/lib/EventConstants.js#15.0.2'];
-  var EventPropagators = _m_['react/lib/EventPropagators.js#15.0.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var SyntheticMouseEvent = _m_['react/lib/SyntheticMouseEvent.js#15.0.2'];
+  var EventConstants = _m_['react/lib/EventConstants.js#15.1.0'];
+  var EventPropagators = _m_['react/lib/EventPropagators.js#15.1.0'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var SyntheticMouseEvent = _m_['react/lib/SyntheticMouseEvent.js#15.1.0'];
   
-  var keyOf = _m_['fbjs/lib/keyOf.js#0.8.2'];
+  var keyOf = _m_['fbjs/lib/keyOf.js#0.8.3'];
   
   var topLevelTypes = EventConstants.topLevelTypes;
   
@@ -21150,7 +21377,7 @@ _m_['react/lib/EnterLeaveEventPlugin.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/DefaultEventPluginOrder.js#15.0.2']=(function(module,exports){
+_m_['react/lib/DefaultEventPluginOrder.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -21166,7 +21393,7 @@ _m_['react/lib/DefaultEventPluginOrder.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var keyOf = _m_['fbjs/lib/keyOf.js#0.8.2'];
+  var keyOf = _m_['fbjs/lib/keyOf.js#0.8.3'];
   
   /**
    * Module that is injectable into `EventPluginHub`, that specifies a
@@ -21183,7 +21410,7 @@ _m_['react/lib/DefaultEventPluginOrder.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ChangeEventPlugin.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ChangeEventPlugin.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -21199,18 +21426,18 @@ _m_['react/lib/ChangeEventPlugin.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var EventConstants = _m_['react/lib/EventConstants.js#15.0.2'];
-  var EventPluginHub = _m_['react/lib/EventPluginHub.js#15.0.2'];
-  var EventPropagators = _m_['react/lib/EventPropagators.js#15.0.2'];
-  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.0.2'];
-  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.0.2'];
+  var EventConstants = _m_['react/lib/EventConstants.js#15.1.0'];
+  var EventPluginHub = _m_['react/lib/EventPluginHub.js#15.1.0'];
+  var EventPropagators = _m_['react/lib/EventPropagators.js#15.1.0'];
+  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.1.0'];
+  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.1.0'];
   
-  var getEventTarget = _m_['react/lib/getEventTarget.js#15.0.2'];
-  var isEventSupported = _m_['react/lib/isEventSupported.js#15.0.2'];
-  var isTextInputElement = _m_['react/lib/isTextInputElement.js#15.0.2'];
-  var keyOf = _m_['fbjs/lib/keyOf.js#0.8.2'];
+  var getEventTarget = _m_['react/lib/getEventTarget.js#15.1.0'];
+  var isEventSupported = _m_['react/lib/isEventSupported.js#15.1.0'];
+  var isTextInputElement = _m_['react/lib/isTextInputElement.js#15.1.0'];
+  var keyOf = _m_['fbjs/lib/keyOf.js#0.8.3'];
   
   var topLevelTypes = EventConstants.topLevelTypes;
   
@@ -21514,7 +21741,7 @@ _m_['react/lib/ChangeEventPlugin.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/SyntheticInputEvent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/SyntheticInputEvent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -21530,7 +21757,7 @@ _m_['react/lib/SyntheticInputEvent.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.0.2'];
+  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.1.0'];
   
   /**
    * @interface Event
@@ -21557,7 +21784,7 @@ _m_['react/lib/SyntheticInputEvent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/SyntheticCompositionEvent.js#15.0.2']=(function(module,exports){
+_m_['react/lib/SyntheticCompositionEvent.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -21573,7 +21800,7 @@ _m_['react/lib/SyntheticCompositionEvent.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.0.2'];
+  var SyntheticEvent = _m_['react/lib/SyntheticEvent.js#15.1.0'];
   
   /**
    * @interface Event
@@ -21599,7 +21826,7 @@ _m_['react/lib/SyntheticCompositionEvent.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/FallbackCompositionState.js#15.0.2']=(function(module,exports){
+_m_['react/lib/FallbackCompositionState.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -21617,9 +21844,9 @@ _m_['react/lib/FallbackCompositionState.js#15.0.2']=(function(module,exports){
   
   var _assign = _m_['object-assign/index.js#4.1.0'];
   
-  var PooledClass = _m_['react/lib/PooledClass.js#15.0.2'];
+  var PooledClass = _m_['react/lib/PooledClass.js#15.1.0'];
   
-  var getTextContentAccessor = _m_['react/lib/getTextContentAccessor.js#15.0.2'];
+  var getTextContentAccessor = _m_['react/lib/getTextContentAccessor.js#15.1.0'];
   
   /**
    * This helper class stores information about text content of a target node,
@@ -21700,7 +21927,7 @@ _m_['react/lib/FallbackCompositionState.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/BeforeInputEventPlugin.js#15.0.2']=(function(module,exports){
+_m_['react/lib/BeforeInputEventPlugin.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -21716,14 +21943,14 @@ _m_['react/lib/BeforeInputEventPlugin.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var EventConstants = _m_['react/lib/EventConstants.js#15.0.2'];
-  var EventPropagators = _m_['react/lib/EventPropagators.js#15.0.2'];
-  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
-  var FallbackCompositionState = _m_['react/lib/FallbackCompositionState.js#15.0.2'];
-  var SyntheticCompositionEvent = _m_['react/lib/SyntheticCompositionEvent.js#15.0.2'];
-  var SyntheticInputEvent = _m_['react/lib/SyntheticInputEvent.js#15.0.2'];
+  var EventConstants = _m_['react/lib/EventConstants.js#15.1.0'];
+  var EventPropagators = _m_['react/lib/EventPropagators.js#15.1.0'];
+  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
+  var FallbackCompositionState = _m_['react/lib/FallbackCompositionState.js#15.1.0'];
+  var SyntheticCompositionEvent = _m_['react/lib/SyntheticCompositionEvent.js#15.1.0'];
+  var SyntheticInputEvent = _m_['react/lib/SyntheticInputEvent.js#15.1.0'];
   
-  var keyOf = _m_['fbjs/lib/keyOf.js#0.8.2'];
+  var keyOf = _m_['fbjs/lib/keyOf.js#0.8.3'];
   
   var END_KEYCODES = [9, 13, 27, 32]; // Tab, Return, Esc, Space
   var START_KEYCODE = 229;
@@ -22094,7 +22321,7 @@ _m_['react/lib/BeforeInputEventPlugin.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDefaultInjection.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDefaultInjection.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -22110,25 +22337,24 @@ _m_['react/lib/ReactDefaultInjection.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var BeforeInputEventPlugin = _m_['react/lib/BeforeInputEventPlugin.js#15.0.2'];
-  var ChangeEventPlugin = _m_['react/lib/ChangeEventPlugin.js#15.0.2'];
-  var DefaultEventPluginOrder = _m_['react/lib/DefaultEventPluginOrder.js#15.0.2'];
-  var EnterLeaveEventPlugin = _m_['react/lib/EnterLeaveEventPlugin.js#15.0.2'];
-  var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
-  var HTMLDOMPropertyConfig = _m_['react/lib/HTMLDOMPropertyConfig.js#15.0.2'];
-  var ReactComponentBrowserEnvironment = _m_['react/lib/ReactComponentBrowserEnvironment.js#15.0.2'];
-  var ReactDOMComponent = _m_['react/lib/ReactDOMComponent.js#15.0.2'];
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var ReactDOMEmptyComponent = _m_['react/lib/ReactDOMEmptyComponent.js#15.0.2'];
-  var ReactDOMTreeTraversal = _m_['react/lib/ReactDOMTreeTraversal.js#15.0.2'];
-  var ReactDOMTextComponent = _m_['react/lib/ReactDOMTextComponent.js#15.0.2'];
-  var ReactDefaultBatchingStrategy = _m_['react/lib/ReactDefaultBatchingStrategy.js#15.0.2'];
-  var ReactEventListener = _m_['react/lib/ReactEventListener.js#15.0.2'];
-  var ReactInjection = _m_['react/lib/ReactInjection.js#15.0.2'];
-  var ReactReconcileTransaction = _m_['react/lib/ReactReconcileTransaction.js#15.0.2'];
-  var SVGDOMPropertyConfig = _m_['react/lib/SVGDOMPropertyConfig.js#15.0.2'];
-  var SelectEventPlugin = _m_['react/lib/SelectEventPlugin.js#15.0.2'];
-  var SimpleEventPlugin = _m_['react/lib/SimpleEventPlugin.js#15.0.2'];
+  var BeforeInputEventPlugin = _m_['react/lib/BeforeInputEventPlugin.js#15.1.0'];
+  var ChangeEventPlugin = _m_['react/lib/ChangeEventPlugin.js#15.1.0'];
+  var DefaultEventPluginOrder = _m_['react/lib/DefaultEventPluginOrder.js#15.1.0'];
+  var EnterLeaveEventPlugin = _m_['react/lib/EnterLeaveEventPlugin.js#15.1.0'];
+  var HTMLDOMPropertyConfig = _m_['react/lib/HTMLDOMPropertyConfig.js#15.1.0'];
+  var ReactComponentBrowserEnvironment = _m_['react/lib/ReactComponentBrowserEnvironment.js#15.1.0'];
+  var ReactDOMComponent = _m_['react/lib/ReactDOMComponent.js#15.1.0'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var ReactDOMEmptyComponent = _m_['react/lib/ReactDOMEmptyComponent.js#15.1.0'];
+  var ReactDOMTreeTraversal = _m_['react/lib/ReactDOMTreeTraversal.js#15.1.0'];
+  var ReactDOMTextComponent = _m_['react/lib/ReactDOMTextComponent.js#15.1.0'];
+  var ReactDefaultBatchingStrategy = _m_['react/lib/ReactDefaultBatchingStrategy.js#15.1.0'];
+  var ReactEventListener = _m_['react/lib/ReactEventListener.js#15.1.0'];
+  var ReactInjection = _m_['react/lib/ReactInjection.js#15.1.0'];
+  var ReactReconcileTransaction = _m_['react/lib/ReactReconcileTransaction.js#15.1.0'];
+  var SVGDOMPropertyConfig = _m_['react/lib/SVGDOMPropertyConfig.js#15.1.0'];
+  var SelectEventPlugin = _m_['react/lib/SelectEventPlugin.js#15.1.0'];
+  var SimpleEventPlugin = _m_['react/lib/SimpleEventPlugin.js#15.1.0'];
   
   var alreadyInjected = false;
   
@@ -22177,14 +22403,6 @@ _m_['react/lib/ReactDefaultInjection.js#15.0.2']=(function(module,exports){
     ReactInjection.Updates.injectBatchingStrategy(ReactDefaultBatchingStrategy);
   
     ReactInjection.Component.injectEnvironment(ReactComponentBrowserEnvironment);
-  
-    if (undefined !== 'production') {
-      var url = ExecutionEnvironment.canUseDOM && window.location.href || '';
-      if (/[?&]react_perf\b/.test(url)) {
-        var ReactDefaultPerf = _m_['react/lib/ReactDefaultPerf.js#15.0.2'];
-        ReactDefaultPerf.start();
-      }
-    }
   }
   
   module.exports = {
@@ -22193,7 +22411,7 @@ _m_['react/lib/ReactDefaultInjection.js#15.0.2']=(function(module,exports){
 
   return module.exports;
 }).call({exports:{}});
-_m_['react/lib/ReactDOM.js#15.0.2']=(function(module,exports){
+_m_['react/lib/ReactDOM.js#15.1.0']=(function(module,exports){
   module=this;exports=module.exports;
 
   /**
@@ -22211,26 +22429,23 @@ _m_['react/lib/ReactDOM.js#15.0.2']=(function(module,exports){
   
   'use strict';
   
-  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.0.2'];
-  var ReactDefaultInjection = _m_['react/lib/ReactDefaultInjection.js#15.0.2'];
-  var ReactMount = _m_['react/lib/ReactMount.js#15.0.2'];
-  var ReactPerf = _m_['react/lib/ReactPerf.js#15.0.2'];
-  var ReactReconciler = _m_['react/lib/ReactReconciler.js#15.0.2'];
-  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.0.2'];
-  var ReactVersion = _m_['react/lib/ReactVersion.js#15.0.2'];
+  var ReactDOMComponentTree = _m_['react/lib/ReactDOMComponentTree.js#15.1.0'];
+  var ReactDefaultInjection = _m_['react/lib/ReactDefaultInjection.js#15.1.0'];
+  var ReactMount = _m_['react/lib/ReactMount.js#15.1.0'];
+  var ReactReconciler = _m_['react/lib/ReactReconciler.js#15.1.0'];
+  var ReactUpdates = _m_['react/lib/ReactUpdates.js#15.1.0'];
+  var ReactVersion = _m_['react/lib/ReactVersion.js#15.1.0'];
   
-  var findDOMNode = _m_['react/lib/findDOMNode.js#15.0.2'];
-  var getNativeComponentFromComposite = _m_['react/lib/getNativeComponentFromComposite.js#15.0.2'];
-  var renderSubtreeIntoContainer = _m_['react/lib/renderSubtreeIntoContainer.js#15.0.2'];
-  var warning = _m_['fbjs/lib/warning.js#0.8.2'];
+  var findDOMNode = _m_['react/lib/findDOMNode.js#15.1.0'];
+  var getNativeComponentFromComposite = _m_['react/lib/getNativeComponentFromComposite.js#15.1.0'];
+  var renderSubtreeIntoContainer = _m_['react/lib/renderSubtreeIntoContainer.js#15.1.0'];
+  var warning = _m_['fbjs/lib/warning.js#0.8.3'];
   
   ReactDefaultInjection.inject();
   
-  var render = ReactPerf.measure('React', 'render', ReactMount.render);
-  
   var React = {
     findDOMNode: findDOMNode,
-    render: render,
+    render: ReactMount.render,
     unmountComponentAtNode: ReactMount.unmountComponentAtNode,
     version: ReactVersion,
   
@@ -22264,7 +22479,7 @@ _m_['react/lib/ReactDOM.js#15.0.2']=(function(module,exports){
   }
   
   if (undefined !== 'production') {
-    var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.2'];
+    var ExecutionEnvironment = _m_['fbjs/lib/ExecutionEnvironment.js#0.8.3'];
     if (ExecutionEnvironment.canUseDOM && window.top === window.self) {
   
       // First check if devtools is not installed
@@ -22308,7 +22523,7 @@ _m_['react-dom/index.js#15.0.2']=(function(module,exports){
 
   'use strict';
   
-  module.exports = _m_['react/lib/ReactDOM.js#15.0.2'];
+  module.exports = _m_['react/lib/ReactDOM.js#15.1.0'];
   
 
   return module.exports;
@@ -22318,7 +22533,7 @@ _m_['@yr/graphics-component/previewGrid.js#3.1.2']=(function(module,exports){
 
   'use strict';
   
-  var component = _m_['@yr/component/index.js#3.0.2'];
+  var component = _m_['@yr/component/index.js#3.0.4'];
   
   var el = component.el;
   
