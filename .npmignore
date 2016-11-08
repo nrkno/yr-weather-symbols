@@ -1,3 +1,8 @@
 .DS_Store
 .git*
 test
+docs
+graphics
+bin
+yr-weather-symbols.zip
+yarn.lock
