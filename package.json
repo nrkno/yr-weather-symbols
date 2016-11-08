@@ -1,6 +1,6 @@
 {
   "name": "@yr/weather-symbols",
-  "version": "3.3.3",
+  "version": "3.3.4",
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no",
   "dependencies": {
@@ -8,47 +8,68 @@
     "@yr/graphics-component": "3.1.x"
   },
   "devDependencies": {
-    "buddy": "5.0.x",
-    "buddy-plugin-babel": "6.7.x",
-    "buddy-plugin-imagemin": "*",
-    "buddy-plugin-stylus": "*",
-    "buddy-plugin-nunjucks": "*",
-    "react-dom": "15.0.x",
-    "svg-to-png": "2.0.1"
+    "babel-plugin-syntax-trailing-function-commas": "6.13.0",
+    "babel-plugin-transform-async-to-generator": "6.16.0",
+    "babel-plugin-transform-es2015-arrow-functions": "6.8.0",
+    "babel-plugin-transform-es2015-block-scoped-functions": "6.8.0",
+    "babel-plugin-transform-es2015-block-scoping": "6.18.0",
+    "babel-plugin-transform-es2015-classes": "6.18.0",
+    "babel-plugin-transform-es2015-computed-properties": "6.8.0",
+    "babel-plugin-transform-es2015-destructuring": "6.18.0",
+    "babel-plugin-transform-es2015-duplicate-keys": "6.8.0",
+    "babel-plugin-transform-es2015-for-of": "6.18.0",
+    "babel-plugin-transform-es2015-function-name": "6.9.0",
+    "babel-plugin-transform-es2015-literals": "6.8.0",
+    "babel-plugin-transform-es2015-object-super": "6.8.0",
+    "babel-plugin-transform-es2015-parameters": "6.18.0",
+    "babel-plugin-transform-es2015-shorthand-properties": "6.18.0",
+    "babel-plugin-transform-es2015-spread": "6.8.0",
+    "babel-plugin-transform-es2015-sticky-regex": "6.8.0",
+    "babel-plugin-transform-es2015-template-literals": "6.8.0",
+    "babel-plugin-transform-es2015-unicode-regex": "6.11.0",
+    "babel-plugin-transform-es5-property-mutators": "6.8.0",
+    "babel-plugin-transform-exponentiation-operator": "6.8.0",
+    "buddy": "6.x.x",
+    "buddy-plugin-imagemin": "5.2.2-3",
+    "buddy-plugin-nunjucks": "2.5.2-3",
+    "react-dom": "15.3.x",
+    "svg-to-png": "3.1.*"
   },
   "main": "src/index.js",
   "scripts": {
     "build": "buddy build -i -g images",
     "build-images": "buddy deploy -g images",
     "convert": "node bin/convert temp && npm run build-images && rm -rf temp && zip -r -X ./yr-weather-symbols.zip ./dist",
-    "prepublish": "npm run build && npm run convert",
-    "watch": "buddy -rs -g dev watch"
+    "prepublish": "npm run build && npm run convert"
   },
   "repository": "https://github.com/YR/weather-symbols.git",
   "license": "MIT",
   "browser": "index.js",
   "buddy": {
-    "build": {
-      "targets": [
-        {
-          "input": "src",
-          "output": ".",
-          "modular": false
-        },
-        {
-          "input": ["src/preview.js", "src/index.css", "src/index.nunjs"],
-          "output": ".",
-          "label": "dev"
-        },
-        {
-          "input": "temp",
-          "output": "dist",
-          "label": "images"
-        }
-      ]
-    },
-    "server": {
-      "port": 3000
-    }
+    "build": [
+      {
+        "input": "src/js",
+        "output": ".",
+        "bundle": false,
+        "version": "es5"
+      },
+      {
+        "input": "src/index.css",
+        "output": "."
+      },
+      {
+        "input": "temp",
+        "output": "dist",
+        "label": "images"
+      },
+      {
+        "input": "src/preview",
+        "output": "docs"
+      },
+      {
+        "input": "dist/png/100",
+        "output": "docs/png"
+      }
+    ]
   }
 }

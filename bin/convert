@@ -3,9 +3,9 @@
 'use strict';
 
 const convert = require('@yr/graphics-component/bin/convert');
-const primitives = require('../src/lib/primitives');
-const recipes = require('../src/lib/recipes');
-const utils = require('../src/lib/utils');
+const primitives = require('../src/js/lib/primitives');
+const recipes = require('../src/js/lib/recipes');
+const utils = require('../src/js/lib/utils');
 
 const dir = process.argv[2];
 const graphics = [];

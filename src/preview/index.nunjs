@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <title>Yr weather symbols</title>
-  <link inline href="../node_modules/@yr/graphics-component/src/previewGrid.css">
-  <link rel="stylesheet" type="text/css" href="index.css">
+  <link inline href="../../node_modules/@yr/graphics-component/src/previewGrid.css">
+  <link inline rel="stylesheet" type="text/css" href="../index.css">
 </head>
 <body>
-  <img inline src="./graphicsDefs.svg">
+  <img inline src="../graphicsDefs.svg">
   <div id="viewport"></div>
   <script src="preview.js"></script>
 </body>

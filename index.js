@@ -18,9 +18,8 @@ module.exports = {
    * @param {Object} options
    * @returns {Function}
    */
-
   create: function create() {
-    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     options.renderInnerSvg = renderInnerSvg;
 
