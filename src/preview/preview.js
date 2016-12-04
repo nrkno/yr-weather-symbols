@@ -1,7 +1,7 @@
 'use strict';
 
+const { ReactDOM } = require('@yr/component');
 const grid = require('@yr/graphics-component/previewGrid');
-const ReactDOM = require('react-dom');
 const recipes = require('../js/lib/recipes');
 const symbolComponent = require('../js/index');
 
