@@ -18,14 +18,14 @@ for (const id in recipes) {
 
   recipe.forEach((recipe) => {
     const opts = utils.parse(recipe);
-    const elProps = primitives[opts.primitive](opts).props;
+    const attrs = primitives[opts.primitive](opts).attributes;
     let symbol = opts.primitive;
 
     if (opts.winter) symbol += 'Winter';
 
     styles.push(opts.class);
     symbols.push(symbol);
-    uses.push(`<use xlink:href="${elProps.xlinkHref}" class="${elProps.className}" x="0" y="0" width="100" height="100" transform="${elProps.transform}"></use>`);
+    uses.push(`<use xlink:href="${attrs['xlink:href']}" class="${attrs.className}" x="0" y="0" width="100" height="100" transform="${attrs.transform}"></use>`);
   });
 
   graphics.push({ id, styles, symbols, uses });
