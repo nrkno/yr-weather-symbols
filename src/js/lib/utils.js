@@ -1,6 +1,6 @@
 'use strict';
 
-const { el } = require('@yr/component');
+const component = require('@yr/component');
 
 const MAX_WIDTH = 100;
 
@@ -40,9 +40,9 @@ module.exports = {
    * @returns {React}
    */
   getElement (link, options) {
-    return el('use', {
+    return component.el('use', {
       className: options.class,
-      'xlink:href': link,
+      xlinkHref: link,
       x: 0,
       y: 0,
       width: 100,

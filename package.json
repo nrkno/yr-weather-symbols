@@ -1,11 +1,11 @@
 {
   "name": "@yr/weather-symbols",
-  "version": "4.0.0",
+  "version": "3.3.6",
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no",
   "dependencies": {
-    "@yr/component": "4.0.x",
-    "@yr/graphics-component": "4.0.x"
+    "@yr/component": "3.1.x",
+    "@yr/graphics-component": "3.1.x"
   },
   "devDependencies": {
     "babel-plugin-syntax-trailing-function-commas": "6.13.0",
@@ -32,14 +32,15 @@
     "buddy": "6.x.x",
     "buddy-plugin-imagemin": "5.2.2-4",
     "buddy-plugin-nunjucks": "3.0.0-1",
+    "react-dom": "15.4.x",
     "svg-to-png": "3.1.*"
   },
   "main": "src/index.js",
   "scripts": {
-    "build": "buddy build --invert --grep images",
-    "build-images": "buddy deploy --grep images",
+    "build": "buddy build -i -g images",
+    "build-images": "buddy deploy -g images",
     "convert": "node bin/convert temp && npm run build-images && rm -rf temp && zip -r -X ./yr-weather-symbols.zip ./dist",
-    "prepublish": "npm run convert && npm run build"
+    "prepublish": "npm run build && npm run convert"
   },
   "repository": "https://github.com/YR/weather-symbols.git",
   "license": "MIT",
