@@ -1,6 +1,6 @@
 {
   "name": "@yr/weather-symbols",
-  "version": "3.3.6",
+  "version": "3.3.7",
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no",
   "dependencies": {
