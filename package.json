@@ -40,7 +40,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "buddy build -i -g images",
-    "build-images": "buddy build -g images",
+    "build-images": "buddy deploy -g images",
     "convert": "node bin/convert temp && npm run build-images && rm -rf temp && zip -r -X ./yr-weather-symbols.zip ./dist",
     "prepublish": "npm run build && npm run convert"
   },
