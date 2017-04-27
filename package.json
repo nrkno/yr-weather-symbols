@@ -37,20 +37,20 @@
     "react-dom": "15.4.x",
     "svg-to-png": "3.1.*"
   },
-  "main": "src/index.js",
+  "main": "src/lib/index.js",
+  "browser": "lib/index.js",
   "scripts": {
-    "build": "buddy build -i -g images",
-    "build-images": "buddy deploy -g images",
+    "build": "buddy build --invert --grep images",
+    "build-images": "buddy build --grep images",
     "convert": "node bin/convert temp && npm run build-images && rm -rf temp && zip -r -X ./yr-weather-symbols.zip ./dist",
     "prepublish": "npm run build && npm run convert"
   },
   "repository": "https://github.com/YR/weather-symbols.git",
   "license": "MIT",
-  "browser": "index.js",
   "buddy": {
     "build": [
       {
-        "input": "src/js",
+        "input": "src/lib",
         "output": ".",
         "bundle": false,
         "version": "es5"
@@ -65,12 +65,12 @@
         "label": "images"
       },
       {
-        "input": "src/preview",
+        "input": "src/preview/",
         "output": "docs",
         "version": "es5"
       },
       {
-        "input": "dist/png/100",
+        "input": "dist/png/100/",
         "output": "docs/png"
       }
     ]

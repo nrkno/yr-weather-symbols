@@ -4,7 +4,6 @@
 
 if ('undefined' === typeof self) var self = this;
 if ('undefined' === typeof global) var global = self;
-if ('undefined' === typeof process) var process = { env: {} };
 var $m = self.$m = self.$m || {};
 if ('browser' != 'browser') {
   var $req = require;
@@ -14,13 +13,14 @@ if ('browser' != 'browser') {
     return $m[id].exports;
   };
 } else {
+  if ('undefined' === typeof process) var process = {browser:true, env:{NODE_ENV:'development'}};
   self.require = self.require || function buddyRequire (id) {
     if ($m[id]) {
       if ('function' == typeof $m[id]) $m[id]();
       return $m[id].exports;
     }
 
-    if (process.env.NODE_ENV == 'development') {
+    if ('development' == 'development') {
       console.warn('module ' + id + ' not found');
     }
   };
@@ -60,8 +60,8 @@ if ('browser' != 'browser') {
 })(typeof global === "undefined" ? self : global);
 
 (function () {
-/*== node_modules/react-dom/lib/ReactPropTypesSecret.js ==*/
-$m['react-dom/lib/ReactPropTypesSecret'] = { exports: {} };
+/*== node_modules/react/lib/KeyEscapeUtils.js ==*/
+$m['react/lib/KeyEscapeUtils'] = { exports: {} };
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -73,10 +73,52 @@ $m['react-dom/lib/ReactPropTypesSecret'] = { exports: {} };
  * 
  */
 
-var reactdomlibReactPropTypesSecret__ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
+/**
+ * Escape and wrap key so it is safe to use as a reactid
+ *
+ * @param {string} key to be escaped.
+ * @return {string} the escaped key.
+ */
 
-$m['react-dom/lib/ReactPropTypesSecret'].exports = reactdomlibReactPropTypesSecret__ReactPropTypesSecret;
-/*≠≠ node_modules/react-dom/lib/ReactPropTypesSecret.js ≠≠*/
+function reactlibKeyEscapeUtils__escape(key) {
+  var escapeRegex = /[=:]/g;
+  var escaperLookup = {
+    '=': '=0',
+    ':': '=2'
+  };
+  var escapedString = ('' + key).replace(escapeRegex, function (match) {
+    return escaperLookup[match];
+  });
+
+  return '$' + escapedString;
+}
+
+/**
+ * Unescape and unwrap key for human-readable display
+ *
+ * @param {string} key to unescape.
+ * @return {string} the unescaped key.
+ */
+function reactlibKeyEscapeUtils__unescape(key) {
+  var unescapeRegex = /(=0|=2)/g;
+  var unescaperLookup = {
+    '=0': '=',
+    '=2': ':'
+  };
+  var keySubstring = key[0] === '.' && key[1] === '$' ? key.substring(2) : key.substring(1);
+
+  return ('' + keySubstring).replace(unescapeRegex, function (match) {
+    return unescaperLookup[match];
+  });
+}
+
+var reactlibKeyEscapeUtils__KeyEscapeUtils = {
+  escape: reactlibKeyEscapeUtils__escape,
+  unescape: reactlibKeyEscapeUtils__unescape
+};
+
+$m['react/lib/KeyEscapeUtils'].exports = reactlibKeyEscapeUtils__KeyEscapeUtils;
+/*≠≠ node_modules/react/lib/KeyEscapeUtils.js ≠≠*/
 
 
 /*== node_modules/react/lib/ReactPropTypesSecret.js ==*/
@@ -96,6 +138,154 @@ var reactlibReactPropTypesSecret__ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THI
 
 $m['react/lib/ReactPropTypesSecret'].exports = reactlibReactPropTypesSecret__ReactPropTypesSecret;
 /*≠≠ node_modules/react/lib/ReactPropTypesSecret.js ≠≠*/
+
+
+/*== node_modules/ms/index.js ==*/
+$m['ms'] = { exports: {} };
+/**
+ * Helpers.
+ */
+
+var ms__s = 1000;
+var ms__m = ms__s * 60;
+var ms__h = ms__m * 60;
+var ms__d = ms__h * 24;
+var ms__y = ms__d * 365.25;
+
+/**
+ * Parse or format the given `val`.
+ *
+ * Options:
+ *
+ *  - `long` verbose formatting [false]
+ *
+ * @param {String|Number} val
+ * @param {Object} [options]
+ * @throws {Error} throw an error if val is not a non-empty string or a number
+ * @return {String|Number}
+ * @api public
+ */
+
+$m['ms'].exports = function (val, options) {
+  options = options || {};
+  var type = typeof val;
+  if (type === 'string' && val.length > 0) {
+    return ms__parse(val);
+  } else if (type === 'number' && isNaN(val) === false) {
+    return options.long ? ms__fmtLong(val) : ms__fmtShort(val);
+  }
+  throw new Error('val is not a non-empty string or a valid number. val=' + JSON.stringify(val));
+};
+
+/**
+ * Parse the given `str` and return milliseconds.
+ *
+ * @param {String} str
+ * @return {Number}
+ * @api private
+ */
+
+function ms__parse(str) {
+  str = String(str);
+  if (str.length > 10000) {
+    return;
+  }
+  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str);
+  if (!match) {
+    return;
+  }
+  var n = parseFloat(match[1]);
+  var type = (match[2] || 'ms').toLowerCase();
+  switch (type) {
+    case 'years':
+    case 'year':
+    case 'yrs':
+    case 'yr':
+    case 'y':
+      return n * ms__y;
+    case 'days':
+    case 'day':
+    case 'd':
+      return n * ms__d;
+    case 'hours':
+    case 'hour':
+    case 'hrs':
+    case 'hr':
+    case 'h':
+      return n * ms__h;
+    case 'minutes':
+    case 'minute':
+    case 'mins':
+    case 'min':
+    case 'm':
+      return n * ms__m;
+    case 'seconds':
+    case 'second':
+    case 'secs':
+    case 'sec':
+    case 's':
+      return n * ms__s;
+    case 'milliseconds':
+    case 'millisecond':
+    case 'msecs':
+    case 'msec':
+    case 'ms':
+      return n;
+    default:
+      return undefined;
+  }
+}
+
+/**
+ * Short format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function ms__fmtShort(ms) {
+  if (ms >= ms__d) {
+    return Math.round(ms / ms__d) + 'd';
+  }
+  if (ms >= ms__h) {
+    return Math.round(ms / ms__h) + 'h';
+  }
+  if (ms >= ms__m) {
+    return Math.round(ms / ms__m) + 'm';
+  }
+  if (ms >= ms__s) {
+    return Math.round(ms / ms__s) + 's';
+  }
+  return ms + 'ms';
+}
+
+/**
+ * Long format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function ms__fmtLong(ms) {
+  return ms__plural(ms, ms__d, 'day') || ms__plural(ms, ms__h, 'hour') || ms__plural(ms, ms__m, 'minute') || ms__plural(ms, ms__s, 'second') || ms + ' ms';
+}
+
+/**
+ * Pluralization helper.
+ */
+
+function ms__plural(ms, n, name) {
+  if (ms < n) {
+    return;
+  }
+  if (ms < n * 1.5) {
+    return Math.floor(ms / n) + ' ' + name;
+  }
+  return Math.ceil(ms / n) + ' ' + name + 's';
+}
+/*≠≠ node_modules/ms/index.js ≠≠*/
 
 
 /*== node_modules/fbjs/lib/getActiveElement.js ==*/
@@ -120,218 +310,24 @@ $m['fbjs/lib/getActiveElement'] = { exports: {} };
  *
  * The activeElement will be null only if the document or document body is not
  * yet defined.
+ *
+ * @param {?DOMDocument} doc Defaults to current document.
+ * @return {?DOMElement}
  */
-function fbjslibgetActiveElement__getActiveElement() /*?DOMElement*/{
-  if (typeof document === 'undefined') {
+function fbjslibgetActiveElement__getActiveElement(doc) /*?DOMElement*/{
+  doc = doc || (typeof document !== 'undefined' ? document : undefined);
+  if (typeof doc === 'undefined') {
     return null;
   }
   try {
-    return document.activeElement || document.body;
+    return doc.activeElement || doc.body;
   } catch (e) {
-    return document.body;
+    return doc.body;
   }
 }
 
 $m['fbjs/lib/getActiveElement'].exports = fbjslibgetActiveElement__getActiveElement;
 /*≠≠ node_modules/fbjs/lib/getActiveElement.js ≠≠*/
-
-
-/*== node_modules/react/lib/getIteratorFn.js ==*/
-$m['react/lib/getIteratorFn'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-/* global Symbol */
-
-var reactlibgetIteratorFn__ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
-var reactlibgetIteratorFn__FAUX_ITERATOR_SYMBOL = '@@iterator'; // Before Symbol spec.
-
-/**
- * Returns the iterator method function contained on the iterable object.
- *
- * Be sure to invoke the function with the iterable as context:
- *
- *     var iteratorFn = getIteratorFn(myIterable);
- *     if (iteratorFn) {
- *       var iterator = iteratorFn.call(myIterable);
- *       ...
- *     }
- *
- * @param {?object} maybeIterable
- * @return {?function}
- */
-function reactlibgetIteratorFn__getIteratorFn(maybeIterable) {
-  var iteratorFn = maybeIterable && (reactlibgetIteratorFn__ITERATOR_SYMBOL && maybeIterable[reactlibgetIteratorFn__ITERATOR_SYMBOL] || maybeIterable[reactlibgetIteratorFn__FAUX_ITERATOR_SYMBOL]);
-  if (typeof iteratorFn === 'function') {
-    return iteratorFn;
-  }
-}
-
-$m['react/lib/getIteratorFn'].exports = reactlibgetIteratorFn__getIteratorFn;
-/*≠≠ node_modules/react/lib/getIteratorFn.js ≠≠*/
-
-
-/*== node_modules/react/lib/canDefineProperty.js ==*/
-$m['react/lib/canDefineProperty'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-var reactlibcanDefineProperty__canDefineProperty = false;
-if (process.env.NODE_ENV !== 'production') {
-  try {
-    // $FlowFixMe https://github.com/facebook/flow/issues/285
-    Object.defineProperty({}, 'x', { get: function get() {} });
-    reactlibcanDefineProperty__canDefineProperty = true;
-  } catch (x) {
-    // IE will fail on defineProperty
-  }
-}
-
-$m['react/lib/canDefineProperty'].exports = reactlibcanDefineProperty__canDefineProperty;
-/*≠≠ node_modules/react/lib/canDefineProperty.js ≠≠*/
-
-
-/*== node_modules/fbjs/lib/invariant.js ==*/
-$m['fbjs/lib/invariant'] = { exports: {} };
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-/**
- * Use invariant() to assert state which your program assumes to be true.
- *
- * Provide sprintf-style format (only %s is supported) and arguments
- * to provide information about what broke and what you were
- * expecting.
- *
- * The invariant message will be stripped in production, but the invariant
- * will remain to ensure logic does not differ in production.
- */
-
-function fbjslibinvariant__invariant(condition, format, a, b, c, d, e, f) {
-  if (process.env.NODE_ENV !== 'production') {
-    if (format === undefined) {
-      throw new Error('invariant requires an error message argument');
-    }
-  }
-
-  if (!condition) {
-    var error;
-    if (format === undefined) {
-      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
-    } else {
-      var args = [a, b, c, d, e, f];
-      var argIndex = 0;
-      error = new Error(format.replace(/%s/g, function () {
-        return args[argIndex++];
-      }));
-      error.name = 'Invariant Violation';
-    }
-
-    error.framesToPop = 1; // we don't care about invariant's own frame
-    throw error;
-  }
-}
-
-$m['fbjs/lib/invariant'].exports = fbjslibinvariant__invariant;
-/*≠≠ node_modules/fbjs/lib/invariant.js ≠≠*/
-
-
-/*== node_modules/react/lib/ReactCurrentOwner.js ==*/
-$m['react/lib/ReactCurrentOwner'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-/**
- * Keeps track of the current owner.
- *
- * The current owner is the component who should own any components that are
- * currently being constructed.
- */
-var reactlibReactCurrentOwner__ReactCurrentOwner = {
-
-  /**
-   * @internal
-   * @type {ReactComponent}
-   */
-  current: null
-
-};
-
-$m['react/lib/ReactCurrentOwner'].exports = reactlibReactCurrentOwner__ReactCurrentOwner;
-/*≠≠ node_modules/react/lib/ReactCurrentOwner.js ≠≠*/
-
-
-/*== node_modules/react/lib/reactProdInvariant.js ==*/
-$m['react/lib/reactProdInvariant'] = { exports: {} };
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-/**
- * WARNING: DO NOT manually require this module.
- * This is a replacement for `invariant(...)` used by the error code system
- * and will _only_ be required by the corresponding babel pass.
- * It always throws.
- */
-
-function reactlibreactProdInvariant__reactProdInvariant(code) {
-  var argCount = arguments.length - 1;
-
-  var message = 'Minified React error #' + code + '; visit ' + 'http://facebook.github.io/react/docs/error-decoder.html?invariant=' + code;
-
-  for (var argIdx = 0; argIdx < argCount; argIdx++) {
-    message += '&args[]=' + encodeURIComponent(arguments[argIdx + 1]);
-  }
-
-  message += ' for the full message or use the non-minified dev environment' + ' for full errors and additional helpful warnings.';
-
-  var error = new Error(message);
-  error.name = 'Invariant Violation';
-  error.framesToPop = 1; // we don't care about reactProdInvariant's own frame
-
-  throw error;
-}
-
-$m['react/lib/reactProdInvariant'].exports = reactlibreactProdInvariant__reactProdInvariant;
-/*≠≠ node_modules/react/lib/reactProdInvariant.js ≠≠*/
 
 
 /*== node_modules/fbjs/lib/focusNode.js ==*/
@@ -363,31 +359,78 @@ $m['fbjs/lib/focusNode'].exports = fbjslibfocusNode__focusNode;
 /*≠≠ node_modules/fbjs/lib/focusNode.js ≠≠*/
 
 
-/*== node_modules/react/lib/ReactPropTypeLocationNames.js ==*/
-$m['react/lib/ReactPropTypeLocationNames'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
+/*== node_modules/@yr/clock/node_mo...nce-now/lib/performance-now.js ==*/
+$m['performance-now'] = { exports: {} };
+// Generated by CoffeeScript 1.12.2
+(function () {
+  var getNanoSeconds, hrtime, loadTime, moduleLoadTime, nodeLoadTime, upTime;
 
-var reactlibReactPropTypeLocationNames__ReactPropTypeLocationNames = {};
+  if (typeof performance !== "undefined" && performance !== null && performance.now) {
+    $m['performance-now'].exports = function () {
+      return performance.now();
+    };
+  } else if (typeof process !== "undefined" && process !== null && process.hrtime) {
+    $m['performance-now'].exports = function () {
+      return (getNanoSeconds() - nodeLoadTime) / 1e6;
+    };
+    hrtime = process.hrtime;
+    getNanoSeconds = function getNanoSeconds() {
+      var hr;
+      hr = hrtime();
+      return hr[0] * 1e9 + hr[1];
+    };
+    moduleLoadTime = getNanoSeconds();
+    upTime = process.uptime() * 1e9;
+    nodeLoadTime = moduleLoadTime - upTime;
+  } else if (Date.now) {
+    $m['performance-now'].exports = function () {
+      return Date.now() - loadTime;
+    };
+    loadTime = Date.now();
+  } else {
+    $m['performance-now'].exports = function () {
+      return new Date().getTime() - loadTime;
+    };
+    loadTime = new Date().getTime();
+  }
+}).call(undefined);
+/*≠≠ node_modules/@yr/clock/node_mo...nce-now/lib/performance-now.js ≠≠*/
 
-if (process.env.NODE_ENV !== 'production') {
-  reactlibReactPropTypeLocationNames__ReactPropTypeLocationNames = {
-    prop: 'prop',
-    context: 'context',
-    childContext: 'child context'
-  };
-}
 
-$m['react/lib/ReactPropTypeLocationNames'].exports = reactlibReactPropTypeLocationNames__ReactPropTypeLocationNames;
-/*≠≠ node_modules/react/lib/ReactPropTypeLocationNames.js ≠≠*/
+/*== node_modules/performance-now/lib/performance-now.js ==*/
+$m['performance-now#0.2.0'] = { exports: {} };
+// Generated by CoffeeScript 1.7.1
+(function () {
+  var getNanoSeconds, hrtime, loadTime;
+
+  if (typeof performance !== "undefined" && performance !== null && performance.now) {
+    $m['performance-now#0.2.0'].exports = function () {
+      return performance.now();
+    };
+  } else if (typeof process !== "undefined" && process !== null && process.hrtime) {
+    $m['performance-now#0.2.0'].exports = function () {
+      return (getNanoSeconds() - loadTime) / 1e6;
+    };
+    hrtime = process.hrtime;
+    getNanoSeconds = function getNanoSeconds() {
+      var hr;
+      hr = hrtime();
+      return hr[0] * 1e9 + hr[1];
+    };
+    loadTime = getNanoSeconds();
+  } else if (Date.now) {
+    $m['performance-now#0.2.0'].exports = function () {
+      return Date.now() - loadTime;
+    };
+    loadTime = Date.now();
+  } else {
+    $m['performance-now#0.2.0'].exports = function () {
+      return new Date().getTime() - loadTime;
+    };
+    loadTime = new Date().getTime();
+  }
+}).call(undefined);
+/*≠≠ node_modules/performance-now/lib/performance-now.js ≠≠*/
 
 
 /*== node_modules/fbjs/lib/isNode.js ==*/
@@ -409,119 +452,13 @@ $m['fbjs/lib/isNode'] = { exports: {} };
  * @return {boolean} Whether or not the object is a DOM node.
  */
 function fbjslibisNode__isNode(object) {
-  return !!(object && (typeof Node === 'function' ? object instanceof Node : typeof object === 'object' && typeof object.nodeType === 'number' && typeof object.nodeName === 'string'));
+  var doc = object ? object.ownerDocument || object : document;
+  var defaultView = doc.defaultView || window;
+  return !!(object && (typeof defaultView.Node === 'function' ? object instanceof defaultView.Node : typeof object === 'object' && typeof object.nodeType === 'number' && typeof object.nodeName === 'string'));
 }
 
 $m['fbjs/lib/isNode'].exports = fbjslibisNode__isNode;
 /*≠≠ node_modules/fbjs/lib/isNode.js ≠≠*/
-
-
-/*== node_modules/react/lib/ReactElementSymbol.js ==*/
-$m['react/lib/ReactElementSymbol'] = { exports: {} };
-/**
- * Copyright 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-// The Symbol used to tag the ReactElement type. If there is no native Symbol
-// nor polyfill, then a plain number is used for performance.
-
-var reactlibReactElementSymbol__REACT_ELEMENT_TYPE = typeof Symbol === 'function' && Symbol['for'] && Symbol['for']('react.element') || 0xeac7;
-
-$m['react/lib/ReactElementSymbol'].exports = reactlibReactElementSymbol__REACT_ELEMENT_TYPE;
-/*≠≠ node_modules/react/lib/ReactElementSymbol.js ≠≠*/
-
-
-/*== node_modules/object-assign/index.js ==*/
-$m['object-assign'] = { exports: {} };
-/* eslint-disable no-unused-vars */
-var objectassign__hasOwnProperty = Object.prototype.hasOwnProperty;
-var objectassign__propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-function objectassign__toObject(val) {
-	if (val === null || val === undefined) {
-		throw new TypeError('Object.assign cannot be called with null or undefined');
-	}
-
-	return Object(val);
-}
-
-function objectassign__shouldUseNative() {
-	try {
-		if (!Object.assign) {
-			return false;
-		}
-
-		// Detect buggy property enumeration order in older V8 versions.
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-		var test1 = new String('abc'); // eslint-disable-line
-		test1[5] = 'de';
-		if (Object.getOwnPropertyNames(test1)[0] === '5') {
-			return false;
-		}
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-		var test2 = {};
-		for (var i = 0; i < 10; i++) {
-			test2['_' + String.fromCharCode(i)] = i;
-		}
-		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
-			return test2[n];
-		});
-		if (order2.join('') !== '0123456789') {
-			return false;
-		}
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-		var test3 = {};
-		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
-			test3[letter] = letter;
-		});
-		if (Object.keys(Object.assign({}, test3)).join('') !== 'abcdefghijklmnopqrst') {
-			return false;
-		}
-
-		return true;
-	} catch (e) {
-		// We don't expect any of the above to throw, but better to be safe.
-		return false;
-	}
-}
-
-$m['object-assign'].exports = objectassign__shouldUseNative() ? Object.assign : function (target, source) {
-	var from;
-	var to = objectassign__toObject(target);
-	var symbols;
-
-	for (var s = 1; s < arguments.length; s++) {
-		from = Object(arguments[s]);
-
-		for (var key in from) {
-			if (objectassign__hasOwnProperty.call(from, key)) {
-				to[key] = from[key];
-			}
-		}
-
-		if (Object.getOwnPropertySymbols) {
-			symbols = Object.getOwnPropertySymbols(from);
-			for (var i = 0; i < symbols.length; i++) {
-				if (objectassign__propIsEnumerable.call(from, symbols[i])) {
-					to[symbols[i]] = from[symbols[i]];
-				}
-			}
-		}
-	}
-
-	return to;
-};
-/*≠≠ node_modules/object-assign/index.js ≠≠*/
 
 
 /*== node_modules/react-dom/lib/getNodeForCharacterOffset.js ==*/
@@ -598,6 +535,142 @@ function reactdomlibgetNodeForCharacterOffset__getNodeForCharacterOffset(root, o
 
 $m['react-dom/lib/getNodeForCharacterOffset'].exports = reactdomlibgetNodeForCharacterOffset__getNodeForCharacterOffset;
 /*≠≠ node_modules/react-dom/lib/getNodeForCharacterOffset.js ≠≠*/
+
+
+/*== node_modules/object-assign/index.js ==*/
+$m['object-assign'] = { exports: {} };
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
+/* eslint-disable no-unused-vars */
+var objectassign__getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var objectassign__hasOwnProperty = Object.prototype.hasOwnProperty;
+var objectassign__propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function objectassign__toObject(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+function objectassign__shouldUseNative() {
+	try {
+		if (!Object.assign) {
+			return false;
+		}
+
+		// Detect buggy property enumeration order in older V8 versions.
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+		var test1 = new String('abc'); // eslint-disable-line no-new-wrappers
+		test1[5] = 'de';
+		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test2 = {};
+		for (var i = 0; i < 10; i++) {
+			test2['_' + String.fromCharCode(i)] = i;
+		}
+		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+			return test2[n];
+		});
+		if (order2.join('') !== '0123456789') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test3 = {};
+		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+			test3[letter] = letter;
+		});
+		if (Object.keys(Object.assign({}, test3)).join('') !== 'abcdefghijklmnopqrst') {
+			return false;
+		}
+
+		return true;
+	} catch (err) {
+		// We don't expect any of the above to throw, but better to be safe.
+		return false;
+	}
+}
+
+$m['object-assign'].exports = objectassign__shouldUseNative() ? Object.assign : function (target, source) {
+	var from;
+	var to = objectassign__toObject(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (objectassign__hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (objectassign__getOwnPropertySymbols) {
+			symbols = objectassign__getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (objectassign__propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
+};
+/*≠≠ node_modules/object-assign/index.js ≠≠*/
+
+
+/*== node_modules/fbjs/lib/emptyFunction.js ==*/
+$m['fbjs/lib/emptyFunction'] = { exports: {} };
+"use strict";
+
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+function fbjslibemptyFunction__makeEmptyFunction(arg) {
+  return function () {
+    return arg;
+  };
+}
+
+/**
+ * This function accepts and discards inputs; it has no side effects. This is
+ * primarily useful idiomatically for overridable function endpoints which
+ * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
+ */
+var fbjslibemptyFunction__emptyFunction = function emptyFunction() {};
+
+fbjslibemptyFunction__emptyFunction.thatReturns = fbjslibemptyFunction__makeEmptyFunction;
+fbjslibemptyFunction__emptyFunction.thatReturnsFalse = fbjslibemptyFunction__makeEmptyFunction(false);
+fbjslibemptyFunction__emptyFunction.thatReturnsTrue = fbjslibemptyFunction__makeEmptyFunction(true);
+fbjslibemptyFunction__emptyFunction.thatReturnsNull = fbjslibemptyFunction__makeEmptyFunction(null);
+fbjslibemptyFunction__emptyFunction.thatReturnsThis = function () {
+  return this;
+};
+fbjslibemptyFunction__emptyFunction.thatReturnsArgument = function (arg) {
+  return arg;
+};
+
+$m['fbjs/lib/emptyFunction'].exports = fbjslibemptyFunction__emptyFunction;
+/*≠≠ node_modules/fbjs/lib/emptyFunction.js ≠≠*/
 
 
 /*== node_modules/react-dom/lib/SVGDOMPropertyConfig.js ==*/
@@ -904,6 +977,139 @@ $m['react-dom/lib/SVGDOMPropertyConfig'].exports = reactdomlibSVGDOMPropertyConf
 /*≠≠ node_modules/react-dom/lib/SVGDOMPropertyConfig.js ≠≠*/
 
 
+/*== node_modules/fbjs/lib/invariant.js ==*/
+$m['fbjs/lib/invariant'] = { exports: {} };
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+/**
+ * Use invariant() to assert state which your program assumes to be true.
+ *
+ * Provide sprintf-style format (only %s is supported) and arguments
+ * to provide information about what broke and what you were
+ * expecting.
+ *
+ * The invariant message will be stripped in production, but the invariant
+ * will remain to ensure logic does not differ in production.
+ */
+
+var fbjslibinvariant__validateFormat = function validateFormat(format) {};
+
+if ('development' !== 'production') {
+  fbjslibinvariant__validateFormat = function validateFormat(format) {
+    if (format === undefined) {
+      throw new Error('invariant requires an error message argument');
+    }
+  };
+}
+
+function fbjslibinvariant__invariant(condition, format, a, b, c, d, e, f) {
+  fbjslibinvariant__validateFormat(format);
+
+  if (!condition) {
+    var error;
+    if (format === undefined) {
+      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+    } else {
+      var args = [a, b, c, d, e, f];
+      var argIndex = 0;
+      error = new Error(format.replace(/%s/g, function () {
+        return args[argIndex++];
+      }));
+      error.name = 'Invariant Violation';
+    }
+
+    error.framesToPop = 1; // we don't care about invariant's own frame
+    throw error;
+  }
+}
+
+$m['fbjs/lib/invariant'].exports = fbjslibinvariant__invariant;
+/*≠≠ node_modules/fbjs/lib/invariant.js ≠≠*/
+
+
+/*== node_modules/react/lib/ReactCurrentOwner.js ==*/
+$m['react/lib/ReactCurrentOwner'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+/**
+ * Keeps track of the current owner.
+ *
+ * The current owner is the component who should own any components that are
+ * currently being constructed.
+ */
+var reactlibReactCurrentOwner__ReactCurrentOwner = {
+
+  /**
+   * @internal
+   * @type {ReactComponent}
+   */
+  current: null
+
+};
+
+$m['react/lib/ReactCurrentOwner'].exports = reactlibReactCurrentOwner__ReactCurrentOwner;
+/*≠≠ node_modules/react/lib/ReactCurrentOwner.js ≠≠*/
+
+
+/*== node_modules/react/lib/reactProdInvariant.js ==*/
+$m['react/lib/reactProdInvariant'] = { exports: {} };
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+/**
+ * WARNING: DO NOT manually require this module.
+ * This is a replacement for `invariant(...)` used by the error code system
+ * and will _only_ be required by the corresponding babel pass.
+ * It always throws.
+ */
+
+function reactlibreactProdInvariant__reactProdInvariant(code) {
+  var argCount = arguments.length - 1;
+
+  var message = 'Minified React error #' + code + '; visit ' + 'http://facebook.github.io/react/docs/error-decoder.html?invariant=' + code;
+
+  for (var argIdx = 0; argIdx < argCount; argIdx++) {
+    message += '&args[]=' + encodeURIComponent(arguments[argIdx + 1]);
+  }
+
+  message += ' for the full message or use the non-minified dev environment' + ' for full errors and additional helpful warnings.';
+
+  var error = new Error(message);
+  error.name = 'Invariant Violation';
+  error.framesToPop = 1; // we don't care about reactProdInvariant's own frame
+
+  throw error;
+}
+
+$m['react/lib/reactProdInvariant'].exports = reactlibreactProdInvariant__reactProdInvariant;
+/*≠≠ node_modules/react/lib/reactProdInvariant.js ≠≠*/
+
+
 /*== node_modules/fbjs/lib/getUnboundedScrollPosition.js ==*/
 $m['fbjs/lib/getUnboundedScrollPosition'] = { exports: {} };
 /**
@@ -929,10 +1135,10 @@ $m['fbjs/lib/getUnboundedScrollPosition'] = { exports: {} };
  */
 
 function fbjslibgetUnboundedScrollPosition__getUnboundedScrollPosition(scrollable) {
-  if (scrollable === window) {
+  if (scrollable.Window && scrollable instanceof scrollable.Window) {
     return {
-      x: window.pageXOffset || document.documentElement.scrollLeft,
-      y: window.pageYOffset || document.documentElement.scrollTop
+      x: scrollable.pageXOffset || scrollable.document.documentElement.scrollLeft,
+      y: scrollable.pageYOffset || scrollable.document.documentElement.scrollTop
     };
   }
   return {
@@ -945,20 +1151,46 @@ $m['fbjs/lib/getUnboundedScrollPosition'].exports = fbjslibgetUnboundedScrollPos
 /*≠≠ node_modules/fbjs/lib/getUnboundedScrollPosition.js ≠≠*/
 
 
-/*== node_modules/react/lib/ReactVersion.js ==*/
-$m['react/lib/ReactVersion'] = { exports: {} };
+/*== node_modules/react-dom/lib/reactProdInvariant.js ==*/
+$m['react-dom/lib/reactProdInvariant'] = { exports: {} };
 /**
- * Copyright 2013-present, Facebook, Inc.
+ * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
+ * 
  */
 
-$m['react/lib/ReactVersion'].exports = '15.4.1';
-/*≠≠ node_modules/react/lib/ReactVersion.js ≠≠*/
+/**
+ * WARNING: DO NOT manually require this module.
+ * This is a replacement for `invariant(...)` used by the error code system
+ * and will _only_ be required by the corresponding babel pass.
+ * It always throws.
+ */
+
+function reactdomlibreactProdInvariant__reactProdInvariant(code) {
+  var argCount = arguments.length - 1;
+
+  var message = 'Minified React error #' + code + '; visit ' + 'http://facebook.github.io/react/docs/error-decoder.html?invariant=' + code;
+
+  for (var argIdx = 0; argIdx < argCount; argIdx++) {
+    message += '&args[]=' + encodeURIComponent(arguments[argIdx + 1]);
+  }
+
+  message += ' for the full message or use the non-minified dev environment' + ' for full errors and additional helpful warnings.';
+
+  var error = new Error(message);
+  error.name = 'Invariant Violation';
+  error.framesToPop = 1; // we don't care about reactProdInvariant's own frame
+
+  throw error;
+}
+
+$m['react-dom/lib/reactProdInvariant'].exports = reactdomlibreactProdInvariant__reactProdInvariant;
+/*≠≠ node_modules/react-dom/lib/reactProdInvariant.js ≠≠*/
 
 
 /*== node_modules/react-dom/lib/KeyEscapeUtils.js ==*/
@@ -1065,28 +1297,6 @@ $m['react-dom/lib/getIteratorFn'].exports = reactdomlibgetIteratorFn__getIterato
 /*≠≠ node_modules/react-dom/lib/getIteratorFn.js ≠≠*/
 
 
-/*== node_modules/fbjs/lib/emptyObject.js ==*/
-$m['fbjs/lib/emptyObject'] = { exports: {} };
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-var fbjslibemptyObject__emptyObject = {};
-
-if (process.env.NODE_ENV !== 'production') {
-  Object.freeze(fbjslibemptyObject__emptyObject);
-}
-
-$m['fbjs/lib/emptyObject'].exports = fbjslibemptyObject__emptyObject;
-/*≠≠ node_modules/fbjs/lib/emptyObject.js ≠≠*/
-
-
 /*== node_modules/react-dom/lib/ReactElementSymbol.js ==*/
 $m['react-dom/lib/ReactElementSymbol'] = { exports: {} };
 /**
@@ -1175,6 +1385,44 @@ function fbjslibhyphenate__hyphenate(string) {
 
 $m['fbjs/lib/hyphenate'].exports = fbjslibhyphenate__hyphenate;
 /*≠≠ node_modules/fbjs/lib/hyphenate.js ≠≠*/
+
+
+/*== node_modules/fbjs/lib/ExecutionEnvironment.js ==*/
+$m['fbjs/lib/ExecutionEnvironment'] = { exports: {} };
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+var fbjslibExecutionEnvironment__canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+
+/**
+ * Simple, lightweight module assisting with the detection and context of
+ * Worker. Helps avoid circular dependencies and allows code to reason about
+ * whether or not they are in a Worker, even if they never include the main
+ * `ReactWorker` dependency.
+ */
+var fbjslibExecutionEnvironment__ExecutionEnvironment = {
+
+  canUseDOM: fbjslibExecutionEnvironment__canUseDOM,
+
+  canUseWorkers: typeof Worker !== 'undefined',
+
+  canUseEventListeners: fbjslibExecutionEnvironment__canUseDOM && !!(window.addEventListener || window.attachEvent),
+
+  canUseViewport: fbjslibExecutionEnvironment__canUseDOM && !!window.screen,
+
+  isInWorker: !fbjslibExecutionEnvironment__canUseDOM // For now, this is true - might change in the future.
+
+};
+
+$m['fbjs/lib/ExecutionEnvironment'].exports = fbjslibExecutionEnvironment__ExecutionEnvironment;
+/*≠≠ node_modules/fbjs/lib/ExecutionEnvironment.js ≠≠*/
 
 
 /*== node_modules/react-dom/lib/CSSProperty.js ==*/
@@ -1327,67 +1575,6 @@ $m['react-dom/lib/CSSProperty'].exports = reactdomlibCSSProperty__CSSProperty;
 /*≠≠ node_modules/react-dom/lib/CSSProperty.js ≠≠*/
 
 
-/*== node_modules/react/lib/KeyEscapeUtils.js ==*/
-$m['react/lib/KeyEscapeUtils'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-/**
- * Escape and wrap key so it is safe to use as a reactid
- *
- * @param {string} key to be escaped.
- * @return {string} the escaped key.
- */
-
-function reactlibKeyEscapeUtils__escape(key) {
-  var escapeRegex = /[=:]/g;
-  var escaperLookup = {
-    '=': '=0',
-    ':': '=2'
-  };
-  var escapedString = ('' + key).replace(escapeRegex, function (match) {
-    return escaperLookup[match];
-  });
-
-  return '$' + escapedString;
-}
-
-/**
- * Unescape and unwrap key for human-readable display
- *
- * @param {string} key to unescape.
- * @return {string} the unescaped key.
- */
-function reactlibKeyEscapeUtils__unescape(key) {
-  var unescapeRegex = /(=0|=2)/g;
-  var unescaperLookup = {
-    '=0': '=',
-    '=2': ':'
-  };
-  var keySubstring = key[0] === '.' && key[1] === '$' ? key.substring(2) : key.substring(1);
-
-  return ('' + keySubstring).replace(unescapeRegex, function (match) {
-    return unescaperLookup[match];
-  });
-}
-
-var reactlibKeyEscapeUtils__KeyEscapeUtils = {
-  escape: reactlibKeyEscapeUtils__escape,
-  unescape: reactlibKeyEscapeUtils__unescape
-};
-
-$m['react/lib/KeyEscapeUtils'].exports = reactlibKeyEscapeUtils__KeyEscapeUtils;
-/*≠≠ node_modules/react/lib/KeyEscapeUtils.js ≠≠*/
-
-
 /*== node_modules/fbjs/lib/camelize.js ==*/
 $m['fbjs/lib/camelize'] = { exports: {} };
 "use strict";
@@ -1424,6 +1611,42 @@ $m['fbjs/lib/camelize'].exports = fbjslibcamelize__camelize;
 /*≠≠ node_modules/fbjs/lib/camelize.js ≠≠*/
 
 
+/*== node_modules/react-dom/lib/ReactHostOperationHistoryHook.js ==*/
+$m['react-dom/lib/ReactHostOperationHistoryHook'] = { exports: {} };
+/**
+ * Copyright 2016-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var reactdomlibReactHostOperationHistoryHook__history = [];
+
+var reactdomlibReactHostOperationHistoryHook__ReactHostOperationHistoryHook = {
+  onHostOperation: function (operation) {
+    reactdomlibReactHostOperationHistoryHook__history.push(operation);
+  },
+  clearHistory: function () {
+    if (reactdomlibReactHostOperationHistoryHook__ReactHostOperationHistoryHook._preventClearing) {
+      // Should only be used for tests.
+      return;
+    }
+
+    reactdomlibReactHostOperationHistoryHook__history = [];
+  },
+  getHistory: function () {
+    return reactdomlibReactHostOperationHistoryHook__history;
+  }
+};
+
+$m['react-dom/lib/ReactHostOperationHistoryHook'].exports = reactdomlibReactHostOperationHistoryHook__ReactHostOperationHistoryHook;
+/*≠≠ node_modules/react-dom/lib/ReactHostOperationHistoryHook.js ≠≠*/
+
+
 /*== node_modules/react-dom/lib/DefaultEventPluginOrder.js ==*/
 $m['react-dom/lib/DefaultEventPluginOrder'] = { exports: {} };
 /**
@@ -1450,418 +1673,6 @@ var reactdomlibDefaultEventPluginOrder__DefaultEventPluginOrder = ['ResponderEve
 
 $m['react-dom/lib/DefaultEventPluginOrder'].exports = reactdomlibDefaultEventPluginOrder__DefaultEventPluginOrder;
 /*≠≠ node_modules/react-dom/lib/DefaultEventPluginOrder.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/getEventTarget.js ==*/
-$m['react-dom/lib/getEventTarget'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-/**
- * Gets the target node from a native browser event by accounting for
- * inconsistencies in browser DOM APIs.
- *
- * @param {object} nativeEvent Native browser event.
- * @return {DOMEventTarget} Target node.
- */
-
-function reactdomlibgetEventTarget__getEventTarget(nativeEvent) {
-  var target = nativeEvent.target || nativeEvent.srcElement || window;
-
-  // Normalize SVG <use> element events #4963
-  if (target.correspondingUseElement) {
-    target = target.correspondingUseElement;
-  }
-
-  // Safari may fire events on text nodes (Node.TEXT_NODE is 3).
-  // @see http://www.quirksmode.org/js/events_properties.html
-  return target.nodeType === 3 ? target.parentNode : target;
-}
-
-$m['react-dom/lib/getEventTarget'].exports = reactdomlibgetEventTarget__getEventTarget;
-/*≠≠ node_modules/react-dom/lib/getEventTarget.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/getEventModifierState.js ==*/
-$m['react-dom/lib/getEventModifierState'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-/**
- * Translation from modifier key to the associated property in the event.
- * @see http://www.w3.org/TR/DOM-Level-3-Events/#keys-Modifiers
- */
-
-var reactdomlibgetEventModifierState__modifierKeyToProp = {
-  'Alt': 'altKey',
-  'Control': 'ctrlKey',
-  'Meta': 'metaKey',
-  'Shift': 'shiftKey'
-};
-
-// IE8 does not implement getModifierState so we simply map it to the only
-// modifier keys exposed by the event itself, does not support Lock-keys.
-// Currently, all major browsers except Chrome seems to support Lock-keys.
-function reactdomlibgetEventModifierState__modifierStateGetter(keyArg) {
-  var syntheticEvent = this;
-  var nativeEvent = syntheticEvent.nativeEvent;
-  if (nativeEvent.getModifierState) {
-    return nativeEvent.getModifierState(keyArg);
-  }
-  var keyProp = reactdomlibgetEventModifierState__modifierKeyToProp[keyArg];
-  return keyProp ? !!nativeEvent[keyProp] : false;
-}
-
-function reactdomlibgetEventModifierState__getEventModifierState(nativeEvent) {
-  return reactdomlibgetEventModifierState__modifierStateGetter;
-}
-
-$m['react-dom/lib/getEventModifierState'].exports = reactdomlibgetEventModifierState__getEventModifierState;
-/*≠≠ node_modules/react-dom/lib/getEventModifierState.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/getEventCharCode.js ==*/
-$m['react-dom/lib/getEventCharCode'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-/**
- * `charCode` represents the actual "character code" and is safe to use with
- * `String.fromCharCode`. As such, only keys that correspond to printable
- * characters produce a valid `charCode`, the only exception to this is Enter.
- * The Tab-key is considered non-printable and does not have a `charCode`,
- * presumably because it does not produce a tab-character in browsers.
- *
- * @param {object} nativeEvent Native browser event.
- * @return {number} Normalized `charCode` property.
- */
-
-function reactdomlibgetEventCharCode__getEventCharCode(nativeEvent) {
-  var charCode;
-  var keyCode = nativeEvent.keyCode;
-
-  if ('charCode' in nativeEvent) {
-    charCode = nativeEvent.charCode;
-
-    // FF does not set `charCode` for the Enter-key, check against `keyCode`.
-    if (charCode === 0 && keyCode === 13) {
-      charCode = 13;
-    }
-  } else {
-    // IE8 does not implement `charCode`, but `keyCode` has the correct value.
-    charCode = keyCode;
-  }
-
-  // Some non-printable keys are reported in `charCode`/`keyCode`, discard them.
-  // Must not discard the (non-)printable Enter-key.
-  if (charCode >= 32 || charCode === 13) {
-    return charCode;
-  }
-
-  return 0;
-}
-
-$m['react-dom/lib/getEventCharCode'].exports = reactdomlibgetEventCharCode__getEventCharCode;
-/*≠≠ node_modules/react-dom/lib/getEventCharCode.js ≠≠*/
-
-
-/*== node_modules/@yr/is-equal/index.js ==*/
-$m['@yr/is-equal'] = { exports: {} };
-/**
- * Determine whether two objects are conceptually equal
- * https://github.com/yr/is-equal
- * @copyright Yr
- * @license MIT
- */
-
-/**
- * Determine if 'obj1' and 'obj2' are conceptually equal,
- * optionally ignoring properties in 'ignore'
- * @param {Object} obj1
- * @param {Object} obj2
- * @param {Array} [ignore]
- * @param {Debug} [debug]
- * @returns {Boolean}
- */
-
-$m['@yr/is-equal'].exports = function isEqual(obj1, obj2, ignore, debug) {
-  ignore = ignore || [];
-
-  if (yrisequal__equal(obj1, obj2)) return true;
-
-  if (yrisequal__isObject(obj1) && yrisequal__isObject(obj2)) {
-    var keys1 = yrisequal__keys(obj1, ignore);
-    var keys2 = yrisequal__keys(obj2, ignore);
-
-    if (keys1.length != keys2.length) return false;
-
-    for (var i = 0, n = keys1.length; i < n; i++) {
-      var prop = keys1[i];
-      var val1 = obj1[prop];
-      var val2 = obj2[prop];
-
-      if (!yrisequal__equal(val1, val2)) {
-        if (debug) debug('"%s" not equal %s:%s', prop, val1, val2);
-        return false;
-      }
-    }
-    return true;
-  }
-  return false;
-};
-
-/**
- * Determine if 'val1' and 'val2' are equal
- * @param {Object} val1
- * @param {Object} val2
- * @returns {Boolean}
- */
-function yrisequal__equal(val1, val2) {
-  var type1 = typeof val1;
-  var type2 = typeof val2;
-
-  // Convert NaN to null
-  if (type1 == 'number' && isNaN(val1)) val1 = null;
-  if (type2 == 'number' && isNaN(val2)) val2 = null;
-
-  return val1 === val2 ||
-  // Handle null & undefined
-  val1 == null && val2 == null || yrisequal__isEqualArray(val1, val2);
-}
-
-/**
- * Determine if 'obj' is an object
- * @param {Object} obj
- * @returns {Boolean}
- */
-function yrisequal__isObject(obj) {
-  var type = typeof obj;
-
-  return 'object' == type && 'function' != type && !Array.isArray(obj);
-}
-
-/**
- * Retrieve non-ignored keys of 'obj'
- * @param {Object} obj
- * @param {Array} ignore
- * @returns {Array}
- */
-function yrisequal__keys(obj, ignore) {
-  return Object.keys(obj).filter(function (key) {
-    // Ignore functions
-    return 'function' != typeof obj[key] && !~ignore.indexOf(key);
-  });
-}
-
-/**
- * Determine if arrays 'arr1' and 'arr2' are equal
- * @param {Array} arr1
- * @param {Array} arr2
- * @returns {Boolean}
- */
-function yrisequal__isEqualArray(arr1, arr2) {
-  if (Array.isArray(arr1) && Array.isArray(arr2)) {
-    var n1 = arr1.length;
-    var n2 = arr2.length;
-
-    if (n1 != n2) return false;
-    // Equal if both empty
-    if (n1 == 0 && n2 == 0) return true;
-
-    // Not equal if items not strictly equal
-    for (var i = 0; i < n1; i++) {
-      if (arr1[i] !== arr2[i]) return false;
-    }
-    return true;
-  }
-  return false;
-}
-/*≠≠ node_modules/@yr/is-equal/index.js ≠≠*/
-
-
-/*== node_modules/ms/index.js ==*/
-$m['ms'] = { exports: {} };
-/**
- * Helpers.
- */
-
-var ms__s = 1000;
-var ms__m = ms__s * 60;
-var ms__h = ms__m * 60;
-var ms__d = ms__h * 24;
-var ms__y = ms__d * 365.25;
-
-/**
- * Parse or format the given `val`.
- *
- * Options:
- *
- *  - `long` verbose formatting [false]
- *
- * @param {String|Number} val
- * @param {Object} options
- * @throws {Error} throw an error if val is not a non-empty string or a number
- * @return {String|Number}
- * @api public
- */
-
-$m['ms'].exports = function (val, options) {
-  options = options || {};
-  var type = typeof val;
-  if (type === 'string' && val.length > 0) {
-    return ms__parse(val);
-  } else if (type === 'number' && isNaN(val) === false) {
-    return options.long ? ms__fmtLong(val) : ms__fmtShort(val);
-  }
-  throw new Error('val is not a non-empty string or a valid number. val=' + JSON.stringify(val));
-};
-
-/**
- * Parse the given `str` and return milliseconds.
- *
- * @param {String} str
- * @return {Number}
- * @api private
- */
-
-function ms__parse(str) {
-  str = String(str);
-  if (str.length > 10000) {
-    return;
-  }
-  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str);
-  if (!match) {
-    return;
-  }
-  var n = parseFloat(match[1]);
-  var type = (match[2] || 'ms').toLowerCase();
-  switch (type) {
-    case 'years':
-    case 'year':
-    case 'yrs':
-    case 'yr':
-    case 'y':
-      return n * ms__y;
-    case 'days':
-    case 'day':
-    case 'd':
-      return n * ms__d;
-    case 'hours':
-    case 'hour':
-    case 'hrs':
-    case 'hr':
-    case 'h':
-      return n * ms__h;
-    case 'minutes':
-    case 'minute':
-    case 'mins':
-    case 'min':
-    case 'm':
-      return n * ms__m;
-    case 'seconds':
-    case 'second':
-    case 'secs':
-    case 'sec':
-    case 's':
-      return n * ms__s;
-    case 'milliseconds':
-    case 'millisecond':
-    case 'msecs':
-    case 'msec':
-    case 'ms':
-      return n;
-    default:
-      return undefined;
-  }
-}
-
-/**
- * Short format for `ms`.
- *
- * @param {Number} ms
- * @return {String}
- * @api private
- */
-
-function ms__fmtShort(ms) {
-  if (ms >= ms__d) {
-    return Math.round(ms / ms__d) + 'd';
-  }
-  if (ms >= ms__h) {
-    return Math.round(ms / ms__h) + 'h';
-  }
-  if (ms >= ms__m) {
-    return Math.round(ms / ms__m) + 'm';
-  }
-  if (ms >= ms__s) {
-    return Math.round(ms / ms__s) + 's';
-  }
-  return ms + 'ms';
-}
-
-/**
- * Long format for `ms`.
- *
- * @param {Number} ms
- * @return {String}
- * @api private
- */
-
-function ms__fmtLong(ms) {
-  return ms__plural(ms, ms__d, 'day') || ms__plural(ms, ms__h, 'hour') || ms__plural(ms, ms__m, 'minute') || ms__plural(ms, ms__s, 'second') || ms + ' ms';
-}
-
-/**
- * Pluralization helper.
- */
-
-function ms__plural(ms, n, name) {
-  if (ms < n) {
-    return;
-  }
-  if (ms < n * 1.5) {
-    return Math.floor(ms / n) + ' ' + name;
-  }
-  return Math.ceil(ms / n) + ' ' + name + 's';
-}
-/*≠≠ node_modules/ms/index.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactVersion.js ==*/
-$m['react-dom/lib/ReactVersion'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-$m['react-dom/lib/ReactVersion'].exports = '15.4.1';
-/*≠≠ node_modules/react-dom/lib/ReactVersion.js ≠≠*/
 
 
 /*== node_modules/react-dom/lib/ARIADOMPropertyConfig.js ==*/
@@ -1940,50 +1751,457 @@ $m['react-dom/lib/ARIADOMPropertyConfig'].exports = reactdomlibARIADOMPropertyCo
 /*≠≠ node_modules/react-dom/lib/ARIADOMPropertyConfig.js ≠≠*/
 
 
-/*== node_modules/performance-now/lib/performance-now.js ==*/
-$m['performance-now'] = { exports: {} };
-// Generated by CoffeeScript 1.7.1
-(function () {
-  var getNanoSeconds, hrtime, loadTime;
+/*== node_modules/react-dom/lib/getEventTarget.js ==*/
+$m['react-dom/lib/getEventTarget'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
 
-  if (typeof performance !== "undefined" && performance !== null && performance.now) {
-    $m['performance-now'].exports = function () {
-      return performance.now();
-    };
-  } else if (typeof process !== "undefined" && process !== null && process.hrtime) {
-    $m['performance-now'].exports = function () {
-      return (getNanoSeconds() - loadTime) / 1e6;
-    };
-    hrtime = process.hrtime;
-    getNanoSeconds = function getNanoSeconds() {
-      var hr;
-      hr = hrtime();
-      return hr[0] * 1e9 + hr[1];
-    };
-    loadTime = getNanoSeconds();
-  } else if (Date.now) {
-    $m['performance-now'].exports = function () {
-      return Date.now() - loadTime;
-    };
-    loadTime = Date.now();
-  } else {
-    $m['performance-now'].exports = function () {
-      return new Date().getTime() - loadTime;
-    };
-    loadTime = new Date().getTime();
+/**
+ * Gets the target node from a native browser event by accounting for
+ * inconsistencies in browser DOM APIs.
+ *
+ * @param {object} nativeEvent Native browser event.
+ * @return {DOMEventTarget} Target node.
+ */
+
+function reactdomlibgetEventTarget__getEventTarget(nativeEvent) {
+  var target = nativeEvent.target || nativeEvent.srcElement || window;
+
+  // Normalize SVG <use> element events #4963
+  if (target.correspondingUseElement) {
+    target = target.correspondingUseElement;
   }
-}).call(undefined);
-/*≠≠ node_modules/performance-now/lib/performance-now.js ≠≠*/
+
+  // Safari may fire events on text nodes (Node.TEXT_NODE is 3).
+  // @see http://www.quirksmode.org/js/events_properties.html
+  return target.nodeType === 3 ? target.parentNode : target;
+}
+
+$m['react-dom/lib/getEventTarget'].exports = reactdomlibgetEventTarget__getEventTarget;
+/*≠≠ node_modules/react-dom/lib/getEventTarget.js ≠≠*/
 
 
-/*== src/js/lib/recipes.js ==*/
-$m['src/js/lib/recipes'] = { exports: {} };
+/*== node_modules/react-dom/lib/shouldUpdateReactComponent.js ==*/
+$m['react-dom/lib/shouldUpdateReactComponent'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
 
-var srcjslibrecipes__base = {
+/**
+ * Given a `prevElement` and `nextElement`, determines if the existing
+ * instance should be updated as opposed to being destroyed or replaced by a new
+ * instance. Both arguments are elements. This ensures that this logic can
+ * operate on stateless trees without any backing instance.
+ *
+ * @param {?object} prevElement
+ * @param {?object} nextElement
+ * @return {boolean} True if the existing instance should be updated.
+ * @protected
+ */
+
+function reactdomlibshouldUpdateReactComponent__shouldUpdateReactComponent(prevElement, nextElement) {
+  var prevEmpty = prevElement === null || prevElement === false;
+  var nextEmpty = nextElement === null || nextElement === false;
+  if (prevEmpty || nextEmpty) {
+    return prevEmpty === nextEmpty;
+  }
+
+  var prevType = typeof prevElement;
+  var nextType = typeof nextElement;
+  if (prevType === 'string' || prevType === 'number') {
+    return nextType === 'string' || nextType === 'number';
+  } else {
+    return nextType === 'object' && prevElement.type === nextElement.type && prevElement.key === nextElement.key;
+  }
+}
+
+$m['react-dom/lib/shouldUpdateReactComponent'].exports = reactdomlibshouldUpdateReactComponent__shouldUpdateReactComponent;
+/*≠≠ node_modules/react-dom/lib/shouldUpdateReactComponent.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/cre...icrosoftUnsafeLocalFunction.js ==*/
+$m['react-dom/lib/createMicrosoftUnsafeLocalFunction'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+/* globals MSApp */
+
+/**
+ * Create a function which has 'unsafe' privileges (required by windows8 apps)
+ */
+
+var reactdomlibcreateMicrosoftUnsafeLocalFunction__createMicrosoftUnsafeLocalFunction = function (func) {
+  if (typeof MSApp !== 'undefined' && MSApp.execUnsafeLocalFunction) {
+    return function (arg0, arg1, arg2, arg3) {
+      MSApp.execUnsafeLocalFunction(function () {
+        return func(arg0, arg1, arg2, arg3);
+      });
+    };
+  } else {
+    return func;
+  }
+};
+
+$m['react-dom/lib/createMicrosoftUnsafeLocalFunction'].exports = reactdomlibcreateMicrosoftUnsafeLocalFunction__createMicrosoftUnsafeLocalFunction;
+/*≠≠ node_modules/react-dom/lib/cre...icrosoftUnsafeLocalFunction.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/DOMNamespaces.js ==*/
+$m['react-dom/lib/DOMNamespaces'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+var reactdomlibDOMNamespaces__DOMNamespaces = {
+  html: 'http://www.w3.org/1999/xhtml',
+  mathml: 'http://www.w3.org/1998/Math/MathML',
+  svg: 'http://www.w3.org/2000/svg'
+};
+
+$m['react-dom/lib/DOMNamespaces'].exports = reactdomlibDOMNamespaces__DOMNamespaces;
+/*≠≠ node_modules/react-dom/lib/DOMNamespaces.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/getEventModifierState.js ==*/
+$m['react-dom/lib/getEventModifierState'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+/**
+ * Translation from modifier key to the associated property in the event.
+ * @see http://www.w3.org/TR/DOM-Level-3-Events/#keys-Modifiers
+ */
+
+var reactdomlibgetEventModifierState__modifierKeyToProp = {
+  'Alt': 'altKey',
+  'Control': 'ctrlKey',
+  'Meta': 'metaKey',
+  'Shift': 'shiftKey'
+};
+
+// IE8 does not implement getModifierState so we simply map it to the only
+// modifier keys exposed by the event itself, does not support Lock-keys.
+// Currently, all major browsers except Chrome seems to support Lock-keys.
+function reactdomlibgetEventModifierState__modifierStateGetter(keyArg) {
+  var syntheticEvent = this;
+  var nativeEvent = syntheticEvent.nativeEvent;
+  if (nativeEvent.getModifierState) {
+    return nativeEvent.getModifierState(keyArg);
+  }
+  var keyProp = reactdomlibgetEventModifierState__modifierKeyToProp[keyArg];
+  return keyProp ? !!nativeEvent[keyProp] : false;
+}
+
+function reactdomlibgetEventModifierState__getEventModifierState(nativeEvent) {
+  return reactdomlibgetEventModifierState__modifierStateGetter;
+}
+
+$m['react-dom/lib/getEventModifierState'].exports = reactdomlibgetEventModifierState__getEventModifierState;
+/*≠≠ node_modules/react-dom/lib/getEventModifierState.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/getNextDebugID.js ==*/
+$m['react-dom/lib/getNextDebugID'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var reactdomlibgetNextDebugID__nextDebugID = 1;
+
+function reactdomlibgetNextDebugID__getNextDebugID() {
+  return reactdomlibgetNextDebugID__nextDebugID++;
+}
+
+$m['react-dom/lib/getNextDebugID'].exports = reactdomlibgetNextDebugID__getNextDebugID;
+/*≠≠ node_modules/react-dom/lib/getNextDebugID.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/getEventCharCode.js ==*/
+$m['react-dom/lib/getEventCharCode'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+/**
+ * `charCode` represents the actual "character code" and is safe to use with
+ * `String.fromCharCode`. As such, only keys that correspond to printable
+ * characters produce a valid `charCode`, the only exception to this is Enter.
+ * The Tab-key is considered non-printable and does not have a `charCode`,
+ * presumably because it does not produce a tab-character in browsers.
+ *
+ * @param {object} nativeEvent Native browser event.
+ * @return {number} Normalized `charCode` property.
+ */
+
+function reactdomlibgetEventCharCode__getEventCharCode(nativeEvent) {
+  var charCode;
+  var keyCode = nativeEvent.keyCode;
+
+  if ('charCode' in nativeEvent) {
+    charCode = nativeEvent.charCode;
+
+    // FF does not set `charCode` for the Enter-key, check against `keyCode`.
+    if (charCode === 0 && keyCode === 13) {
+      charCode = 13;
+    }
+  } else {
+    // IE8 does not implement `charCode`, but `keyCode` has the correct value.
+    charCode = keyCode;
+  }
+
+  // Some non-printable keys are reported in `charCode`/`keyCode`, discard them.
+  // Must not discard the (non-)printable Enter-key.
+  if (charCode >= 32 || charCode === 13) {
+    return charCode;
+  }
+
+  return 0;
+}
+
+$m['react-dom/lib/getEventCharCode'].exports = reactdomlibgetEventCharCode__getEventCharCode;
+/*≠≠ node_modules/react-dom/lib/getEventCharCode.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactEmptyComponent.js ==*/
+$m['react-dom/lib/ReactEmptyComponent'] = { exports: {} };
+/**
+ * Copyright 2014-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+var reactdomlibReactEmptyComponent__emptyComponentFactory;
+
+var reactdomlibReactEmptyComponent__ReactEmptyComponentInjection = {
+  injectEmptyComponentFactory: function (factory) {
+    reactdomlibReactEmptyComponent__emptyComponentFactory = factory;
+  }
+};
+
+var reactdomlibReactEmptyComponent__ReactEmptyComponent = {
+  create: function (instantiate) {
+    return reactdomlibReactEmptyComponent__emptyComponentFactory(instantiate);
+  }
+};
+
+reactdomlibReactEmptyComponent__ReactEmptyComponent.injection = reactdomlibReactEmptyComponent__ReactEmptyComponentInjection;
+
+$m['react-dom/lib/ReactEmptyComponent'].exports = reactdomlibReactEmptyComponent__ReactEmptyComponent;
+/*≠≠ node_modules/react-dom/lib/ReactEmptyComponent.js ≠≠*/
+
+
+/*== node_modules/fbjs/lib/shallowEqual.js ==*/
+$m['fbjs/lib/shallowEqual'] = { exports: {} };
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @typechecks
+ * 
+ */
+
+/*eslint-disable no-self-compare */
+
+var fbjslibshallowEqual__hasOwnProperty = Object.prototype.hasOwnProperty;
+
+/**
+ * inlined Object.is polyfill to avoid requiring consumers ship their own
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+ */
+function fbjslibshallowEqual__is(x, y) {
+  // SameValue algorithm
+  if (x === y) {
+    // Steps 1-5, 7-10
+    // Steps 6.b-6.e: +0 != -0
+    // Added the nonzero y check to make Flow happy, but it is redundant
+    return x !== 0 || y !== 0 || 1 / x === 1 / y;
+  } else {
+    // Step 6.a: NaN == NaN
+    return x !== x && y !== y;
+  }
+}
+
+/**
+ * Performs equality by iterating through keys on an object and returning false
+ * when any key has values which are not strictly equal between the arguments.
+ * Returns true when the values of all keys are strictly equal.
+ */
+function fbjslibshallowEqual__shallowEqual(objA, objB) {
+  if (fbjslibshallowEqual__is(objA, objB)) {
+    return true;
+  }
+
+  if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) {
+    return false;
+  }
+
+  var keysA = Object.keys(objA);
+  var keysB = Object.keys(objB);
+
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+
+  // Test for A's keys different from B.
+  for (var i = 0; i < keysA.length; i++) {
+    if (!fbjslibshallowEqual__hasOwnProperty.call(objB, keysA[i]) || !fbjslibshallowEqual__is(objA[keysA[i]], objB[keysA[i]])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+$m['fbjs/lib/shallowEqual'].exports = fbjslibshallowEqual__shallowEqual;
+/*≠≠ node_modules/fbjs/lib/shallowEqual.js ≠≠*/
+
+
+/*== node_modules/fbjs/lib/emptyObject.js ==*/
+$m['fbjs/lib/emptyObject'] = { exports: {} };
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+var fbjslibemptyObject__emptyObject = {};
+
+if ('development' !== 'production') {
+  Object.freeze(fbjslibemptyObject__emptyObject);
+}
+
+$m['fbjs/lib/emptyObject'].exports = fbjslibemptyObject__emptyObject;
+/*≠≠ node_modules/fbjs/lib/emptyObject.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactPropTypesSecret.js ==*/
+$m['react-dom/lib/ReactPropTypesSecret'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var reactdomlibReactPropTypesSecret__ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
+
+$m['react-dom/lib/ReactPropTypesSecret'].exports = reactdomlibReactPropTypesSecret__ReactPropTypesSecret;
+/*≠≠ node_modules/react-dom/lib/ReactPropTypesSecret.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactPropTypeLocationNames.js ==*/
+$m['react-dom/lib/ReactPropTypeLocationNames'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var reactdomlibReactPropTypeLocationNames__ReactPropTypeLocationNames = {};
+
+if ('development' !== 'production') {
+  reactdomlibReactPropTypeLocationNames__ReactPropTypeLocationNames = {
+    prop: 'prop',
+    context: 'context',
+    childContext: 'child context'
+  };
+}
+
+$m['react-dom/lib/ReactPropTypeLocationNames'].exports = reactdomlibReactPropTypeLocationNames__ReactPropTypeLocationNames;
+/*≠≠ node_modules/react-dom/lib/ReactPropTypeLocationNames.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactVersion.js ==*/
+$m['react-dom/lib/ReactVersion'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+$m['react-dom/lib/ReactVersion'].exports = '15.4.2';
+/*≠≠ node_modules/react-dom/lib/ReactVersion.js ≠≠*/
+
+
+/*== src/lib/recipes.js ==*/
+$m['src/lib/recipes'] = { exports: {} };
+
+var srclibrecipes__base = {
   sun1: [{
     primitive: 'sun',
     x: 5,
-    y: 0
+    y: 5
   }],
   sun2: [{
     primitive: 'sun',
@@ -2434,72 +2652,72 @@ var srcjslibrecipes__base = {
   }]
 };
 
-$m['src/js/lib/recipes'].exports = {
-  '01d': srcjslibrecipes__base.sun1,
-  '02d': srcjslibrecipes__base.sun2.concat(srcjslibrecipes__base['02']),
-  '03d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['03']),
-  '40d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['40']),
-  '05d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['05']),
-  '41d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['41']),
-  '42d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['42']),
-  '07d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['07']),
-  '43d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['43']),
-  '44d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['44']),
-  '08d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['08']),
-  '45d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['45']),
-  '24d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['24']),
-  '06d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['06']),
-  '25d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['25']),
-  '26d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['26']),
-  '20d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['20']),
-  '27d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['27']),
-  '28d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['28']),
-  '21d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['21']),
-  '29d': srcjslibrecipes__base.sun3.concat(srcjslibrecipes__base['29']),
+$m['src/lib/recipes'].exports = {
+  '01d': srclibrecipes__base.sun1,
+  '02d': srclibrecipes__base.sun2.concat(srclibrecipes__base['02']),
+  '03d': srclibrecipes__base.sun3.concat(srclibrecipes__base['03']),
+  '40d': srclibrecipes__base.sun3.concat(srclibrecipes__base['40']),
+  '05d': srclibrecipes__base.sun3.concat(srclibrecipes__base['05']),
+  '41d': srclibrecipes__base.sun3.concat(srclibrecipes__base['41']),
+  '42d': srclibrecipes__base.sun3.concat(srclibrecipes__base['42']),
+  '07d': srclibrecipes__base.sun3.concat(srclibrecipes__base['07']),
+  '43d': srclibrecipes__base.sun3.concat(srclibrecipes__base['43']),
+  '44d': srclibrecipes__base.sun3.concat(srclibrecipes__base['44']),
+  '08d': srclibrecipes__base.sun3.concat(srclibrecipes__base['08']),
+  '45d': srclibrecipes__base.sun3.concat(srclibrecipes__base['45']),
+  '24d': srclibrecipes__base.sun3.concat(srclibrecipes__base['24']),
+  '06d': srclibrecipes__base.sun3.concat(srclibrecipes__base['06']),
+  '25d': srclibrecipes__base.sun3.concat(srclibrecipes__base['25']),
+  '26d': srclibrecipes__base.sun3.concat(srclibrecipes__base['26']),
+  '20d': srclibrecipes__base.sun3.concat(srclibrecipes__base['20']),
+  '27d': srclibrecipes__base.sun3.concat(srclibrecipes__base['27']),
+  '28d': srclibrecipes__base.sun3.concat(srclibrecipes__base['28']),
+  '21d': srclibrecipes__base.sun3.concat(srclibrecipes__base['21']),
+  '29d': srclibrecipes__base.sun3.concat(srclibrecipes__base['29']),
 
-  '01m': srcjslibrecipes__base.sunWinter1,
-  '02m': srcjslibrecipes__base.sunWinter2.concat(srcjslibrecipes__base['02']),
-  '03m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['03']),
-  '40m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['40']),
-  '05m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['05']),
-  '41m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['41']),
-  '42m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['42']),
-  '07m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['07']),
-  '43m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['43']),
-  '44m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['44']),
-  '08m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['08']),
-  '45m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['45']),
-  '24m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['24']),
-  '06m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['06']),
-  '25m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['25']),
-  '26m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['26']),
-  '20m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['20']),
-  '27m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['27']),
-  '28m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['28']),
-  '21m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['21']),
-  '29m': srcjslibrecipes__base.sunWinter3.concat(srcjslibrecipes__base['29']),
+  '01m': srclibrecipes__base.sunWinter1,
+  '02m': srclibrecipes__base.sunWinter2.concat(srclibrecipes__base['02']),
+  '03m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['03']),
+  '40m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['40']),
+  '05m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['05']),
+  '41m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['41']),
+  '42m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['42']),
+  '07m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['07']),
+  '43m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['43']),
+  '44m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['44']),
+  '08m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['08']),
+  '45m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['45']),
+  '24m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['24']),
+  '06m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['06']),
+  '25m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['25']),
+  '26m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['26']),
+  '20m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['20']),
+  '27m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['27']),
+  '28m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['28']),
+  '21m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['21']),
+  '29m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['29']),
 
-  '01n': srcjslibrecipes__base.moon1,
-  '02n': srcjslibrecipes__base.moon2.concat(srcjslibrecipes__base['02']),
-  '03n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['03']),
-  '40n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['40']),
-  '05n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['05']),
-  '41n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['41']),
-  '42n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['42']),
-  '07n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['07']),
-  '43n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['43']),
-  '44n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['44']),
-  '08n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['08']),
-  '45n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['45']),
-  '24n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['24']),
-  '06n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['06']),
-  '25n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['25']),
-  '26n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['26']),
-  '20n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['20']),
-  '27n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['27']),
-  '28n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['28']),
-  '21n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['21']),
-  '29n': srcjslibrecipes__base.moon3.concat(srcjslibrecipes__base['29']),
+  '01n': srclibrecipes__base.moon1,
+  '02n': srclibrecipes__base.moon2.concat(srclibrecipes__base['02']),
+  '03n': srclibrecipes__base.moon3.concat(srclibrecipes__base['03']),
+  '40n': srclibrecipes__base.moon3.concat(srclibrecipes__base['40']),
+  '05n': srclibrecipes__base.moon3.concat(srclibrecipes__base['05']),
+  '41n': srclibrecipes__base.moon3.concat(srclibrecipes__base['41']),
+  '42n': srclibrecipes__base.moon3.concat(srclibrecipes__base['42']),
+  '07n': srclibrecipes__base.moon3.concat(srclibrecipes__base['07']),
+  '43n': srclibrecipes__base.moon3.concat(srclibrecipes__base['43']),
+  '44n': srclibrecipes__base.moon3.concat(srclibrecipes__base['44']),
+  '08n': srclibrecipes__base.moon3.concat(srclibrecipes__base['08']),
+  '45n': srclibrecipes__base.moon3.concat(srclibrecipes__base['45']),
+  '24n': srclibrecipes__base.moon3.concat(srclibrecipes__base['24']),
+  '06n': srclibrecipes__base.moon3.concat(srclibrecipes__base['06']),
+  '25n': srclibrecipes__base.moon3.concat(srclibrecipes__base['25']),
+  '26n': srclibrecipes__base.moon3.concat(srclibrecipes__base['26']),
+  '20n': srclibrecipes__base.moon3.concat(srclibrecipes__base['20']),
+  '27n': srclibrecipes__base.moon3.concat(srclibrecipes__base['27']),
+  '28n': srclibrecipes__base.moon3.concat(srclibrecipes__base['28']),
+  '21n': srclibrecipes__base.moon3.concat(srclibrecipes__base['21']),
+  '29n': srclibrecipes__base.moon3.concat(srclibrecipes__base['29']),
 
   15: [{
     primitive: 'cloud',
@@ -2517,26 +2735,26 @@ $m['src/js/lib/recipes'].exports = {
     y: 25,
     variation: 1
   }],
-  46: srcjslibrecipes__base['40'],
-  '09': srcjslibrecipes__base['05'],
-  10: srcjslibrecipes__base['41'],
-  47: srcjslibrecipes__base['42'],
-  12: srcjslibrecipes__base['07'],
-  48: srcjslibrecipes__base['43'],
-  49: srcjslibrecipes__base['44'],
-  13: srcjslibrecipes__base['08'],
-  50: srcjslibrecipes__base['45'],
-  30: srcjslibrecipes__base['24'],
-  22: srcjslibrecipes__base['06'],
-  11: srcjslibrecipes__base['25'],
-  31: srcjslibrecipes__base['26'],
-  23: srcjslibrecipes__base['20'],
-  32: srcjslibrecipes__base['27'],
-  33: srcjslibrecipes__base['28'],
-  14: srcjslibrecipes__base['21'],
-  34: srcjslibrecipes__base['29']
+  46: srclibrecipes__base['40'],
+  '09': srclibrecipes__base['05'],
+  10: srclibrecipes__base['41'],
+  47: srclibrecipes__base['42'],
+  12: srclibrecipes__base['07'],
+  48: srclibrecipes__base['43'],
+  49: srclibrecipes__base['44'],
+  13: srclibrecipes__base['08'],
+  50: srclibrecipes__base['45'],
+  30: srclibrecipes__base['24'],
+  22: srclibrecipes__base['06'],
+  11: srclibrecipes__base['25'],
+  31: srclibrecipes__base['26'],
+  23: srclibrecipes__base['20'],
+  32: srclibrecipes__base['27'],
+  33: srclibrecipes__base['28'],
+  14: srclibrecipes__base['21'],
+  34: srclibrecipes__base['29']
 };
-/*≠≠ src/js/lib/recipes.js ≠≠*/
+/*≠≠ src/lib/recipes.js ≠≠*/
 
 
 /*== node_modules/@yr/runtime/index.js ==*/
@@ -2683,10 +2901,10 @@ $m['react-dom/lib/escapeTextContentForBrowser'].exports = reactdomlibescapeTextC
 /*≠≠ node_modules/react-dom/lib/escapeTextContentForBrowser.js ≠≠*/
 
 
-/*== node_modules/react-dom/lib/reactProdInvariant.js ==*/
-$m['react-dom/lib/reactProdInvariant'] = { exports: {} };
+/*== node_modules/react/lib/getIteratorFn.js ==*/
+$m['react/lib/getIteratorFn'] = { exports: {} };
 /**
- * Copyright (c) 2013-present, Facebook, Inc.
+ * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -2696,33 +2914,89 @@ $m['react-dom/lib/reactProdInvariant'] = { exports: {} };
  * 
  */
 
+/* global Symbol */
+
+var reactlibgetIteratorFn__ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
+var reactlibgetIteratorFn__FAUX_ITERATOR_SYMBOL = '@@iterator'; // Before Symbol spec.
+
 /**
- * WARNING: DO NOT manually require this module.
- * This is a replacement for `invariant(...)` used by the error code system
- * and will _only_ be required by the corresponding babel pass.
- * It always throws.
+ * Returns the iterator method function contained on the iterable object.
+ *
+ * Be sure to invoke the function with the iterable as context:
+ *
+ *     var iteratorFn = getIteratorFn(myIterable);
+ *     if (iteratorFn) {
+ *       var iterator = iteratorFn.call(myIterable);
+ *       ...
+ *     }
+ *
+ * @param {?object} maybeIterable
+ * @return {?function}
  */
-
-function reactdomlibreactProdInvariant__reactProdInvariant(code) {
-  var argCount = arguments.length - 1;
-
-  var message = 'Minified React error #' + code + '; visit ' + 'http://facebook.github.io/react/docs/error-decoder.html?invariant=' + code;
-
-  for (var argIdx = 0; argIdx < argCount; argIdx++) {
-    message += '&args[]=' + encodeURIComponent(arguments[argIdx + 1]);
+function reactlibgetIteratorFn__getIteratorFn(maybeIterable) {
+  var iteratorFn = maybeIterable && (reactlibgetIteratorFn__ITERATOR_SYMBOL && maybeIterable[reactlibgetIteratorFn__ITERATOR_SYMBOL] || maybeIterable[reactlibgetIteratorFn__FAUX_ITERATOR_SYMBOL]);
+  if (typeof iteratorFn === 'function') {
+    return iteratorFn;
   }
-
-  message += ' for the full message or use the non-minified dev environment' + ' for full errors and additional helpful warnings.';
-
-  var error = new Error(message);
-  error.name = 'Invariant Violation';
-  error.framesToPop = 1; // we don't care about reactProdInvariant's own frame
-
-  throw error;
 }
 
-$m['react-dom/lib/reactProdInvariant'].exports = reactdomlibreactProdInvariant__reactProdInvariant;
-/*≠≠ node_modules/react-dom/lib/reactProdInvariant.js ≠≠*/
+$m['react/lib/getIteratorFn'].exports = reactlibgetIteratorFn__getIteratorFn;
+/*≠≠ node_modules/react/lib/getIteratorFn.js ≠≠*/
+
+
+/*== node_modules/react/lib/canDefineProperty.js ==*/
+$m['react/lib/canDefineProperty'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var reactlibcanDefineProperty__canDefineProperty = false;
+if ('development' !== 'production') {
+  try {
+    // $FlowFixMe https://github.com/facebook/flow/issues/285
+    Object.defineProperty({}, 'x', { get: function get() {} });
+    reactlibcanDefineProperty__canDefineProperty = true;
+  } catch (x) {
+    // IE will fail on defineProperty
+  }
+}
+
+$m['react/lib/canDefineProperty'].exports = reactlibcanDefineProperty__canDefineProperty;
+/*≠≠ node_modules/react/lib/canDefineProperty.js ≠≠*/
+
+
+/*== node_modules/react/lib/ReactPropTypeLocationNames.js ==*/
+$m['react/lib/ReactPropTypeLocationNames'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var reactlibReactPropTypeLocationNames__ReactPropTypeLocationNames = {};
+
+if ('development' !== 'production') {
+  reactlibReactPropTypeLocationNames__ReactPropTypeLocationNames = {
+    prop: 'prop',
+    context: 'context',
+    childContext: 'child context'
+  };
+}
+
+$m['react/lib/ReactPropTypeLocationNames'].exports = reactlibReactPropTypeLocationNames__ReactPropTypeLocationNames;
+/*≠≠ node_modules/react/lib/ReactPropTypeLocationNames.js ≠≠*/
 
 
 /*== node_modules/react-dom/lib/forEachAccumulated.js ==*/
@@ -2756,6 +3030,28 @@ function reactdomlibforEachAccumulated__forEachAccumulated(arr, cb, scope) {
 
 $m['react-dom/lib/forEachAccumulated'].exports = reactdomlibforEachAccumulated__forEachAccumulated;
 /*≠≠ node_modules/react-dom/lib/forEachAccumulated.js ≠≠*/
+
+
+/*== node_modules/react/lib/ReactElementSymbol.js ==*/
+$m['react/lib/ReactElementSymbol'] = { exports: {} };
+/**
+ * Copyright 2014-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+// The Symbol used to tag the ReactElement type. If there is no native Symbol
+// nor polyfill, then a plain number is used for performance.
+
+var reactlibReactElementSymbol__REACT_ELEMENT_TYPE = typeof Symbol === 'function' && Symbol['for'] && Symbol['for']('react.element') || 0xeac7;
+
+$m['react/lib/ReactElementSymbol'].exports = reactlibReactElementSymbol__REACT_ELEMENT_TYPE;
+/*≠≠ node_modules/react/lib/ReactElementSymbol.js ≠≠*/
 
 
 /*== node_modules/react-dom/lib/ViewportMetrics.js ==*/
@@ -2828,6 +3124,22 @@ $m['react-dom/lib/ReactDOMFeatureFlags'].exports = reactdomlibReactDOMFeatureFla
 /*≠≠ node_modules/react-dom/lib/ReactDOMFeatureFlags.js ≠≠*/
 
 
+/*== node_modules/react/lib/ReactVersion.js ==*/
+$m['react/lib/ReactVersion'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+$m['react/lib/ReactVersion'].exports = '15.4.2';
+/*≠≠ node_modules/react/lib/ReactVersion.js ≠≠*/
+
+
 /*== node_modules/react-dom/lib/adler32.js ==*/
 $m['react-dom/lib/adler32'] = { exports: {} };
 /**
@@ -2872,44 +3184,6 @@ function reactdomlibadler32__adler32(data) {
 
 $m['react-dom/lib/adler32'].exports = reactdomlibadler32__adler32;
 /*≠≠ node_modules/react-dom/lib/adler32.js ≠≠*/
-
-
-/*== node_modules/fbjs/lib/ExecutionEnvironment.js ==*/
-$m['fbjs/lib/ExecutionEnvironment'] = { exports: {} };
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-var fbjslibExecutionEnvironment__canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
-
-/**
- * Simple, lightweight module assisting with the detection and context of
- * Worker. Helps avoid circular dependencies and allows code to reason about
- * whether or not they are in a Worker, even if they never include the main
- * `ReactWorker` dependency.
- */
-var fbjslibExecutionEnvironment__ExecutionEnvironment = {
-
-  canUseDOM: fbjslibExecutionEnvironment__canUseDOM,
-
-  canUseWorkers: typeof Worker !== 'undefined',
-
-  canUseEventListeners: fbjslibExecutionEnvironment__canUseDOM && !!(window.addEventListener || window.attachEvent),
-
-  canUseViewport: fbjslibExecutionEnvironment__canUseDOM && !!window.screen,
-
-  isInWorker: !fbjslibExecutionEnvironment__canUseDOM // For now, this is true - might change in the future.
-
-};
-
-$m['fbjs/lib/ExecutionEnvironment'].exports = fbjslibExecutionEnvironment__ExecutionEnvironment;
-/*≠≠ node_modules/fbjs/lib/ExecutionEnvironment.js ≠≠*/
 
 
 /*== node_modules/react-dom/lib/ReactFeatureFlags.js ==*/
@@ -2991,7 +3265,7 @@ var reactdomlibReactErrorUtils__ReactErrorUtils = {
   }
 };
 
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   /**
    * To help development we can get better devtools integration by simulating a
    * real browser event.
@@ -3013,42 +3287,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 $m['react-dom/lib/ReactErrorUtils'].exports = reactdomlibReactErrorUtils__ReactErrorUtils;
 /*≠≠ node_modules/react-dom/lib/ReactErrorUtils.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactHostOperationHistoryHook.js ==*/
-$m['react-dom/lib/ReactHostOperationHistoryHook'] = { exports: {} };
-/**
- * Copyright 2016-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-var reactdomlibReactHostOperationHistoryHook__history = [];
-
-var reactdomlibReactHostOperationHistoryHook__ReactHostOperationHistoryHook = {
-  onHostOperation: function (operation) {
-    reactdomlibReactHostOperationHistoryHook__history.push(operation);
-  },
-  clearHistory: function () {
-    if (reactdomlibReactHostOperationHistoryHook__ReactHostOperationHistoryHook._preventClearing) {
-      // Should only be used for tests.
-      return;
-    }
-
-    reactdomlibReactHostOperationHistoryHook__history = [];
-  },
-  getHistory: function () {
-    return reactdomlibReactHostOperationHistoryHook__history;
-  }
-};
-
-$m['react-dom/lib/ReactHostOperationHistoryHook'].exports = reactdomlibReactHostOperationHistoryHook__ReactHostOperationHistoryHook;
-/*≠≠ node_modules/react-dom/lib/ReactHostOperationHistoryHook.js ≠≠*/
 
 
 /*== node_modules/react-dom/lib/ReactInstanceMap.js ==*/
@@ -3101,299 +3339,118 @@ $m['react-dom/lib/ReactInstanceMap'].exports = reactdomlibReactInstanceMap__Reac
 /*≠≠ node_modules/react-dom/lib/ReactInstanceMap.js ≠≠*/
 
 
-/*== node_modules/react-dom/lib/ReactPropTypeLocationNames.js ==*/
-$m['react-dom/lib/ReactPropTypeLocationNames'] = { exports: {} };
+/*== node_modules/@yr/is-equal/index.js ==*/
+$m['@yr/is-equal'] = { exports: {} };
 /**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-var reactdomlibReactPropTypeLocationNames__ReactPropTypeLocationNames = {};
-
-if (process.env.NODE_ENV !== 'production') {
-  reactdomlibReactPropTypeLocationNames__ReactPropTypeLocationNames = {
-    prop: 'prop',
-    context: 'context',
-    childContext: 'child context'
-  };
-}
-
-$m['react-dom/lib/ReactPropTypeLocationNames'].exports = reactdomlibReactPropTypeLocationNames__ReactPropTypeLocationNames;
-/*≠≠ node_modules/react-dom/lib/ReactPropTypeLocationNames.js ≠≠*/
-
-
-/*== node_modules/fbjs/lib/emptyFunction.js ==*/
-$m['fbjs/lib/emptyFunction'] = { exports: {} };
-"use strict";
-
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-function fbjslibemptyFunction__makeEmptyFunction(arg) {
-  return function () {
-    return arg;
-  };
-}
-
-/**
- * This function accepts and discards inputs; it has no side effects. This is
- * primarily useful idiomatically for overridable function endpoints which
- * always need to be callable, since JS lacks a null-call idiom ala Cocoa.
- */
-var fbjslibemptyFunction__emptyFunction = function emptyFunction() {};
-
-fbjslibemptyFunction__emptyFunction.thatReturns = fbjslibemptyFunction__makeEmptyFunction;
-fbjslibemptyFunction__emptyFunction.thatReturnsFalse = fbjslibemptyFunction__makeEmptyFunction(false);
-fbjslibemptyFunction__emptyFunction.thatReturnsTrue = fbjslibemptyFunction__makeEmptyFunction(true);
-fbjslibemptyFunction__emptyFunction.thatReturnsNull = fbjslibemptyFunction__makeEmptyFunction(null);
-fbjslibemptyFunction__emptyFunction.thatReturnsThis = function () {
-  return this;
-};
-fbjslibemptyFunction__emptyFunction.thatReturnsArgument = function (arg) {
-  return arg;
-};
-
-$m['fbjs/lib/emptyFunction'].exports = fbjslibemptyFunction__emptyFunction;
-/*≠≠ node_modules/fbjs/lib/emptyFunction.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/shouldUpdateReactComponent.js ==*/
-$m['react-dom/lib/shouldUpdateReactComponent'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
+ * Determine whether two objects are conceptually equal
+ * https://github.com/yr/is-equal
+ * @copyright Yr
+ * @license MIT
  */
 
 /**
- * Given a `prevElement` and `nextElement`, determines if the existing
- * instance should be updated as opposed to being destroyed or replaced by a new
- * instance. Both arguments are elements. This ensures that this logic can
- * operate on stateless trees without any backing instance.
- *
- * @param {?object} prevElement
- * @param {?object} nextElement
- * @return {boolean} True if the existing instance should be updated.
- * @protected
+ * Determine if 'obj1' and 'obj2' are conceptually equal,
+ * optionally ignoring properties in 'ignore'
+ * @param {Object} obj1
+ * @param {Object} obj2
+ * @param {Array} [ignore]
+ * @param {Debug} [debug]
+ * @returns {Boolean}
  */
 
-function reactdomlibshouldUpdateReactComponent__shouldUpdateReactComponent(prevElement, nextElement) {
-  var prevEmpty = prevElement === null || prevElement === false;
-  var nextEmpty = nextElement === null || nextElement === false;
-  if (prevEmpty || nextEmpty) {
-    return prevEmpty === nextEmpty;
-  }
+$m['@yr/is-equal'].exports = function isEqual(obj1, obj2, ignore, debug) {
+  ignore = ignore || [];
 
-  var prevType = typeof prevElement;
-  var nextType = typeof nextElement;
-  if (prevType === 'string' || prevType === 'number') {
-    return nextType === 'string' || nextType === 'number';
-  } else {
-    return nextType === 'object' && prevElement.type === nextElement.type && prevElement.key === nextElement.key;
-  }
-}
+  if (yrisequal__equal(obj1, obj2)) return true;
 
-$m['react-dom/lib/shouldUpdateReactComponent'].exports = reactdomlibshouldUpdateReactComponent__shouldUpdateReactComponent;
-/*≠≠ node_modules/react-dom/lib/shouldUpdateReactComponent.js ≠≠*/
+  if (yrisequal__isObject(obj1) && yrisequal__isObject(obj2)) {
+    var keys1 = yrisequal__keys(obj1, ignore);
+    var keys2 = yrisequal__keys(obj2, ignore);
 
+    if (keys1.length != keys2.length) return false;
 
-/*== node_modules/react-dom/lib/cre...icrosoftUnsafeLocalFunction.js ==*/
-$m['react-dom/lib/createMicrosoftUnsafeLocalFunction'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
+    for (var i = 0, n = keys1.length; i < n; i++) {
+      var prop = keys1[i];
+      var val1 = obj1[prop];
+      var val2 = obj2[prop];
 
-/* globals MSApp */
-
-/**
- * Create a function which has 'unsafe' privileges (required by windows8 apps)
- */
-
-var reactdomlibcreateMicrosoftUnsafeLocalFunction__createMicrosoftUnsafeLocalFunction = function (func) {
-  if (typeof MSApp !== 'undefined' && MSApp.execUnsafeLocalFunction) {
-    return function (arg0, arg1, arg2, arg3) {
-      MSApp.execUnsafeLocalFunction(function () {
-        return func(arg0, arg1, arg2, arg3);
-      });
-    };
-  } else {
-    return func;
-  }
-};
-
-$m['react-dom/lib/createMicrosoftUnsafeLocalFunction'].exports = reactdomlibcreateMicrosoftUnsafeLocalFunction__createMicrosoftUnsafeLocalFunction;
-/*≠≠ node_modules/react-dom/lib/cre...icrosoftUnsafeLocalFunction.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/DOMNamespaces.js ==*/
-$m['react-dom/lib/DOMNamespaces'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-var reactdomlibDOMNamespaces__DOMNamespaces = {
-  html: 'http://www.w3.org/1999/xhtml',
-  mathml: 'http://www.w3.org/1998/Math/MathML',
-  svg: 'http://www.w3.org/2000/svg'
-};
-
-$m['react-dom/lib/DOMNamespaces'].exports = reactdomlibDOMNamespaces__DOMNamespaces;
-/*≠≠ node_modules/react-dom/lib/DOMNamespaces.js ≠≠*/
-
-
-/*== node_modules/fbjs/lib/shallowEqual.js ==*/
-$m['fbjs/lib/shallowEqual'] = { exports: {} };
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @typechecks
- * 
- */
-
-/*eslint-disable no-self-compare */
-
-var fbjslibshallowEqual__hasOwnProperty = Object.prototype.hasOwnProperty;
-
-/**
- * inlined Object.is polyfill to avoid requiring consumers ship their own
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
- */
-function fbjslibshallowEqual__is(x, y) {
-  // SameValue algorithm
-  if (x === y) {
-    // Steps 1-5, 7-10
-    // Steps 6.b-6.e: +0 != -0
-    // Added the nonzero y check to make Flow happy, but it is redundant
-    return x !== 0 || y !== 0 || 1 / x === 1 / y;
-  } else {
-    // Step 6.a: NaN == NaN
-    return x !== x && y !== y;
-  }
-}
-
-/**
- * Performs equality by iterating through keys on an object and returning false
- * when any key has values which are not strictly equal between the arguments.
- * Returns true when the values of all keys are strictly equal.
- */
-function fbjslibshallowEqual__shallowEqual(objA, objB) {
-  if (fbjslibshallowEqual__is(objA, objB)) {
+      if (!yrisequal__equal(val1, val2)) {
+        if (debug) debug('"%s" not equal %s:%s', prop, val1, val2);
+        return false;
+      }
+    }
     return true;
   }
+  return false;
+};
 
-  if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) {
-    return false;
-  }
+/**
+ * Determine if 'val1' and 'val2' are equal
+ * @param {Object} val1
+ * @param {Object} val2
+ * @returns {Boolean}
+ */
+function yrisequal__equal(val1, val2) {
+  var type1 = typeof val1;
+  var type2 = typeof val2;
 
-  var keysA = Object.keys(objA);
-  var keysB = Object.keys(objB);
+  // Convert NaN to null
+  if (type1 == 'number' && isNaN(val1)) val1 = null;
+  if (type2 == 'number' && isNaN(val2)) val2 = null;
 
-  if (keysA.length !== keysB.length) {
-    return false;
-  }
+  return val1 === val2 ||
+  // Handle null & undefined
+  val1 == null && val2 == null || yrisequal__isEqualArray(val1, val2);
+}
 
-  // Test for A's keys different from B.
-  for (var i = 0; i < keysA.length; i++) {
-    if (!fbjslibshallowEqual__hasOwnProperty.call(objB, keysA[i]) || !fbjslibshallowEqual__is(objA[keysA[i]], objB[keysA[i]])) {
-      return false;
+/**
+ * Determine if 'obj' is an object
+ * @param {Object} obj
+ * @returns {Boolean}
+ */
+function yrisequal__isObject(obj) {
+  var type = typeof obj;
+
+  return 'object' == type && 'function' != type && !Array.isArray(obj);
+}
+
+/**
+ * Retrieve non-ignored keys of 'obj'
+ * @param {Object} obj
+ * @param {Array} ignore
+ * @returns {Array}
+ */
+function yrisequal__keys(obj, ignore) {
+  return Object.keys(obj).filter(function (key) {
+    // Ignore functions
+    return 'function' != typeof obj[key] && !~ignore.indexOf(key);
+  });
+}
+
+/**
+ * Determine if arrays 'arr1' and 'arr2' are equal
+ * @param {Array} arr1
+ * @param {Array} arr2
+ * @returns {Boolean}
+ */
+function yrisequal__isEqualArray(arr1, arr2) {
+  if (Array.isArray(arr1) && Array.isArray(arr2)) {
+    var n1 = arr1.length;
+    var n2 = arr2.length;
+
+    if (n1 != n2) return false;
+    // Equal if both empty
+    if (n1 == 0 && n2 == 0) return true;
+
+    // Not equal if items not strictly equal
+    for (var i = 0; i < n1; i++) {
+      if (arr1[i] !== arr2[i]) return false;
     }
+    return true;
   }
-
-  return true;
+  return false;
 }
-
-$m['fbjs/lib/shallowEqual'].exports = fbjslibshallowEqual__shallowEqual;
-/*≠≠ node_modules/fbjs/lib/shallowEqual.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/getNextDebugID.js ==*/
-$m['react-dom/lib/getNextDebugID'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-var reactdomlibgetNextDebugID__nextDebugID = 1;
-
-function reactdomlibgetNextDebugID__getNextDebugID() {
-  return reactdomlibgetNextDebugID__nextDebugID++;
-}
-
-$m['react-dom/lib/getNextDebugID'].exports = reactdomlibgetNextDebugID__getNextDebugID;
-/*≠≠ node_modules/react-dom/lib/getNextDebugID.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactEmptyComponent.js ==*/
-$m['react-dom/lib/ReactEmptyComponent'] = { exports: {} };
-/**
- * Copyright 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-var reactdomlibReactEmptyComponent__emptyComponentFactory;
-
-var reactdomlibReactEmptyComponent__ReactEmptyComponentInjection = {
-  injectEmptyComponentFactory: function (factory) {
-    reactdomlibReactEmptyComponent__emptyComponentFactory = factory;
-  }
-};
-
-var reactdomlibReactEmptyComponent__ReactEmptyComponent = {
-  create: function (instantiate) {
-    return reactdomlibReactEmptyComponent__emptyComponentFactory(instantiate);
-  }
-};
-
-reactdomlibReactEmptyComponent__ReactEmptyComponent.injection = reactdomlibReactEmptyComponent__ReactEmptyComponentInjection;
-
-$m['react-dom/lib/ReactEmptyComponent'].exports = reactdomlibReactEmptyComponent__ReactEmptyComponent;
-/*≠≠ node_modules/react-dom/lib/ReactEmptyComponent.js ≠≠*/
+/*≠≠ node_modules/@yr/is-equal/index.js ≠≠*/
 
 
 /*== node_modules/react-dom/lib/isTextInputElement.js ==*/
@@ -3449,6 +3506,657 @@ $m['react-dom/lib/isTextInputElement'].exports = reactdomlibisTextInputElement__
 /*≠≠ node_modules/react-dom/lib/isTextInputElement.js ≠≠*/
 
 
+/*== node_modules/debug/src/debug.js ==*/
+$m['debug/src/debug'] = { exports: {} };
+
+/**
+ * This is the common logic for both the Node.js and web browser
+ * implementations of `debug()`.
+ *
+ * Expose `debug()` as the module.
+ */
+
+$m['debug/src/debug'].exports = $m['debug/src/debug'].exports = debugsrcdebug__createDebug.debug = debugsrcdebug__createDebug['default'] = debugsrcdebug__createDebug;
+$m['debug/src/debug'].exports.coerce = debugsrcdebug__coerce;
+$m['debug/src/debug'].exports.disable = debugsrcdebug__disable;
+$m['debug/src/debug'].exports.enable = debugsrcdebug__enable;
+$m['debug/src/debug'].exports.enabled = debugsrcdebug__enabled;
+$m['debug/src/debug'].exports.humanize = $m['ms'].exports;
+
+/**
+ * The currently active debug mode names, and names to skip.
+ */
+
+$m['debug/src/debug'].exports.names = [];
+$m['debug/src/debug'].exports.skips = [];
+
+/**
+ * Map of special "%n" handling functions, for the debug "format" argument.
+ *
+ * Valid key names are a single, lower or upper-case letter, i.e. "n" and "N".
+ */
+
+$m['debug/src/debug'].exports.formatters = {};
+
+/**
+ * Previous log timestamp.
+ */
+
+var debugsrcdebug__prevTime;
+
+/**
+ * Select a color.
+ * @param {String} namespace
+ * @return {Number}
+ * @api private
+ */
+
+function debugsrcdebug__selectColor(namespace) {
+  var hash = 0,
+      i;
+
+  for (i in namespace) {
+    hash = (hash << 5) - hash + namespace.charCodeAt(i);
+    hash |= 0; // Convert to 32bit integer
+  }
+
+  return $m['debug/src/debug'].exports.colors[Math.abs(hash) % $m['debug/src/debug'].exports.colors.length];
+}
+
+/**
+ * Create a debugger with the given `namespace`.
+ *
+ * @param {String} namespace
+ * @return {Function}
+ * @api public
+ */
+
+function debugsrcdebug__createDebug(namespace) {
+
+  function debug() {
+    // disabled?
+    if (!debug.enabled) return;
+
+    var self = debug;
+
+    // set `diff` timestamp
+    var curr = +new Date();
+    var ms = curr - (debugsrcdebug__prevTime || curr);
+    self.diff = ms;
+    self.prev = debugsrcdebug__prevTime;
+    self.curr = curr;
+    debugsrcdebug__prevTime = curr;
+
+    // turn the `arguments` into a proper Array
+    var args = new Array(arguments.length);
+    for (var i = 0; i < args.length; i++) {
+      args[i] = arguments[i];
+    }
+
+    args[0] = $m['debug/src/debug'].exports.coerce(args[0]);
+
+    if ('string' !== typeof args[0]) {
+      // anything else let's inspect with %O
+      args.unshift('%O');
+    }
+
+    // apply any `formatters` transformations
+    var index = 0;
+    args[0] = args[0].replace(/%([a-zA-Z%])/g, function (match, format) {
+      // if we encounter an escaped % then don't increase the array index
+      if (match === '%%') return match;
+      index++;
+      var formatter = $m['debug/src/debug'].exports.formatters[format];
+      if ('function' === typeof formatter) {
+        var val = args[index];
+        match = formatter.call(self, val);
+
+        // now we need to remove `args[index]` since it's inlined in the `format`
+        args.splice(index, 1);
+        index--;
+      }
+      return match;
+    });
+
+    // apply env-specific formatting (colors, etc.)
+    $m['debug/src/debug'].exports.formatArgs.call(self, args);
+
+    var logFn = debug.log || $m['debug/src/debug'].exports.log || console.log.bind(console);
+    logFn.apply(self, args);
+  }
+
+  debug.namespace = namespace;
+  debug.enabled = $m['debug/src/debug'].exports.enabled(namespace);
+  debug.useColors = $m['debug/src/debug'].exports.useColors();
+  debug.color = debugsrcdebug__selectColor(namespace);
+
+  // env-specific initialization logic for debug instances
+  if ('function' === typeof $m['debug/src/debug'].exports.init) {
+    $m['debug/src/debug'].exports.init(debug);
+  }
+
+  return debug;
+}
+
+/**
+ * Enables a debug mode by namespaces. This can include modes
+ * separated by a colon and wildcards.
+ *
+ * @param {String} namespaces
+ * @api public
+ */
+
+function debugsrcdebug__enable(namespaces) {
+  $m['debug/src/debug'].exports.save(namespaces);
+
+  $m['debug/src/debug'].exports.names = [];
+  $m['debug/src/debug'].exports.skips = [];
+
+  var split = (typeof namespaces === 'string' ? namespaces : '').split(/[\s,]+/);
+  var len = split.length;
+
+  for (var i = 0; i < len; i++) {
+    if (!split[i]) continue; // ignore empty strings
+    namespaces = split[i].replace(/\*/g, '.*?');
+    if (namespaces[0] === '-') {
+      $m['debug/src/debug'].exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
+    } else {
+      $m['debug/src/debug'].exports.names.push(new RegExp('^' + namespaces + '$'));
+    }
+  }
+}
+
+/**
+ * Disable debug output.
+ *
+ * @api public
+ */
+
+function debugsrcdebug__disable() {
+  $m['debug/src/debug'].exports.enable('');
+}
+
+/**
+ * Returns true if the given mode name is enabled, false otherwise.
+ *
+ * @param {String} name
+ * @return {Boolean}
+ * @api public
+ */
+
+function debugsrcdebug__enabled(name) {
+  var i, len;
+  for (i = 0, len = $m['debug/src/debug'].exports.skips.length; i < len; i++) {
+    if ($m['debug/src/debug'].exports.skips[i].test(name)) {
+      return false;
+    }
+  }
+  for (i = 0, len = $m['debug/src/debug'].exports.names.length; i < len; i++) {
+    if ($m['debug/src/debug'].exports.names[i].test(name)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Coerce `val`.
+ *
+ * @param {Mixed} val
+ * @return {Mixed}
+ * @api private
+ */
+
+function debugsrcdebug__coerce(val) {
+  if (val instanceof Error) return val.stack || val.message;
+  return val;
+}
+/*≠≠ node_modules/debug/src/debug.js ≠≠*/
+
+
+/*== node_modules/debug/src/browser.js ==*/
+$m['debug'] = { exports: {} };
+/**
+ * This is the web browser implementation of `debug()`.
+ *
+ * Expose `debug()` as the module.
+ */
+
+$m['debug'].exports = $m['debug'].exports = $m['debug/src/debug'].exports;
+$m['debug'].exports.log = debug__log;
+$m['debug'].exports.formatArgs = debug__formatArgs;
+$m['debug'].exports.save = debug__save;
+$m['debug'].exports.load = debug__load;
+$m['debug'].exports.useColors = debug__useColors;
+$m['debug'].exports.storage = 'undefined' != typeof chrome && 'undefined' != typeof chrome.storage ? chrome.storage.local : debug__localstorage();
+
+/**
+ * Colors.
+ */
+
+$m['debug'].exports.colors = ['lightseagreen', 'forestgreen', 'goldenrod', 'dodgerblue', 'darkorchid', 'crimson'];
+
+/**
+ * Currently only WebKit-based Web Inspectors, Firefox >= v31,
+ * and the Firebug extension (any Firefox version) are known
+ * to support "%c" CSS customizations.
+ *
+ * TODO: add a `localStorage` variable to explicitly enable/disable colors
+ */
+
+function debug__useColors() {
+  // NB: In an Electron preload script, document will be defined but not fully
+  // initialized. Since we know we're in Chrome, we'll just detect this case
+  // explicitly
+  if (typeof window !== 'undefined' && window && typeof window.process !== 'undefined' && window.process.type === 'renderer') {
+    return true;
+  }
+
+  // is webkit? http://stackoverflow.com/a/16459606/376773
+  // document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
+  return typeof document !== 'undefined' && document && 'WebkitAppearance' in document.documentElement.style ||
+  // is firebug? http://stackoverflow.com/a/398120/376773
+  typeof window !== 'undefined' && window && window.console && (console.firebug || console.exception && console.table) ||
+  // is firefox >= v31?
+  // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
+  typeof navigator !== 'undefined' && navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31 ||
+  // double check webkit in userAgent just in case we are in a worker
+  typeof navigator !== 'undefined' && navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/);
+}
+
+/**
+ * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
+ */
+
+$m['debug'].exports.formatters.j = function (v) {
+  try {
+    return JSON.stringify(v);
+  } catch (err) {
+    return '[UnexpectedJSONParseError]: ' + err.message;
+  }
+};
+
+/**
+ * Colorize log arguments if enabled.
+ *
+ * @api public
+ */
+
+function debug__formatArgs(args) {
+  var useColors = this.useColors;
+
+  args[0] = (useColors ? '%c' : '') + this.namespace + (useColors ? ' %c' : ' ') + args[0] + (useColors ? '%c ' : ' ') + '+' + $m['debug'].exports.humanize(this.diff);
+
+  if (!useColors) return;
+
+  var c = 'color: ' + this.color;
+  args.splice(1, 0, c, 'color: inherit');
+
+  // the final "%c" is somewhat tricky, because there could be other
+  // arguments passed either before or after the %c, so we need to
+  // figure out the correct index to insert the CSS into
+  var index = 0;
+  var lastC = 0;
+  args[0].replace(/%[a-zA-Z%]/g, function (match) {
+    if ('%%' === match) return;
+    index++;
+    if ('%c' === match) {
+      // we only are interested in the *last* %c
+      // (the user may have provided their own)
+      lastC = index;
+    }
+  });
+
+  args.splice(lastC, 0, c);
+}
+
+/**
+ * Invokes `console.log()` when available.
+ * No-op when `console.log` is not a "function".
+ *
+ * @api public
+ */
+
+function debug__log() {
+  // this hackery is required for IE8/9, where
+  // the `console.log` function doesn't have 'apply'
+  return 'object' === typeof console && console.log && Function.prototype.apply.call(console.log, console, arguments);
+}
+
+/**
+ * Save `namespaces`.
+ *
+ * @param {String} namespaces
+ * @api private
+ */
+
+function debug__save(namespaces) {
+  try {
+    if (null == namespaces) {
+      $m['debug'].exports.storage.removeItem('debug');
+    } else {
+      $m['debug'].exports.storage.debug = namespaces;
+    }
+  } catch (e) {}
+}
+
+/**
+ * Load `namespaces`.
+ *
+ * @return {String} returns the previously persisted debug modes
+ * @api private
+ */
+
+function debug__load() {
+  var r;
+  try {
+    r = $m['debug'].exports.storage.debug;
+  } catch (e) {}
+
+  // If debug isn't set in LS, and we're in Electron, try to load $DEBUG
+  if (!r && typeof process !== 'undefined' && 'env' in process) {
+    r = process.env.DEBUG;
+  }
+
+  return r;
+}
+
+/**
+ * Enable namespaces listed in `localStorage.debug` initially.
+ */
+
+$m['debug'].exports.enable(debug__load());
+
+/**
+ * Localstorage attempts to return the localstorage.
+ *
+ * This is necessary because safari throws
+ * when a user disables cookies/localstorage
+ * and you attempt to access it.
+ *
+ * @return {LocalStorage}
+ * @api private
+ */
+
+function debug__localstorage() {
+  try {
+    return window.localStorage;
+  } catch (e) {}
+}
+/*≠≠ node_modules/debug/src/browser.js ≠≠*/
+
+
+/*== node_modules/raf/index.js ==*/
+$m['raf'] = { exports: {} };
+var raf__now = $m['performance-now#0.2.0'].exports,
+    raf__root = typeof window === 'undefined' ? global : window,
+    raf__vendors = ['moz', 'webkit'],
+    raf__suffix = 'AnimationFrame',
+    raf__raf = raf__root['request' + raf__suffix],
+    raf__caf = raf__root['cancel' + raf__suffix] || raf__root['cancelRequest' + raf__suffix];
+
+for (var raf__i = 0; !raf__raf && raf__i < raf__vendors.length; raf__i++) {
+  raf__raf = raf__root[raf__vendors[raf__i] + 'Request' + raf__suffix];
+  raf__caf = raf__root[raf__vendors[raf__i] + 'Cancel' + raf__suffix] || raf__root[raf__vendors[raf__i] + 'CancelRequest' + raf__suffix];
+}
+
+// Some versions of FF have rAF but not cAF
+if (!raf__raf || !raf__caf) {
+  var raf__last = 0,
+      raf__id = 0,
+      raf__queue = [],
+      raf__frameDuration = 1000 / 60;
+
+  raf__raf = function raf__raf(callback) {
+    if (raf__queue.length === 0) {
+      var _now = raf__now(),
+          next = Math.max(0, raf__frameDuration - (_now - raf__last));
+      raf__last = next + _now;
+      setTimeout(function () {
+        var cp = raf__queue.slice(0);
+        // Clear queue here to prevent
+        // callbacks from appending listeners
+        // to the current frame's queue
+        raf__queue.length = 0;
+        for (var i = 0; i < cp.length; i++) {
+          if (!cp[i].cancelled) {
+            try {
+              cp[i].callback(raf__last);
+            } catch (e) {
+              setTimeout(function () {
+                throw e;
+              }, 0);
+            }
+          }
+        }
+      }, Math.round(next));
+    }
+    raf__queue.push({
+      handle: ++raf__id,
+      callback: callback,
+      cancelled: false
+    });
+    return raf__id;
+  };
+
+  raf__caf = function raf__caf(handle) {
+    for (var i = 0; i < raf__queue.length; i++) {
+      if (raf__queue[i].handle === handle) {
+        raf__queue[i].cancelled = true;
+      }
+    }
+  };
+}
+
+$m['raf'].exports = function (fn) {
+  // Wrap in a new function to prevent
+  // `cancel` potentially being assigned
+  // to the native rAF function
+  return raf__raf.call(raf__root, fn);
+};
+$m['raf'].exports.cancel = function () {
+  raf__caf.apply(raf__root, arguments);
+};
+$m['raf'].exports.polyfill = function () {
+  raf__root.requestAnimationFrame = raf__raf;
+  raf__root.cancelAnimationFrame = raf__caf;
+};
+/*≠≠ node_modules/raf/index.js ≠≠*/
+
+
+/*== node_modules/@yr/clock/index.js ==*/
+$m['@yr/clock'] = { exports: {} };
+
+/**
+ * A global timer utility for managing immediate/timeout intervals
+ * https://github.com/yr/clock
+ * @copyright Yr
+ * @license MIT
+ */
+
+var yrclock__Debug = $m['debug'].exports;
+var yrclock__raf = $m['raf'].exports;
+var yrclock__now = $m['performance-now'].exports;
+
+var yrclock__INTERVAL_CUTOFF = 1000;
+var yrclock__INTERVAL_MAX = 600000;
+
+var yrclock__debug = yrclock__Debug('yr:clock');
+var yrclock__isDev = 'development' == 'development';
+var yrclock__hasImmediate = 'setImmediate' in (typeof global !== 'undefined' ? global : window);
+var yrclock__queue = {};
+var yrclock__rafHandle = 0;
+var yrclock__stHandle = 0;
+var yrclock__uid = 0;
+
+// Add polyfills
+yrclock__raf.polyfill();
+
+$m['@yr/clock'].exports = {
+  /**
+   * Initialize with visibility api "features"
+   * @param {Object} features
+   */
+  initialize: function initialize(features) {
+    var hidden = features.hidden;
+    var visibilityChange = features.visibilityChange;
+
+    if (hidden) {
+      document.addEventListener(visibilityChange, function (evt) {
+        if (document[hidden]) {
+          yrclock__debug('disable while hidden');
+          yrclock__stop();
+        } else {
+          yrclock__debug('enable while visible');
+          if ('development' == 'development') {
+            var current = yrclock__now();
+
+            for (var id in yrclock__queue) {
+              var item = yrclock__queue[id];
+
+              if (item.time <= current) {
+                yrclock__debug('timeout should trigger for "%s"', id);
+              } else {
+                var date = new Date();
+
+                date.setMilliseconds(date.getMilliseconds() + item.time - current);
+                yrclock__debug('timeout for "%s" expected at %s', id, date.toLocaleTimeString());
+              }
+            }
+          }
+          yrclock__run();
+        }
+      }, false);
+    }
+  },
+
+  /**
+   * Call 'fn' on next loop turn
+   * @param {Function} fn
+   * @returns {Number}
+   */
+  immediate: function immediate(fn) {
+    return yrclock__hasImmediate ? setImmediate(fn) : setTimeout(fn, 0);
+  },
+
+  /**
+   * Call 'fn' on next animation frame
+   * @param {Function} fn
+   * @returns {Number}
+   */
+  frame: function frame(fn) {
+    return yrclock__raf(fn);
+  },
+
+  /**
+   * Call 'fn' after 'duration'
+   * @param {Number} duration - ms
+   * @param {Function} fn
+   * @param {String} [id]
+   * @returns {String|Number|Object}
+   */
+  timeout: function timeout(duration, fn, id) {
+    if (duration <= 0) return this.immediate(fn);
+
+    var time = yrclock__now() + duration;
+
+    id = id || 'c::' + ++yrclock__uid;
+    // Existing ids will be overwritten/cancelled
+    yrclock__queue[id] = { fn: fn, time: time };
+
+    if (yrclock__debug.enabled) {
+      var date = new Date();
+
+      date.setMilliseconds(date.getMilliseconds() + duration);
+      yrclock__debug('timeout scheduled for "%s" at %s', id, date.toLocaleTimeString());
+    }
+
+    yrclock__run();
+
+    return id;
+  },
+
+  /**
+   * Cancel immediate/timeout with 'id'
+   * @param {String|Number} id
+   * @returns {String|Number}
+   */
+  cancel: function cancel(id) {
+    switch (typeof id) {
+      // Timeout
+      case 'string':
+        if (id in yrclock__queue) {
+          yrclock__debug('timeout canceled for "%s"', id);
+          delete yrclock__queue[id];
+        }
+        return '';
+      // Frame raf or immediate setTimeout
+      case 'number':
+        yrclock__raf.cancel(id);
+        clearTimeout(id);
+        return 0;
+      // Immediate setImmediate
+      case 'object':
+        clearImmediate(id);
+        return null;
+    }
+  }
+};
+
+/**
+ * Process outstanding queue items
+ */
+function yrclock__run() {
+  var current = yrclock__now();
+  var interval = yrclock__INTERVAL_MAX;
+  var running = false;
+
+  // Reset
+  if (yrclock__rafHandle || yrclock__stHandle) yrclock__stop();
+
+  for (var id in yrclock__queue) {
+    var item = yrclock__queue[id];
+
+    if (item != null && item.time != null) {
+      var duration = item.time - current;
+
+      if (duration <= 0) {
+        if (yrclock__isDev) yrclock__debug('timeout triggered for "%s" at %s', id, new Date().toLocaleTimeString());
+        delete yrclock__queue[id];
+        item.fn();
+      } else {
+        // Store smallest duration
+        if (duration < interval) interval = duration;
+        running = true;
+      }
+    } else {
+      delete yrclock__queue[id];
+    }
+  }
+
+  // Loop
+  if (running) {
+    // Use raf if requested interval is less than cutoff
+    if (interval < yrclock__INTERVAL_CUTOFF) {
+      yrclock__rafHandle = yrclock__raf(yrclock__run);
+    } else {
+      yrclock__stHandle = setTimeout(yrclock__run, interval);
+    }
+  }
+}
+
+/**
+ * Stop running
+ */
+function yrclock__stop() {
+  if (yrclock__rafHandle) yrclock__raf.cancel(yrclock__rafHandle);
+  if (yrclock__stHandle) clearTimeout(yrclock__stHandle);
+  yrclock__rafHandle = 0;
+  yrclock__stHandle = 0;
+}
+/*≠≠ node_modules/@yr/clock/index.js ≠≠*/
+
+
 /*== node_modules/fbjs/lib/warning.js ==*/
 $m['fbjs/lib/warning'] = { exports: {} };
 /**
@@ -3472,7 +4180,7 @@ var fbjslibwarning__emptyFunction = $m['fbjs/lib/emptyFunction'].exports;
 
 var fbjslibwarning__warning = fbjslibwarning__emptyFunction;
 
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   (function () {
     var printWarning = function printWarning(format) {
       for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -3681,29 +4389,29 @@ function reactlibReactComponentTreeHook__describeID(id) {
   if (ownerID) {
     ownerName = reactlibReactComponentTreeHook__ReactComponentTreeHook.getDisplayName(ownerID);
   }
-  process.env.NODE_ENV !== 'production' ? reactlibReactComponentTreeHook__warning(element, 'ReactComponentTreeHook: Missing React element for debugID %s when ' + 'building stack', id) : void 0;
+  'development' !== 'production' ? reactlibReactComponentTreeHook__warning(element, 'ReactComponentTreeHook: Missing React element for debugID %s when ' + 'building stack', id) : void 0;
   return reactlibReactComponentTreeHook__describeComponentFrame(name, element && element._source, ownerName);
 }
 
 var reactlibReactComponentTreeHook__ReactComponentTreeHook = {
   onSetChildren: function onSetChildren(id, nextChildIDs) {
     var item = reactlibReactComponentTreeHook__getItem(id);
-    !item ? process.env.NODE_ENV !== 'production' ? reactlibReactComponentTreeHook__invariant(false, 'Item must have been set') : reactlibReactComponentTreeHook___prodInvariant('144') : void 0;
+    !item ? 'development' !== 'production' ? reactlibReactComponentTreeHook__invariant(false, 'Item must have been set') : reactlibReactComponentTreeHook___prodInvariant('144') : void 0;
     item.childIDs = nextChildIDs;
 
     for (var i = 0; i < nextChildIDs.length; i++) {
       var nextChildID = nextChildIDs[i];
       var nextChild = reactlibReactComponentTreeHook__getItem(nextChildID);
-      !nextChild ? process.env.NODE_ENV !== 'production' ? reactlibReactComponentTreeHook__invariant(false, 'Expected hook events to fire for the child before its parent includes it in onSetChildren().') : reactlibReactComponentTreeHook___prodInvariant('140') : void 0;
-      !(nextChild.childIDs != null || typeof nextChild.element !== 'object' || nextChild.element == null) ? process.env.NODE_ENV !== 'production' ? reactlibReactComponentTreeHook__invariant(false, 'Expected onSetChildren() to fire for a container child before its parent includes it in onSetChildren().') : reactlibReactComponentTreeHook___prodInvariant('141') : void 0;
-      !nextChild.isMounted ? process.env.NODE_ENV !== 'production' ? reactlibReactComponentTreeHook__invariant(false, 'Expected onMountComponent() to fire for the child before its parent includes it in onSetChildren().') : reactlibReactComponentTreeHook___prodInvariant('71') : void 0;
+      !nextChild ? 'development' !== 'production' ? reactlibReactComponentTreeHook__invariant(false, 'Expected hook events to fire for the child before its parent includes it in onSetChildren().') : reactlibReactComponentTreeHook___prodInvariant('140') : void 0;
+      !(nextChild.childIDs != null || typeof nextChild.element !== 'object' || nextChild.element == null) ? 'development' !== 'production' ? reactlibReactComponentTreeHook__invariant(false, 'Expected onSetChildren() to fire for a container child before its parent includes it in onSetChildren().') : reactlibReactComponentTreeHook___prodInvariant('141') : void 0;
+      !nextChild.isMounted ? 'development' !== 'production' ? reactlibReactComponentTreeHook__invariant(false, 'Expected onMountComponent() to fire for the child before its parent includes it in onSetChildren().') : reactlibReactComponentTreeHook___prodInvariant('71') : void 0;
       if (nextChild.parentID == null) {
         nextChild.parentID = id;
         // TODO: This shouldn't be necessary but mounting a new root during in
         // componentWillMount currently causes not-yet-mounted components to
         // be purged from our tree data so their parent id is missing.
       }
-      !(nextChild.parentID === id) ? process.env.NODE_ENV !== 'production' ? reactlibReactComponentTreeHook__invariant(false, 'Expected onBeforeMountComponent() parent and onSetChildren() to be consistent (%s has parents %s and %s).', nextChildID, nextChild.parentID, id) : reactlibReactComponentTreeHook___prodInvariant('142', nextChildID, nextChild.parentID, id) : void 0;
+      !(nextChild.parentID === id) ? 'development' !== 'production' ? reactlibReactComponentTreeHook__invariant(false, 'Expected onBeforeMountComponent() parent and onSetChildren() to be consistent (%s has parents %s and %s).', nextChildID, nextChild.parentID, id) : reactlibReactComponentTreeHook___prodInvariant('142', nextChildID, nextChild.parentID, id) : void 0;
     }
   },
   onBeforeMountComponent: function onBeforeMountComponent(id, element, parentID) {
@@ -3728,7 +4436,7 @@ var reactlibReactComponentTreeHook__ReactComponentTreeHook = {
   },
   onMountComponent: function onMountComponent(id) {
     var item = reactlibReactComponentTreeHook__getItem(id);
-    !item ? process.env.NODE_ENV !== 'production' ? reactlibReactComponentTreeHook__invariant(false, 'Item must have been set') : reactlibReactComponentTreeHook___prodInvariant('144') : void 0;
+    !item ? 'development' !== 'production' ? reactlibReactComponentTreeHook__invariant(false, 'Item must have been set') : reactlibReactComponentTreeHook___prodInvariant('144') : void 0;
     item.isMounted = true;
     var isRoot = item.parentID === 0;
     if (isRoot) {
@@ -3853,6 +4561,1835 @@ $m['react/lib/ReactComponentTreeHook'].exports = reactlibReactComponentTreeHook_
 /*≠≠ node_modules/react/lib/ReactComponentTreeHook.js ≠≠*/
 
 
+/*== node_modules/react-dom/lib/DOMProperty.js ==*/
+$m['react-dom/lib/DOMProperty'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+var reactdomlibDOMProperty___prodInvariant = $m['react-dom/lib/reactProdInvariant'].exports;
+
+var reactdomlibDOMProperty__invariant = $m['fbjs/lib/invariant'].exports;
+
+function reactdomlibDOMProperty__checkMask(value, bitmask) {
+  return (value & bitmask) === bitmask;
+}
+
+var reactdomlibDOMProperty__DOMPropertyInjection = {
+  /**
+   * Mapping from normalized, camelcased property names to a configuration that
+   * specifies how the associated DOM property should be accessed or rendered.
+   */
+  MUST_USE_PROPERTY: 0x1,
+  HAS_BOOLEAN_VALUE: 0x4,
+  HAS_NUMERIC_VALUE: 0x8,
+  HAS_POSITIVE_NUMERIC_VALUE: 0x10 | 0x8,
+  HAS_OVERLOADED_BOOLEAN_VALUE: 0x20,
+
+  /**
+   * Inject some specialized knowledge about the DOM. This takes a config object
+   * with the following properties:
+   *
+   * isCustomAttribute: function that given an attribute name will return true
+   * if it can be inserted into the DOM verbatim. Useful for data-* or aria-*
+   * attributes where it's impossible to enumerate all of the possible
+   * attribute names,
+   *
+   * Properties: object mapping DOM property name to one of the
+   * DOMPropertyInjection constants or null. If your attribute isn't in here,
+   * it won't get written to the DOM.
+   *
+   * DOMAttributeNames: object mapping React attribute name to the DOM
+   * attribute name. Attribute names not specified use the **lowercase**
+   * normalized name.
+   *
+   * DOMAttributeNamespaces: object mapping React attribute name to the DOM
+   * attribute namespace URL. (Attribute names not specified use no namespace.)
+   *
+   * DOMPropertyNames: similar to DOMAttributeNames but for DOM properties.
+   * Property names not specified use the normalized name.
+   *
+   * DOMMutationMethods: Properties that require special mutation methods. If
+   * `value` is undefined, the mutation method should unset the property.
+   *
+   * @param {object} domPropertyConfig the config as described above.
+   */
+  injectDOMPropertyConfig: function (domPropertyConfig) {
+    var Injection = reactdomlibDOMProperty__DOMPropertyInjection;
+    var Properties = domPropertyConfig.Properties || {};
+    var DOMAttributeNamespaces = domPropertyConfig.DOMAttributeNamespaces || {};
+    var DOMAttributeNames = domPropertyConfig.DOMAttributeNames || {};
+    var DOMPropertyNames = domPropertyConfig.DOMPropertyNames || {};
+    var DOMMutationMethods = domPropertyConfig.DOMMutationMethods || {};
+
+    if (domPropertyConfig.isCustomAttribute) {
+      reactdomlibDOMProperty__DOMProperty._isCustomAttributeFunctions.push(domPropertyConfig.isCustomAttribute);
+    }
+
+    for (var propName in Properties) {
+      !!reactdomlibDOMProperty__DOMProperty.properties.hasOwnProperty(propName) ? 'development' !== 'production' ? reactdomlibDOMProperty__invariant(false, 'injectDOMPropertyConfig(...): You\'re trying to inject DOM property \'%s\' which has already been injected. You may be accidentally injecting the same DOM property config twice, or you may be injecting two configs that have conflicting property names.', propName) : reactdomlibDOMProperty___prodInvariant('48', propName) : void 0;
+
+      var lowerCased = propName.toLowerCase();
+      var propConfig = Properties[propName];
+
+      var propertyInfo = {
+        attributeName: lowerCased,
+        attributeNamespace: null,
+        propertyName: propName,
+        mutationMethod: null,
+
+        mustUseProperty: reactdomlibDOMProperty__checkMask(propConfig, Injection.MUST_USE_PROPERTY),
+        hasBooleanValue: reactdomlibDOMProperty__checkMask(propConfig, Injection.HAS_BOOLEAN_VALUE),
+        hasNumericValue: reactdomlibDOMProperty__checkMask(propConfig, Injection.HAS_NUMERIC_VALUE),
+        hasPositiveNumericValue: reactdomlibDOMProperty__checkMask(propConfig, Injection.HAS_POSITIVE_NUMERIC_VALUE),
+        hasOverloadedBooleanValue: reactdomlibDOMProperty__checkMask(propConfig, Injection.HAS_OVERLOADED_BOOLEAN_VALUE)
+      };
+      !(propertyInfo.hasBooleanValue + propertyInfo.hasNumericValue + propertyInfo.hasOverloadedBooleanValue <= 1) ? 'development' !== 'production' ? reactdomlibDOMProperty__invariant(false, 'DOMProperty: Value can be one of boolean, overloaded boolean, or numeric value, but not a combination: %s', propName) : reactdomlibDOMProperty___prodInvariant('50', propName) : void 0;
+
+      if ('development' !== 'production') {
+        reactdomlibDOMProperty__DOMProperty.getPossibleStandardName[lowerCased] = propName;
+      }
+
+      if (DOMAttributeNames.hasOwnProperty(propName)) {
+        var attributeName = DOMAttributeNames[propName];
+        propertyInfo.attributeName = attributeName;
+        if ('development' !== 'production') {
+          reactdomlibDOMProperty__DOMProperty.getPossibleStandardName[attributeName] = propName;
+        }
+      }
+
+      if (DOMAttributeNamespaces.hasOwnProperty(propName)) {
+        propertyInfo.attributeNamespace = DOMAttributeNamespaces[propName];
+      }
+
+      if (DOMPropertyNames.hasOwnProperty(propName)) {
+        propertyInfo.propertyName = DOMPropertyNames[propName];
+      }
+
+      if (DOMMutationMethods.hasOwnProperty(propName)) {
+        propertyInfo.mutationMethod = DOMMutationMethods[propName];
+      }
+
+      reactdomlibDOMProperty__DOMProperty.properties[propName] = propertyInfo;
+    }
+  }
+};
+
+/* eslint-disable max-len */
+var reactdomlibDOMProperty__ATTRIBUTE_NAME_START_CHAR = ':A-Z_a-z\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD';
+/* eslint-enable max-len */
+
+/**
+ * DOMProperty exports lookup objects that can be used like functions:
+ *
+ *   > DOMProperty.isValid['id']
+ *   true
+ *   > DOMProperty.isValid['foobar']
+ *   undefined
+ *
+ * Although this may be confusing, it performs better in general.
+ *
+ * @see http://jsperf.com/key-exists
+ * @see http://jsperf.com/key-missing
+ */
+var reactdomlibDOMProperty__DOMProperty = {
+
+  ID_ATTRIBUTE_NAME: 'data-reactid',
+  ROOT_ATTRIBUTE_NAME: 'data-reactroot',
+
+  ATTRIBUTE_NAME_START_CHAR: reactdomlibDOMProperty__ATTRIBUTE_NAME_START_CHAR,
+  ATTRIBUTE_NAME_CHAR: reactdomlibDOMProperty__ATTRIBUTE_NAME_START_CHAR + '\\-.0-9\\u00B7\\u0300-\\u036F\\u203F-\\u2040',
+
+  /**
+   * Map from property "standard name" to an object with info about how to set
+   * the property in the DOM. Each object contains:
+   *
+   * attributeName:
+   *   Used when rendering markup or with `*Attribute()`.
+   * attributeNamespace
+   * propertyName:
+   *   Used on DOM node instances. (This includes properties that mutate due to
+   *   external factors.)
+   * mutationMethod:
+   *   If non-null, used instead of the property or `setAttribute()` after
+   *   initial render.
+   * mustUseProperty:
+   *   Whether the property must be accessed and mutated as an object property.
+   * hasBooleanValue:
+   *   Whether the property should be removed when set to a falsey value.
+   * hasNumericValue:
+   *   Whether the property must be numeric or parse as a numeric and should be
+   *   removed when set to a falsey value.
+   * hasPositiveNumericValue:
+   *   Whether the property must be positive numeric or parse as a positive
+   *   numeric and should be removed when set to a falsey value.
+   * hasOverloadedBooleanValue:
+   *   Whether the property can be used as a flag as well as with a value.
+   *   Removed when strictly equal to false; present without a value when
+   *   strictly equal to true; present with a value otherwise.
+   */
+  properties: {},
+
+  /**
+   * Mapping from lowercase property names to the properly cased version, used
+   * to warn in the case of missing properties. Available only in __DEV__.
+   *
+   * autofocus is predefined, because adding it to the property whitelist
+   * causes unintended side effects.
+   *
+   * @type {Object}
+   */
+  getPossibleStandardName: 'development' !== 'production' ? { autofocus: 'autoFocus' } : null,
+
+  /**
+   * All of the isCustomAttribute() functions that have been injected.
+   */
+  _isCustomAttributeFunctions: [],
+
+  /**
+   * Checks whether a property name is a custom attribute.
+   * @method
+   */
+  isCustomAttribute: function (attributeName) {
+    for (var i = 0; i < reactdomlibDOMProperty__DOMProperty._isCustomAttributeFunctions.length; i++) {
+      var isCustomAttributeFn = reactdomlibDOMProperty__DOMProperty._isCustomAttributeFunctions[i];
+      if (isCustomAttributeFn(attributeName)) {
+        return true;
+      }
+    }
+    return false;
+  },
+
+  injection: reactdomlibDOMProperty__DOMPropertyInjection
+};
+
+$m['react-dom/lib/DOMProperty'].exports = reactdomlibDOMProperty__DOMProperty;
+/*≠≠ node_modules/react-dom/lib/DOMProperty.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactDOMInvalidARIAHook.js ==*/
+$m['react-dom/lib/ReactDOMInvalidARIAHook'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+var reactdomlibReactDOMInvalidARIAHook__DOMProperty = $m['react-dom/lib/DOMProperty'].exports;
+var reactdomlibReactDOMInvalidARIAHook__ReactComponentTreeHook = $m['react/lib/ReactComponentTreeHook'].exports;
+
+var reactdomlibReactDOMInvalidARIAHook__warning = $m['fbjs/lib/warning'].exports;
+
+var reactdomlibReactDOMInvalidARIAHook__warnedProperties = {};
+var reactdomlibReactDOMInvalidARIAHook__rARIA = new RegExp('^(aria)-[' + reactdomlibReactDOMInvalidARIAHook__DOMProperty.ATTRIBUTE_NAME_CHAR + ']*$');
+
+function reactdomlibReactDOMInvalidARIAHook__validateProperty(tagName, name, debugID) {
+  if (reactdomlibReactDOMInvalidARIAHook__warnedProperties.hasOwnProperty(name) && reactdomlibReactDOMInvalidARIAHook__warnedProperties[name]) {
+    return true;
+  }
+
+  if (reactdomlibReactDOMInvalidARIAHook__rARIA.test(name)) {
+    var lowerCasedName = name.toLowerCase();
+    var standardName = reactdomlibReactDOMInvalidARIAHook__DOMProperty.getPossibleStandardName.hasOwnProperty(lowerCasedName) ? reactdomlibReactDOMInvalidARIAHook__DOMProperty.getPossibleStandardName[lowerCasedName] : null;
+
+    // If this is an aria-* attribute, but is not listed in the known DOM
+    // DOM properties, then it is an invalid aria-* attribute.
+    if (standardName == null) {
+      reactdomlibReactDOMInvalidARIAHook__warnedProperties[name] = true;
+      return false;
+    }
+    // aria-* attributes should be lowercase; suggest the lowercase version.
+    if (name !== standardName) {
+      'development' !== 'production' ? reactdomlibReactDOMInvalidARIAHook__warning(false, 'Unknown ARIA attribute %s. Did you mean %s?%s', name, standardName, reactdomlibReactDOMInvalidARIAHook__ReactComponentTreeHook.getStackAddendumByID(debugID)) : void 0;
+      reactdomlibReactDOMInvalidARIAHook__warnedProperties[name] = true;
+      return true;
+    }
+  }
+
+  return true;
+}
+
+function reactdomlibReactDOMInvalidARIAHook__warnInvalidARIAProps(debugID, element) {
+  var invalidProps = [];
+
+  for (var key in element.props) {
+    var isValid = reactdomlibReactDOMInvalidARIAHook__validateProperty(element.type, key, debugID);
+    if (!isValid) {
+      invalidProps.push(key);
+    }
+  }
+
+  var unknownPropString = invalidProps.map(function (prop) {
+    return '`' + prop + '`';
+  }).join(', ');
+
+  if (invalidProps.length === 1) {
+    'development' !== 'production' ? reactdomlibReactDOMInvalidARIAHook__warning(false, 'Invalid aria prop %s on <%s> tag. ' + 'For details, see https://fb.me/invalid-aria-prop%s', unknownPropString, element.type, reactdomlibReactDOMInvalidARIAHook__ReactComponentTreeHook.getStackAddendumByID(debugID)) : void 0;
+  } else if (invalidProps.length > 1) {
+    'development' !== 'production' ? reactdomlibReactDOMInvalidARIAHook__warning(false, 'Invalid aria props %s on <%s> tag. ' + 'For details, see https://fb.me/invalid-aria-prop%s', unknownPropString, element.type, reactdomlibReactDOMInvalidARIAHook__ReactComponentTreeHook.getStackAddendumByID(debugID)) : void 0;
+  }
+}
+
+function reactdomlibReactDOMInvalidARIAHook__handleElement(debugID, element) {
+  if (element == null || typeof element.type !== 'string') {
+    return;
+  }
+  if (element.type.indexOf('-') >= 0 || element.props.is) {
+    return;
+  }
+
+  reactdomlibReactDOMInvalidARIAHook__warnInvalidARIAProps(debugID, element);
+}
+
+var reactdomlibReactDOMInvalidARIAHook__ReactDOMInvalidARIAHook = {
+  onBeforeMountComponent: function (debugID, element) {
+    if ('development' !== 'production') {
+      reactdomlibReactDOMInvalidARIAHook__handleElement(debugID, element);
+    }
+  },
+  onBeforeUpdateComponent: function (debugID, element) {
+    if ('development' !== 'production') {
+      reactdomlibReactDOMInvalidARIAHook__handleElement(debugID, element);
+    }
+  }
+};
+
+$m['react-dom/lib/ReactDOMInvalidARIAHook'].exports = reactdomlibReactDOMInvalidARIAHook__ReactDOMInvalidARIAHook;
+/*≠≠ node_modules/react-dom/lib/ReactDOMInvalidARIAHook.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactDOMNullInputValuePropHook.js ==*/
+$m['react-dom/lib/ReactDOMNullInputValuePropHook'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+var reactdomlibReactDOMNullInputValuePropHook__ReactComponentTreeHook = $m['react/lib/ReactComponentTreeHook'].exports;
+
+var reactdomlibReactDOMNullInputValuePropHook__warning = $m['fbjs/lib/warning'].exports;
+
+var reactdomlibReactDOMNullInputValuePropHook__didWarnValueNull = false;
+
+function reactdomlibReactDOMNullInputValuePropHook__handleElement(debugID, element) {
+  if (element == null) {
+    return;
+  }
+  if (element.type !== 'input' && element.type !== 'textarea' && element.type !== 'select') {
+    return;
+  }
+  if (element.props != null && element.props.value === null && !reactdomlibReactDOMNullInputValuePropHook__didWarnValueNull) {
+    'development' !== 'production' ? reactdomlibReactDOMNullInputValuePropHook__warning(false, '`value` prop on `%s` should not be null. ' + 'Consider using the empty string to clear the component or `undefined` ' + 'for uncontrolled components.%s', element.type, reactdomlibReactDOMNullInputValuePropHook__ReactComponentTreeHook.getStackAddendumByID(debugID)) : void 0;
+
+    reactdomlibReactDOMNullInputValuePropHook__didWarnValueNull = true;
+  }
+}
+
+var reactdomlibReactDOMNullInputValuePropHook__ReactDOMNullInputValuePropHook = {
+  onBeforeMountComponent: function (debugID, element) {
+    reactdomlibReactDOMNullInputValuePropHook__handleElement(debugID, element);
+  },
+  onBeforeUpdateComponent: function (debugID, element) {
+    reactdomlibReactDOMNullInputValuePropHook__handleElement(debugID, element);
+  }
+};
+
+$m['react-dom/lib/ReactDOMNullInputValuePropHook'].exports = reactdomlibReactDOMNullInputValuePropHook__ReactDOMNullInputValuePropHook;
+/*≠≠ node_modules/react-dom/lib/ReactDOMNullInputValuePropHook.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/EventPluginRegistry.js ==*/
+$m['react-dom/lib/EventPluginRegistry'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var reactdomlibEventPluginRegistry___prodInvariant = $m['react-dom/lib/reactProdInvariant'].exports;
+
+var reactdomlibEventPluginRegistry__invariant = $m['fbjs/lib/invariant'].exports;
+
+/**
+ * Injectable ordering of event plugins.
+ */
+var reactdomlibEventPluginRegistry__eventPluginOrder = null;
+
+/**
+ * Injectable mapping from names to event plugin modules.
+ */
+var reactdomlibEventPluginRegistry__namesToPlugins = {};
+
+/**
+ * Recomputes the plugin list using the injected plugins and plugin ordering.
+ *
+ * @private
+ */
+function reactdomlibEventPluginRegistry__recomputePluginOrdering() {
+  if (!reactdomlibEventPluginRegistry__eventPluginOrder) {
+    // Wait until an `eventPluginOrder` is injected.
+    return;
+  }
+  for (var pluginName in reactdomlibEventPluginRegistry__namesToPlugins) {
+    var pluginModule = reactdomlibEventPluginRegistry__namesToPlugins[pluginName];
+    var pluginIndex = reactdomlibEventPluginRegistry__eventPluginOrder.indexOf(pluginName);
+    !(pluginIndex > -1) ? 'development' !== 'production' ? reactdomlibEventPluginRegistry__invariant(false, 'EventPluginRegistry: Cannot inject event plugins that do not exist in the plugin ordering, `%s`.', pluginName) : reactdomlibEventPluginRegistry___prodInvariant('96', pluginName) : void 0;
+    if (reactdomlibEventPluginRegistry__EventPluginRegistry.plugins[pluginIndex]) {
+      continue;
+    }
+    !pluginModule.extractEvents ? 'development' !== 'production' ? reactdomlibEventPluginRegistry__invariant(false, 'EventPluginRegistry: Event plugins must implement an `extractEvents` method, but `%s` does not.', pluginName) : reactdomlibEventPluginRegistry___prodInvariant('97', pluginName) : void 0;
+    reactdomlibEventPluginRegistry__EventPluginRegistry.plugins[pluginIndex] = pluginModule;
+    var publishedEvents = pluginModule.eventTypes;
+    for (var eventName in publishedEvents) {
+      !reactdomlibEventPluginRegistry__publishEventForPlugin(publishedEvents[eventName], pluginModule, eventName) ? 'development' !== 'production' ? reactdomlibEventPluginRegistry__invariant(false, 'EventPluginRegistry: Failed to publish event `%s` for plugin `%s`.', eventName, pluginName) : reactdomlibEventPluginRegistry___prodInvariant('98', eventName, pluginName) : void 0;
+    }
+  }
+}
+
+/**
+ * Publishes an event so that it can be dispatched by the supplied plugin.
+ *
+ * @param {object} dispatchConfig Dispatch configuration for the event.
+ * @param {object} PluginModule Plugin publishing the event.
+ * @return {boolean} True if the event was successfully published.
+ * @private
+ */
+function reactdomlibEventPluginRegistry__publishEventForPlugin(dispatchConfig, pluginModule, eventName) {
+  !!reactdomlibEventPluginRegistry__EventPluginRegistry.eventNameDispatchConfigs.hasOwnProperty(eventName) ? 'development' !== 'production' ? reactdomlibEventPluginRegistry__invariant(false, 'EventPluginHub: More than one plugin attempted to publish the same event name, `%s`.', eventName) : reactdomlibEventPluginRegistry___prodInvariant('99', eventName) : void 0;
+  reactdomlibEventPluginRegistry__EventPluginRegistry.eventNameDispatchConfigs[eventName] = dispatchConfig;
+
+  var phasedRegistrationNames = dispatchConfig.phasedRegistrationNames;
+  if (phasedRegistrationNames) {
+    for (var phaseName in phasedRegistrationNames) {
+      if (phasedRegistrationNames.hasOwnProperty(phaseName)) {
+        var phasedRegistrationName = phasedRegistrationNames[phaseName];
+        reactdomlibEventPluginRegistry__publishRegistrationName(phasedRegistrationName, pluginModule, eventName);
+      }
+    }
+    return true;
+  } else if (dispatchConfig.registrationName) {
+    reactdomlibEventPluginRegistry__publishRegistrationName(dispatchConfig.registrationName, pluginModule, eventName);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Publishes a registration name that is used to identify dispatched events and
+ * can be used with `EventPluginHub.putListener` to register listeners.
+ *
+ * @param {string} registrationName Registration name to add.
+ * @param {object} PluginModule Plugin publishing the event.
+ * @private
+ */
+function reactdomlibEventPluginRegistry__publishRegistrationName(registrationName, pluginModule, eventName) {
+  !!reactdomlibEventPluginRegistry__EventPluginRegistry.registrationNameModules[registrationName] ? 'development' !== 'production' ? reactdomlibEventPluginRegistry__invariant(false, 'EventPluginHub: More than one plugin attempted to publish the same registration name, `%s`.', registrationName) : reactdomlibEventPluginRegistry___prodInvariant('100', registrationName) : void 0;
+  reactdomlibEventPluginRegistry__EventPluginRegistry.registrationNameModules[registrationName] = pluginModule;
+  reactdomlibEventPluginRegistry__EventPluginRegistry.registrationNameDependencies[registrationName] = pluginModule.eventTypes[eventName].dependencies;
+
+  if ('development' !== 'production') {
+    var lowerCasedName = registrationName.toLowerCase();
+    reactdomlibEventPluginRegistry__EventPluginRegistry.possibleRegistrationNames[lowerCasedName] = registrationName;
+
+    if (registrationName === 'onDoubleClick') {
+      reactdomlibEventPluginRegistry__EventPluginRegistry.possibleRegistrationNames.ondblclick = registrationName;
+    }
+  }
+}
+
+/**
+ * Registers plugins so that they can extract and dispatch events.
+ *
+ * @see {EventPluginHub}
+ */
+var reactdomlibEventPluginRegistry__EventPluginRegistry = {
+
+  /**
+   * Ordered list of injected plugins.
+   */
+  plugins: [],
+
+  /**
+   * Mapping from event name to dispatch config
+   */
+  eventNameDispatchConfigs: {},
+
+  /**
+   * Mapping from registration name to plugin module
+   */
+  registrationNameModules: {},
+
+  /**
+   * Mapping from registration name to event name
+   */
+  registrationNameDependencies: {},
+
+  /**
+   * Mapping from lowercase registration names to the properly cased version,
+   * used to warn in the case of missing event handlers. Available
+   * only in __DEV__.
+   * @type {Object}
+   */
+  possibleRegistrationNames: 'development' !== 'production' ? {} : null,
+  // Trust the developer to only use possibleRegistrationNames in __DEV__
+
+  /**
+   * Injects an ordering of plugins (by plugin name). This allows the ordering
+   * to be decoupled from injection of the actual plugins so that ordering is
+   * always deterministic regardless of packaging, on-the-fly injection, etc.
+   *
+   * @param {array} InjectedEventPluginOrder
+   * @internal
+   * @see {EventPluginHub.injection.injectEventPluginOrder}
+   */
+  injectEventPluginOrder: function (injectedEventPluginOrder) {
+    !!reactdomlibEventPluginRegistry__eventPluginOrder ? 'development' !== 'production' ? reactdomlibEventPluginRegistry__invariant(false, 'EventPluginRegistry: Cannot inject event plugin ordering more than once. You are likely trying to load more than one copy of React.') : reactdomlibEventPluginRegistry___prodInvariant('101') : void 0;
+    // Clone the ordering so it cannot be dynamically mutated.
+    reactdomlibEventPluginRegistry__eventPluginOrder = Array.prototype.slice.call(injectedEventPluginOrder);
+    reactdomlibEventPluginRegistry__recomputePluginOrdering();
+  },
+
+  /**
+   * Injects plugins to be used by `EventPluginHub`. The plugin names must be
+   * in the ordering injected by `injectEventPluginOrder`.
+   *
+   * Plugins can be injected as part of page initialization or on-the-fly.
+   *
+   * @param {object} injectedNamesToPlugins Map from names to plugin modules.
+   * @internal
+   * @see {EventPluginHub.injection.injectEventPluginsByName}
+   */
+  injectEventPluginsByName: function (injectedNamesToPlugins) {
+    var isOrderingDirty = false;
+    for (var pluginName in injectedNamesToPlugins) {
+      if (!injectedNamesToPlugins.hasOwnProperty(pluginName)) {
+        continue;
+      }
+      var pluginModule = injectedNamesToPlugins[pluginName];
+      if (!reactdomlibEventPluginRegistry__namesToPlugins.hasOwnProperty(pluginName) || reactdomlibEventPluginRegistry__namesToPlugins[pluginName] !== pluginModule) {
+        !!reactdomlibEventPluginRegistry__namesToPlugins[pluginName] ? 'development' !== 'production' ? reactdomlibEventPluginRegistry__invariant(false, 'EventPluginRegistry: Cannot inject two different event plugins using the same name, `%s`.', pluginName) : reactdomlibEventPluginRegistry___prodInvariant('102', pluginName) : void 0;
+        reactdomlibEventPluginRegistry__namesToPlugins[pluginName] = pluginModule;
+        isOrderingDirty = true;
+      }
+    }
+    if (isOrderingDirty) {
+      reactdomlibEventPluginRegistry__recomputePluginOrdering();
+    }
+  },
+
+  /**
+   * Looks up the plugin for the supplied event.
+   *
+   * @param {object} event A synthetic event.
+   * @return {?object} The plugin that created the supplied event.
+   * @internal
+   */
+  getPluginModuleForEvent: function (event) {
+    var dispatchConfig = event.dispatchConfig;
+    if (dispatchConfig.registrationName) {
+      return reactdomlibEventPluginRegistry__EventPluginRegistry.registrationNameModules[dispatchConfig.registrationName] || null;
+    }
+    if (dispatchConfig.phasedRegistrationNames !== undefined) {
+      // pulling phasedRegistrationNames out of dispatchConfig helps Flow see
+      // that it is not undefined.
+      var phasedRegistrationNames = dispatchConfig.phasedRegistrationNames;
+
+      for (var phase in phasedRegistrationNames) {
+        if (!phasedRegistrationNames.hasOwnProperty(phase)) {
+          continue;
+        }
+        var pluginModule = reactdomlibEventPluginRegistry__EventPluginRegistry.registrationNameModules[phasedRegistrationNames[phase]];
+        if (pluginModule) {
+          return pluginModule;
+        }
+      }
+    }
+    return null;
+  },
+
+  /**
+   * Exposed for unit testing.
+   * @private
+   */
+  _resetEventPlugins: function () {
+    reactdomlibEventPluginRegistry__eventPluginOrder = null;
+    for (var pluginName in reactdomlibEventPluginRegistry__namesToPlugins) {
+      if (reactdomlibEventPluginRegistry__namesToPlugins.hasOwnProperty(pluginName)) {
+        delete reactdomlibEventPluginRegistry__namesToPlugins[pluginName];
+      }
+    }
+    reactdomlibEventPluginRegistry__EventPluginRegistry.plugins.length = 0;
+
+    var eventNameDispatchConfigs = reactdomlibEventPluginRegistry__EventPluginRegistry.eventNameDispatchConfigs;
+    for (var eventName in eventNameDispatchConfigs) {
+      if (eventNameDispatchConfigs.hasOwnProperty(eventName)) {
+        delete eventNameDispatchConfigs[eventName];
+      }
+    }
+
+    var registrationNameModules = reactdomlibEventPluginRegistry__EventPluginRegistry.registrationNameModules;
+    for (var registrationName in registrationNameModules) {
+      if (registrationNameModules.hasOwnProperty(registrationName)) {
+        delete registrationNameModules[registrationName];
+      }
+    }
+
+    if ('development' !== 'production') {
+      var possibleRegistrationNames = reactdomlibEventPluginRegistry__EventPluginRegistry.possibleRegistrationNames;
+      for (var lowerCasedName in possibleRegistrationNames) {
+        if (possibleRegistrationNames.hasOwnProperty(lowerCasedName)) {
+          delete possibleRegistrationNames[lowerCasedName];
+        }
+      }
+    }
+  }
+
+};
+
+$m['react-dom/lib/EventPluginRegistry'].exports = reactdomlibEventPluginRegistry__EventPluginRegistry;
+/*≠≠ node_modules/react-dom/lib/EventPluginRegistry.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactDOMUnknownPropertyHook.js ==*/
+$m['react-dom/lib/ReactDOMUnknownPropertyHook'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+var reactdomlibReactDOMUnknownPropertyHook__DOMProperty = $m['react-dom/lib/DOMProperty'].exports;
+var reactdomlibReactDOMUnknownPropertyHook__EventPluginRegistry = $m['react-dom/lib/EventPluginRegistry'].exports;
+var reactdomlibReactDOMUnknownPropertyHook__ReactComponentTreeHook = $m['react/lib/ReactComponentTreeHook'].exports;
+
+var reactdomlibReactDOMUnknownPropertyHook__warning = $m['fbjs/lib/warning'].exports;
+
+if ('development' !== 'production') {
+  var reactdomlibReactDOMUnknownPropertyHook__reactProps = {
+    children: true,
+    dangerouslySetInnerHTML: true,
+    key: true,
+    ref: true,
+
+    autoFocus: true,
+    defaultValue: true,
+    valueLink: true,
+    defaultChecked: true,
+    checkedLink: true,
+    innerHTML: true,
+    suppressContentEditableWarning: true,
+    onFocusIn: true,
+    onFocusOut: true
+  };
+  var reactdomlibReactDOMUnknownPropertyHook__warnedProperties = {};
+
+  var reactdomlibReactDOMUnknownPropertyHook__validateProperty = function (tagName, name, debugID) {
+    if (reactdomlibReactDOMUnknownPropertyHook__DOMProperty.properties.hasOwnProperty(name) || reactdomlibReactDOMUnknownPropertyHook__DOMProperty.isCustomAttribute(name)) {
+      return true;
+    }
+    if (reactdomlibReactDOMUnknownPropertyHook__reactProps.hasOwnProperty(name) && reactdomlibReactDOMUnknownPropertyHook__reactProps[name] || reactdomlibReactDOMUnknownPropertyHook__warnedProperties.hasOwnProperty(name) && reactdomlibReactDOMUnknownPropertyHook__warnedProperties[name]) {
+      return true;
+    }
+    if (reactdomlibReactDOMUnknownPropertyHook__EventPluginRegistry.registrationNameModules.hasOwnProperty(name)) {
+      return true;
+    }
+    reactdomlibReactDOMUnknownPropertyHook__warnedProperties[name] = true;
+    var lowerCasedName = name.toLowerCase();
+
+    // data-* attributes should be lowercase; suggest the lowercase version
+    var standardName = reactdomlibReactDOMUnknownPropertyHook__DOMProperty.isCustomAttribute(lowerCasedName) ? lowerCasedName : reactdomlibReactDOMUnknownPropertyHook__DOMProperty.getPossibleStandardName.hasOwnProperty(lowerCasedName) ? reactdomlibReactDOMUnknownPropertyHook__DOMProperty.getPossibleStandardName[lowerCasedName] : null;
+
+    var registrationName = reactdomlibReactDOMUnknownPropertyHook__EventPluginRegistry.possibleRegistrationNames.hasOwnProperty(lowerCasedName) ? reactdomlibReactDOMUnknownPropertyHook__EventPluginRegistry.possibleRegistrationNames[lowerCasedName] : null;
+
+    if (standardName != null) {
+      'development' !== 'production' ? reactdomlibReactDOMUnknownPropertyHook__warning(false, 'Unknown DOM property %s. Did you mean %s?%s', name, standardName, reactdomlibReactDOMUnknownPropertyHook__ReactComponentTreeHook.getStackAddendumByID(debugID)) : void 0;
+      return true;
+    } else if (registrationName != null) {
+      'development' !== 'production' ? reactdomlibReactDOMUnknownPropertyHook__warning(false, 'Unknown event handler property %s. Did you mean `%s`?%s', name, registrationName, reactdomlibReactDOMUnknownPropertyHook__ReactComponentTreeHook.getStackAddendumByID(debugID)) : void 0;
+      return true;
+    } else {
+      // We were unable to guess which prop the user intended.
+      // It is likely that the user was just blindly spreading/forwarding props
+      // Components should be careful to only render valid props/attributes.
+      // Warning will be invoked in warnUnknownProperties to allow grouping.
+      return false;
+    }
+  };
+}
+
+var reactdomlibReactDOMUnknownPropertyHook__warnUnknownProperties = function (debugID, element) {
+  var unknownProps = [];
+  for (var key in element.props) {
+    var isValid = reactdomlibReactDOMUnknownPropertyHook__validateProperty(element.type, key, debugID);
+    if (!isValid) {
+      unknownProps.push(key);
+    }
+  }
+
+  var unknownPropString = unknownProps.map(function (prop) {
+    return '`' + prop + '`';
+  }).join(', ');
+
+  if (unknownProps.length === 1) {
+    'development' !== 'production' ? reactdomlibReactDOMUnknownPropertyHook__warning(false, 'Unknown prop %s on <%s> tag. Remove this prop from the element. ' + 'For details, see https://fb.me/react-unknown-prop%s', unknownPropString, element.type, reactdomlibReactDOMUnknownPropertyHook__ReactComponentTreeHook.getStackAddendumByID(debugID)) : void 0;
+  } else if (unknownProps.length > 1) {
+    'development' !== 'production' ? reactdomlibReactDOMUnknownPropertyHook__warning(false, 'Unknown props %s on <%s> tag. Remove these props from the element. ' + 'For details, see https://fb.me/react-unknown-prop%s', unknownPropString, element.type, reactdomlibReactDOMUnknownPropertyHook__ReactComponentTreeHook.getStackAddendumByID(debugID)) : void 0;
+  }
+};
+
+function reactdomlibReactDOMUnknownPropertyHook__handleElement(debugID, element) {
+  if (element == null || typeof element.type !== 'string') {
+    return;
+  }
+  if (element.type.indexOf('-') >= 0 || element.props.is) {
+    return;
+  }
+  reactdomlibReactDOMUnknownPropertyHook__warnUnknownProperties(debugID, element);
+}
+
+var reactdomlibReactDOMUnknownPropertyHook__ReactDOMUnknownPropertyHook = {
+  onBeforeMountComponent: function (debugID, element) {
+    reactdomlibReactDOMUnknownPropertyHook__handleElement(debugID, element);
+  },
+  onBeforeUpdateComponent: function (debugID, element) {
+    reactdomlibReactDOMUnknownPropertyHook__handleElement(debugID, element);
+  }
+};
+
+$m['react-dom/lib/ReactDOMUnknownPropertyHook'].exports = reactdomlibReactDOMUnknownPropertyHook__ReactDOMUnknownPropertyHook;
+/*≠≠ node_modules/react-dom/lib/ReactDOMUnknownPropertyHook.js ≠≠*/
+
+
+/*== node_modules/fbjs/lib/performance.js ==*/
+$m['fbjs/lib/performance'] = { exports: {} };
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @typechecks
+ */
+
+var fbjslibperformance__ExecutionEnvironment = $m['fbjs/lib/ExecutionEnvironment'].exports;
+
+var fbjslibperformance__performance;
+
+if (fbjslibperformance__ExecutionEnvironment.canUseDOM) {
+  fbjslibperformance__performance = window.performance || window.msPerformance || window.webkitPerformance;
+}
+
+$m['fbjs/lib/performance'].exports = fbjslibperformance__performance || {};
+/*≠≠ node_modules/fbjs/lib/performance.js ≠≠*/
+
+
+/*== node_modules/fbjs/lib/performanceNow.js ==*/
+$m['fbjs/lib/performanceNow'] = { exports: {} };
+
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @typechecks
+ */
+
+var fbjslibperformanceNow__performance = $m['fbjs/lib/performance'].exports;
+
+var fbjslibperformanceNow__performanceNow;
+
+/**
+ * Detect if we can use `window.performance.now()` and gracefully fallback to
+ * `Date.now()` if it doesn't exist. We need to support Firefox < 15 for now
+ * because of Facebook's testing infrastructure.
+ */
+if (fbjslibperformanceNow__performance.now) {
+  fbjslibperformanceNow__performanceNow = function performanceNow() {
+    return fbjslibperformanceNow__performance.now();
+  };
+} else {
+  fbjslibperformanceNow__performanceNow = function performanceNow() {
+    return Date.now();
+  };
+}
+
+$m['fbjs/lib/performanceNow'].exports = fbjslibperformanceNow__performanceNow;
+/*≠≠ node_modules/fbjs/lib/performanceNow.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactInvalidSetStateWarningHook.js ==*/
+$m['react-dom/lib/ReactInvalidSetStateWarningHook'] = { exports: {} };
+/**
+ * Copyright 2016-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var reactdomlibReactInvalidSetStateWarningHook__warning = $m['fbjs/lib/warning'].exports;
+
+if ('development' !== 'production') {
+  var reactdomlibReactInvalidSetStateWarningHook__processingChildContext = false;
+
+  var reactdomlibReactInvalidSetStateWarningHook__warnInvalidSetState = function () {
+    'development' !== 'production' ? reactdomlibReactInvalidSetStateWarningHook__warning(!reactdomlibReactInvalidSetStateWarningHook__processingChildContext, 'setState(...): Cannot call setState() inside getChildContext()') : void 0;
+  };
+}
+
+var reactdomlibReactInvalidSetStateWarningHook__ReactInvalidSetStateWarningHook = {
+  onBeginProcessingChildContext: function () {
+    reactdomlibReactInvalidSetStateWarningHook__processingChildContext = true;
+  },
+  onEndProcessingChildContext: function () {
+    reactdomlibReactInvalidSetStateWarningHook__processingChildContext = false;
+  },
+  onSetState: function () {
+    reactdomlibReactInvalidSetStateWarningHook__warnInvalidSetState();
+  }
+};
+
+$m['react-dom/lib/ReactInvalidSetStateWarningHook'].exports = reactdomlibReactInvalidSetStateWarningHook__ReactInvalidSetStateWarningHook;
+/*≠≠ node_modules/react-dom/lib/ReactInvalidSetStateWarningHook.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactDebugTool.js ==*/
+$m['react-dom/lib/ReactDebugTool'] = { exports: {} };
+/**
+ * Copyright 2016-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var reactdomlibReactDebugTool__ReactInvalidSetStateWarningHook = $m['react-dom/lib/ReactInvalidSetStateWarningHook'].exports;
+var reactdomlibReactDebugTool__ReactHostOperationHistoryHook = $m['react-dom/lib/ReactHostOperationHistoryHook'].exports;
+var reactdomlibReactDebugTool__ReactComponentTreeHook = $m['react/lib/ReactComponentTreeHook'].exports;
+var reactdomlibReactDebugTool__ExecutionEnvironment = $m['fbjs/lib/ExecutionEnvironment'].exports;
+
+var reactdomlibReactDebugTool__performanceNow = $m['fbjs/lib/performanceNow'].exports;
+var reactdomlibReactDebugTool__warning = $m['fbjs/lib/warning'].exports;
+
+var reactdomlibReactDebugTool__hooks = [];
+var reactdomlibReactDebugTool__didHookThrowForEvent = {};
+
+function reactdomlibReactDebugTool__callHook(event, fn, context, arg1, arg2, arg3, arg4, arg5) {
+  try {
+    fn.call(context, arg1, arg2, arg3, arg4, arg5);
+  } catch (e) {
+    'development' !== 'production' ? reactdomlibReactDebugTool__warning(reactdomlibReactDebugTool__didHookThrowForEvent[event], 'Exception thrown by hook while handling %s: %s', event, e + '\n' + e.stack) : void 0;
+    reactdomlibReactDebugTool__didHookThrowForEvent[event] = true;
+  }
+}
+
+function reactdomlibReactDebugTool__emitEvent(event, arg1, arg2, arg3, arg4, arg5) {
+  for (var i = 0; i < reactdomlibReactDebugTool__hooks.length; i++) {
+    var hook = reactdomlibReactDebugTool__hooks[i];
+    var fn = hook[event];
+    if (fn) {
+      reactdomlibReactDebugTool__callHook(event, fn, hook, arg1, arg2, arg3, arg4, arg5);
+    }
+  }
+}
+
+var reactdomlibReactDebugTool__isProfiling = false;
+var reactdomlibReactDebugTool__flushHistory = [];
+var reactdomlibReactDebugTool__lifeCycleTimerStack = [];
+var reactdomlibReactDebugTool__currentFlushNesting = 0;
+var reactdomlibReactDebugTool__currentFlushMeasurements = [];
+var reactdomlibReactDebugTool__currentFlushStartTime = 0;
+var reactdomlibReactDebugTool__currentTimerDebugID = null;
+var reactdomlibReactDebugTool__currentTimerStartTime = 0;
+var reactdomlibReactDebugTool__currentTimerNestedFlushDuration = 0;
+var reactdomlibReactDebugTool__currentTimerType = null;
+
+var reactdomlibReactDebugTool__lifeCycleTimerHasWarned = false;
+
+function reactdomlibReactDebugTool__clearHistory() {
+  reactdomlibReactDebugTool__ReactComponentTreeHook.purgeUnmountedComponents();
+  reactdomlibReactDebugTool__ReactHostOperationHistoryHook.clearHistory();
+}
+
+function reactdomlibReactDebugTool__getTreeSnapshot(registeredIDs) {
+  return registeredIDs.reduce(function (tree, id) {
+    var ownerID = reactdomlibReactDebugTool__ReactComponentTreeHook.getOwnerID(id);
+    var parentID = reactdomlibReactDebugTool__ReactComponentTreeHook.getParentID(id);
+    tree[id] = {
+      displayName: reactdomlibReactDebugTool__ReactComponentTreeHook.getDisplayName(id),
+      text: reactdomlibReactDebugTool__ReactComponentTreeHook.getText(id),
+      updateCount: reactdomlibReactDebugTool__ReactComponentTreeHook.getUpdateCount(id),
+      childIDs: reactdomlibReactDebugTool__ReactComponentTreeHook.getChildIDs(id),
+      // Text nodes don't have owners but this is close enough.
+      ownerID: ownerID || parentID && reactdomlibReactDebugTool__ReactComponentTreeHook.getOwnerID(parentID) || 0,
+      parentID: parentID
+    };
+    return tree;
+  }, {});
+}
+
+function reactdomlibReactDebugTool__resetMeasurements() {
+  var previousStartTime = reactdomlibReactDebugTool__currentFlushStartTime;
+  var previousMeasurements = reactdomlibReactDebugTool__currentFlushMeasurements;
+  var previousOperations = reactdomlibReactDebugTool__ReactHostOperationHistoryHook.getHistory();
+
+  if (reactdomlibReactDebugTool__currentFlushNesting === 0) {
+    reactdomlibReactDebugTool__currentFlushStartTime = 0;
+    reactdomlibReactDebugTool__currentFlushMeasurements = [];
+    reactdomlibReactDebugTool__clearHistory();
+    return;
+  }
+
+  if (previousMeasurements.length || previousOperations.length) {
+    var registeredIDs = reactdomlibReactDebugTool__ReactComponentTreeHook.getRegisteredIDs();
+    reactdomlibReactDebugTool__flushHistory.push({
+      duration: reactdomlibReactDebugTool__performanceNow() - previousStartTime,
+      measurements: previousMeasurements || [],
+      operations: previousOperations || [],
+      treeSnapshot: reactdomlibReactDebugTool__getTreeSnapshot(registeredIDs)
+    });
+  }
+
+  reactdomlibReactDebugTool__clearHistory();
+  reactdomlibReactDebugTool__currentFlushStartTime = reactdomlibReactDebugTool__performanceNow();
+  reactdomlibReactDebugTool__currentFlushMeasurements = [];
+}
+
+function reactdomlibReactDebugTool__checkDebugID(debugID) {
+  var allowRoot = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+  if (allowRoot && debugID === 0) {
+    return;
+  }
+  if (!debugID) {
+    'development' !== 'production' ? reactdomlibReactDebugTool__warning(false, 'ReactDebugTool: debugID may not be empty.') : void 0;
+  }
+}
+
+function reactdomlibReactDebugTool__beginLifeCycleTimer(debugID, timerType) {
+  if (reactdomlibReactDebugTool__currentFlushNesting === 0) {
+    return;
+  }
+  if (reactdomlibReactDebugTool__currentTimerType && !reactdomlibReactDebugTool__lifeCycleTimerHasWarned) {
+    'development' !== 'production' ? reactdomlibReactDebugTool__warning(false, 'There is an internal error in the React performance measurement code. ' + 'Did not expect %s timer to start while %s timer is still in ' + 'progress for %s instance.', timerType, reactdomlibReactDebugTool__currentTimerType || 'no', debugID === reactdomlibReactDebugTool__currentTimerDebugID ? 'the same' : 'another') : void 0;
+    reactdomlibReactDebugTool__lifeCycleTimerHasWarned = true;
+  }
+  reactdomlibReactDebugTool__currentTimerStartTime = reactdomlibReactDebugTool__performanceNow();
+  reactdomlibReactDebugTool__currentTimerNestedFlushDuration = 0;
+  reactdomlibReactDebugTool__currentTimerDebugID = debugID;
+  reactdomlibReactDebugTool__currentTimerType = timerType;
+}
+
+function reactdomlibReactDebugTool__endLifeCycleTimer(debugID, timerType) {
+  if (reactdomlibReactDebugTool__currentFlushNesting === 0) {
+    return;
+  }
+  if (reactdomlibReactDebugTool__currentTimerType !== timerType && !reactdomlibReactDebugTool__lifeCycleTimerHasWarned) {
+    'development' !== 'production' ? reactdomlibReactDebugTool__warning(false, 'There is an internal error in the React performance measurement code. ' + 'We did not expect %s timer to stop while %s timer is still in ' + 'progress for %s instance. Please report this as a bug in React.', timerType, reactdomlibReactDebugTool__currentTimerType || 'no', debugID === reactdomlibReactDebugTool__currentTimerDebugID ? 'the same' : 'another') : void 0;
+    reactdomlibReactDebugTool__lifeCycleTimerHasWarned = true;
+  }
+  if (reactdomlibReactDebugTool__isProfiling) {
+    reactdomlibReactDebugTool__currentFlushMeasurements.push({
+      timerType: timerType,
+      instanceID: debugID,
+      duration: reactdomlibReactDebugTool__performanceNow() - reactdomlibReactDebugTool__currentTimerStartTime - reactdomlibReactDebugTool__currentTimerNestedFlushDuration
+    });
+  }
+  reactdomlibReactDebugTool__currentTimerStartTime = 0;
+  reactdomlibReactDebugTool__currentTimerNestedFlushDuration = 0;
+  reactdomlibReactDebugTool__currentTimerDebugID = null;
+  reactdomlibReactDebugTool__currentTimerType = null;
+}
+
+function reactdomlibReactDebugTool__pauseCurrentLifeCycleTimer() {
+  var currentTimer = {
+    startTime: reactdomlibReactDebugTool__currentTimerStartTime,
+    nestedFlushStartTime: reactdomlibReactDebugTool__performanceNow(),
+    debugID: reactdomlibReactDebugTool__currentTimerDebugID,
+    timerType: reactdomlibReactDebugTool__currentTimerType
+  };
+  reactdomlibReactDebugTool__lifeCycleTimerStack.push(currentTimer);
+  reactdomlibReactDebugTool__currentTimerStartTime = 0;
+  reactdomlibReactDebugTool__currentTimerNestedFlushDuration = 0;
+  reactdomlibReactDebugTool__currentTimerDebugID = null;
+  reactdomlibReactDebugTool__currentTimerType = null;
+}
+
+function reactdomlibReactDebugTool__resumeCurrentLifeCycleTimer() {
+  var _lifeCycleTimerStack$ = reactdomlibReactDebugTool__lifeCycleTimerStack.pop(),
+      startTime = _lifeCycleTimerStack$.startTime,
+      nestedFlushStartTime = _lifeCycleTimerStack$.nestedFlushStartTime,
+      debugID = _lifeCycleTimerStack$.debugID,
+      timerType = _lifeCycleTimerStack$.timerType;
+
+  var nestedFlushDuration = reactdomlibReactDebugTool__performanceNow() - nestedFlushStartTime;
+  reactdomlibReactDebugTool__currentTimerStartTime = startTime;
+  reactdomlibReactDebugTool__currentTimerNestedFlushDuration += nestedFlushDuration;
+  reactdomlibReactDebugTool__currentTimerDebugID = debugID;
+  reactdomlibReactDebugTool__currentTimerType = timerType;
+}
+
+var reactdomlibReactDebugTool__lastMarkTimeStamp = 0;
+var reactdomlibReactDebugTool__canUsePerformanceMeasure =
+// $FlowFixMe https://github.com/facebook/flow/issues/2345
+typeof performance !== 'undefined' && typeof performance.mark === 'function' && typeof performance.clearMarks === 'function' && typeof performance.measure === 'function' && typeof performance.clearMeasures === 'function';
+
+function reactdomlibReactDebugTool__shouldMark(debugID) {
+  if (!reactdomlibReactDebugTool__isProfiling || !reactdomlibReactDebugTool__canUsePerformanceMeasure) {
+    return false;
+  }
+  var element = reactdomlibReactDebugTool__ReactComponentTreeHook.getElement(debugID);
+  if (element == null || typeof element !== 'object') {
+    return false;
+  }
+  var isHostElement = typeof element.type === 'string';
+  if (isHostElement) {
+    return false;
+  }
+  return true;
+}
+
+function reactdomlibReactDebugTool__markBegin(debugID, markType) {
+  if (!reactdomlibReactDebugTool__shouldMark(debugID)) {
+    return;
+  }
+
+  var markName = debugID + '::' + markType;
+  reactdomlibReactDebugTool__lastMarkTimeStamp = reactdomlibReactDebugTool__performanceNow();
+  performance.mark(markName);
+}
+
+function reactdomlibReactDebugTool__markEnd(debugID, markType) {
+  if (!reactdomlibReactDebugTool__shouldMark(debugID)) {
+    return;
+  }
+
+  var markName = debugID + '::' + markType;
+  var displayName = reactdomlibReactDebugTool__ReactComponentTreeHook.getDisplayName(debugID) || 'Unknown';
+
+  // Chrome has an issue of dropping markers recorded too fast:
+  // https://bugs.chromium.org/p/chromium/issues/detail?id=640652
+  // To work around this, we will not report very small measurements.
+  // I determined the magic number by tweaking it back and forth.
+  // 0.05ms was enough to prevent the issue, but I set it to 0.1ms to be safe.
+  // When the bug is fixed, we can `measure()` unconditionally if we want to.
+  var timeStamp = reactdomlibReactDebugTool__performanceNow();
+  if (timeStamp - reactdomlibReactDebugTool__lastMarkTimeStamp > 0.1) {
+    var measurementName = displayName + ' [' + markType + ']';
+    performance.measure(measurementName, markName);
+  }
+
+  performance.clearMarks(markName);
+  performance.clearMeasures(measurementName);
+}
+
+var reactdomlibReactDebugTool__ReactDebugTool = {
+  addHook: function (hook) {
+    reactdomlibReactDebugTool__hooks.push(hook);
+  },
+  removeHook: function (hook) {
+    for (var i = 0; i < reactdomlibReactDebugTool__hooks.length; i++) {
+      if (reactdomlibReactDebugTool__hooks[i] === hook) {
+        reactdomlibReactDebugTool__hooks.splice(i, 1);
+        i--;
+      }
+    }
+  },
+  isProfiling: function () {
+    return reactdomlibReactDebugTool__isProfiling;
+  },
+  beginProfiling: function () {
+    if (reactdomlibReactDebugTool__isProfiling) {
+      return;
+    }
+
+    reactdomlibReactDebugTool__isProfiling = true;
+    reactdomlibReactDebugTool__flushHistory.length = 0;
+    reactdomlibReactDebugTool__resetMeasurements();
+    reactdomlibReactDebugTool__ReactDebugTool.addHook(reactdomlibReactDebugTool__ReactHostOperationHistoryHook);
+  },
+  endProfiling: function () {
+    if (!reactdomlibReactDebugTool__isProfiling) {
+      return;
+    }
+
+    reactdomlibReactDebugTool__isProfiling = false;
+    reactdomlibReactDebugTool__resetMeasurements();
+    reactdomlibReactDebugTool__ReactDebugTool.removeHook(reactdomlibReactDebugTool__ReactHostOperationHistoryHook);
+  },
+  getFlushHistory: function () {
+    return reactdomlibReactDebugTool__flushHistory;
+  },
+  onBeginFlush: function () {
+    reactdomlibReactDebugTool__currentFlushNesting++;
+    reactdomlibReactDebugTool__resetMeasurements();
+    reactdomlibReactDebugTool__pauseCurrentLifeCycleTimer();
+    reactdomlibReactDebugTool__emitEvent('onBeginFlush');
+  },
+  onEndFlush: function () {
+    reactdomlibReactDebugTool__resetMeasurements();
+    reactdomlibReactDebugTool__currentFlushNesting--;
+    reactdomlibReactDebugTool__resumeCurrentLifeCycleTimer();
+    reactdomlibReactDebugTool__emitEvent('onEndFlush');
+  },
+  onBeginLifeCycleTimer: function (debugID, timerType) {
+    reactdomlibReactDebugTool__checkDebugID(debugID);
+    reactdomlibReactDebugTool__emitEvent('onBeginLifeCycleTimer', debugID, timerType);
+    reactdomlibReactDebugTool__markBegin(debugID, timerType);
+    reactdomlibReactDebugTool__beginLifeCycleTimer(debugID, timerType);
+  },
+  onEndLifeCycleTimer: function (debugID, timerType) {
+    reactdomlibReactDebugTool__checkDebugID(debugID);
+    reactdomlibReactDebugTool__endLifeCycleTimer(debugID, timerType);
+    reactdomlibReactDebugTool__markEnd(debugID, timerType);
+    reactdomlibReactDebugTool__emitEvent('onEndLifeCycleTimer', debugID, timerType);
+  },
+  onBeginProcessingChildContext: function () {
+    reactdomlibReactDebugTool__emitEvent('onBeginProcessingChildContext');
+  },
+  onEndProcessingChildContext: function () {
+    reactdomlibReactDebugTool__emitEvent('onEndProcessingChildContext');
+  },
+  onHostOperation: function (operation) {
+    reactdomlibReactDebugTool__checkDebugID(operation.instanceID);
+    reactdomlibReactDebugTool__emitEvent('onHostOperation', operation);
+  },
+  onSetState: function () {
+    reactdomlibReactDebugTool__emitEvent('onSetState');
+  },
+  onSetChildren: function (debugID, childDebugIDs) {
+    reactdomlibReactDebugTool__checkDebugID(debugID);
+    childDebugIDs.forEach(reactdomlibReactDebugTool__checkDebugID);
+    reactdomlibReactDebugTool__emitEvent('onSetChildren', debugID, childDebugIDs);
+  },
+  onBeforeMountComponent: function (debugID, element, parentDebugID) {
+    reactdomlibReactDebugTool__checkDebugID(debugID);
+    reactdomlibReactDebugTool__checkDebugID(parentDebugID, true);
+    reactdomlibReactDebugTool__emitEvent('onBeforeMountComponent', debugID, element, parentDebugID);
+    reactdomlibReactDebugTool__markBegin(debugID, 'mount');
+  },
+  onMountComponent: function (debugID) {
+    reactdomlibReactDebugTool__checkDebugID(debugID);
+    reactdomlibReactDebugTool__markEnd(debugID, 'mount');
+    reactdomlibReactDebugTool__emitEvent('onMountComponent', debugID);
+  },
+  onBeforeUpdateComponent: function (debugID, element) {
+    reactdomlibReactDebugTool__checkDebugID(debugID);
+    reactdomlibReactDebugTool__emitEvent('onBeforeUpdateComponent', debugID, element);
+    reactdomlibReactDebugTool__markBegin(debugID, 'update');
+  },
+  onUpdateComponent: function (debugID) {
+    reactdomlibReactDebugTool__checkDebugID(debugID);
+    reactdomlibReactDebugTool__markEnd(debugID, 'update');
+    reactdomlibReactDebugTool__emitEvent('onUpdateComponent', debugID);
+  },
+  onBeforeUnmountComponent: function (debugID) {
+    reactdomlibReactDebugTool__checkDebugID(debugID);
+    reactdomlibReactDebugTool__emitEvent('onBeforeUnmountComponent', debugID);
+    reactdomlibReactDebugTool__markBegin(debugID, 'unmount');
+  },
+  onUnmountComponent: function (debugID) {
+    reactdomlibReactDebugTool__checkDebugID(debugID);
+    reactdomlibReactDebugTool__markEnd(debugID, 'unmount');
+    reactdomlibReactDebugTool__emitEvent('onUnmountComponent', debugID);
+  },
+  onTestEvent: function () {
+    reactdomlibReactDebugTool__emitEvent('onTestEvent');
+  }
+};
+
+// TODO remove these when RN/www gets updated
+reactdomlibReactDebugTool__ReactDebugTool.addDevtool = reactdomlibReactDebugTool__ReactDebugTool.addHook;
+reactdomlibReactDebugTool__ReactDebugTool.removeDevtool = reactdomlibReactDebugTool__ReactDebugTool.removeHook;
+
+reactdomlibReactDebugTool__ReactDebugTool.addHook(reactdomlibReactDebugTool__ReactInvalidSetStateWarningHook);
+reactdomlibReactDebugTool__ReactDebugTool.addHook(reactdomlibReactDebugTool__ReactComponentTreeHook);
+var reactdomlibReactDebugTool__url = reactdomlibReactDebugTool__ExecutionEnvironment.canUseDOM && window.location.href || '';
+if (/[?&]react_perf\b/.test(reactdomlibReactDebugTool__url)) {
+  reactdomlibReactDebugTool__ReactDebugTool.beginProfiling();
+}
+
+$m['react-dom/lib/ReactDebugTool'].exports = reactdomlibReactDebugTool__ReactDebugTool;
+/*≠≠ node_modules/react-dom/lib/ReactDebugTool.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactInstrumentation.js ==*/
+$m['react-dom/lib/ReactInstrumentation'] = { exports: {} };
+/**
+ * Copyright 2016-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+// Trust the developer to only use ReactInstrumentation with a __DEV__ check
+
+var reactdomlibReactInstrumentation__debugTool = null;
+
+if ('development' !== 'production') {
+  var reactdomlibReactInstrumentation__ReactDebugTool = $m['react-dom/lib/ReactDebugTool'].exports;
+  reactdomlibReactInstrumentation__debugTool = reactdomlibReactInstrumentation__ReactDebugTool;
+}
+
+$m['react-dom/lib/ReactInstrumentation'].exports = { debugTool: reactdomlibReactInstrumentation__debugTool };
+/*≠≠ node_modules/react-dom/lib/ReactInstrumentation.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/setInnerHTML.js ==*/
+$m['react-dom/lib/setInnerHTML'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+var reactdomlibsetInnerHTML__ExecutionEnvironment = $m['fbjs/lib/ExecutionEnvironment'].exports;
+var reactdomlibsetInnerHTML__DOMNamespaces = $m['react-dom/lib/DOMNamespaces'].exports;
+
+var reactdomlibsetInnerHTML__WHITESPACE_TEST = /^[ \r\n\t\f]/;
+var reactdomlibsetInnerHTML__NONVISIBLE_TEST = /<(!--|link|noscript|meta|script|style)[ \r\n\t\f\/>]/;
+
+var reactdomlibsetInnerHTML__createMicrosoftUnsafeLocalFunction = $m['react-dom/lib/createMicrosoftUnsafeLocalFunction'].exports;
+
+// SVG temp container for IE lacking innerHTML
+var reactdomlibsetInnerHTML__reusableSVGContainer;
+
+/**
+ * Set the innerHTML property of a node, ensuring that whitespace is preserved
+ * even in IE8.
+ *
+ * @param {DOMElement} node
+ * @param {string} html
+ * @internal
+ */
+var reactdomlibsetInnerHTML__setInnerHTML = reactdomlibsetInnerHTML__createMicrosoftUnsafeLocalFunction(function (node, html) {
+  // IE does not have innerHTML for SVG nodes, so instead we inject the
+  // new markup in a temp node and then move the child nodes across into
+  // the target node
+  if (node.namespaceURI === reactdomlibsetInnerHTML__DOMNamespaces.svg && !('innerHTML' in node)) {
+    reactdomlibsetInnerHTML__reusableSVGContainer = reactdomlibsetInnerHTML__reusableSVGContainer || document.createElement('div');
+    reactdomlibsetInnerHTML__reusableSVGContainer.innerHTML = '<svg>' + html + '</svg>';
+    var svgNode = reactdomlibsetInnerHTML__reusableSVGContainer.firstChild;
+    while (svgNode.firstChild) {
+      node.appendChild(svgNode.firstChild);
+    }
+  } else {
+    node.innerHTML = html;
+  }
+});
+
+if (reactdomlibsetInnerHTML__ExecutionEnvironment.canUseDOM) {
+  // IE8: When updating a just created node with innerHTML only leading
+  // whitespace is removed. When updating an existing node with innerHTML
+  // whitespace in root TextNodes is also collapsed.
+  // @see quirksmode.org/bugreports/archives/2004/11/innerhtml_and_t.html
+
+  // Feature detection; only IE8 is known to behave improperly like this.
+  var reactdomlibsetInnerHTML__testElement = document.createElement('div');
+  reactdomlibsetInnerHTML__testElement.innerHTML = ' ';
+  if (reactdomlibsetInnerHTML__testElement.innerHTML === '') {
+    reactdomlibsetInnerHTML__setInnerHTML = function (node, html) {
+      // Magic theory: IE8 supposedly differentiates between added and updated
+      // nodes when processing innerHTML, innerHTML on updated nodes suffers
+      // from worse whitespace behavior. Re-adding a node like this triggers
+      // the initial and more favorable whitespace behavior.
+      // TODO: What to do on a detached node?
+      if (node.parentNode) {
+        node.parentNode.replaceChild(node, node);
+      }
+
+      // We also implement a workaround for non-visible tags disappearing into
+      // thin air on IE8, this only happens if there is no visible text
+      // in-front of the non-visible tags. Piggyback on the whitespace fix
+      // and simply check if any non-visible tags appear in the source.
+      if (reactdomlibsetInnerHTML__WHITESPACE_TEST.test(html) || html[0] === '<' && reactdomlibsetInnerHTML__NONVISIBLE_TEST.test(html)) {
+        // Recover leading whitespace by temporarily prepending any character.
+        // \uFEFF has the potential advantage of being zero-width/invisible.
+        // UglifyJS drops U+FEFF chars when parsing, so use String.fromCharCode
+        // in hopes that this is preserved even if "\uFEFF" is transformed to
+        // the actual Unicode character (by Babel, for example).
+        // https://github.com/mishoo/UglifyJS2/blob/v2.4.20/lib/parse.js#L216
+        node.innerHTML = String.fromCharCode(0xFEFF) + html;
+
+        // deleteData leaves an empty `TextNode` which offsets the index of all
+        // children. Definitely want to avoid this.
+        var textNode = node.firstChild;
+        if (textNode.data.length === 1) {
+          node.removeChild(textNode);
+        } else {
+          textNode.deleteData(0, 1);
+        }
+      } else {
+        node.innerHTML = html;
+      }
+    };
+  }
+  reactdomlibsetInnerHTML__testElement = null;
+}
+
+$m['react-dom/lib/setInnerHTML'].exports = reactdomlibsetInnerHTML__setInnerHTML;
+/*≠≠ node_modules/react-dom/lib/setInnerHTML.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactHostComponent.js ==*/
+$m['react-dom/lib/ReactHostComponent'] = { exports: {} };
+/**
+ * Copyright 2014-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+var reactdomlibReactHostComponent___prodInvariant = $m['react-dom/lib/reactProdInvariant'].exports;
+
+var reactdomlibReactHostComponent__invariant = $m['fbjs/lib/invariant'].exports;
+
+var reactdomlibReactHostComponent__genericComponentClass = null;
+var reactdomlibReactHostComponent__textComponentClass = null;
+
+var reactdomlibReactHostComponent__ReactHostComponentInjection = {
+  // This accepts a class that receives the tag string. This is a catch all
+  // that can render any kind of tag.
+  injectGenericComponentClass: function (componentClass) {
+    reactdomlibReactHostComponent__genericComponentClass = componentClass;
+  },
+  // This accepts a text component class that takes the text string to be
+  // rendered as props.
+  injectTextComponentClass: function (componentClass) {
+    reactdomlibReactHostComponent__textComponentClass = componentClass;
+  }
+};
+
+/**
+ * Get a host internal component class for a specific tag.
+ *
+ * @param {ReactElement} element The element to create.
+ * @return {function} The internal class constructor function.
+ */
+function reactdomlibReactHostComponent__createInternalComponent(element) {
+  !reactdomlibReactHostComponent__genericComponentClass ? 'development' !== 'production' ? reactdomlibReactHostComponent__invariant(false, 'There is no registered component for the tag %s', element.type) : reactdomlibReactHostComponent___prodInvariant('111', element.type) : void 0;
+  return new reactdomlibReactHostComponent__genericComponentClass(element);
+}
+
+/**
+ * @param {ReactText} text
+ * @return {ReactComponent}
+ */
+function reactdomlibReactHostComponent__createInstanceForText(text) {
+  return new reactdomlibReactHostComponent__textComponentClass(text);
+}
+
+/**
+ * @param {ReactComponent} component
+ * @return {boolean}
+ */
+function reactdomlibReactHostComponent__isTextComponent(component) {
+  return component instanceof reactdomlibReactHostComponent__textComponentClass;
+}
+
+var reactdomlibReactHostComponent__ReactHostComponent = {
+  createInternalComponent: reactdomlibReactHostComponent__createInternalComponent,
+  createInstanceForText: reactdomlibReactHostComponent__createInstanceForText,
+  isTextComponent: reactdomlibReactHostComponent__isTextComponent,
+  injection: reactdomlibReactHostComponent__ReactHostComponentInjection
+};
+
+$m['react-dom/lib/ReactHostComponent'].exports = reactdomlibReactHostComponent__ReactHostComponent;
+/*≠≠ node_modules/react-dom/lib/ReactHostComponent.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/checkReactTypeSpec.js ==*/
+$m['react-dom/lib/checkReactTypeSpec'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+var reactdomlibcheckReactTypeSpec___prodInvariant = $m['react-dom/lib/reactProdInvariant'].exports;
+
+var reactdomlibcheckReactTypeSpec__ReactPropTypeLocationNames = $m['react-dom/lib/ReactPropTypeLocationNames'].exports;
+var reactdomlibcheckReactTypeSpec__ReactPropTypesSecret = $m['react-dom/lib/ReactPropTypesSecret'].exports;
+
+var reactdomlibcheckReactTypeSpec__invariant = $m['fbjs/lib/invariant'].exports;
+var reactdomlibcheckReactTypeSpec__warning = $m['fbjs/lib/warning'].exports;
+
+var reactdomlibcheckReactTypeSpec__ReactComponentTreeHook;
+
+if (typeof process !== 'undefined' && process.env && 'development' === 'test') {
+  // Temporary hack.
+  // Inline requires don't work well with Jest:
+  // https://github.com/facebook/react/issues/7240
+  // Remove the inline requires when we don't need them anymore:
+  // https://github.com/facebook/react/pull/7178
+  reactdomlibcheckReactTypeSpec__ReactComponentTreeHook = $m['react/lib/ReactComponentTreeHook'].exports;
+}
+
+var reactdomlibcheckReactTypeSpec__loggedTypeFailures = {};
+
+/**
+ * Assert that the values match with the type specs.
+ * Error messages are memorized and will only be shown once.
+ *
+ * @param {object} typeSpecs Map of name to a ReactPropType
+ * @param {object} values Runtime values that need to be type-checked
+ * @param {string} location e.g. "prop", "context", "child context"
+ * @param {string} componentName Name of the component for error messages.
+ * @param {?object} element The React element that is being type-checked
+ * @param {?number} debugID The React component instance that is being type-checked
+ * @private
+ */
+function reactdomlibcheckReactTypeSpec__checkReactTypeSpec(typeSpecs, values, location, componentName, element, debugID) {
+  for (var typeSpecName in typeSpecs) {
+    if (typeSpecs.hasOwnProperty(typeSpecName)) {
+      var error;
+      // Prop type validation may throw. In case they do, we don't want to
+      // fail the render phase where it didn't fail before. So we log it.
+      // After these have been cleaned up, we'll let them throw.
+      try {
+        // This is intentionally an invariant that gets caught. It's the same
+        // behavior as without this statement except with a better message.
+        !(typeof typeSpecs[typeSpecName] === 'function') ? 'development' !== 'production' ? reactdomlibcheckReactTypeSpec__invariant(false, '%s: %s type `%s` is invalid; it must be a function, usually from React.PropTypes.', componentName || 'React class', reactdomlibcheckReactTypeSpec__ReactPropTypeLocationNames[location], typeSpecName) : reactdomlibcheckReactTypeSpec___prodInvariant('84', componentName || 'React class', reactdomlibcheckReactTypeSpec__ReactPropTypeLocationNames[location], typeSpecName) : void 0;
+        error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, reactdomlibcheckReactTypeSpec__ReactPropTypesSecret);
+      } catch (ex) {
+        error = ex;
+      }
+      'development' !== 'production' ? reactdomlibcheckReactTypeSpec__warning(!error || error instanceof Error, '%s: type specification of %s `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', reactdomlibcheckReactTypeSpec__ReactPropTypeLocationNames[location], typeSpecName, typeof error) : void 0;
+      if (error instanceof Error && !(error.message in reactdomlibcheckReactTypeSpec__loggedTypeFailures)) {
+        // Only monitor this failure once because there tends to be a lot of the
+        // same error.
+        reactdomlibcheckReactTypeSpec__loggedTypeFailures[error.message] = true;
+
+        var componentStackInfo = '';
+
+        if ('development' !== 'production') {
+          if (!reactdomlibcheckReactTypeSpec__ReactComponentTreeHook) {
+            reactdomlibcheckReactTypeSpec__ReactComponentTreeHook = $m['react/lib/ReactComponentTreeHook'].exports;
+          }
+          if (debugID !== null) {
+            componentStackInfo = reactdomlibcheckReactTypeSpec__ReactComponentTreeHook.getStackAddendumByID(debugID);
+          } else if (element !== null) {
+            componentStackInfo = reactdomlibcheckReactTypeSpec__ReactComponentTreeHook.getCurrentStackAddendum(element);
+          }
+        }
+
+        'development' !== 'production' ? reactdomlibcheckReactTypeSpec__warning(false, 'Failed %s type: %s%s', location, error.message, componentStackInfo) : void 0;
+      }
+    }
+  }
+}
+
+$m['react-dom/lib/checkReactTypeSpec'].exports = reactdomlibcheckReactTypeSpec__checkReactTypeSpec;
+/*≠≠ node_modules/react-dom/lib/checkReactTypeSpec.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactOwner.js ==*/
+$m['react-dom/lib/ReactOwner'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var reactdomlibReactOwner___prodInvariant = $m['react-dom/lib/reactProdInvariant'].exports;
+
+var reactdomlibReactOwner__invariant = $m['fbjs/lib/invariant'].exports;
+
+/**
+ * @param {?object} object
+ * @return {boolean} True if `object` is a valid owner.
+ * @final
+ */
+function reactdomlibReactOwner__isValidOwner(object) {
+  return !!(object && typeof object.attachRef === 'function' && typeof object.detachRef === 'function');
+}
+
+/**
+ * ReactOwners are capable of storing references to owned components.
+ *
+ * All components are capable of //being// referenced by owner components, but
+ * only ReactOwner components are capable of //referencing// owned components.
+ * The named reference is known as a "ref".
+ *
+ * Refs are available when mounted and updated during reconciliation.
+ *
+ *   var MyComponent = React.createClass({
+ *     render: function() {
+ *       return (
+ *         <div onClick={this.handleClick}>
+ *           <CustomComponent ref="custom" />
+ *         </div>
+ *       );
+ *     },
+ *     handleClick: function() {
+ *       this.refs.custom.handleClick();
+ *     },
+ *     componentDidMount: function() {
+ *       this.refs.custom.initialize();
+ *     }
+ *   });
+ *
+ * Refs should rarely be used. When refs are used, they should only be done to
+ * control data that is not handled by React's data flow.
+ *
+ * @class ReactOwner
+ */
+var reactdomlibReactOwner__ReactOwner = {
+  /**
+   * Adds a component by ref to an owner component.
+   *
+   * @param {ReactComponent} component Component to reference.
+   * @param {string} ref Name by which to refer to the component.
+   * @param {ReactOwner} owner Component on which to record the ref.
+   * @final
+   * @internal
+   */
+  addComponentAsRefTo: function (component, ref, owner) {
+    !reactdomlibReactOwner__isValidOwner(owner) ? 'development' !== 'production' ? reactdomlibReactOwner__invariant(false, 'addComponentAsRefTo(...): Only a ReactOwner can have refs. You might be adding a ref to a component that was not created inside a component\'s `render` method, or you have multiple copies of React loaded (details: https://fb.me/react-refs-must-have-owner).') : reactdomlibReactOwner___prodInvariant('119') : void 0;
+    owner.attachRef(ref, component);
+  },
+
+  /**
+   * Removes a component by ref from an owner component.
+   *
+   * @param {ReactComponent} component Component to dereference.
+   * @param {string} ref Name of the ref to remove.
+   * @param {ReactOwner} owner Component on which the ref is recorded.
+   * @final
+   * @internal
+   */
+  removeComponentAsRefFrom: function (component, ref, owner) {
+    !reactdomlibReactOwner__isValidOwner(owner) ? 'development' !== 'production' ? reactdomlibReactOwner__invariant(false, 'removeComponentAsRefFrom(...): Only a ReactOwner can have refs. You might be removing a ref to a component that was not created inside a component\'s `render` method, or you have multiple copies of React loaded (details: https://fb.me/react-refs-must-have-owner).') : reactdomlibReactOwner___prodInvariant('120') : void 0;
+    var ownerPublicInstance = owner.getPublicInstance();
+    // Check that `component`'s owner is still alive and that `component` is still the current ref
+    // because we do not want to detach the ref if another component stole it.
+    if (ownerPublicInstance && ownerPublicInstance.refs[ref] === component.getPublicInstance()) {
+      owner.detachRef(ref);
+    }
+  }
+
+};
+
+$m['react-dom/lib/ReactOwner'].exports = reactdomlibReactOwner__ReactOwner;
+/*≠≠ node_modules/react-dom/lib/ReactOwner.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactRef.js ==*/
+$m['react-dom/lib/ReactRef'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var reactdomlibReactRef__ReactOwner = $m['react-dom/lib/ReactOwner'].exports;
+
+var reactdomlibReactRef__ReactRef = {};
+
+function reactdomlibReactRef__attachRef(ref, component, owner) {
+  if (typeof ref === 'function') {
+    ref(component.getPublicInstance());
+  } else {
+    // Legacy ref
+    reactdomlibReactRef__ReactOwner.addComponentAsRefTo(component, ref, owner);
+  }
+}
+
+function reactdomlibReactRef__detachRef(ref, component, owner) {
+  if (typeof ref === 'function') {
+    ref(null);
+  } else {
+    // Legacy ref
+    reactdomlibReactRef__ReactOwner.removeComponentAsRefFrom(component, ref, owner);
+  }
+}
+
+reactdomlibReactRef__ReactRef.attachRefs = function (instance, element) {
+  if (element === null || typeof element !== 'object') {
+    return;
+  }
+  var ref = element.ref;
+  if (ref != null) {
+    reactdomlibReactRef__attachRef(ref, instance, element._owner);
+  }
+};
+
+reactdomlibReactRef__ReactRef.shouldUpdateRefs = function (prevElement, nextElement) {
+  // If either the owner or a `ref` has changed, make sure the newest owner
+  // has stored a reference to `this`, and the previous owner (if different)
+  // has forgotten the reference to `this`. We use the element instead
+  // of the public this.props because the post processing cannot determine
+  // a ref. The ref conceptually lives on the element.
+
+  // TODO: Should this even be possible? The owner cannot change because
+  // it's forbidden by shouldUpdateReactComponent. The ref can change
+  // if you swap the keys of but not the refs. Reconsider where this check
+  // is made. It probably belongs where the key checking and
+  // instantiateReactComponent is done.
+
+  var prevRef = null;
+  var prevOwner = null;
+  if (prevElement !== null && typeof prevElement === 'object') {
+    prevRef = prevElement.ref;
+    prevOwner = prevElement._owner;
+  }
+
+  var nextRef = null;
+  var nextOwner = null;
+  if (nextElement !== null && typeof nextElement === 'object') {
+    nextRef = nextElement.ref;
+    nextOwner = nextElement._owner;
+  }
+
+  return prevRef !== nextRef ||
+  // If owner changes but we have an unchanged function ref, don't update refs
+  typeof nextRef === 'string' && nextOwner !== prevOwner;
+};
+
+reactdomlibReactRef__ReactRef.detachRefs = function (instance, element) {
+  if (element === null || typeof element !== 'object') {
+    return;
+  }
+  var ref = element.ref;
+  if (ref != null) {
+    reactdomlibReactRef__detachRef(ref, instance, element._owner);
+  }
+};
+
+$m['react-dom/lib/ReactRef'].exports = reactdomlibReactRef__ReactRef;
+/*≠≠ node_modules/react-dom/lib/ReactRef.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactReconciler.js ==*/
+$m['react-dom/lib/ReactReconciler'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+var reactdomlibReactReconciler__ReactRef = $m['react-dom/lib/ReactRef'].exports;
+var reactdomlibReactReconciler__ReactInstrumentation = $m['react-dom/lib/ReactInstrumentation'].exports;
+
+var reactdomlibReactReconciler__warning = $m['fbjs/lib/warning'].exports;
+
+/**
+ * Helper to call ReactRef.attachRefs with this composite component, split out
+ * to avoid allocations in the transaction mount-ready queue.
+ */
+function reactdomlibReactReconciler__attachRefs() {
+  reactdomlibReactReconciler__ReactRef.attachRefs(this, this._currentElement);
+}
+
+var reactdomlibReactReconciler__ReactReconciler = {
+
+  /**
+   * Initializes the component, renders markup, and registers event listeners.
+   *
+   * @param {ReactComponent} internalInstance
+   * @param {ReactReconcileTransaction|ReactServerRenderingTransaction} transaction
+   * @param {?object} the containing host component instance
+   * @param {?object} info about the host container
+   * @return {?string} Rendered markup to be inserted into the DOM.
+   * @final
+   * @internal
+   */
+  mountComponent: function (internalInstance, transaction, hostParent, hostContainerInfo, context, parentDebugID // 0 in production and for roots
+  ) {
+    if ('development' !== 'production') {
+      if (internalInstance._debugID !== 0) {
+        reactdomlibReactReconciler__ReactInstrumentation.debugTool.onBeforeMountComponent(internalInstance._debugID, internalInstance._currentElement, parentDebugID);
+      }
+    }
+    var markup = internalInstance.mountComponent(transaction, hostParent, hostContainerInfo, context, parentDebugID);
+    if (internalInstance._currentElement && internalInstance._currentElement.ref != null) {
+      transaction.getReactMountReady().enqueue(reactdomlibReactReconciler__attachRefs, internalInstance);
+    }
+    if ('development' !== 'production') {
+      if (internalInstance._debugID !== 0) {
+        reactdomlibReactReconciler__ReactInstrumentation.debugTool.onMountComponent(internalInstance._debugID);
+      }
+    }
+    return markup;
+  },
+
+  /**
+   * Returns a value that can be passed to
+   * ReactComponentEnvironment.replaceNodeWithMarkup.
+   */
+  getHostNode: function (internalInstance) {
+    return internalInstance.getHostNode();
+  },
+
+  /**
+   * Releases any resources allocated by `mountComponent`.
+   *
+   * @final
+   * @internal
+   */
+  unmountComponent: function (internalInstance, safely) {
+    if ('development' !== 'production') {
+      if (internalInstance._debugID !== 0) {
+        reactdomlibReactReconciler__ReactInstrumentation.debugTool.onBeforeUnmountComponent(internalInstance._debugID);
+      }
+    }
+    reactdomlibReactReconciler__ReactRef.detachRefs(internalInstance, internalInstance._currentElement);
+    internalInstance.unmountComponent(safely);
+    if ('development' !== 'production') {
+      if (internalInstance._debugID !== 0) {
+        reactdomlibReactReconciler__ReactInstrumentation.debugTool.onUnmountComponent(internalInstance._debugID);
+      }
+    }
+  },
+
+  /**
+   * Update a component using a new element.
+   *
+   * @param {ReactComponent} internalInstance
+   * @param {ReactElement} nextElement
+   * @param {ReactReconcileTransaction} transaction
+   * @param {object} context
+   * @internal
+   */
+  receiveComponent: function (internalInstance, nextElement, transaction, context) {
+    var prevElement = internalInstance._currentElement;
+
+    if (nextElement === prevElement && context === internalInstance._context) {
+      // Since elements are immutable after the owner is rendered,
+      // we can do a cheap identity compare here to determine if this is a
+      // superfluous reconcile. It's possible for state to be mutable but such
+      // change should trigger an update of the owner which would recreate
+      // the element. We explicitly check for the existence of an owner since
+      // it's possible for an element created outside a composite to be
+      // deeply mutated and reused.
+
+      // TODO: Bailing out early is just a perf optimization right?
+      // TODO: Removing the return statement should affect correctness?
+      return;
+    }
+
+    if ('development' !== 'production') {
+      if (internalInstance._debugID !== 0) {
+        reactdomlibReactReconciler__ReactInstrumentation.debugTool.onBeforeUpdateComponent(internalInstance._debugID, nextElement);
+      }
+    }
+
+    var refsChanged = reactdomlibReactReconciler__ReactRef.shouldUpdateRefs(prevElement, nextElement);
+
+    if (refsChanged) {
+      reactdomlibReactReconciler__ReactRef.detachRefs(internalInstance, prevElement);
+    }
+
+    internalInstance.receiveComponent(nextElement, transaction, context);
+
+    if (refsChanged && internalInstance._currentElement && internalInstance._currentElement.ref != null) {
+      transaction.getReactMountReady().enqueue(reactdomlibReactReconciler__attachRefs, internalInstance);
+    }
+
+    if ('development' !== 'production') {
+      if (internalInstance._debugID !== 0) {
+        reactdomlibReactReconciler__ReactInstrumentation.debugTool.onUpdateComponent(internalInstance._debugID);
+      }
+    }
+  },
+
+  /**
+   * Flush any dirty changes in a component.
+   *
+   * @param {ReactComponent} internalInstance
+   * @param {ReactReconcileTransaction} transaction
+   * @internal
+   */
+  performUpdateIfNecessary: function (internalInstance, transaction, updateBatchNumber) {
+    if (internalInstance._updateBatchNumber !== updateBatchNumber) {
+      // The component's enqueued batch number should always be the current
+      // batch or the following one.
+      'development' !== 'production' ? reactdomlibReactReconciler__warning(internalInstance._updateBatchNumber == null || internalInstance._updateBatchNumber === updateBatchNumber + 1, 'performUpdateIfNecessary: Unexpected batch number (current %s, ' + 'pending %s)', updateBatchNumber, internalInstance._updateBatchNumber) : void 0;
+      return;
+    }
+    if ('development' !== 'production') {
+      if (internalInstance._debugID !== 0) {
+        reactdomlibReactReconciler__ReactInstrumentation.debugTool.onBeforeUpdateComponent(internalInstance._debugID, internalInstance._currentElement);
+      }
+    }
+    internalInstance.performUpdateIfNecessary(transaction);
+    if ('development' !== 'production') {
+      if (internalInstance._debugID !== 0) {
+        reactdomlibReactReconciler__ReactInstrumentation.debugTool.onUpdateComponent(internalInstance._debugID);
+      }
+    }
+  }
+
+};
+
+$m['react-dom/lib/ReactReconciler'].exports = reactdomlibReactReconciler__ReactReconciler;
+/*≠≠ node_modules/react-dom/lib/ReactReconciler.js ≠≠*/
+
+
 /*== node_modules/react/lib/checkReactTypeSpec.js ==*/
 $m['react/lib/checkReactTypeSpec'] = { exports: {} };
 /**
@@ -3875,7 +6412,7 @@ var reactlibcheckReactTypeSpec__warning = $m['fbjs/lib/warning'].exports;
 
 var reactlibcheckReactTypeSpec__ReactComponentTreeHook;
 
-if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'test') {
+if (typeof process !== 'undefined' && process.env && 'development' === 'test') {
   // Temporary hack.
   // Inline requires don't work well with Jest:
   // https://github.com/facebook/react/issues/7240
@@ -3908,12 +6445,12 @@ function reactlibcheckReactTypeSpec__checkReactTypeSpec(typeSpecs, values, locat
       try {
         // This is intentionally an invariant that gets caught. It's the same
         // behavior as without this statement except with a better message.
-        !(typeof typeSpecs[typeSpecName] === 'function') ? process.env.NODE_ENV !== 'production' ? reactlibcheckReactTypeSpec__invariant(false, '%s: %s type `%s` is invalid; it must be a function, usually from React.PropTypes.', componentName || 'React class', reactlibcheckReactTypeSpec__ReactPropTypeLocationNames[location], typeSpecName) : reactlibcheckReactTypeSpec___prodInvariant('84', componentName || 'React class', reactlibcheckReactTypeSpec__ReactPropTypeLocationNames[location], typeSpecName) : void 0;
+        !(typeof typeSpecs[typeSpecName] === 'function') ? 'development' !== 'production' ? reactlibcheckReactTypeSpec__invariant(false, '%s: %s type `%s` is invalid; it must be a function, usually from React.PropTypes.', componentName || 'React class', reactlibcheckReactTypeSpec__ReactPropTypeLocationNames[location], typeSpecName) : reactlibcheckReactTypeSpec___prodInvariant('84', componentName || 'React class', reactlibcheckReactTypeSpec__ReactPropTypeLocationNames[location], typeSpecName) : void 0;
         error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, reactlibcheckReactTypeSpec__ReactPropTypesSecret);
       } catch (ex) {
         error = ex;
       }
-      process.env.NODE_ENV !== 'production' ? reactlibcheckReactTypeSpec__warning(!error || error instanceof Error, '%s: type specification of %s `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', reactlibcheckReactTypeSpec__ReactPropTypeLocationNames[location], typeSpecName, typeof error) : void 0;
+      'development' !== 'production' ? reactlibcheckReactTypeSpec__warning(!error || error instanceof Error, '%s: type specification of %s `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', reactlibcheckReactTypeSpec__ReactPropTypeLocationNames[location], typeSpecName, typeof error) : void 0;
       if (error instanceof Error && !(error.message in reactlibcheckReactTypeSpec__loggedTypeFailures)) {
         // Only monitor this failure once because there tends to be a lot of the
         // same error.
@@ -3921,7 +6458,7 @@ function reactlibcheckReactTypeSpec__checkReactTypeSpec(typeSpecs, values, locat
 
         var componentStackInfo = '';
 
-        if (process.env.NODE_ENV !== 'production') {
+        if ('development' !== 'production') {
           if (!reactlibcheckReactTypeSpec__ReactComponentTreeHook) {
             reactlibcheckReactTypeSpec__ReactComponentTreeHook = $m['react/lib/ReactComponentTreeHook'].exports;
           }
@@ -3932,7 +6469,7 @@ function reactlibcheckReactTypeSpec__checkReactTypeSpec(typeSpecs, values, locat
           }
         }
 
-        process.env.NODE_ENV !== 'production' ? reactlibcheckReactTypeSpec__warning(false, 'Failed %s type: %s%s', location, error.message, componentStackInfo) : void 0;
+        'development' !== 'production' ? reactlibcheckReactTypeSpec__warning(false, 'Failed %s type: %s%s', location, error.message, componentStackInfo) : void 0;
       }
     }
   }
@@ -3974,7 +6511,7 @@ var reactlibReactElement__RESERVED_PROPS = {
 var reactlibReactElement__specialPropKeyWarningShown, reactlibReactElement__specialPropRefWarningShown;
 
 function reactlibReactElement__hasValidRef(config) {
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     if (reactlibReactElement__hasOwnProperty.call(config, 'ref')) {
       var getter = Object.getOwnPropertyDescriptor(config, 'ref').get;
       if (getter && getter.isReactWarning) {
@@ -3986,7 +6523,7 @@ function reactlibReactElement__hasValidRef(config) {
 }
 
 function reactlibReactElement__hasValidKey(config) {
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     if (reactlibReactElement__hasOwnProperty.call(config, 'key')) {
       var getter = Object.getOwnPropertyDescriptor(config, 'key').get;
       if (getter && getter.isReactWarning) {
@@ -4001,7 +6538,7 @@ function reactlibReactElement__defineKeyPropWarningGetter(props, displayName) {
   var warnAboutAccessingKey = function warnAboutAccessingKey() {
     if (!reactlibReactElement__specialPropKeyWarningShown) {
       reactlibReactElement__specialPropKeyWarningShown = true;
-      process.env.NODE_ENV !== 'production' ? reactlibReactElement__warning(false, '%s: `key` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://fb.me/react-special-props)', displayName) : void 0;
+      'development' !== 'production' ? reactlibReactElement__warning(false, '%s: `key` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://fb.me/react-special-props)', displayName) : void 0;
     }
   };
   warnAboutAccessingKey.isReactWarning = true;
@@ -4015,7 +6552,7 @@ function reactlibReactElement__defineRefPropWarningGetter(props, displayName) {
   var warnAboutAccessingRef = function warnAboutAccessingRef() {
     if (!reactlibReactElement__specialPropRefWarningShown) {
       reactlibReactElement__specialPropRefWarningShown = true;
-      process.env.NODE_ENV !== 'production' ? reactlibReactElement__warning(false, '%s: `ref` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://fb.me/react-special-props)', displayName) : void 0;
+      'development' !== 'production' ? reactlibReactElement__warning(false, '%s: `ref` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://fb.me/react-special-props)', displayName) : void 0;
     }
   };
   warnAboutAccessingRef.isReactWarning = true;
@@ -4060,7 +6597,7 @@ var reactlibReactElement__ReactElement = function reactlibReactElement__ReactEle
     _owner: owner
   };
 
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     // The validation flag is currently mutative. We put it on
     // an external backing store so that we can freeze the whole object.
     // This can be replaced with a WeakMap once they are implemented in
@@ -4150,7 +6687,7 @@ reactlibReactElement__ReactElement.createElement = function (type, config, child
     for (var i = 0; i < childrenLength; i++) {
       childArray[i] = arguments[i + 2];
     }
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       if (Object.freeze) {
         Object.freeze(childArray);
       }
@@ -4167,7 +6704,7 @@ reactlibReactElement__ReactElement.createElement = function (type, config, child
       }
     }
   }
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     if (key || ref) {
       if (typeof props.$$typeof === 'undefined' || props.$$typeof !== reactlibReactElement__REACT_ELEMENT_TYPE) {
         var displayName = typeof type === 'function' ? type.displayName || type.name || 'Unknown' : type;
@@ -4377,7 +6914,7 @@ function reactlibReactElementValidator__validateExplicitKey(element, parentType)
     childOwner = ' It was passed a child from ' + element._owner.getName() + '.';
   }
 
-  process.env.NODE_ENV !== 'production' ? reactlibReactElementValidator__warning(false, 'Each child in an array or iterator should have a unique "key" prop.' + '%s%s See https://fb.me/react-warning-keys for more information.%s', currentComponentErrorInfo, childOwner, reactlibReactElementValidator__ReactComponentTreeHook.getCurrentStackAddendum(element)) : void 0;
+  'development' !== 'production' ? reactlibReactElementValidator__warning(false, 'Each child in an array or iterator should have a unique "key" prop.' + '%s%s See https://fb.me/react-warning-keys for more information.%s', currentComponentErrorInfo, childOwner, reactlibReactElementValidator__ReactComponentTreeHook.getCurrentStackAddendum(element)) : void 0;
 }
 
 /**
@@ -4438,7 +6975,7 @@ function reactlibReactElementValidator__validatePropTypes(element) {
     reactlibReactElementValidator__checkReactTypeSpec(componentClass.propTypes, element.props, 'prop', name, element, null);
   }
   if (typeof componentClass.getDefaultProps === 'function') {
-    process.env.NODE_ENV !== 'production' ? reactlibReactElementValidator__warning(componentClass.getDefaultProps.isReactClassApproved, 'getDefaultProps is only used on classic React.createClass ' + 'definitions. Use a static property named `defaultProps` instead.') : void 0;
+    'development' !== 'production' ? reactlibReactElementValidator__warning(componentClass.getDefaultProps.isReactClassApproved, 'getDefaultProps is only used on classic React.createClass ' + 'definitions. Use a static property named `defaultProps` instead.') : void 0;
   }
 }
 
@@ -4449,7 +6986,14 @@ var reactlibReactElementValidator__ReactElementValidator = {
     // We warn in this case but don't throw. We expect the element creation to
     // succeed and there will likely be errors in render.
     if (!validType) {
-      process.env.NODE_ENV !== 'production' ? reactlibReactElementValidator__warning(false, 'React.createElement: type should not be null, undefined, boolean, or ' + 'number. It should be a string (for DOM elements) or a ReactClass ' + '(for composite components).%s', reactlibReactElementValidator__getDeclarationErrorAddendum()) : void 0;
+      if (typeof type !== 'function' && typeof type !== 'string') {
+        var info = '';
+        if (type === undefined || typeof type === 'object' && type !== null && Object.keys(type).length === 0) {
+          info += ' You likely forgot to export your component from the file ' + 'it\'s defined in.';
+        }
+        info += reactlibReactElementValidator__getDeclarationErrorAddendum();
+        'development' !== 'production' ? reactlibReactElementValidator__warning(false, 'React.createElement: type is invalid -- expected a string (for ' + 'built-in components) or a class/function (for composite ' + 'components) but got: %s.%s', type == null ? type : typeof type, info) : void 0;
+      }
     }
 
     var element = reactlibReactElementValidator__ReactElement.createElement.apply(this, arguments);
@@ -4481,12 +7025,12 @@ var reactlibReactElementValidator__ReactElementValidator = {
     // Legacy hook TODO: Warn if this is accessed
     validatedFactory.type = type;
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       if (reactlibReactElementValidator__canDefineProperty) {
         Object.defineProperty(validatedFactory, 'type', {
           enumerable: false,
           get: function get() {
-            process.env.NODE_ENV !== 'production' ? reactlibReactElementValidator__warning(false, 'Factory.type is deprecated. Access the class directly ' + 'before passing it to createFactory.') : void 0;
+            'development' !== 'production' ? reactlibReactElementValidator__warning(false, 'Factory.type is deprecated. Access the class directly ' + 'before passing it to createFactory.') : void 0;
             Object.defineProperty(this, 'type', {
               value: type
             });
@@ -4547,7 +7091,7 @@ var reactlibonlyChild__invariant = $m['fbjs/lib/invariant'].exports;
  * structure.
  */
 function reactlibonlyChild__onlyChild(children) {
-  !reactlibonlyChild__ReactElement.isValidElement(children) ? process.env.NODE_ENV !== 'production' ? reactlibonlyChild__invariant(false, 'React.Children.only expected to receive a single React element child.') : reactlibonlyChild___prodInvariant('143') : void 0;
+  !reactlibonlyChild__ReactElement.isValidElement(children) ? 'development' !== 'production' ? reactlibonlyChild__invariant(false, 'React.Children.only expected to receive a single React element child.') : reactlibonlyChild___prodInvariant('143') : void 0;
   return children;
 }
 
@@ -4677,17 +7221,17 @@ function reactlibReactPropTypes__PropTypeError(message) {
 reactlibReactPropTypes__PropTypeError.prototype = Error.prototype;
 
 function reactlibReactPropTypes__createChainableTypeChecker(validate) {
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     var manualPropTypeCallCache = {};
   }
   function checkType(isRequired, props, propName, componentName, location, propFullName, secret) {
     componentName = componentName || reactlibReactPropTypes__ANONYMOUS;
     propFullName = propFullName || propName;
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       if (secret !== reactlibReactPropTypes__ReactPropTypesSecret && typeof console !== 'undefined') {
         var cacheKey = componentName + ':' + propName;
         if (!manualPropTypeCallCache[cacheKey]) {
-          process.env.NODE_ENV !== 'production' ? reactlibReactPropTypes__warning(false, 'You are manually calling a React.PropTypes validation ' + 'function for the `%s` prop on `%s`. This is deprecated ' + 'and will not work in production with the next major version. ' + 'You may be seeing this warning due to a third-party PropTypes ' + 'library. See https://fb.me/react-warning-dont-call-proptypes ' + 'for details.', propFullName, componentName) : void 0;
+          'development' !== 'production' ? reactlibReactPropTypes__warning(false, 'You are manually calling a React.PropTypes validation ' + 'function for the `%s` prop on `%s`. This is deprecated ' + 'and will not work in production with the next major version. ' + 'You may be seeing this warning due to a third-party PropTypes ' + 'library. See https://fb.me/react-warning-dont-call-proptypes ' + 'for details.', propFullName, componentName) : void 0;
           manualPropTypeCallCache[cacheKey] = true;
         }
       }
@@ -4784,7 +7328,7 @@ function reactlibReactPropTypes__createInstanceTypeChecker(expectedClass) {
 
 function reactlibReactPropTypes__createEnumTypeChecker(expectedValues) {
   if (!Array.isArray(expectedValues)) {
-    process.env.NODE_ENV !== 'production' ? reactlibReactPropTypes__warning(false, 'Invalid argument supplied to oneOf, expected an instance of array.') : void 0;
+    'development' !== 'production' ? reactlibReactPropTypes__warning(false, 'Invalid argument supplied to oneOf, expected an instance of array.') : void 0;
     return reactlibReactPropTypes__emptyFunction.thatReturnsNull;
   }
 
@@ -4829,7 +7373,7 @@ function reactlibReactPropTypes__createObjectOfTypeChecker(typeChecker) {
 
 function reactlibReactPropTypes__createUnionTypeChecker(arrayOfTypeCheckers) {
   if (!Array.isArray(arrayOfTypeCheckers)) {
-    process.env.NODE_ENV !== 'production' ? reactlibReactPropTypes__warning(false, 'Invalid argument supplied to oneOfType, expected an instance of array.') : void 0;
+    'development' !== 'production' ? reactlibReactPropTypes__warning(false, 'Invalid argument supplied to oneOfType, expected an instance of array.') : void 0;
     return reactlibReactPropTypes__emptyFunction.thatReturnsNull;
   }
 
@@ -5011,7 +7555,7 @@ var reactlibReactDOMFactories__ReactElement = $m['react/lib/ReactElement'].expor
  * @private
  */
 var reactlibReactDOMFactories__createDOMFactory = reactlibReactDOMFactories__ReactElement.createFactory;
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   var reactlibReactDOMFactories__ReactElementValidator = $m['react/lib/ReactElementValidator'].exports;
   reactlibReactDOMFactories__createDOMFactory = reactlibReactDOMFactories__ReactElementValidator.createFactory;
 }
@@ -5178,9 +7722,9 @@ $m['react/lib/ReactNoopUpdateQueue'] = { exports: {} };
 var reactlibReactNoopUpdateQueue__warning = $m['fbjs/lib/warning'].exports;
 
 function reactlibReactNoopUpdateQueue__warnNoop(publicInstance, callerName) {
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     var constructor = publicInstance.constructor;
-    process.env.NODE_ENV !== 'production' ? reactlibReactNoopUpdateQueue__warning(false, '%s(...): Can only update a mounted or mounting component. ' + 'This usually means you called %s() on an unmounted component. ' + 'This is a no-op. Please check the code for the %s component.', callerName, callerName, constructor && (constructor.displayName || constructor.name) || 'ReactClass') : void 0;
+    'development' !== 'production' ? reactlibReactNoopUpdateQueue__warning(false, '%s(...): Can only update a mounted or mounting component. ' + 'This usually means you called %s() on an unmounted component. ' + 'This is a no-op. Please check the code for the %s component.', callerName, callerName, constructor && (constructor.displayName || constructor.name) || 'ReactClass') : void 0;
   }
 }
 
@@ -5322,7 +7866,7 @@ reactlibReactComponent__ReactComponent.prototype.isReactComponent = {};
  * @protected
  */
 reactlibReactComponent__ReactComponent.prototype.setState = function (partialState, callback) {
-  !(typeof partialState === 'object' || typeof partialState === 'function' || partialState == null) ? process.env.NODE_ENV !== 'production' ? reactlibReactComponent__invariant(false, 'setState(...): takes an object of state variables to update or a function which returns an object of state variables.') : reactlibReactComponent___prodInvariant('85') : void 0;
+  !(typeof partialState === 'object' || typeof partialState === 'function' || partialState == null) ? 'development' !== 'production' ? reactlibReactComponent__invariant(false, 'setState(...): takes an object of state variables to update or a function which returns an object of state variables.') : reactlibReactComponent___prodInvariant('85') : void 0;
   this.updater.enqueueSetState(this, partialState);
   if (callback) {
     this.updater.enqueueCallback(this, callback, 'setState');
@@ -5355,7 +7899,7 @@ reactlibReactComponent__ReactComponent.prototype.forceUpdate = function (callbac
  * we would like to deprecate them, we're not going to move them over to this
  * modern base class. Instead, we define a getter that warns if it's accessed.
  */
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   var reactlibReactComponent__deprecatedAPIs = {
     isMounted: ['isMounted', 'Instead, make sure to clean up subscriptions and pending requests in ' + 'componentWillUnmount to prevent memory leaks.'],
     replaceState: ['replaceState', 'Refactor your code to use setState instead (see ' + 'https://github.com/facebook/react/issues/3236).']
@@ -5364,7 +7908,7 @@ if (process.env.NODE_ENV !== 'production') {
     if (reactlibReactComponent__canDefineProperty) {
       Object.defineProperty(reactlibReactComponent__ReactComponent.prototype, methodName, {
         get: function get() {
-          process.env.NODE_ENV !== 'production' ? reactlibReactComponent__warning(false, '%s(...) is deprecated in plain JavaScript React classes. %s', info[0], info[1]) : void 0;
+          'development' !== 'production' ? reactlibReactComponent__warning(false, '%s(...) is deprecated in plain JavaScript React classes. %s', info[0], info[1]) : void 0;
           return undefined;
         }
       });
@@ -5685,13 +8229,13 @@ var reactlibReactClass__RESERVED_SPEC_KEYS = {
     }
   },
   childContextTypes: function childContextTypes(Constructor, _childContextTypes) {
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       reactlibReactClass__validateTypeDef(Constructor, _childContextTypes, 'childContext');
     }
     Constructor.childContextTypes = reactlibReactClass___assign({}, Constructor.childContextTypes, _childContextTypes);
   },
   contextTypes: function contextTypes(Constructor, _contextTypes) {
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       reactlibReactClass__validateTypeDef(Constructor, _contextTypes, 'context');
     }
     Constructor.contextTypes = reactlibReactClass___assign({}, Constructor.contextTypes, _contextTypes);
@@ -5708,7 +8252,7 @@ var reactlibReactClass__RESERVED_SPEC_KEYS = {
     }
   },
   propTypes: function propTypes(Constructor, _propTypes) {
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       reactlibReactClass__validateTypeDef(Constructor, _propTypes, 'prop');
     }
     Constructor.propTypes = reactlibReactClass___assign({}, Constructor.propTypes, _propTypes);
@@ -5723,7 +8267,7 @@ function reactlibReactClass__validateTypeDef(Constructor, typeDef, location) {
     if (typeDef.hasOwnProperty(propName)) {
       // use a warning instead of an invariant so components
       // don't show up in prod but only in __DEV__
-      process.env.NODE_ENV !== 'production' ? reactlibReactClass__warning(typeof typeDef[propName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'React.PropTypes.', Constructor.displayName || 'ReactClass', reactlibReactClass__ReactPropTypeLocationNames[location], propName) : void 0;
+      'development' !== 'production' ? reactlibReactClass__warning(typeof typeDef[propName] === 'function', '%s: %s type `%s` is invalid; it must be a function, usually from ' + 'React.PropTypes.', Constructor.displayName || 'ReactClass', reactlibReactClass__ReactPropTypeLocationNames[location], propName) : void 0;
     }
   }
 }
@@ -5733,12 +8277,12 @@ function reactlibReactClass__validateMethodOverride(isAlreadyDefined, name) {
 
   // Disallow overriding of base class methods unless explicitly allowed.
   if (reactlibReactClass__ReactClassMixin.hasOwnProperty(name)) {
-    !(specPolicy === 'OVERRIDE_BASE') ? process.env.NODE_ENV !== 'production' ? reactlibReactClass__invariant(false, 'ReactClassInterface: You are attempting to override `%s` from your class specification. Ensure that your method names do not overlap with React methods.', name) : reactlibReactClass___prodInvariant('73', name) : void 0;
+    !(specPolicy === 'OVERRIDE_BASE') ? 'development' !== 'production' ? reactlibReactClass__invariant(false, 'ReactClassInterface: You are attempting to override `%s` from your class specification. Ensure that your method names do not overlap with React methods.', name) : reactlibReactClass___prodInvariant('73', name) : void 0;
   }
 
   // Disallow defining methods more than once unless explicitly allowed.
   if (isAlreadyDefined) {
-    !(specPolicy === 'DEFINE_MANY' || specPolicy === 'DEFINE_MANY_MERGED') ? process.env.NODE_ENV !== 'production' ? reactlibReactClass__invariant(false, 'ReactClassInterface: You are attempting to define `%s` on your component more than once. This conflict may be due to a mixin.', name) : reactlibReactClass___prodInvariant('74', name) : void 0;
+    !(specPolicy === 'DEFINE_MANY' || specPolicy === 'DEFINE_MANY_MERGED') ? 'development' !== 'production' ? reactlibReactClass__invariant(false, 'ReactClassInterface: You are attempting to define `%s` on your component more than once. This conflict may be due to a mixin.', name) : reactlibReactClass___prodInvariant('74', name) : void 0;
   }
 }
 
@@ -5748,18 +8292,18 @@ function reactlibReactClass__validateMethodOverride(isAlreadyDefined, name) {
  */
 function reactlibReactClass__mixSpecIntoComponent(Constructor, spec) {
   if (!spec) {
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       var typeofSpec = typeof spec;
       var isMixinValid = typeofSpec === 'object' && spec !== null;
 
-      process.env.NODE_ENV !== 'production' ? reactlibReactClass__warning(isMixinValid, '%s: You\'re attempting to include a mixin that is either null ' + 'or not an object. Check the mixins included by the component, ' + 'as well as any mixins they include themselves. ' + 'Expected object but got %s.', Constructor.displayName || 'ReactClass', spec === null ? null : typeofSpec) : void 0;
+      'development' !== 'production' ? reactlibReactClass__warning(isMixinValid, '%s: You\'re attempting to include a mixin that is either null ' + 'or not an object. Check the mixins included by the component, ' + 'as well as any mixins they include themselves. ' + 'Expected object but got %s.', Constructor.displayName || 'ReactClass', spec === null ? null : typeofSpec) : void 0;
     }
 
     return;
   }
 
-  !(typeof spec !== 'function') ? process.env.NODE_ENV !== 'production' ? reactlibReactClass__invariant(false, 'ReactClass: You\'re attempting to use a component class or function as a mixin. Instead, just use a regular object.') : reactlibReactClass___prodInvariant('75') : void 0;
-  !!reactlibReactClass__ReactElement.isValidElement(spec) ? process.env.NODE_ENV !== 'production' ? reactlibReactClass__invariant(false, 'ReactClass: You\'re attempting to use a component as a mixin. Instead, just use a regular object.') : reactlibReactClass___prodInvariant('76') : void 0;
+  !(typeof spec !== 'function') ? 'development' !== 'production' ? reactlibReactClass__invariant(false, 'ReactClass: You\'re attempting to use a component class or function as a mixin. Instead, just use a regular object.') : reactlibReactClass___prodInvariant('75') : void 0;
+  !!reactlibReactClass__ReactElement.isValidElement(spec) ? 'development' !== 'production' ? reactlibReactClass__invariant(false, 'ReactClass: You\'re attempting to use a component as a mixin. Instead, just use a regular object.') : reactlibReactClass___prodInvariant('76') : void 0;
 
   var proto = Constructor.prototype;
   var autoBindPairs = proto.__reactAutoBindPairs;
@@ -5804,7 +8348,7 @@ function reactlibReactClass__mixSpecIntoComponent(Constructor, spec) {
           var specPolicy = reactlibReactClass__ReactClassInterface[name];
 
           // These cases should already be caught by validateMethodOverride.
-          !(isReactClassMethod && (specPolicy === 'DEFINE_MANY_MERGED' || specPolicy === 'DEFINE_MANY')) ? process.env.NODE_ENV !== 'production' ? reactlibReactClass__invariant(false, 'ReactClass: Unexpected spec policy %s for key %s when mixing in component specs.', specPolicy, name) : reactlibReactClass___prodInvariant('77', specPolicy, name) : void 0;
+          !(isReactClassMethod && (specPolicy === 'DEFINE_MANY_MERGED' || specPolicy === 'DEFINE_MANY')) ? 'development' !== 'production' ? reactlibReactClass__invariant(false, 'ReactClass: Unexpected spec policy %s for key %s when mixing in component specs.', specPolicy, name) : reactlibReactClass___prodInvariant('77', specPolicy, name) : void 0;
 
           // For methods which are defined more than once, call the existing
           // methods before calling the new property, merging if appropriate.
@@ -5815,7 +8359,7 @@ function reactlibReactClass__mixSpecIntoComponent(Constructor, spec) {
           }
         } else {
           proto[name] = property;
-          if (process.env.NODE_ENV !== 'production') {
+          if ('development' !== 'production') {
             // Add verbose displayName to the function, which helps when looking
             // at profiling tools.
             if (typeof property === 'function' && spec.displayName) {
@@ -5839,10 +8383,10 @@ function reactlibReactClass__mixStaticSpecIntoComponent(Constructor, statics) {
     }
 
     var isReserved = name in reactlibReactClass__RESERVED_SPEC_KEYS;
-    !!isReserved ? process.env.NODE_ENV !== 'production' ? reactlibReactClass__invariant(false, 'ReactClass: You are attempting to define a reserved property, `%s`, that shouldn\'t be on the "statics" key. Define it as an instance property instead; it will still be accessible on the constructor.', name) : reactlibReactClass___prodInvariant('78', name) : void 0;
+    !!isReserved ? 'development' !== 'production' ? reactlibReactClass__invariant(false, 'ReactClass: You are attempting to define a reserved property, `%s`, that shouldn\'t be on the "statics" key. Define it as an instance property instead; it will still be accessible on the constructor.', name) : reactlibReactClass___prodInvariant('78', name) : void 0;
 
     var isInherited = name in Constructor;
-    !!isInherited ? process.env.NODE_ENV !== 'production' ? reactlibReactClass__invariant(false, 'ReactClass: You are attempting to define `%s` on your component more than once. This conflict may be due to a mixin.', name) : reactlibReactClass___prodInvariant('79', name) : void 0;
+    !!isInherited ? 'development' !== 'production' ? reactlibReactClass__invariant(false, 'ReactClass: You are attempting to define `%s` on your component more than once. This conflict may be due to a mixin.', name) : reactlibReactClass___prodInvariant('79', name) : void 0;
     Constructor[name] = property;
   }
 }
@@ -5855,11 +8399,11 @@ function reactlibReactClass__mixStaticSpecIntoComponent(Constructor, statics) {
  * @return {object} one after it has been mutated to contain everything in two.
  */
 function reactlibReactClass__mergeIntoWithNoDuplicateKeys(one, two) {
-  !(one && two && typeof one === 'object' && typeof two === 'object') ? process.env.NODE_ENV !== 'production' ? reactlibReactClass__invariant(false, 'mergeIntoWithNoDuplicateKeys(): Cannot merge non-objects.') : reactlibReactClass___prodInvariant('80') : void 0;
+  !(one && two && typeof one === 'object' && typeof two === 'object') ? 'development' !== 'production' ? reactlibReactClass__invariant(false, 'mergeIntoWithNoDuplicateKeys(): Cannot merge non-objects.') : reactlibReactClass___prodInvariant('80') : void 0;
 
   for (var key in two) {
     if (two.hasOwnProperty(key)) {
-      !(one[key] === undefined) ? process.env.NODE_ENV !== 'production' ? reactlibReactClass__invariant(false, 'mergeIntoWithNoDuplicateKeys(): Tried to merge two objects with the same key: `%s`. This conflict may be due to a mixin; in particular, this may be caused by two getInitialState() or getDefaultProps() methods returning objects with clashing keys.', key) : reactlibReactClass___prodInvariant('81', key) : void 0;
+      !(one[key] === undefined) ? 'development' !== 'production' ? reactlibReactClass__invariant(false, 'mergeIntoWithNoDuplicateKeys(): Tried to merge two objects with the same key: `%s`. This conflict may be due to a mixin; in particular, this may be caused by two getInitialState() or getDefaultProps() methods returning objects with clashing keys.', key) : reactlibReactClass___prodInvariant('81', key) : void 0;
       one[key] = two[key];
     }
   }
@@ -5914,7 +8458,7 @@ function reactlibReactClass__createChainedFunction(one, two) {
  */
 function reactlibReactClass__bindAutoBindMethod(component, method) {
   var boundMethod = method.bind(component);
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     boundMethod.__reactBoundContext = component;
     boundMethod.__reactBoundMethod = method;
     boundMethod.__reactBoundArguments = null;
@@ -5929,9 +8473,9 @@ function reactlibReactClass__bindAutoBindMethod(component, method) {
       // ignore the value of "this" that the user is trying to use, so
       // let's warn.
       if (newThis !== component && newThis !== null) {
-        process.env.NODE_ENV !== 'production' ? reactlibReactClass__warning(false, 'bind(): React component methods may only be bound to the ' + 'component instance. See %s', componentName) : void 0;
+        'development' !== 'production' ? reactlibReactClass__warning(false, 'bind(): React component methods may only be bound to the ' + 'component instance. See %s', componentName) : void 0;
       } else if (!args.length) {
-        process.env.NODE_ENV !== 'production' ? reactlibReactClass__warning(false, 'bind(): You are binding a component method to the component. ' + 'React does this for you automatically in a high-performance ' + 'way, so you can safely remove this call. See %s', componentName) : void 0;
+        'development' !== 'production' ? reactlibReactClass__warning(false, 'bind(): You are binding a component method to the component. ' + 'React does this for you automatically in a high-performance ' + 'way, so you can safely remove this call. See %s', componentName) : void 0;
         return boundMethod;
       }
       var reboundMethod = _bind.apply(boundMethod, arguments);
@@ -6012,8 +8556,8 @@ var reactlibReactClass__ReactClass = {
       // This constructor gets overridden by mocks. The argument is used
       // by mocks to assert on what gets mounted.
 
-      if (process.env.NODE_ENV !== 'production') {
-        process.env.NODE_ENV !== 'production' ? reactlibReactClass__warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
+      if ('development' !== 'production') {
+        'development' !== 'production' ? reactlibReactClass__warning(this instanceof Constructor, 'Something is calling a React component directly. Use a factory or ' + 'JSX instead. See: https://fb.me/react-legacyfactory') : void 0;
       }
 
       // Wire up auto-binding
@@ -6032,7 +8576,7 @@ var reactlibReactClass__ReactClass = {
       // getInitialState and componentWillMount methods for initialization.
 
       var initialState = this.getInitialState ? this.getInitialState() : null;
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         // We allow auto-mocks to proceed as if they're returning null.
         if (initialState === undefined && this.getInitialState._isMockFunction) {
           // This is probably bad practice. Consider warning here and
@@ -6040,7 +8584,7 @@ var reactlibReactClass__ReactClass = {
           initialState = null;
         }
       }
-      !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? reactlibReactClass__invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : reactlibReactClass___prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
+      !(typeof initialState === 'object' && !Array.isArray(initialState)) ? 'development' !== 'production' ? reactlibReactClass__invariant(false, '%s.getInitialState(): must return an object or null', Constructor.displayName || 'ReactCompositeComponent') : reactlibReactClass___prodInvariant('82', Constructor.displayName || 'ReactCompositeComponent') : void 0;
 
       this.state = initialState;
     });
@@ -6057,7 +8601,7 @@ var reactlibReactClass__ReactClass = {
       Constructor.defaultProps = Constructor.getDefaultProps();
     }
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       // This is a tag to indicate that the use of these method names is ok,
       // since it's used with createClass. If it's not, then it's likely a
       // mistake so we'll warn you to use the static property, property
@@ -6070,11 +8614,11 @@ var reactlibReactClass__ReactClass = {
       }
     }
 
-    !Constructor.prototype.render ? process.env.NODE_ENV !== 'production' ? reactlibReactClass__invariant(false, 'createClass(...): Class specification must implement a `render` method.') : reactlibReactClass___prodInvariant('83') : void 0;
+    !Constructor.prototype.render ? 'development' !== 'production' ? reactlibReactClass__invariant(false, 'createClass(...): Class specification must implement a `render` method.') : reactlibReactClass___prodInvariant('83') : void 0;
 
-    if (process.env.NODE_ENV !== 'production') {
-      process.env.NODE_ENV !== 'production' ? reactlibReactClass__warning(!Constructor.prototype.componentShouldUpdate, '%s has a method called ' + 'componentShouldUpdate(). Did you mean shouldComponentUpdate()? ' + 'The name is phrased as a question because the function is ' + 'expected to return a value.', spec.displayName || 'A component') : void 0;
-      process.env.NODE_ENV !== 'production' ? reactlibReactClass__warning(!Constructor.prototype.componentWillRecieveProps, '%s has a method called ' + 'componentWillRecieveProps(). Did you mean componentWillReceiveProps()?', spec.displayName || 'A component') : void 0;
+    if ('development' !== 'production') {
+      'development' !== 'production' ? reactlibReactClass__warning(!Constructor.prototype.componentShouldUpdate, '%s has a method called ' + 'componentShouldUpdate(). Did you mean shouldComponentUpdate()? ' + 'The name is phrased as a question because the function is ' + 'expected to return a value.', spec.displayName || 'A component') : void 0;
+      'development' !== 'production' ? reactlibReactClass__warning(!Constructor.prototype.componentWillRecieveProps, '%s has a method called ' + 'componentWillRecieveProps(). Did you mean componentWillReceiveProps()?', spec.displayName || 'A component') : void 0;
     }
 
     // Reduce time spent doing lookups by setting these on the prototype.
@@ -6250,7 +8794,7 @@ function reactlibtraverseAllChildren__traverseAllChildrenImpl(children, nameSoFa
           subtreeCount += reactlibtraverseAllChildren__traverseAllChildrenImpl(child, nextName, callback, traverseContext);
         }
       } else {
-        if (process.env.NODE_ENV !== 'production') {
+        if ('development' !== 'production') {
           var mapsAsChildrenAddendum = '';
           if (reactlibtraverseAllChildren__ReactCurrentOwner.current) {
             var mapsAsChildrenOwnerName = reactlibtraverseAllChildren__ReactCurrentOwner.current.getName();
@@ -6258,7 +8802,7 @@ function reactlibtraverseAllChildren__traverseAllChildrenImpl(children, nameSoFa
               mapsAsChildrenAddendum = ' Check the render method of `' + mapsAsChildrenOwnerName + '`.';
             }
           }
-          process.env.NODE_ENV !== 'production' ? reactlibtraverseAllChildren__warning(reactlibtraverseAllChildren__didWarnAboutMaps, 'Using Maps as children is not yet fully supported. It is an ' + 'experimental feature that might be removed. Convert it to a ' + 'sequence / iterable of keyed ReactElements instead.%s', mapsAsChildrenAddendum) : void 0;
+          'development' !== 'production' ? reactlibtraverseAllChildren__warning(reactlibtraverseAllChildren__didWarnAboutMaps, 'Using Maps as children is not yet fully supported. It is an ' + 'experimental feature that might be removed. Convert it to a ' + 'sequence / iterable of keyed ReactElements instead.%s', mapsAsChildrenAddendum) : void 0;
           reactlibtraverseAllChildren__didWarnAboutMaps = true;
         }
         // Iterator will provide entry [k,v] tuples rather than values.
@@ -6273,7 +8817,7 @@ function reactlibtraverseAllChildren__traverseAllChildrenImpl(children, nameSoFa
       }
     } else if (type === 'object') {
       var addendum = '';
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         addendum = ' If you meant to render a collection of children, use an array ' + 'instead or wrap the object using createFragment(object) from the ' + 'React add-ons.';
         if (children._isReactElement) {
           addendum = ' It looks like you\'re using an element created by a different ' + 'version of React. Make sure to use only one copy of React.';
@@ -6286,7 +8830,7 @@ function reactlibtraverseAllChildren__traverseAllChildrenImpl(children, nameSoFa
         }
       }
       var childrenString = String(children);
-      !false ? process.env.NODE_ENV !== 'production' ? reactlibtraverseAllChildren__invariant(false, 'Objects are not valid as a React child (found: %s).%s', childrenString === '[object Object]' ? 'object with keys {' + Object.keys(children).join(', ') + '}' : childrenString, addendum) : reactlibtraverseAllChildren___prodInvariant('31', childrenString === '[object Object]' ? 'object with keys {' + Object.keys(children).join(', ') + '}' : childrenString, addendum) : void 0;
+      !false ? 'development' !== 'production' ? reactlibtraverseAllChildren__invariant(false, 'Objects are not valid as a React child (found: %s).%s', childrenString === '[object Object]' ? 'object with keys {' + Object.keys(children).join(', ') + '}' : childrenString, addendum) : reactlibtraverseAllChildren___prodInvariant('31', childrenString === '[object Object]' ? 'object with keys {' + Object.keys(children).join(', ') + '}' : childrenString, addendum) : void 0;
     }
   }
 
@@ -6389,20 +8933,9 @@ var reactlibPooledClass__fourArgumentPooler = function reactlibPooledClass__four
   }
 };
 
-var reactlibPooledClass__fiveArgumentPooler = function reactlibPooledClass__fiveArgumentPooler(a1, a2, a3, a4, a5) {
-  var Klass = this;
-  if (Klass.instancePool.length) {
-    var instance = Klass.instancePool.pop();
-    Klass.call(instance, a1, a2, a3, a4, a5);
-    return instance;
-  } else {
-    return new Klass(a1, a2, a3, a4, a5);
-  }
-};
-
 var reactlibPooledClass__standardReleaser = function reactlibPooledClass__standardReleaser(instance) {
   var Klass = this;
-  !(instance instanceof Klass) ? process.env.NODE_ENV !== 'production' ? reactlibPooledClass__invariant(false, 'Trying to release an instance into a pool of a different type.') : reactlibPooledClass___prodInvariant('25') : void 0;
+  !(instance instanceof Klass) ? 'development' !== 'production' ? reactlibPooledClass__invariant(false, 'Trying to release an instance into a pool of a different type.') : reactlibPooledClass___prodInvariant('25') : void 0;
   instance.destructor();
   if (Klass.instancePool.length < Klass.poolSize) {
     Klass.instancePool.push(instance);
@@ -6439,8 +8972,7 @@ var reactlibPooledClass__PooledClass = {
   oneArgumentPooler: reactlibPooledClass__oneArgumentPooler,
   twoArgumentPooler: reactlibPooledClass__twoArgumentPooler,
   threeArgumentPooler: reactlibPooledClass__threeArgumentPooler,
-  fourArgumentPooler: reactlibPooledClass__fourArgumentPooler,
-  fiveArgumentPooler: reactlibPooledClass__fiveArgumentPooler
+  fourArgumentPooler: reactlibPooledClass__fourArgumentPooler
 };
 
 $m['react/lib/PooledClass'].exports = reactlibPooledClass__PooledClass;
@@ -6669,7 +9201,7 @@ var reactlibReact__createElement = reactlibReact__ReactElement.createElement;
 var reactlibReact__createFactory = reactlibReact__ReactElement.createFactory;
 var reactlibReact__cloneElement = reactlibReact__ReactElement.cloneElement;
 
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   var reactlibReact__ReactElementValidator = $m['react/lib/ReactElementValidator'].exports;
   reactlibReact__createElement = reactlibReact__ReactElementValidator.createElement;
   reactlibReact__createFactory = reactlibReact__ReactElementValidator.createFactory;
@@ -6678,10 +9210,10 @@ if (process.env.NODE_ENV !== 'production') {
 
 var reactlibReact____spread = reactlibReact___assign;
 
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   var reactlibReact__warned = false;
   reactlibReact____spread = function reactlibReact____spread() {
-    process.env.NODE_ENV !== 'production' ? reactlibReact__warning(reactlibReact__warned, 'React.__spread is deprecated and should not be used. Use ' + 'Object.assign directly or another helper function with similar ' + 'semantics. You may be seeing this warning due to your compiler. ' + 'See https://fb.me/react-spread-deprecation for more details.') : void 0;
+    'development' !== 'production' ? reactlibReact__warning(reactlibReact__warned, 'React.__spread is deprecated and should not be used. Use ' + 'Object.assign directly or another helper function with similar ' + 'semantics. You may be seeing this warning due to your compiler. ' + 'See https://fb.me/react-spread-deprecation for more details.') : void 0;
     reactlibReact__warned = true;
     return reactlibReact___assign.apply(null, arguments);
   };
@@ -6730,2639 +9262,6 @@ $m['react/lib/React'].exports = reactlibReact__React;
 /*≠≠ node_modules/react/lib/React.js ≠≠*/
 
 
-/*== node_modules/react/react.js ==*/
-$m['react'] = { exports: {} };
-
-$m['react'].exports = $m['react/lib/React'].exports;
-/*≠≠ node_modules/react/react.js ≠≠*/
-
-
-/*== node_modules/debug/debug.js ==*/
-$m['debug/debug'] = { exports: {} };
-
-/**
- * This is the common logic for both the Node.js and web browser
- * implementations of `debug()`.
- *
- * Expose `debug()` as the module.
- */
-
-$m['debug/debug'].exports = $m['debug/debug'].exports = debugdebug__debug.debug = debugdebug__debug;
-$m['debug/debug'].exports.coerce = debugdebug__coerce;
-$m['debug/debug'].exports.disable = debugdebug__disable;
-$m['debug/debug'].exports.enable = debugdebug__enable;
-$m['debug/debug'].exports.enabled = debugdebug__enabled;
-$m['debug/debug'].exports.humanize = $m['ms'].exports;
-
-/**
- * The currently active debug mode names, and names to skip.
- */
-
-$m['debug/debug'].exports.names = [];
-$m['debug/debug'].exports.skips = [];
-
-/**
- * Map of special "%n" handling functions, for the debug "format" argument.
- *
- * Valid key names are a single, lowercased letter, i.e. "n".
- */
-
-$m['debug/debug'].exports.formatters = {};
-
-/**
- * Previously assigned color.
- */
-
-var debugdebug__prevColor = 0;
-
-/**
- * Previous log timestamp.
- */
-
-var debugdebug__prevTime;
-
-/**
- * Select a color.
- *
- * @return {Number}
- * @api private
- */
-
-function debugdebug__selectColor() {
-  return $m['debug/debug'].exports.colors[debugdebug__prevColor++ % $m['debug/debug'].exports.colors.length];
-}
-
-/**
- * Create a debugger with the given `namespace`.
- *
- * @param {String} namespace
- * @return {Function}
- * @api public
- */
-
-function debugdebug__debug(namespace) {
-
-  // define the `disabled` version
-  function disabled() {}
-  disabled.enabled = false;
-
-  // define the `enabled` version
-  function enabled() {
-
-    var self = enabled;
-
-    // set `diff` timestamp
-    var curr = +new Date();
-    var ms = curr - (debugdebug__prevTime || curr);
-    self.diff = ms;
-    self.prev = debugdebug__prevTime;
-    self.curr = curr;
-    debugdebug__prevTime = curr;
-
-    // add the `color` if not set
-    if (null == self.useColors) self.useColors = $m['debug/debug'].exports.useColors();
-    if (null == self.color && self.useColors) self.color = debugdebug__selectColor();
-
-    var args = new Array(arguments.length);
-    for (var i = 0; i < args.length; i++) {
-      args[i] = arguments[i];
-    }
-
-    args[0] = $m['debug/debug'].exports.coerce(args[0]);
-
-    if ('string' !== typeof args[0]) {
-      // anything else let's inspect with %o
-      args = ['%o'].concat(args);
-    }
-
-    // apply any `formatters` transformations
-    var index = 0;
-    args[0] = args[0].replace(/%([a-z%])/g, function (match, format) {
-      // if we encounter an escaped % then don't increase the array index
-      if (match === '%%') return match;
-      index++;
-      var formatter = $m['debug/debug'].exports.formatters[format];
-      if ('function' === typeof formatter) {
-        var val = args[index];
-        match = formatter.call(self, val);
-
-        // now we need to remove `args[index]` since it's inlined in the `format`
-        args.splice(index, 1);
-        index--;
-      }
-      return match;
-    });
-
-    // apply env-specific formatting
-    args = $m['debug/debug'].exports.formatArgs.apply(self, args);
-
-    var logFn = enabled.log || $m['debug/debug'].exports.log || console.log.bind(console);
-    logFn.apply(self, args);
-  }
-  enabled.enabled = true;
-
-  var fn = $m['debug/debug'].exports.enabled(namespace) ? enabled : disabled;
-
-  fn.namespace = namespace;
-
-  return fn;
-}
-
-/**
- * Enables a debug mode by namespaces. This can include modes
- * separated by a colon and wildcards.
- *
- * @param {String} namespaces
- * @api public
- */
-
-function debugdebug__enable(namespaces) {
-  $m['debug/debug'].exports.save(namespaces);
-
-  var split = (namespaces || '').split(/[\s,]+/);
-  var len = split.length;
-
-  for (var i = 0; i < len; i++) {
-    if (!split[i]) continue; // ignore empty strings
-    namespaces = split[i].replace(/[\\^$+?.()|[\]{}]/g, '\\$&').replace(/\*/g, '.*?');
-    if (namespaces[0] === '-') {
-      $m['debug/debug'].exports.skips.push(new RegExp('^' + namespaces.substr(1) + '$'));
-    } else {
-      $m['debug/debug'].exports.names.push(new RegExp('^' + namespaces + '$'));
-    }
-  }
-}
-
-/**
- * Disable debug output.
- *
- * @api public
- */
-
-function debugdebug__disable() {
-  $m['debug/debug'].exports.enable('');
-}
-
-/**
- * Returns true if the given mode name is enabled, false otherwise.
- *
- * @param {String} name
- * @return {Boolean}
- * @api public
- */
-
-function debugdebug__enabled(name) {
-  var i, len;
-  for (i = 0, len = $m['debug/debug'].exports.skips.length; i < len; i++) {
-    if ($m['debug/debug'].exports.skips[i].test(name)) {
-      return false;
-    }
-  }
-  for (i = 0, len = $m['debug/debug'].exports.names.length; i < len; i++) {
-    if ($m['debug/debug'].exports.names[i].test(name)) {
-      return true;
-    }
-  }
-  return false;
-}
-
-/**
- * Coerce `val`.
- *
- * @param {Mixed} val
- * @return {Mixed}
- * @api private
- */
-
-function debugdebug__coerce(val) {
-  if (val instanceof Error) return val.stack || val.message;
-  return val;
-}
-/*≠≠ node_modules/debug/debug.js ≠≠*/
-
-
-/*== node_modules/debug/browser.js ==*/
-$m['debug'] = { exports: {} };
-
-/**
- * This is the web browser implementation of `debug()`.
- *
- * Expose `debug()` as the module.
- */
-
-$m['debug'].exports = $m['debug'].exports = $m['debug/debug'].exports;
-$m['debug'].exports.log = debug__log;
-$m['debug'].exports.formatArgs = debug__formatArgs;
-$m['debug'].exports.save = debug__save;
-$m['debug'].exports.load = debug__load;
-$m['debug'].exports.useColors = debug__useColors;
-$m['debug'].exports.storage = 'undefined' != typeof chrome && 'undefined' != typeof chrome.storage ? chrome.storage.local : debug__localstorage();
-
-/**
- * Colors.
- */
-
-$m['debug'].exports.colors = ['lightseagreen', 'forestgreen', 'goldenrod', 'dodgerblue', 'darkorchid', 'crimson'];
-
-/**
- * Currently only WebKit-based Web Inspectors, Firefox >= v31,
- * and the Firebug extension (any Firefox version) are known
- * to support "%c" CSS customizations.
- *
- * TODO: add a `localStorage` variable to explicitly enable/disable colors
- */
-
-function debug__useColors() {
-  // is webkit? http://stackoverflow.com/a/16459606/376773
-  // document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
-  return typeof document !== 'undefined' && 'WebkitAppearance' in document.documentElement.style ||
-  // is firebug? http://stackoverflow.com/a/398120/376773
-  window.console && (console.firebug || console.exception && console.table) ||
-  // is firefox >= v31?
-  // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
-  navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31;
-}
-
-/**
- * Map %j to `JSON.stringify()`, since no Web Inspectors do that by default.
- */
-
-$m['debug'].exports.formatters.j = function (v) {
-  try {
-    return JSON.stringify(v);
-  } catch (err) {
-    return '[UnexpectedJSONParseError]: ' + err.message;
-  }
-};
-
-/**
- * Colorize log arguments if enabled.
- *
- * @api public
- */
-
-function debug__formatArgs() {
-  var args = arguments;
-  var useColors = this.useColors;
-
-  args[0] = (useColors ? '%c' : '') + this.namespace + (useColors ? ' %c' : ' ') + args[0] + (useColors ? '%c ' : ' ') + '+' + $m['debug'].exports.humanize(this.diff);
-
-  if (!useColors) return args;
-
-  var c = 'color: ' + this.color;
-  args = [args[0], c, 'color: inherit'].concat(Array.prototype.slice.call(args, 1));
-
-  // the final "%c" is somewhat tricky, because there could be other
-  // arguments passed either before or after the %c, so we need to
-  // figure out the correct index to insert the CSS into
-  var index = 0;
-  var lastC = 0;
-  args[0].replace(/%[a-z%]/g, function (match) {
-    if ('%%' === match) return;
-    index++;
-    if ('%c' === match) {
-      // we only are interested in the *last* %c
-      // (the user may have provided their own)
-      lastC = index;
-    }
-  });
-
-  args.splice(lastC, 0, c);
-  return args;
-}
-
-/**
- * Invokes `console.log()` when available.
- * No-op when `console.log` is not a "function".
- *
- * @api public
- */
-
-function debug__log() {
-  // this hackery is required for IE8/9, where
-  // the `console.log` function doesn't have 'apply'
-  return 'object' === typeof console && console.log && Function.prototype.apply.call(console.log, console, arguments);
-}
-
-/**
- * Save `namespaces`.
- *
- * @param {String} namespaces
- * @api private
- */
-
-function debug__save(namespaces) {
-  try {
-    if (null == namespaces) {
-      $m['debug'].exports.storage.removeItem('debug');
-    } else {
-      $m['debug'].exports.storage.debug = namespaces;
-    }
-  } catch (e) {}
-}
-
-/**
- * Load `namespaces`.
- *
- * @return {String} returns the previously persisted debug modes
- * @api private
- */
-
-function debug__load() {
-  var r;
-  try {
-    return $m['debug'].exports.storage.debug;
-  } catch (e) {}
-
-  // If debug isn't set in LS, and we're in Electron, try to load $DEBUG
-  if (typeof process !== 'undefined' && 'env' in process) {
-    return process.env.DEBUG;
-  }
-}
-
-/**
- * Enable namespaces listed in `localStorage.debug` initially.
- */
-
-$m['debug'].exports.enable(debug__load());
-
-/**
- * Localstorage attempts to return the localstorage.
- *
- * This is necessary because safari throws
- * when a user disables cookies/localstorage
- * and you attempt to access it.
- *
- * @return {LocalStorage}
- * @api private
- */
-
-function debug__localstorage() {
-  try {
-    return window.localStorage;
-  } catch (e) {}
-}
-/*≠≠ node_modules/debug/browser.js ≠≠*/
-
-
-/*== node_modules/raf/index.js ==*/
-$m['raf'] = { exports: {} };
-var raf__now = $m['performance-now'].exports,
-    raf__root = typeof window === 'undefined' ? global : window,
-    raf__vendors = ['moz', 'webkit'],
-    raf__suffix = 'AnimationFrame',
-    raf__raf = raf__root['request' + raf__suffix],
-    raf__caf = raf__root['cancel' + raf__suffix] || raf__root['cancelRequest' + raf__suffix];
-
-for (var raf__i = 0; !raf__raf && raf__i < raf__vendors.length; raf__i++) {
-  raf__raf = raf__root[raf__vendors[raf__i] + 'Request' + raf__suffix];
-  raf__caf = raf__root[raf__vendors[raf__i] + 'Cancel' + raf__suffix] || raf__root[raf__vendors[raf__i] + 'CancelRequest' + raf__suffix];
-}
-
-// Some versions of FF have rAF but not cAF
-if (!raf__raf || !raf__caf) {
-  var raf__last = 0,
-      raf__id = 0,
-      raf__queue = [],
-      raf__frameDuration = 1000 / 60;
-
-  raf__raf = function raf__raf(callback) {
-    if (raf__queue.length === 0) {
-      var _now = raf__now(),
-          next = Math.max(0, raf__frameDuration - (_now - raf__last));
-      raf__last = next + _now;
-      setTimeout(function () {
-        var cp = raf__queue.slice(0);
-        // Clear queue here to prevent
-        // callbacks from appending listeners
-        // to the current frame's queue
-        raf__queue.length = 0;
-        for (var i = 0; i < cp.length; i++) {
-          if (!cp[i].cancelled) {
-            try {
-              cp[i].callback(raf__last);
-            } catch (e) {
-              setTimeout(function () {
-                throw e;
-              }, 0);
-            }
-          }
-        }
-      }, Math.round(next));
-    }
-    raf__queue.push({
-      handle: ++raf__id,
-      callback: callback,
-      cancelled: false
-    });
-    return raf__id;
-  };
-
-  raf__caf = function raf__caf(handle) {
-    for (var i = 0; i < raf__queue.length; i++) {
-      if (raf__queue[i].handle === handle) {
-        raf__queue[i].cancelled = true;
-      }
-    }
-  };
-}
-
-$m['raf'].exports = function (fn) {
-  // Wrap in a new function to prevent
-  // `cancel` potentially being assigned
-  // to the native rAF function
-  return raf__raf.call(raf__root, fn);
-};
-$m['raf'].exports.cancel = function () {
-  raf__caf.apply(raf__root, arguments);
-};
-$m['raf'].exports.polyfill = function () {
-  raf__root.requestAnimationFrame = raf__raf;
-  raf__root.cancelAnimationFrame = raf__caf;
-};
-/*≠≠ node_modules/raf/index.js ≠≠*/
-
-
-/*== node_modules/@yr/clock/index.js ==*/
-$m['@yr/clock'] = { exports: {} };
-
-/**
- * A global timer utility for managing immediate/timeout intervals
- * https://github.com/yr/clock
- * @copyright Yr
- * @license MIT
- */
-
-var yrclock__Debug = $m['debug'].exports;
-var yrclock__raf = $m['raf'].exports;
-var yrclock__now = $m['performance-now'].exports;
-
-var yrclock__INTERVAL_CUTOFF = 1000;
-var yrclock__INTERVAL_MAX = 600000;
-
-var yrclock__debug = yrclock__Debug('yr:clock');
-var yrclock__isDev = process.env.NODE_ENV == 'development';
-var yrclock__hasImmediate = 'setImmediate' in (typeof global !== 'undefined' ? global : window);
-var yrclock__queue = {};
-var yrclock__rafHandle = 0;
-var yrclock__stHandle = 0;
-var yrclock__uid = 0;
-
-// Add polyfills
-yrclock__raf.polyfill();
-
-$m['@yr/clock'].exports = {
-  /**
-   * Initialize with visibility api "features"
-   * @param {Object} features
-   */
-  initialize: function initialize(features) {
-    var hidden = features.hidden;
-    var visibilityChange = features.visibilityChange;
-
-    if (hidden) {
-      document.addEventListener(visibilityChange, function (evt) {
-        if (document[hidden]) {
-          yrclock__debug('disable while hidden');
-          yrclock__stop();
-        } else {
-          yrclock__debug('enable while visible');
-          if (process.env.NODE_ENV == 'development') {
-            var current = yrclock__now();
-
-            for (var id in yrclock__queue) {
-              var item = yrclock__queue[id];
-
-              if (item.time <= current) {
-                yrclock__debug('timeout should trigger for "%s"', id);
-              } else {
-                var date = new Date();
-
-                date.setMilliseconds(date.getMilliseconds() + item.time - current);
-                yrclock__debug('timeout for "%s" expected at %s', id, date.toLocaleTimeString());
-              }
-            }
-          }
-          yrclock__run();
-        }
-      }, false);
-    }
-  },
-
-  /**
-   * Call 'fn' on next loop turn
-   * @param {Function} fn
-   * @returns {Number}
-   */
-  immediate: function immediate(fn) {
-    return yrclock__hasImmediate ? setImmediate(fn) : setTimeout(fn, 0);
-  },
-
-  /**
-   * Call 'fn' on next animation frame
-   * @param {Function} fn
-   * @returns {Number}
-   */
-  frame: function frame(fn) {
-    return yrclock__raf(fn);
-  },
-
-  /**
-   * Call 'fn' after 'duration'
-   * @param {Number} duration - ms
-   * @param {Function} fn
-   * @param {String} [id]
-   * @returns {String|Number|Object}
-   */
-  timeout: function timeout(duration, fn, id) {
-    if (duration <= 0) return this.immediate(fn);
-
-    var time = yrclock__now() + duration;
-
-    id = id || 'c::' + ++yrclock__uid;
-    // Existing ids will be overwritten/cancelled
-    yrclock__queue[id] = { fn: fn, time: time };
-
-    if (yrclock__debug.enabled) {
-      var date = new Date();
-
-      date.setMilliseconds(date.getMilliseconds() + duration);
-      yrclock__debug('timeout scheduled for "%s" at %s', id, date.toLocaleTimeString());
-    }
-
-    yrclock__run();
-
-    return id;
-  },
-
-  /**
-   * Cancel immediate/timeout with 'id'
-   * @param {String|Number} id
-   * @returns {String|Number}
-   */
-  cancel: function cancel(id) {
-    switch (typeof id) {
-      // Timeout
-      case 'string':
-        if (id in yrclock__queue) {
-          yrclock__debug('timeout canceled for "%s"', id);
-          delete yrclock__queue[id];
-        }
-        return '';
-      // Frame raf or immediate setTimeout
-      case 'number':
-        yrclock__raf.cancel(id);
-        clearTimeout(id);
-        return 0;
-      // Immediate setImmediate
-      case 'object':
-        clearImmediate(id);
-        return null;
-    }
-  }
-};
-
-/**
- * Process outstanding queue items
- */
-function yrclock__run() {
-  var current = yrclock__now();
-  var interval = yrclock__INTERVAL_MAX;
-  var running = false;
-
-  // Reset
-  if (yrclock__rafHandle || yrclock__stHandle) yrclock__stop();
-
-  for (var id in yrclock__queue) {
-    var item = yrclock__queue[id];
-
-    if (item != null && item.time != null) {
-      var duration = item.time - current;
-
-      if (duration <= 0) {
-        if (yrclock__isDev) yrclock__debug('timeout triggered for "%s" at %s', id, new Date().toLocaleTimeString());
-        delete yrclock__queue[id];
-        item.fn();
-      } else {
-        // Store smallest duration
-        if (duration < interval) interval = duration;
-        running = true;
-      }
-    } else {
-      delete yrclock__queue[id];
-    }
-  }
-
-  // Loop
-  if (running) {
-    // Use raf if requested interval is less than cutoff
-    if (interval < yrclock__INTERVAL_CUTOFF) {
-      yrclock__rafHandle = yrclock__raf(yrclock__run);
-    } else {
-      yrclock__stHandle = setTimeout(yrclock__run, interval);
-    }
-  }
-}
-
-/**
- * Stop running
- */
-function yrclock__stop() {
-  if (yrclock__rafHandle) yrclock__raf.cancel(yrclock__rafHandle);
-  if (yrclock__stHandle) clearTimeout(yrclock__stHandle);
-  yrclock__rafHandle = 0;
-  yrclock__stHandle = 0;
-}
-/*≠≠ node_modules/@yr/clock/index.js ≠≠*/
-
-
-/*== node_modules/@yr/component/lib/Component.js ==*/
-$m['@yr/component/lib/Component'] = { exports: {} };
-
-/**
- * Base component class (client)
- */
-
-var yrcomponentlibComponent__assign = $m['object-assign'].exports;
-var yrcomponentlibComponent__clock = $m['@yr/clock'].exports;
-var yrcomponentlibComponent__Debug = $m['debug'].exports;
-var yrcomponentlibComponent__isEqual = $m['@yr/is-equal'].exports;
-var yrcomponentlibComponent__React = $m['react'].exports;
-
-var yrcomponentlibComponent__DEFAULT_TRANSITION_DURATION = 250;
-var yrcomponentlibComponent__TIMEOUT = 20;
-
-var yrcomponentlibComponent__debug = yrcomponentlibComponent__Debug('yr:component');
-
-$m['@yr/component/lib/Component'].exports = function (_React$Component) {
-  babelHelpers.inherits(Component, _React$Component);
-
-  /**
-   * Constructor
-   * @param {Object} props
-   */
-  function Component(props) {
-    babelHelpers.classCallCheck(this, Component);
-
-    var _this = babelHelpers.possibleConstructorReturn(this, _React$Component.call(this, props));
-
-    _this.__timerID = 0;
-    _this.__transitionDuration = 'getTransitionDuration' in _this ? _this.getTransitionDuration() : yrcomponentlibComponent__DEFAULT_TRANSITION_DURATION;
-    // Set up initial state
-    _this.state = yrcomponentlibComponent__assign({}, _this.__state);
-    // Autobind mixin methods
-    if (_this.__bindableMethods) {
-      _this.__bindableMethods.forEach(function (method) {
-        _this[method] = _this[method].bind(_this);
-      });
-    }
-    return _this;
-  }
-
-  /**
-   * React: render
-   * @returns {React}
-   */
-
-  Component.prototype.render = function render() {
-    return this.__render(this.props, this.state);
-  };
-
-  /**
-   * React: shouldComponentUpdate
-   * @param {Object} nextProps
-   * @param {Object} nextState
-   * @returns {Boolean}
-   */
-
-  Component.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps, nextState) {
-    var changed = 'isEqual' in nextProps ? !this.props.isEqual(nextProps) : !yrcomponentlibComponent__isEqual(nextProps, this.props, null, yrcomponentlibComponent__debug);
-
-    if (!changed) {
-      changed = !yrcomponentlibComponent__isEqual(nextState, this.state, null, yrcomponentlibComponent__debug);
-      if (changed) yrcomponentlibComponent__debug('state changed for %s', this.displayName);
-    } else {
-      yrcomponentlibComponent__debug('props changed for %s', this.displayName);
-    }
-
-    if (changed && this.shouldComponentTransition(nextProps, nextState)) {
-      this.willTransition(nextState);
-    }
-
-    return changed;
-  };
-
-  /**
-   * Determine if component should transition based on 'nextProps' or 'nextState'
-   * @param {Object} nextProps
-   * @param {Object} nextState
-   * @returns {Boolean}
-   */
-
-  Component.prototype.shouldComponentTransition = function shouldComponentTransition(nextProps, nextState) {
-    return false;
-  };
-
-  /**
-   * Update 'state' for transition
-   * @param {Object} state
-   */
-
-  Component.prototype.willTransition = function willTransition(state) {
-    var _this2 = this;
-
-    if (this.__timerID) yrcomponentlibComponent__clock.cancel(this.__timerID);
-
-    // Generally a bad idea...
-    state.visibility = !state.visibility ? 1 : 2;
-
-    // frame/immediate doesn't leave enough time for redraw between states
-    this.__timerID = yrcomponentlibComponent__clock.timeout(yrcomponentlibComponent__TIMEOUT, function () {
-      _this2.isTransitioning();
-    });
-  };
-
-  /**
-   * Trigger transition state change
-   */
-
-  Component.prototype.isTransitioning = function isTransitioning() {
-    var _this3 = this;
-
-    this.setState({
-      visibility: this.state.visibility == 1 ? 2 : 1
-    });
-
-    this.__timerID = yrcomponentlibComponent__clock.timeout(this.__transitionDuration, function () {
-      _this3.didTransition();
-    });
-  };
-
-  /**
-   * Trigger transition state change
-   */
-
-  Component.prototype.didTransition = function didTransition() {
-    this.__timerID = 0;
-
-    this.setState({
-      visibility: this.state.visibility == 2 ? 3 : 0
-    });
-  };
-
-  /**
-   * React: componentWillUnmount
-   */
-
-  Component.prototype.componentWillUnmount = function componentWillUnmount() {
-    // Reset
-    if (this.state && this.state.visibility) this.state.visibility = 0;
-    if (this.__timerID) yrcomponentlibComponent__clock.cancel(this.__timerID);
-    if (this.__componentWillUnmount) this.__componentWillUnmount();
-  };
-
-  return Component;
-}(yrcomponentlibComponent__React.Component);
-/*≠≠ node_modules/@yr/component/lib/Component.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/DOMProperty.js ==*/
-$m['react-dom/lib/DOMProperty'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-var reactdomlibDOMProperty___prodInvariant = $m['react-dom/lib/reactProdInvariant'].exports;
-
-var reactdomlibDOMProperty__invariant = $m['fbjs/lib/invariant'].exports;
-
-function reactdomlibDOMProperty__checkMask(value, bitmask) {
-  return (value & bitmask) === bitmask;
-}
-
-var reactdomlibDOMProperty__DOMPropertyInjection = {
-  /**
-   * Mapping from normalized, camelcased property names to a configuration that
-   * specifies how the associated DOM property should be accessed or rendered.
-   */
-  MUST_USE_PROPERTY: 0x1,
-  HAS_BOOLEAN_VALUE: 0x4,
-  HAS_NUMERIC_VALUE: 0x8,
-  HAS_POSITIVE_NUMERIC_VALUE: 0x10 | 0x8,
-  HAS_OVERLOADED_BOOLEAN_VALUE: 0x20,
-
-  /**
-   * Inject some specialized knowledge about the DOM. This takes a config object
-   * with the following properties:
-   *
-   * isCustomAttribute: function that given an attribute name will return true
-   * if it can be inserted into the DOM verbatim. Useful for data-* or aria-*
-   * attributes where it's impossible to enumerate all of the possible
-   * attribute names,
-   *
-   * Properties: object mapping DOM property name to one of the
-   * DOMPropertyInjection constants or null. If your attribute isn't in here,
-   * it won't get written to the DOM.
-   *
-   * DOMAttributeNames: object mapping React attribute name to the DOM
-   * attribute name. Attribute names not specified use the **lowercase**
-   * normalized name.
-   *
-   * DOMAttributeNamespaces: object mapping React attribute name to the DOM
-   * attribute namespace URL. (Attribute names not specified use no namespace.)
-   *
-   * DOMPropertyNames: similar to DOMAttributeNames but for DOM properties.
-   * Property names not specified use the normalized name.
-   *
-   * DOMMutationMethods: Properties that require special mutation methods. If
-   * `value` is undefined, the mutation method should unset the property.
-   *
-   * @param {object} domPropertyConfig the config as described above.
-   */
-  injectDOMPropertyConfig: function (domPropertyConfig) {
-    var Injection = reactdomlibDOMProperty__DOMPropertyInjection;
-    var Properties = domPropertyConfig.Properties || {};
-    var DOMAttributeNamespaces = domPropertyConfig.DOMAttributeNamespaces || {};
-    var DOMAttributeNames = domPropertyConfig.DOMAttributeNames || {};
-    var DOMPropertyNames = domPropertyConfig.DOMPropertyNames || {};
-    var DOMMutationMethods = domPropertyConfig.DOMMutationMethods || {};
-
-    if (domPropertyConfig.isCustomAttribute) {
-      reactdomlibDOMProperty__DOMProperty._isCustomAttributeFunctions.push(domPropertyConfig.isCustomAttribute);
-    }
-
-    for (var propName in Properties) {
-      !!reactdomlibDOMProperty__DOMProperty.properties.hasOwnProperty(propName) ? process.env.NODE_ENV !== 'production' ? reactdomlibDOMProperty__invariant(false, 'injectDOMPropertyConfig(...): You\'re trying to inject DOM property \'%s\' which has already been injected. You may be accidentally injecting the same DOM property config twice, or you may be injecting two configs that have conflicting property names.', propName) : reactdomlibDOMProperty___prodInvariant('48', propName) : void 0;
-
-      var lowerCased = propName.toLowerCase();
-      var propConfig = Properties[propName];
-
-      var propertyInfo = {
-        attributeName: lowerCased,
-        attributeNamespace: null,
-        propertyName: propName,
-        mutationMethod: null,
-
-        mustUseProperty: reactdomlibDOMProperty__checkMask(propConfig, Injection.MUST_USE_PROPERTY),
-        hasBooleanValue: reactdomlibDOMProperty__checkMask(propConfig, Injection.HAS_BOOLEAN_VALUE),
-        hasNumericValue: reactdomlibDOMProperty__checkMask(propConfig, Injection.HAS_NUMERIC_VALUE),
-        hasPositiveNumericValue: reactdomlibDOMProperty__checkMask(propConfig, Injection.HAS_POSITIVE_NUMERIC_VALUE),
-        hasOverloadedBooleanValue: reactdomlibDOMProperty__checkMask(propConfig, Injection.HAS_OVERLOADED_BOOLEAN_VALUE)
-      };
-      !(propertyInfo.hasBooleanValue + propertyInfo.hasNumericValue + propertyInfo.hasOverloadedBooleanValue <= 1) ? process.env.NODE_ENV !== 'production' ? reactdomlibDOMProperty__invariant(false, 'DOMProperty: Value can be one of boolean, overloaded boolean, or numeric value, but not a combination: %s', propName) : reactdomlibDOMProperty___prodInvariant('50', propName) : void 0;
-
-      if (process.env.NODE_ENV !== 'production') {
-        reactdomlibDOMProperty__DOMProperty.getPossibleStandardName[lowerCased] = propName;
-      }
-
-      if (DOMAttributeNames.hasOwnProperty(propName)) {
-        var attributeName = DOMAttributeNames[propName];
-        propertyInfo.attributeName = attributeName;
-        if (process.env.NODE_ENV !== 'production') {
-          reactdomlibDOMProperty__DOMProperty.getPossibleStandardName[attributeName] = propName;
-        }
-      }
-
-      if (DOMAttributeNamespaces.hasOwnProperty(propName)) {
-        propertyInfo.attributeNamespace = DOMAttributeNamespaces[propName];
-      }
-
-      if (DOMPropertyNames.hasOwnProperty(propName)) {
-        propertyInfo.propertyName = DOMPropertyNames[propName];
-      }
-
-      if (DOMMutationMethods.hasOwnProperty(propName)) {
-        propertyInfo.mutationMethod = DOMMutationMethods[propName];
-      }
-
-      reactdomlibDOMProperty__DOMProperty.properties[propName] = propertyInfo;
-    }
-  }
-};
-
-/* eslint-disable max-len */
-var reactdomlibDOMProperty__ATTRIBUTE_NAME_START_CHAR = ':A-Z_a-z\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD';
-/* eslint-enable max-len */
-
-/**
- * DOMProperty exports lookup objects that can be used like functions:
- *
- *   > DOMProperty.isValid['id']
- *   true
- *   > DOMProperty.isValid['foobar']
- *   undefined
- *
- * Although this may be confusing, it performs better in general.
- *
- * @see http://jsperf.com/key-exists
- * @see http://jsperf.com/key-missing
- */
-var reactdomlibDOMProperty__DOMProperty = {
-
-  ID_ATTRIBUTE_NAME: 'data-reactid',
-  ROOT_ATTRIBUTE_NAME: 'data-reactroot',
-
-  ATTRIBUTE_NAME_START_CHAR: reactdomlibDOMProperty__ATTRIBUTE_NAME_START_CHAR,
-  ATTRIBUTE_NAME_CHAR: reactdomlibDOMProperty__ATTRIBUTE_NAME_START_CHAR + '\\-.0-9\\u00B7\\u0300-\\u036F\\u203F-\\u2040',
-
-  /**
-   * Map from property "standard name" to an object with info about how to set
-   * the property in the DOM. Each object contains:
-   *
-   * attributeName:
-   *   Used when rendering markup or with `*Attribute()`.
-   * attributeNamespace
-   * propertyName:
-   *   Used on DOM node instances. (This includes properties that mutate due to
-   *   external factors.)
-   * mutationMethod:
-   *   If non-null, used instead of the property or `setAttribute()` after
-   *   initial render.
-   * mustUseProperty:
-   *   Whether the property must be accessed and mutated as an object property.
-   * hasBooleanValue:
-   *   Whether the property should be removed when set to a falsey value.
-   * hasNumericValue:
-   *   Whether the property must be numeric or parse as a numeric and should be
-   *   removed when set to a falsey value.
-   * hasPositiveNumericValue:
-   *   Whether the property must be positive numeric or parse as a positive
-   *   numeric and should be removed when set to a falsey value.
-   * hasOverloadedBooleanValue:
-   *   Whether the property can be used as a flag as well as with a value.
-   *   Removed when strictly equal to false; present without a value when
-   *   strictly equal to true; present with a value otherwise.
-   */
-  properties: {},
-
-  /**
-   * Mapping from lowercase property names to the properly cased version, used
-   * to warn in the case of missing properties. Available only in __DEV__.
-   *
-   * autofocus is predefined, because adding it to the property whitelist
-   * causes unintended side effects.
-   *
-   * @type {Object}
-   */
-  getPossibleStandardName: process.env.NODE_ENV !== 'production' ? { autofocus: 'autoFocus' } : null,
-
-  /**
-   * All of the isCustomAttribute() functions that have been injected.
-   */
-  _isCustomAttributeFunctions: [],
-
-  /**
-   * Checks whether a property name is a custom attribute.
-   * @method
-   */
-  isCustomAttribute: function (attributeName) {
-    for (var i = 0; i < reactdomlibDOMProperty__DOMProperty._isCustomAttributeFunctions.length; i++) {
-      var isCustomAttributeFn = reactdomlibDOMProperty__DOMProperty._isCustomAttributeFunctions[i];
-      if (isCustomAttributeFn(attributeName)) {
-        return true;
-      }
-    }
-    return false;
-  },
-
-  injection: reactdomlibDOMProperty__DOMPropertyInjection
-};
-
-$m['react-dom/lib/DOMProperty'].exports = reactdomlibDOMProperty__DOMProperty;
-/*≠≠ node_modules/react-dom/lib/DOMProperty.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactDOMInvalidARIAHook.js ==*/
-$m['react-dom/lib/ReactDOMInvalidARIAHook'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-var reactdomlibReactDOMInvalidARIAHook__DOMProperty = $m['react-dom/lib/DOMProperty'].exports;
-var reactdomlibReactDOMInvalidARIAHook__ReactComponentTreeHook = $m['react/lib/ReactComponentTreeHook'].exports;
-
-var reactdomlibReactDOMInvalidARIAHook__warning = $m['fbjs/lib/warning'].exports;
-
-var reactdomlibReactDOMInvalidARIAHook__warnedProperties = {};
-var reactdomlibReactDOMInvalidARIAHook__rARIA = new RegExp('^(aria)-[' + reactdomlibReactDOMInvalidARIAHook__DOMProperty.ATTRIBUTE_NAME_CHAR + ']*$');
-
-function reactdomlibReactDOMInvalidARIAHook__validateProperty(tagName, name, debugID) {
-  if (reactdomlibReactDOMInvalidARIAHook__warnedProperties.hasOwnProperty(name) && reactdomlibReactDOMInvalidARIAHook__warnedProperties[name]) {
-    return true;
-  }
-
-  if (reactdomlibReactDOMInvalidARIAHook__rARIA.test(name)) {
-    var lowerCasedName = name.toLowerCase();
-    var standardName = reactdomlibReactDOMInvalidARIAHook__DOMProperty.getPossibleStandardName.hasOwnProperty(lowerCasedName) ? reactdomlibReactDOMInvalidARIAHook__DOMProperty.getPossibleStandardName[lowerCasedName] : null;
-
-    // If this is an aria-* attribute, but is not listed in the known DOM
-    // DOM properties, then it is an invalid aria-* attribute.
-    if (standardName == null) {
-      reactdomlibReactDOMInvalidARIAHook__warnedProperties[name] = true;
-      return false;
-    }
-    // aria-* attributes should be lowercase; suggest the lowercase version.
-    if (name !== standardName) {
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMInvalidARIAHook__warning(false, 'Unknown ARIA attribute %s. Did you mean %s?%s', name, standardName, reactdomlibReactDOMInvalidARIAHook__ReactComponentTreeHook.getStackAddendumByID(debugID)) : void 0;
-      reactdomlibReactDOMInvalidARIAHook__warnedProperties[name] = true;
-      return true;
-    }
-  }
-
-  return true;
-}
-
-function reactdomlibReactDOMInvalidARIAHook__warnInvalidARIAProps(debugID, element) {
-  var invalidProps = [];
-
-  for (var key in element.props) {
-    var isValid = reactdomlibReactDOMInvalidARIAHook__validateProperty(element.type, key, debugID);
-    if (!isValid) {
-      invalidProps.push(key);
-    }
-  }
-
-  var unknownPropString = invalidProps.map(function (prop) {
-    return '`' + prop + '`';
-  }).join(', ');
-
-  if (invalidProps.length === 1) {
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMInvalidARIAHook__warning(false, 'Invalid aria prop %s on <%s> tag. ' + 'For details, see https://fb.me/invalid-aria-prop%s', unknownPropString, element.type, reactdomlibReactDOMInvalidARIAHook__ReactComponentTreeHook.getStackAddendumByID(debugID)) : void 0;
-  } else if (invalidProps.length > 1) {
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMInvalidARIAHook__warning(false, 'Invalid aria props %s on <%s> tag. ' + 'For details, see https://fb.me/invalid-aria-prop%s', unknownPropString, element.type, reactdomlibReactDOMInvalidARIAHook__ReactComponentTreeHook.getStackAddendumByID(debugID)) : void 0;
-  }
-}
-
-function reactdomlibReactDOMInvalidARIAHook__handleElement(debugID, element) {
-  if (element == null || typeof element.type !== 'string') {
-    return;
-  }
-  if (element.type.indexOf('-') >= 0 || element.props.is) {
-    return;
-  }
-
-  reactdomlibReactDOMInvalidARIAHook__warnInvalidARIAProps(debugID, element);
-}
-
-var reactdomlibReactDOMInvalidARIAHook__ReactDOMInvalidARIAHook = {
-  onBeforeMountComponent: function (debugID, element) {
-    if (process.env.NODE_ENV !== 'production') {
-      reactdomlibReactDOMInvalidARIAHook__handleElement(debugID, element);
-    }
-  },
-  onBeforeUpdateComponent: function (debugID, element) {
-    if (process.env.NODE_ENV !== 'production') {
-      reactdomlibReactDOMInvalidARIAHook__handleElement(debugID, element);
-    }
-  }
-};
-
-$m['react-dom/lib/ReactDOMInvalidARIAHook'].exports = reactdomlibReactDOMInvalidARIAHook__ReactDOMInvalidARIAHook;
-/*≠≠ node_modules/react-dom/lib/ReactDOMInvalidARIAHook.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactDOMNullInputValuePropHook.js ==*/
-$m['react-dom/lib/ReactDOMNullInputValuePropHook'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-var reactdomlibReactDOMNullInputValuePropHook__ReactComponentTreeHook = $m['react/lib/ReactComponentTreeHook'].exports;
-
-var reactdomlibReactDOMNullInputValuePropHook__warning = $m['fbjs/lib/warning'].exports;
-
-var reactdomlibReactDOMNullInputValuePropHook__didWarnValueNull = false;
-
-function reactdomlibReactDOMNullInputValuePropHook__handleElement(debugID, element) {
-  if (element == null) {
-    return;
-  }
-  if (element.type !== 'input' && element.type !== 'textarea' && element.type !== 'select') {
-    return;
-  }
-  if (element.props != null && element.props.value === null && !reactdomlibReactDOMNullInputValuePropHook__didWarnValueNull) {
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMNullInputValuePropHook__warning(false, '`value` prop on `%s` should not be null. ' + 'Consider using the empty string to clear the component or `undefined` ' + 'for uncontrolled components.%s', element.type, reactdomlibReactDOMNullInputValuePropHook__ReactComponentTreeHook.getStackAddendumByID(debugID)) : void 0;
-
-    reactdomlibReactDOMNullInputValuePropHook__didWarnValueNull = true;
-  }
-}
-
-var reactdomlibReactDOMNullInputValuePropHook__ReactDOMNullInputValuePropHook = {
-  onBeforeMountComponent: function (debugID, element) {
-    reactdomlibReactDOMNullInputValuePropHook__handleElement(debugID, element);
-  },
-  onBeforeUpdateComponent: function (debugID, element) {
-    reactdomlibReactDOMNullInputValuePropHook__handleElement(debugID, element);
-  }
-};
-
-$m['react-dom/lib/ReactDOMNullInputValuePropHook'].exports = reactdomlibReactDOMNullInputValuePropHook__ReactDOMNullInputValuePropHook;
-/*≠≠ node_modules/react-dom/lib/ReactDOMNullInputValuePropHook.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/EventPluginRegistry.js ==*/
-$m['react-dom/lib/EventPluginRegistry'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-var reactdomlibEventPluginRegistry___prodInvariant = $m['react-dom/lib/reactProdInvariant'].exports;
-
-var reactdomlibEventPluginRegistry__invariant = $m['fbjs/lib/invariant'].exports;
-
-/**
- * Injectable ordering of event plugins.
- */
-var reactdomlibEventPluginRegistry__eventPluginOrder = null;
-
-/**
- * Injectable mapping from names to event plugin modules.
- */
-var reactdomlibEventPluginRegistry__namesToPlugins = {};
-
-/**
- * Recomputes the plugin list using the injected plugins and plugin ordering.
- *
- * @private
- */
-function reactdomlibEventPluginRegistry__recomputePluginOrdering() {
-  if (!reactdomlibEventPluginRegistry__eventPluginOrder) {
-    // Wait until an `eventPluginOrder` is injected.
-    return;
-  }
-  for (var pluginName in reactdomlibEventPluginRegistry__namesToPlugins) {
-    var pluginModule = reactdomlibEventPluginRegistry__namesToPlugins[pluginName];
-    var pluginIndex = reactdomlibEventPluginRegistry__eventPluginOrder.indexOf(pluginName);
-    !(pluginIndex > -1) ? process.env.NODE_ENV !== 'production' ? reactdomlibEventPluginRegistry__invariant(false, 'EventPluginRegistry: Cannot inject event plugins that do not exist in the plugin ordering, `%s`.', pluginName) : reactdomlibEventPluginRegistry___prodInvariant('96', pluginName) : void 0;
-    if (reactdomlibEventPluginRegistry__EventPluginRegistry.plugins[pluginIndex]) {
-      continue;
-    }
-    !pluginModule.extractEvents ? process.env.NODE_ENV !== 'production' ? reactdomlibEventPluginRegistry__invariant(false, 'EventPluginRegistry: Event plugins must implement an `extractEvents` method, but `%s` does not.', pluginName) : reactdomlibEventPluginRegistry___prodInvariant('97', pluginName) : void 0;
-    reactdomlibEventPluginRegistry__EventPluginRegistry.plugins[pluginIndex] = pluginModule;
-    var publishedEvents = pluginModule.eventTypes;
-    for (var eventName in publishedEvents) {
-      !reactdomlibEventPluginRegistry__publishEventForPlugin(publishedEvents[eventName], pluginModule, eventName) ? process.env.NODE_ENV !== 'production' ? reactdomlibEventPluginRegistry__invariant(false, 'EventPluginRegistry: Failed to publish event `%s` for plugin `%s`.', eventName, pluginName) : reactdomlibEventPluginRegistry___prodInvariant('98', eventName, pluginName) : void 0;
-    }
-  }
-}
-
-/**
- * Publishes an event so that it can be dispatched by the supplied plugin.
- *
- * @param {object} dispatchConfig Dispatch configuration for the event.
- * @param {object} PluginModule Plugin publishing the event.
- * @return {boolean} True if the event was successfully published.
- * @private
- */
-function reactdomlibEventPluginRegistry__publishEventForPlugin(dispatchConfig, pluginModule, eventName) {
-  !!reactdomlibEventPluginRegistry__EventPluginRegistry.eventNameDispatchConfigs.hasOwnProperty(eventName) ? process.env.NODE_ENV !== 'production' ? reactdomlibEventPluginRegistry__invariant(false, 'EventPluginHub: More than one plugin attempted to publish the same event name, `%s`.', eventName) : reactdomlibEventPluginRegistry___prodInvariant('99', eventName) : void 0;
-  reactdomlibEventPluginRegistry__EventPluginRegistry.eventNameDispatchConfigs[eventName] = dispatchConfig;
-
-  var phasedRegistrationNames = dispatchConfig.phasedRegistrationNames;
-  if (phasedRegistrationNames) {
-    for (var phaseName in phasedRegistrationNames) {
-      if (phasedRegistrationNames.hasOwnProperty(phaseName)) {
-        var phasedRegistrationName = phasedRegistrationNames[phaseName];
-        reactdomlibEventPluginRegistry__publishRegistrationName(phasedRegistrationName, pluginModule, eventName);
-      }
-    }
-    return true;
-  } else if (dispatchConfig.registrationName) {
-    reactdomlibEventPluginRegistry__publishRegistrationName(dispatchConfig.registrationName, pluginModule, eventName);
-    return true;
-  }
-  return false;
-}
-
-/**
- * Publishes a registration name that is used to identify dispatched events and
- * can be used with `EventPluginHub.putListener` to register listeners.
- *
- * @param {string} registrationName Registration name to add.
- * @param {object} PluginModule Plugin publishing the event.
- * @private
- */
-function reactdomlibEventPluginRegistry__publishRegistrationName(registrationName, pluginModule, eventName) {
-  !!reactdomlibEventPluginRegistry__EventPluginRegistry.registrationNameModules[registrationName] ? process.env.NODE_ENV !== 'production' ? reactdomlibEventPluginRegistry__invariant(false, 'EventPluginHub: More than one plugin attempted to publish the same registration name, `%s`.', registrationName) : reactdomlibEventPluginRegistry___prodInvariant('100', registrationName) : void 0;
-  reactdomlibEventPluginRegistry__EventPluginRegistry.registrationNameModules[registrationName] = pluginModule;
-  reactdomlibEventPluginRegistry__EventPluginRegistry.registrationNameDependencies[registrationName] = pluginModule.eventTypes[eventName].dependencies;
-
-  if (process.env.NODE_ENV !== 'production') {
-    var lowerCasedName = registrationName.toLowerCase();
-    reactdomlibEventPluginRegistry__EventPluginRegistry.possibleRegistrationNames[lowerCasedName] = registrationName;
-
-    if (registrationName === 'onDoubleClick') {
-      reactdomlibEventPluginRegistry__EventPluginRegistry.possibleRegistrationNames.ondblclick = registrationName;
-    }
-  }
-}
-
-/**
- * Registers plugins so that they can extract and dispatch events.
- *
- * @see {EventPluginHub}
- */
-var reactdomlibEventPluginRegistry__EventPluginRegistry = {
-
-  /**
-   * Ordered list of injected plugins.
-   */
-  plugins: [],
-
-  /**
-   * Mapping from event name to dispatch config
-   */
-  eventNameDispatchConfigs: {},
-
-  /**
-   * Mapping from registration name to plugin module
-   */
-  registrationNameModules: {},
-
-  /**
-   * Mapping from registration name to event name
-   */
-  registrationNameDependencies: {},
-
-  /**
-   * Mapping from lowercase registration names to the properly cased version,
-   * used to warn in the case of missing event handlers. Available
-   * only in __DEV__.
-   * @type {Object}
-   */
-  possibleRegistrationNames: process.env.NODE_ENV !== 'production' ? {} : null,
-  // Trust the developer to only use possibleRegistrationNames in __DEV__
-
-  /**
-   * Injects an ordering of plugins (by plugin name). This allows the ordering
-   * to be decoupled from injection of the actual plugins so that ordering is
-   * always deterministic regardless of packaging, on-the-fly injection, etc.
-   *
-   * @param {array} InjectedEventPluginOrder
-   * @internal
-   * @see {EventPluginHub.injection.injectEventPluginOrder}
-   */
-  injectEventPluginOrder: function (injectedEventPluginOrder) {
-    !!reactdomlibEventPluginRegistry__eventPluginOrder ? process.env.NODE_ENV !== 'production' ? reactdomlibEventPluginRegistry__invariant(false, 'EventPluginRegistry: Cannot inject event plugin ordering more than once. You are likely trying to load more than one copy of React.') : reactdomlibEventPluginRegistry___prodInvariant('101') : void 0;
-    // Clone the ordering so it cannot be dynamically mutated.
-    reactdomlibEventPluginRegistry__eventPluginOrder = Array.prototype.slice.call(injectedEventPluginOrder);
-    reactdomlibEventPluginRegistry__recomputePluginOrdering();
-  },
-
-  /**
-   * Injects plugins to be used by `EventPluginHub`. The plugin names must be
-   * in the ordering injected by `injectEventPluginOrder`.
-   *
-   * Plugins can be injected as part of page initialization or on-the-fly.
-   *
-   * @param {object} injectedNamesToPlugins Map from names to plugin modules.
-   * @internal
-   * @see {EventPluginHub.injection.injectEventPluginsByName}
-   */
-  injectEventPluginsByName: function (injectedNamesToPlugins) {
-    var isOrderingDirty = false;
-    for (var pluginName in injectedNamesToPlugins) {
-      if (!injectedNamesToPlugins.hasOwnProperty(pluginName)) {
-        continue;
-      }
-      var pluginModule = injectedNamesToPlugins[pluginName];
-      if (!reactdomlibEventPluginRegistry__namesToPlugins.hasOwnProperty(pluginName) || reactdomlibEventPluginRegistry__namesToPlugins[pluginName] !== pluginModule) {
-        !!reactdomlibEventPluginRegistry__namesToPlugins[pluginName] ? process.env.NODE_ENV !== 'production' ? reactdomlibEventPluginRegistry__invariant(false, 'EventPluginRegistry: Cannot inject two different event plugins using the same name, `%s`.', pluginName) : reactdomlibEventPluginRegistry___prodInvariant('102', pluginName) : void 0;
-        reactdomlibEventPluginRegistry__namesToPlugins[pluginName] = pluginModule;
-        isOrderingDirty = true;
-      }
-    }
-    if (isOrderingDirty) {
-      reactdomlibEventPluginRegistry__recomputePluginOrdering();
-    }
-  },
-
-  /**
-   * Looks up the plugin for the supplied event.
-   *
-   * @param {object} event A synthetic event.
-   * @return {?object} The plugin that created the supplied event.
-   * @internal
-   */
-  getPluginModuleForEvent: function (event) {
-    var dispatchConfig = event.dispatchConfig;
-    if (dispatchConfig.registrationName) {
-      return reactdomlibEventPluginRegistry__EventPluginRegistry.registrationNameModules[dispatchConfig.registrationName] || null;
-    }
-    if (dispatchConfig.phasedRegistrationNames !== undefined) {
-      // pulling phasedRegistrationNames out of dispatchConfig helps Flow see
-      // that it is not undefined.
-      var phasedRegistrationNames = dispatchConfig.phasedRegistrationNames;
-
-      for (var phase in phasedRegistrationNames) {
-        if (!phasedRegistrationNames.hasOwnProperty(phase)) {
-          continue;
-        }
-        var pluginModule = reactdomlibEventPluginRegistry__EventPluginRegistry.registrationNameModules[phasedRegistrationNames[phase]];
-        if (pluginModule) {
-          return pluginModule;
-        }
-      }
-    }
-    return null;
-  },
-
-  /**
-   * Exposed for unit testing.
-   * @private
-   */
-  _resetEventPlugins: function () {
-    reactdomlibEventPluginRegistry__eventPluginOrder = null;
-    for (var pluginName in reactdomlibEventPluginRegistry__namesToPlugins) {
-      if (reactdomlibEventPluginRegistry__namesToPlugins.hasOwnProperty(pluginName)) {
-        delete reactdomlibEventPluginRegistry__namesToPlugins[pluginName];
-      }
-    }
-    reactdomlibEventPluginRegistry__EventPluginRegistry.plugins.length = 0;
-
-    var eventNameDispatchConfigs = reactdomlibEventPluginRegistry__EventPluginRegistry.eventNameDispatchConfigs;
-    for (var eventName in eventNameDispatchConfigs) {
-      if (eventNameDispatchConfigs.hasOwnProperty(eventName)) {
-        delete eventNameDispatchConfigs[eventName];
-      }
-    }
-
-    var registrationNameModules = reactdomlibEventPluginRegistry__EventPluginRegistry.registrationNameModules;
-    for (var registrationName in registrationNameModules) {
-      if (registrationNameModules.hasOwnProperty(registrationName)) {
-        delete registrationNameModules[registrationName];
-      }
-    }
-
-    if (process.env.NODE_ENV !== 'production') {
-      var possibleRegistrationNames = reactdomlibEventPluginRegistry__EventPluginRegistry.possibleRegistrationNames;
-      for (var lowerCasedName in possibleRegistrationNames) {
-        if (possibleRegistrationNames.hasOwnProperty(lowerCasedName)) {
-          delete possibleRegistrationNames[lowerCasedName];
-        }
-      }
-    }
-  }
-
-};
-
-$m['react-dom/lib/EventPluginRegistry'].exports = reactdomlibEventPluginRegistry__EventPluginRegistry;
-/*≠≠ node_modules/react-dom/lib/EventPluginRegistry.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactDOMUnknownPropertyHook.js ==*/
-$m['react-dom/lib/ReactDOMUnknownPropertyHook'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-var reactdomlibReactDOMUnknownPropertyHook__DOMProperty = $m['react-dom/lib/DOMProperty'].exports;
-var reactdomlibReactDOMUnknownPropertyHook__EventPluginRegistry = $m['react-dom/lib/EventPluginRegistry'].exports;
-var reactdomlibReactDOMUnknownPropertyHook__ReactComponentTreeHook = $m['react/lib/ReactComponentTreeHook'].exports;
-
-var reactdomlibReactDOMUnknownPropertyHook__warning = $m['fbjs/lib/warning'].exports;
-
-if (process.env.NODE_ENV !== 'production') {
-  var reactdomlibReactDOMUnknownPropertyHook__reactProps = {
-    children: true,
-    dangerouslySetInnerHTML: true,
-    key: true,
-    ref: true,
-
-    autoFocus: true,
-    defaultValue: true,
-    valueLink: true,
-    defaultChecked: true,
-    checkedLink: true,
-    innerHTML: true,
-    suppressContentEditableWarning: true,
-    onFocusIn: true,
-    onFocusOut: true
-  };
-  var reactdomlibReactDOMUnknownPropertyHook__warnedProperties = {};
-
-  var reactdomlibReactDOMUnknownPropertyHook__validateProperty = function (tagName, name, debugID) {
-    if (reactdomlibReactDOMUnknownPropertyHook__DOMProperty.properties.hasOwnProperty(name) || reactdomlibReactDOMUnknownPropertyHook__DOMProperty.isCustomAttribute(name)) {
-      return true;
-    }
-    if (reactdomlibReactDOMUnknownPropertyHook__reactProps.hasOwnProperty(name) && reactdomlibReactDOMUnknownPropertyHook__reactProps[name] || reactdomlibReactDOMUnknownPropertyHook__warnedProperties.hasOwnProperty(name) && reactdomlibReactDOMUnknownPropertyHook__warnedProperties[name]) {
-      return true;
-    }
-    if (reactdomlibReactDOMUnknownPropertyHook__EventPluginRegistry.registrationNameModules.hasOwnProperty(name)) {
-      return true;
-    }
-    reactdomlibReactDOMUnknownPropertyHook__warnedProperties[name] = true;
-    var lowerCasedName = name.toLowerCase();
-
-    // data-* attributes should be lowercase; suggest the lowercase version
-    var standardName = reactdomlibReactDOMUnknownPropertyHook__DOMProperty.isCustomAttribute(lowerCasedName) ? lowerCasedName : reactdomlibReactDOMUnknownPropertyHook__DOMProperty.getPossibleStandardName.hasOwnProperty(lowerCasedName) ? reactdomlibReactDOMUnknownPropertyHook__DOMProperty.getPossibleStandardName[lowerCasedName] : null;
-
-    var registrationName = reactdomlibReactDOMUnknownPropertyHook__EventPluginRegistry.possibleRegistrationNames.hasOwnProperty(lowerCasedName) ? reactdomlibReactDOMUnknownPropertyHook__EventPluginRegistry.possibleRegistrationNames[lowerCasedName] : null;
-
-    if (standardName != null) {
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMUnknownPropertyHook__warning(false, 'Unknown DOM property %s. Did you mean %s?%s', name, standardName, reactdomlibReactDOMUnknownPropertyHook__ReactComponentTreeHook.getStackAddendumByID(debugID)) : void 0;
-      return true;
-    } else if (registrationName != null) {
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMUnknownPropertyHook__warning(false, 'Unknown event handler property %s. Did you mean `%s`?%s', name, registrationName, reactdomlibReactDOMUnknownPropertyHook__ReactComponentTreeHook.getStackAddendumByID(debugID)) : void 0;
-      return true;
-    } else {
-      // We were unable to guess which prop the user intended.
-      // It is likely that the user was just blindly spreading/forwarding props
-      // Components should be careful to only render valid props/attributes.
-      // Warning will be invoked in warnUnknownProperties to allow grouping.
-      return false;
-    }
-  };
-}
-
-var reactdomlibReactDOMUnknownPropertyHook__warnUnknownProperties = function (debugID, element) {
-  var unknownProps = [];
-  for (var key in element.props) {
-    var isValid = reactdomlibReactDOMUnknownPropertyHook__validateProperty(element.type, key, debugID);
-    if (!isValid) {
-      unknownProps.push(key);
-    }
-  }
-
-  var unknownPropString = unknownProps.map(function (prop) {
-    return '`' + prop + '`';
-  }).join(', ');
-
-  if (unknownProps.length === 1) {
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMUnknownPropertyHook__warning(false, 'Unknown prop %s on <%s> tag. Remove this prop from the element. ' + 'For details, see https://fb.me/react-unknown-prop%s', unknownPropString, element.type, reactdomlibReactDOMUnknownPropertyHook__ReactComponentTreeHook.getStackAddendumByID(debugID)) : void 0;
-  } else if (unknownProps.length > 1) {
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMUnknownPropertyHook__warning(false, 'Unknown props %s on <%s> tag. Remove these props from the element. ' + 'For details, see https://fb.me/react-unknown-prop%s', unknownPropString, element.type, reactdomlibReactDOMUnknownPropertyHook__ReactComponentTreeHook.getStackAddendumByID(debugID)) : void 0;
-  }
-};
-
-function reactdomlibReactDOMUnknownPropertyHook__handleElement(debugID, element) {
-  if (element == null || typeof element.type !== 'string') {
-    return;
-  }
-  if (element.type.indexOf('-') >= 0 || element.props.is) {
-    return;
-  }
-  reactdomlibReactDOMUnknownPropertyHook__warnUnknownProperties(debugID, element);
-}
-
-var reactdomlibReactDOMUnknownPropertyHook__ReactDOMUnknownPropertyHook = {
-  onBeforeMountComponent: function (debugID, element) {
-    reactdomlibReactDOMUnknownPropertyHook__handleElement(debugID, element);
-  },
-  onBeforeUpdateComponent: function (debugID, element) {
-    reactdomlibReactDOMUnknownPropertyHook__handleElement(debugID, element);
-  }
-};
-
-$m['react-dom/lib/ReactDOMUnknownPropertyHook'].exports = reactdomlibReactDOMUnknownPropertyHook__ReactDOMUnknownPropertyHook;
-/*≠≠ node_modules/react-dom/lib/ReactDOMUnknownPropertyHook.js ≠≠*/
-
-
-/*== node_modules/fbjs/lib/performance.js ==*/
-$m['fbjs/lib/performance'] = { exports: {} };
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @typechecks
- */
-
-var fbjslibperformance__ExecutionEnvironment = $m['fbjs/lib/ExecutionEnvironment'].exports;
-
-var fbjslibperformance__performance;
-
-if (fbjslibperformance__ExecutionEnvironment.canUseDOM) {
-  fbjslibperformance__performance = window.performance || window.msPerformance || window.webkitPerformance;
-}
-
-$m['fbjs/lib/performance'].exports = fbjslibperformance__performance || {};
-/*≠≠ node_modules/fbjs/lib/performance.js ≠≠*/
-
-
-/*== node_modules/fbjs/lib/performanceNow.js ==*/
-$m['fbjs/lib/performanceNow'] = { exports: {} };
-
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @typechecks
- */
-
-var fbjslibperformanceNow__performance = $m['fbjs/lib/performance'].exports;
-
-var fbjslibperformanceNow__performanceNow;
-
-/**
- * Detect if we can use `window.performance.now()` and gracefully fallback to
- * `Date.now()` if it doesn't exist. We need to support Firefox < 15 for now
- * because of Facebook's testing infrastructure.
- */
-if (fbjslibperformanceNow__performance.now) {
-  fbjslibperformanceNow__performanceNow = function performanceNow() {
-    return fbjslibperformanceNow__performance.now();
-  };
-} else {
-  fbjslibperformanceNow__performanceNow = function performanceNow() {
-    return Date.now();
-  };
-}
-
-$m['fbjs/lib/performanceNow'].exports = fbjslibperformanceNow__performanceNow;
-/*≠≠ node_modules/fbjs/lib/performanceNow.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactInvalidSetStateWarningHook.js ==*/
-$m['react-dom/lib/ReactInvalidSetStateWarningHook'] = { exports: {} };
-/**
- * Copyright 2016-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-var reactdomlibReactInvalidSetStateWarningHook__warning = $m['fbjs/lib/warning'].exports;
-
-if (process.env.NODE_ENV !== 'production') {
-  var reactdomlibReactInvalidSetStateWarningHook__processingChildContext = false;
-
-  var reactdomlibReactInvalidSetStateWarningHook__warnInvalidSetState = function () {
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactInvalidSetStateWarningHook__warning(!reactdomlibReactInvalidSetStateWarningHook__processingChildContext, 'setState(...): Cannot call setState() inside getChildContext()') : void 0;
-  };
-}
-
-var reactdomlibReactInvalidSetStateWarningHook__ReactInvalidSetStateWarningHook = {
-  onBeginProcessingChildContext: function () {
-    reactdomlibReactInvalidSetStateWarningHook__processingChildContext = true;
-  },
-  onEndProcessingChildContext: function () {
-    reactdomlibReactInvalidSetStateWarningHook__processingChildContext = false;
-  },
-  onSetState: function () {
-    reactdomlibReactInvalidSetStateWarningHook__warnInvalidSetState();
-  }
-};
-
-$m['react-dom/lib/ReactInvalidSetStateWarningHook'].exports = reactdomlibReactInvalidSetStateWarningHook__ReactInvalidSetStateWarningHook;
-/*≠≠ node_modules/react-dom/lib/ReactInvalidSetStateWarningHook.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactDebugTool.js ==*/
-$m['react-dom/lib/ReactDebugTool'] = { exports: {} };
-/**
- * Copyright 2016-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-var reactdomlibReactDebugTool__ReactInvalidSetStateWarningHook = $m['react-dom/lib/ReactInvalidSetStateWarningHook'].exports;
-var reactdomlibReactDebugTool__ReactHostOperationHistoryHook = $m['react-dom/lib/ReactHostOperationHistoryHook'].exports;
-var reactdomlibReactDebugTool__ReactComponentTreeHook = $m['react/lib/ReactComponentTreeHook'].exports;
-var reactdomlibReactDebugTool__ExecutionEnvironment = $m['fbjs/lib/ExecutionEnvironment'].exports;
-
-var reactdomlibReactDebugTool__performanceNow = $m['fbjs/lib/performanceNow'].exports;
-var reactdomlibReactDebugTool__warning = $m['fbjs/lib/warning'].exports;
-
-var reactdomlibReactDebugTool__hooks = [];
-var reactdomlibReactDebugTool__didHookThrowForEvent = {};
-
-function reactdomlibReactDebugTool__callHook(event, fn, context, arg1, arg2, arg3, arg4, arg5) {
-  try {
-    fn.call(context, arg1, arg2, arg3, arg4, arg5);
-  } catch (e) {
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactDebugTool__warning(reactdomlibReactDebugTool__didHookThrowForEvent[event], 'Exception thrown by hook while handling %s: %s', event, e + '\n' + e.stack) : void 0;
-    reactdomlibReactDebugTool__didHookThrowForEvent[event] = true;
-  }
-}
-
-function reactdomlibReactDebugTool__emitEvent(event, arg1, arg2, arg3, arg4, arg5) {
-  for (var i = 0; i < reactdomlibReactDebugTool__hooks.length; i++) {
-    var hook = reactdomlibReactDebugTool__hooks[i];
-    var fn = hook[event];
-    if (fn) {
-      reactdomlibReactDebugTool__callHook(event, fn, hook, arg1, arg2, arg3, arg4, arg5);
-    }
-  }
-}
-
-var reactdomlibReactDebugTool__isProfiling = false;
-var reactdomlibReactDebugTool__flushHistory = [];
-var reactdomlibReactDebugTool__lifeCycleTimerStack = [];
-var reactdomlibReactDebugTool__currentFlushNesting = 0;
-var reactdomlibReactDebugTool__currentFlushMeasurements = [];
-var reactdomlibReactDebugTool__currentFlushStartTime = 0;
-var reactdomlibReactDebugTool__currentTimerDebugID = null;
-var reactdomlibReactDebugTool__currentTimerStartTime = 0;
-var reactdomlibReactDebugTool__currentTimerNestedFlushDuration = 0;
-var reactdomlibReactDebugTool__currentTimerType = null;
-
-var reactdomlibReactDebugTool__lifeCycleTimerHasWarned = false;
-
-function reactdomlibReactDebugTool__clearHistory() {
-  reactdomlibReactDebugTool__ReactComponentTreeHook.purgeUnmountedComponents();
-  reactdomlibReactDebugTool__ReactHostOperationHistoryHook.clearHistory();
-}
-
-function reactdomlibReactDebugTool__getTreeSnapshot(registeredIDs) {
-  return registeredIDs.reduce(function (tree, id) {
-    var ownerID = reactdomlibReactDebugTool__ReactComponentTreeHook.getOwnerID(id);
-    var parentID = reactdomlibReactDebugTool__ReactComponentTreeHook.getParentID(id);
-    tree[id] = {
-      displayName: reactdomlibReactDebugTool__ReactComponentTreeHook.getDisplayName(id),
-      text: reactdomlibReactDebugTool__ReactComponentTreeHook.getText(id),
-      updateCount: reactdomlibReactDebugTool__ReactComponentTreeHook.getUpdateCount(id),
-      childIDs: reactdomlibReactDebugTool__ReactComponentTreeHook.getChildIDs(id),
-      // Text nodes don't have owners but this is close enough.
-      ownerID: ownerID || parentID && reactdomlibReactDebugTool__ReactComponentTreeHook.getOwnerID(parentID) || 0,
-      parentID: parentID
-    };
-    return tree;
-  }, {});
-}
-
-function reactdomlibReactDebugTool__resetMeasurements() {
-  var previousStartTime = reactdomlibReactDebugTool__currentFlushStartTime;
-  var previousMeasurements = reactdomlibReactDebugTool__currentFlushMeasurements;
-  var previousOperations = reactdomlibReactDebugTool__ReactHostOperationHistoryHook.getHistory();
-
-  if (reactdomlibReactDebugTool__currentFlushNesting === 0) {
-    reactdomlibReactDebugTool__currentFlushStartTime = 0;
-    reactdomlibReactDebugTool__currentFlushMeasurements = [];
-    reactdomlibReactDebugTool__clearHistory();
-    return;
-  }
-
-  if (previousMeasurements.length || previousOperations.length) {
-    var registeredIDs = reactdomlibReactDebugTool__ReactComponentTreeHook.getRegisteredIDs();
-    reactdomlibReactDebugTool__flushHistory.push({
-      duration: reactdomlibReactDebugTool__performanceNow() - previousStartTime,
-      measurements: previousMeasurements || [],
-      operations: previousOperations || [],
-      treeSnapshot: reactdomlibReactDebugTool__getTreeSnapshot(registeredIDs)
-    });
-  }
-
-  reactdomlibReactDebugTool__clearHistory();
-  reactdomlibReactDebugTool__currentFlushStartTime = reactdomlibReactDebugTool__performanceNow();
-  reactdomlibReactDebugTool__currentFlushMeasurements = [];
-}
-
-function reactdomlibReactDebugTool__checkDebugID(debugID) {
-  var allowRoot = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-  if (allowRoot && debugID === 0) {
-    return;
-  }
-  if (!debugID) {
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactDebugTool__warning(false, 'ReactDebugTool: debugID may not be empty.') : void 0;
-  }
-}
-
-function reactdomlibReactDebugTool__beginLifeCycleTimer(debugID, timerType) {
-  if (reactdomlibReactDebugTool__currentFlushNesting === 0) {
-    return;
-  }
-  if (reactdomlibReactDebugTool__currentTimerType && !reactdomlibReactDebugTool__lifeCycleTimerHasWarned) {
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactDebugTool__warning(false, 'There is an internal error in the React performance measurement code. ' + 'Did not expect %s timer to start while %s timer is still in ' + 'progress for %s instance.', timerType, reactdomlibReactDebugTool__currentTimerType || 'no', debugID === reactdomlibReactDebugTool__currentTimerDebugID ? 'the same' : 'another') : void 0;
-    reactdomlibReactDebugTool__lifeCycleTimerHasWarned = true;
-  }
-  reactdomlibReactDebugTool__currentTimerStartTime = reactdomlibReactDebugTool__performanceNow();
-  reactdomlibReactDebugTool__currentTimerNestedFlushDuration = 0;
-  reactdomlibReactDebugTool__currentTimerDebugID = debugID;
-  reactdomlibReactDebugTool__currentTimerType = timerType;
-}
-
-function reactdomlibReactDebugTool__endLifeCycleTimer(debugID, timerType) {
-  if (reactdomlibReactDebugTool__currentFlushNesting === 0) {
-    return;
-  }
-  if (reactdomlibReactDebugTool__currentTimerType !== timerType && !reactdomlibReactDebugTool__lifeCycleTimerHasWarned) {
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactDebugTool__warning(false, 'There is an internal error in the React performance measurement code. ' + 'We did not expect %s timer to stop while %s timer is still in ' + 'progress for %s instance. Please report this as a bug in React.', timerType, reactdomlibReactDebugTool__currentTimerType || 'no', debugID === reactdomlibReactDebugTool__currentTimerDebugID ? 'the same' : 'another') : void 0;
-    reactdomlibReactDebugTool__lifeCycleTimerHasWarned = true;
-  }
-  if (reactdomlibReactDebugTool__isProfiling) {
-    reactdomlibReactDebugTool__currentFlushMeasurements.push({
-      timerType: timerType,
-      instanceID: debugID,
-      duration: reactdomlibReactDebugTool__performanceNow() - reactdomlibReactDebugTool__currentTimerStartTime - reactdomlibReactDebugTool__currentTimerNestedFlushDuration
-    });
-  }
-  reactdomlibReactDebugTool__currentTimerStartTime = 0;
-  reactdomlibReactDebugTool__currentTimerNestedFlushDuration = 0;
-  reactdomlibReactDebugTool__currentTimerDebugID = null;
-  reactdomlibReactDebugTool__currentTimerType = null;
-}
-
-function reactdomlibReactDebugTool__pauseCurrentLifeCycleTimer() {
-  var currentTimer = {
-    startTime: reactdomlibReactDebugTool__currentTimerStartTime,
-    nestedFlushStartTime: reactdomlibReactDebugTool__performanceNow(),
-    debugID: reactdomlibReactDebugTool__currentTimerDebugID,
-    timerType: reactdomlibReactDebugTool__currentTimerType
-  };
-  reactdomlibReactDebugTool__lifeCycleTimerStack.push(currentTimer);
-  reactdomlibReactDebugTool__currentTimerStartTime = 0;
-  reactdomlibReactDebugTool__currentTimerNestedFlushDuration = 0;
-  reactdomlibReactDebugTool__currentTimerDebugID = null;
-  reactdomlibReactDebugTool__currentTimerType = null;
-}
-
-function reactdomlibReactDebugTool__resumeCurrentLifeCycleTimer() {
-  var _lifeCycleTimerStack$ = reactdomlibReactDebugTool__lifeCycleTimerStack.pop(),
-      startTime = _lifeCycleTimerStack$.startTime,
-      nestedFlushStartTime = _lifeCycleTimerStack$.nestedFlushStartTime,
-      debugID = _lifeCycleTimerStack$.debugID,
-      timerType = _lifeCycleTimerStack$.timerType;
-
-  var nestedFlushDuration = reactdomlibReactDebugTool__performanceNow() - nestedFlushStartTime;
-  reactdomlibReactDebugTool__currentTimerStartTime = startTime;
-  reactdomlibReactDebugTool__currentTimerNestedFlushDuration += nestedFlushDuration;
-  reactdomlibReactDebugTool__currentTimerDebugID = debugID;
-  reactdomlibReactDebugTool__currentTimerType = timerType;
-}
-
-var reactdomlibReactDebugTool__lastMarkTimeStamp = 0;
-var reactdomlibReactDebugTool__canUsePerformanceMeasure =
-// $FlowFixMe https://github.com/facebook/flow/issues/2345
-typeof performance !== 'undefined' && typeof performance.mark === 'function' && typeof performance.clearMarks === 'function' && typeof performance.measure === 'function' && typeof performance.clearMeasures === 'function';
-
-function reactdomlibReactDebugTool__shouldMark(debugID) {
-  if (!reactdomlibReactDebugTool__isProfiling || !reactdomlibReactDebugTool__canUsePerformanceMeasure) {
-    return false;
-  }
-  var element = reactdomlibReactDebugTool__ReactComponentTreeHook.getElement(debugID);
-  if (element == null || typeof element !== 'object') {
-    return false;
-  }
-  var isHostElement = typeof element.type === 'string';
-  if (isHostElement) {
-    return false;
-  }
-  return true;
-}
-
-function reactdomlibReactDebugTool__markBegin(debugID, markType) {
-  if (!reactdomlibReactDebugTool__shouldMark(debugID)) {
-    return;
-  }
-
-  var markName = debugID + '::' + markType;
-  reactdomlibReactDebugTool__lastMarkTimeStamp = reactdomlibReactDebugTool__performanceNow();
-  performance.mark(markName);
-}
-
-function reactdomlibReactDebugTool__markEnd(debugID, markType) {
-  if (!reactdomlibReactDebugTool__shouldMark(debugID)) {
-    return;
-  }
-
-  var markName = debugID + '::' + markType;
-  var displayName = reactdomlibReactDebugTool__ReactComponentTreeHook.getDisplayName(debugID) || 'Unknown';
-
-  // Chrome has an issue of dropping markers recorded too fast:
-  // https://bugs.chromium.org/p/chromium/issues/detail?id=640652
-  // To work around this, we will not report very small measurements.
-  // I determined the magic number by tweaking it back and forth.
-  // 0.05ms was enough to prevent the issue, but I set it to 0.1ms to be safe.
-  // When the bug is fixed, we can `measure()` unconditionally if we want to.
-  var timeStamp = reactdomlibReactDebugTool__performanceNow();
-  if (timeStamp - reactdomlibReactDebugTool__lastMarkTimeStamp > 0.1) {
-    var measurementName = displayName + ' [' + markType + ']';
-    performance.measure(measurementName, markName);
-  }
-
-  performance.clearMarks(markName);
-  performance.clearMeasures(measurementName);
-}
-
-var reactdomlibReactDebugTool__ReactDebugTool = {
-  addHook: function (hook) {
-    reactdomlibReactDebugTool__hooks.push(hook);
-  },
-  removeHook: function (hook) {
-    for (var i = 0; i < reactdomlibReactDebugTool__hooks.length; i++) {
-      if (reactdomlibReactDebugTool__hooks[i] === hook) {
-        reactdomlibReactDebugTool__hooks.splice(i, 1);
-        i--;
-      }
-    }
-  },
-  isProfiling: function () {
-    return reactdomlibReactDebugTool__isProfiling;
-  },
-  beginProfiling: function () {
-    if (reactdomlibReactDebugTool__isProfiling) {
-      return;
-    }
-
-    reactdomlibReactDebugTool__isProfiling = true;
-    reactdomlibReactDebugTool__flushHistory.length = 0;
-    reactdomlibReactDebugTool__resetMeasurements();
-    reactdomlibReactDebugTool__ReactDebugTool.addHook(reactdomlibReactDebugTool__ReactHostOperationHistoryHook);
-  },
-  endProfiling: function () {
-    if (!reactdomlibReactDebugTool__isProfiling) {
-      return;
-    }
-
-    reactdomlibReactDebugTool__isProfiling = false;
-    reactdomlibReactDebugTool__resetMeasurements();
-    reactdomlibReactDebugTool__ReactDebugTool.removeHook(reactdomlibReactDebugTool__ReactHostOperationHistoryHook);
-  },
-  getFlushHistory: function () {
-    return reactdomlibReactDebugTool__flushHistory;
-  },
-  onBeginFlush: function () {
-    reactdomlibReactDebugTool__currentFlushNesting++;
-    reactdomlibReactDebugTool__resetMeasurements();
-    reactdomlibReactDebugTool__pauseCurrentLifeCycleTimer();
-    reactdomlibReactDebugTool__emitEvent('onBeginFlush');
-  },
-  onEndFlush: function () {
-    reactdomlibReactDebugTool__resetMeasurements();
-    reactdomlibReactDebugTool__currentFlushNesting--;
-    reactdomlibReactDebugTool__resumeCurrentLifeCycleTimer();
-    reactdomlibReactDebugTool__emitEvent('onEndFlush');
-  },
-  onBeginLifeCycleTimer: function (debugID, timerType) {
-    reactdomlibReactDebugTool__checkDebugID(debugID);
-    reactdomlibReactDebugTool__emitEvent('onBeginLifeCycleTimer', debugID, timerType);
-    reactdomlibReactDebugTool__markBegin(debugID, timerType);
-    reactdomlibReactDebugTool__beginLifeCycleTimer(debugID, timerType);
-  },
-  onEndLifeCycleTimer: function (debugID, timerType) {
-    reactdomlibReactDebugTool__checkDebugID(debugID);
-    reactdomlibReactDebugTool__endLifeCycleTimer(debugID, timerType);
-    reactdomlibReactDebugTool__markEnd(debugID, timerType);
-    reactdomlibReactDebugTool__emitEvent('onEndLifeCycleTimer', debugID, timerType);
-  },
-  onBeginProcessingChildContext: function () {
-    reactdomlibReactDebugTool__emitEvent('onBeginProcessingChildContext');
-  },
-  onEndProcessingChildContext: function () {
-    reactdomlibReactDebugTool__emitEvent('onEndProcessingChildContext');
-  },
-  onHostOperation: function (operation) {
-    reactdomlibReactDebugTool__checkDebugID(operation.instanceID);
-    reactdomlibReactDebugTool__emitEvent('onHostOperation', operation);
-  },
-  onSetState: function () {
-    reactdomlibReactDebugTool__emitEvent('onSetState');
-  },
-  onSetChildren: function (debugID, childDebugIDs) {
-    reactdomlibReactDebugTool__checkDebugID(debugID);
-    childDebugIDs.forEach(reactdomlibReactDebugTool__checkDebugID);
-    reactdomlibReactDebugTool__emitEvent('onSetChildren', debugID, childDebugIDs);
-  },
-  onBeforeMountComponent: function (debugID, element, parentDebugID) {
-    reactdomlibReactDebugTool__checkDebugID(debugID);
-    reactdomlibReactDebugTool__checkDebugID(parentDebugID, true);
-    reactdomlibReactDebugTool__emitEvent('onBeforeMountComponent', debugID, element, parentDebugID);
-    reactdomlibReactDebugTool__markBegin(debugID, 'mount');
-  },
-  onMountComponent: function (debugID) {
-    reactdomlibReactDebugTool__checkDebugID(debugID);
-    reactdomlibReactDebugTool__markEnd(debugID, 'mount');
-    reactdomlibReactDebugTool__emitEvent('onMountComponent', debugID);
-  },
-  onBeforeUpdateComponent: function (debugID, element) {
-    reactdomlibReactDebugTool__checkDebugID(debugID);
-    reactdomlibReactDebugTool__emitEvent('onBeforeUpdateComponent', debugID, element);
-    reactdomlibReactDebugTool__markBegin(debugID, 'update');
-  },
-  onUpdateComponent: function (debugID) {
-    reactdomlibReactDebugTool__checkDebugID(debugID);
-    reactdomlibReactDebugTool__markEnd(debugID, 'update');
-    reactdomlibReactDebugTool__emitEvent('onUpdateComponent', debugID);
-  },
-  onBeforeUnmountComponent: function (debugID) {
-    reactdomlibReactDebugTool__checkDebugID(debugID);
-    reactdomlibReactDebugTool__emitEvent('onBeforeUnmountComponent', debugID);
-    reactdomlibReactDebugTool__markBegin(debugID, 'unmount');
-  },
-  onUnmountComponent: function (debugID) {
-    reactdomlibReactDebugTool__checkDebugID(debugID);
-    reactdomlibReactDebugTool__markEnd(debugID, 'unmount');
-    reactdomlibReactDebugTool__emitEvent('onUnmountComponent', debugID);
-  },
-  onTestEvent: function () {
-    reactdomlibReactDebugTool__emitEvent('onTestEvent');
-  }
-};
-
-// TODO remove these when RN/www gets updated
-reactdomlibReactDebugTool__ReactDebugTool.addDevtool = reactdomlibReactDebugTool__ReactDebugTool.addHook;
-reactdomlibReactDebugTool__ReactDebugTool.removeDevtool = reactdomlibReactDebugTool__ReactDebugTool.removeHook;
-
-reactdomlibReactDebugTool__ReactDebugTool.addHook(reactdomlibReactDebugTool__ReactInvalidSetStateWarningHook);
-reactdomlibReactDebugTool__ReactDebugTool.addHook(reactdomlibReactDebugTool__ReactComponentTreeHook);
-var reactdomlibReactDebugTool__url = reactdomlibReactDebugTool__ExecutionEnvironment.canUseDOM && window.location.href || '';
-if (/[?&]react_perf\b/.test(reactdomlibReactDebugTool__url)) {
-  reactdomlibReactDebugTool__ReactDebugTool.beginProfiling();
-}
-
-$m['react-dom/lib/ReactDebugTool'].exports = reactdomlibReactDebugTool__ReactDebugTool;
-/*≠≠ node_modules/react-dom/lib/ReactDebugTool.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactInstrumentation.js ==*/
-$m['react-dom/lib/ReactInstrumentation'] = { exports: {} };
-/**
- * Copyright 2016-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-// Trust the developer to only use ReactInstrumentation with a __DEV__ check
-
-var reactdomlibReactInstrumentation__debugTool = null;
-
-if (process.env.NODE_ENV !== 'production') {
-  var reactdomlibReactInstrumentation__ReactDebugTool = $m['react-dom/lib/ReactDebugTool'].exports;
-  reactdomlibReactInstrumentation__debugTool = reactdomlibReactInstrumentation__ReactDebugTool;
-}
-
-$m['react-dom/lib/ReactInstrumentation'].exports = { debugTool: reactdomlibReactInstrumentation__debugTool };
-/*≠≠ node_modules/react-dom/lib/ReactInstrumentation.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/setInnerHTML.js ==*/
-$m['react-dom/lib/setInnerHTML'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-var reactdomlibsetInnerHTML__ExecutionEnvironment = $m['fbjs/lib/ExecutionEnvironment'].exports;
-var reactdomlibsetInnerHTML__DOMNamespaces = $m['react-dom/lib/DOMNamespaces'].exports;
-
-var reactdomlibsetInnerHTML__WHITESPACE_TEST = /^[ \r\n\t\f]/;
-var reactdomlibsetInnerHTML__NONVISIBLE_TEST = /<(!--|link|noscript|meta|script|style)[ \r\n\t\f\/>]/;
-
-var reactdomlibsetInnerHTML__createMicrosoftUnsafeLocalFunction = $m['react-dom/lib/createMicrosoftUnsafeLocalFunction'].exports;
-
-// SVG temp container for IE lacking innerHTML
-var reactdomlibsetInnerHTML__reusableSVGContainer;
-
-/**
- * Set the innerHTML property of a node, ensuring that whitespace is preserved
- * even in IE8.
- *
- * @param {DOMElement} node
- * @param {string} html
- * @internal
- */
-var reactdomlibsetInnerHTML__setInnerHTML = reactdomlibsetInnerHTML__createMicrosoftUnsafeLocalFunction(function (node, html) {
-  // IE does not have innerHTML for SVG nodes, so instead we inject the
-  // new markup in a temp node and then move the child nodes across into
-  // the target node
-  if (node.namespaceURI === reactdomlibsetInnerHTML__DOMNamespaces.svg && !('innerHTML' in node)) {
-    reactdomlibsetInnerHTML__reusableSVGContainer = reactdomlibsetInnerHTML__reusableSVGContainer || document.createElement('div');
-    reactdomlibsetInnerHTML__reusableSVGContainer.innerHTML = '<svg>' + html + '</svg>';
-    var svgNode = reactdomlibsetInnerHTML__reusableSVGContainer.firstChild;
-    while (svgNode.firstChild) {
-      node.appendChild(svgNode.firstChild);
-    }
-  } else {
-    node.innerHTML = html;
-  }
-});
-
-if (reactdomlibsetInnerHTML__ExecutionEnvironment.canUseDOM) {
-  // IE8: When updating a just created node with innerHTML only leading
-  // whitespace is removed. When updating an existing node with innerHTML
-  // whitespace in root TextNodes is also collapsed.
-  // @see quirksmode.org/bugreports/archives/2004/11/innerhtml_and_t.html
-
-  // Feature detection; only IE8 is known to behave improperly like this.
-  var reactdomlibsetInnerHTML__testElement = document.createElement('div');
-  reactdomlibsetInnerHTML__testElement.innerHTML = ' ';
-  if (reactdomlibsetInnerHTML__testElement.innerHTML === '') {
-    reactdomlibsetInnerHTML__setInnerHTML = function (node, html) {
-      // Magic theory: IE8 supposedly differentiates between added and updated
-      // nodes when processing innerHTML, innerHTML on updated nodes suffers
-      // from worse whitespace behavior. Re-adding a node like this triggers
-      // the initial and more favorable whitespace behavior.
-      // TODO: What to do on a detached node?
-      if (node.parentNode) {
-        node.parentNode.replaceChild(node, node);
-      }
-
-      // We also implement a workaround for non-visible tags disappearing into
-      // thin air on IE8, this only happens if there is no visible text
-      // in-front of the non-visible tags. Piggyback on the whitespace fix
-      // and simply check if any non-visible tags appear in the source.
-      if (reactdomlibsetInnerHTML__WHITESPACE_TEST.test(html) || html[0] === '<' && reactdomlibsetInnerHTML__NONVISIBLE_TEST.test(html)) {
-        // Recover leading whitespace by temporarily prepending any character.
-        // \uFEFF has the potential advantage of being zero-width/invisible.
-        // UglifyJS drops U+FEFF chars when parsing, so use String.fromCharCode
-        // in hopes that this is preserved even if "\uFEFF" is transformed to
-        // the actual Unicode character (by Babel, for example).
-        // https://github.com/mishoo/UglifyJS2/blob/v2.4.20/lib/parse.js#L216
-        node.innerHTML = String.fromCharCode(0xFEFF) + html;
-
-        // deleteData leaves an empty `TextNode` which offsets the index of all
-        // children. Definitely want to avoid this.
-        var textNode = node.firstChild;
-        if (textNode.data.length === 1) {
-          node.removeChild(textNode);
-        } else {
-          textNode.deleteData(0, 1);
-        }
-      } else {
-        node.innerHTML = html;
-      }
-    };
-  }
-  reactdomlibsetInnerHTML__testElement = null;
-}
-
-$m['react-dom/lib/setInnerHTML'].exports = reactdomlibsetInnerHTML__setInnerHTML;
-/*≠≠ node_modules/react-dom/lib/setInnerHTML.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactHostComponent.js ==*/
-$m['react-dom/lib/ReactHostComponent'] = { exports: {} };
-/**
- * Copyright 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-var reactdomlibReactHostComponent___prodInvariant = $m['react-dom/lib/reactProdInvariant'].exports,
-    reactdomlibReactHostComponent___assign = $m['object-assign'].exports;
-
-var reactdomlibReactHostComponent__invariant = $m['fbjs/lib/invariant'].exports;
-
-var reactdomlibReactHostComponent__genericComponentClass = null;
-// This registry keeps track of wrapper classes around host tags.
-var reactdomlibReactHostComponent__tagToComponentClass = {};
-var reactdomlibReactHostComponent__textComponentClass = null;
-
-var reactdomlibReactHostComponent__ReactHostComponentInjection = {
-  // This accepts a class that receives the tag string. This is a catch all
-  // that can render any kind of tag.
-  injectGenericComponentClass: function (componentClass) {
-    reactdomlibReactHostComponent__genericComponentClass = componentClass;
-  },
-  // This accepts a text component class that takes the text string to be
-  // rendered as props.
-  injectTextComponentClass: function (componentClass) {
-    reactdomlibReactHostComponent__textComponentClass = componentClass;
-  },
-  // This accepts a keyed object with classes as values. Each key represents a
-  // tag. That particular tag will use this class instead of the generic one.
-  injectComponentClasses: function (componentClasses) {
-    reactdomlibReactHostComponent___assign(reactdomlibReactHostComponent__tagToComponentClass, componentClasses);
-  }
-};
-
-/**
- * Get a host internal component class for a specific tag.
- *
- * @param {ReactElement} element The element to create.
- * @return {function} The internal class constructor function.
- */
-function reactdomlibReactHostComponent__createInternalComponent(element) {
-  !reactdomlibReactHostComponent__genericComponentClass ? process.env.NODE_ENV !== 'production' ? reactdomlibReactHostComponent__invariant(false, 'There is no registered component for the tag %s', element.type) : reactdomlibReactHostComponent___prodInvariant('111', element.type) : void 0;
-  return new reactdomlibReactHostComponent__genericComponentClass(element);
-}
-
-/**
- * @param {ReactText} text
- * @return {ReactComponent}
- */
-function reactdomlibReactHostComponent__createInstanceForText(text) {
-  return new reactdomlibReactHostComponent__textComponentClass(text);
-}
-
-/**
- * @param {ReactComponent} component
- * @return {boolean}
- */
-function reactdomlibReactHostComponent__isTextComponent(component) {
-  return component instanceof reactdomlibReactHostComponent__textComponentClass;
-}
-
-var reactdomlibReactHostComponent__ReactHostComponent = {
-  createInternalComponent: reactdomlibReactHostComponent__createInternalComponent,
-  createInstanceForText: reactdomlibReactHostComponent__createInstanceForText,
-  isTextComponent: reactdomlibReactHostComponent__isTextComponent,
-  injection: reactdomlibReactHostComponent__ReactHostComponentInjection
-};
-
-$m['react-dom/lib/ReactHostComponent'].exports = reactdomlibReactHostComponent__ReactHostComponent;
-/*≠≠ node_modules/react-dom/lib/ReactHostComponent.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/checkReactTypeSpec.js ==*/
-$m['react-dom/lib/checkReactTypeSpec'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-var reactdomlibcheckReactTypeSpec___prodInvariant = $m['react-dom/lib/reactProdInvariant'].exports;
-
-var reactdomlibcheckReactTypeSpec__ReactPropTypeLocationNames = $m['react-dom/lib/ReactPropTypeLocationNames'].exports;
-var reactdomlibcheckReactTypeSpec__ReactPropTypesSecret = $m['react-dom/lib/ReactPropTypesSecret'].exports;
-
-var reactdomlibcheckReactTypeSpec__invariant = $m['fbjs/lib/invariant'].exports;
-var reactdomlibcheckReactTypeSpec__warning = $m['fbjs/lib/warning'].exports;
-
-var reactdomlibcheckReactTypeSpec__ReactComponentTreeHook;
-
-if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'test') {
-  // Temporary hack.
-  // Inline requires don't work well with Jest:
-  // https://github.com/facebook/react/issues/7240
-  // Remove the inline requires when we don't need them anymore:
-  // https://github.com/facebook/react/pull/7178
-  reactdomlibcheckReactTypeSpec__ReactComponentTreeHook = $m['react/lib/ReactComponentTreeHook'].exports;
-}
-
-var reactdomlibcheckReactTypeSpec__loggedTypeFailures = {};
-
-/**
- * Assert that the values match with the type specs.
- * Error messages are memorized and will only be shown once.
- *
- * @param {object} typeSpecs Map of name to a ReactPropType
- * @param {object} values Runtime values that need to be type-checked
- * @param {string} location e.g. "prop", "context", "child context"
- * @param {string} componentName Name of the component for error messages.
- * @param {?object} element The React element that is being type-checked
- * @param {?number} debugID The React component instance that is being type-checked
- * @private
- */
-function reactdomlibcheckReactTypeSpec__checkReactTypeSpec(typeSpecs, values, location, componentName, element, debugID) {
-  for (var typeSpecName in typeSpecs) {
-    if (typeSpecs.hasOwnProperty(typeSpecName)) {
-      var error;
-      // Prop type validation may throw. In case they do, we don't want to
-      // fail the render phase where it didn't fail before. So we log it.
-      // After these have been cleaned up, we'll let them throw.
-      try {
-        // This is intentionally an invariant that gets caught. It's the same
-        // behavior as without this statement except with a better message.
-        !(typeof typeSpecs[typeSpecName] === 'function') ? process.env.NODE_ENV !== 'production' ? reactdomlibcheckReactTypeSpec__invariant(false, '%s: %s type `%s` is invalid; it must be a function, usually from React.PropTypes.', componentName || 'React class', reactdomlibcheckReactTypeSpec__ReactPropTypeLocationNames[location], typeSpecName) : reactdomlibcheckReactTypeSpec___prodInvariant('84', componentName || 'React class', reactdomlibcheckReactTypeSpec__ReactPropTypeLocationNames[location], typeSpecName) : void 0;
-        error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, reactdomlibcheckReactTypeSpec__ReactPropTypesSecret);
-      } catch (ex) {
-        error = ex;
-      }
-      process.env.NODE_ENV !== 'production' ? reactdomlibcheckReactTypeSpec__warning(!error || error instanceof Error, '%s: type specification of %s `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', reactdomlibcheckReactTypeSpec__ReactPropTypeLocationNames[location], typeSpecName, typeof error) : void 0;
-      if (error instanceof Error && !(error.message in reactdomlibcheckReactTypeSpec__loggedTypeFailures)) {
-        // Only monitor this failure once because there tends to be a lot of the
-        // same error.
-        reactdomlibcheckReactTypeSpec__loggedTypeFailures[error.message] = true;
-
-        var componentStackInfo = '';
-
-        if (process.env.NODE_ENV !== 'production') {
-          if (!reactdomlibcheckReactTypeSpec__ReactComponentTreeHook) {
-            reactdomlibcheckReactTypeSpec__ReactComponentTreeHook = $m['react/lib/ReactComponentTreeHook'].exports;
-          }
-          if (debugID !== null) {
-            componentStackInfo = reactdomlibcheckReactTypeSpec__ReactComponentTreeHook.getStackAddendumByID(debugID);
-          } else if (element !== null) {
-            componentStackInfo = reactdomlibcheckReactTypeSpec__ReactComponentTreeHook.getCurrentStackAddendum(element);
-          }
-        }
-
-        process.env.NODE_ENV !== 'production' ? reactdomlibcheckReactTypeSpec__warning(false, 'Failed %s type: %s%s', location, error.message, componentStackInfo) : void 0;
-      }
-    }
-  }
-}
-
-$m['react-dom/lib/checkReactTypeSpec'].exports = reactdomlibcheckReactTypeSpec__checkReactTypeSpec;
-/*≠≠ node_modules/react-dom/lib/checkReactTypeSpec.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactOwner.js ==*/
-$m['react-dom/lib/ReactOwner'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-var reactdomlibReactOwner___prodInvariant = $m['react-dom/lib/reactProdInvariant'].exports;
-
-var reactdomlibReactOwner__invariant = $m['fbjs/lib/invariant'].exports;
-
-/**
- * @param {?object} object
- * @return {boolean} True if `object` is a valid owner.
- * @final
- */
-function reactdomlibReactOwner__isValidOwner(object) {
-  return !!(object && typeof object.attachRef === 'function' && typeof object.detachRef === 'function');
-}
-
-/**
- * ReactOwners are capable of storing references to owned components.
- *
- * All components are capable of //being// referenced by owner components, but
- * only ReactOwner components are capable of //referencing// owned components.
- * The named reference is known as a "ref".
- *
- * Refs are available when mounted and updated during reconciliation.
- *
- *   var MyComponent = React.createClass({
- *     render: function() {
- *       return (
- *         <div onClick={this.handleClick}>
- *           <CustomComponent ref="custom" />
- *         </div>
- *       );
- *     },
- *     handleClick: function() {
- *       this.refs.custom.handleClick();
- *     },
- *     componentDidMount: function() {
- *       this.refs.custom.initialize();
- *     }
- *   });
- *
- * Refs should rarely be used. When refs are used, they should only be done to
- * control data that is not handled by React's data flow.
- *
- * @class ReactOwner
- */
-var reactdomlibReactOwner__ReactOwner = {
-  /**
-   * Adds a component by ref to an owner component.
-   *
-   * @param {ReactComponent} component Component to reference.
-   * @param {string} ref Name by which to refer to the component.
-   * @param {ReactOwner} owner Component on which to record the ref.
-   * @final
-   * @internal
-   */
-  addComponentAsRefTo: function (component, ref, owner) {
-    !reactdomlibReactOwner__isValidOwner(owner) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactOwner__invariant(false, 'addComponentAsRefTo(...): Only a ReactOwner can have refs. You might be adding a ref to a component that was not created inside a component\'s `render` method, or you have multiple copies of React loaded (details: https://fb.me/react-refs-must-have-owner).') : reactdomlibReactOwner___prodInvariant('119') : void 0;
-    owner.attachRef(ref, component);
-  },
-
-  /**
-   * Removes a component by ref from an owner component.
-   *
-   * @param {ReactComponent} component Component to dereference.
-   * @param {string} ref Name of the ref to remove.
-   * @param {ReactOwner} owner Component on which the ref is recorded.
-   * @final
-   * @internal
-   */
-  removeComponentAsRefFrom: function (component, ref, owner) {
-    !reactdomlibReactOwner__isValidOwner(owner) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactOwner__invariant(false, 'removeComponentAsRefFrom(...): Only a ReactOwner can have refs. You might be removing a ref to a component that was not created inside a component\'s `render` method, or you have multiple copies of React loaded (details: https://fb.me/react-refs-must-have-owner).') : reactdomlibReactOwner___prodInvariant('120') : void 0;
-    var ownerPublicInstance = owner.getPublicInstance();
-    // Check that `component`'s owner is still alive and that `component` is still the current ref
-    // because we do not want to detach the ref if another component stole it.
-    if (ownerPublicInstance && ownerPublicInstance.refs[ref] === component.getPublicInstance()) {
-      owner.detachRef(ref);
-    }
-  }
-
-};
-
-$m['react-dom/lib/ReactOwner'].exports = reactdomlibReactOwner__ReactOwner;
-/*≠≠ node_modules/react-dom/lib/ReactOwner.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactRef.js ==*/
-$m['react-dom/lib/ReactRef'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-var reactdomlibReactRef__ReactOwner = $m['react-dom/lib/ReactOwner'].exports;
-
-var reactdomlibReactRef__ReactRef = {};
-
-function reactdomlibReactRef__attachRef(ref, component, owner) {
-  if (typeof ref === 'function') {
-    ref(component.getPublicInstance());
-  } else {
-    // Legacy ref
-    reactdomlibReactRef__ReactOwner.addComponentAsRefTo(component, ref, owner);
-  }
-}
-
-function reactdomlibReactRef__detachRef(ref, component, owner) {
-  if (typeof ref === 'function') {
-    ref(null);
-  } else {
-    // Legacy ref
-    reactdomlibReactRef__ReactOwner.removeComponentAsRefFrom(component, ref, owner);
-  }
-}
-
-reactdomlibReactRef__ReactRef.attachRefs = function (instance, element) {
-  if (element === null || typeof element !== 'object') {
-    return;
-  }
-  var ref = element.ref;
-  if (ref != null) {
-    reactdomlibReactRef__attachRef(ref, instance, element._owner);
-  }
-};
-
-reactdomlibReactRef__ReactRef.shouldUpdateRefs = function (prevElement, nextElement) {
-  // If either the owner or a `ref` has changed, make sure the newest owner
-  // has stored a reference to `this`, and the previous owner (if different)
-  // has forgotten the reference to `this`. We use the element instead
-  // of the public this.props because the post processing cannot determine
-  // a ref. The ref conceptually lives on the element.
-
-  // TODO: Should this even be possible? The owner cannot change because
-  // it's forbidden by shouldUpdateReactComponent. The ref can change
-  // if you swap the keys of but not the refs. Reconsider where this check
-  // is made. It probably belongs where the key checking and
-  // instantiateReactComponent is done.
-
-  var prevRef = null;
-  var prevOwner = null;
-  if (prevElement !== null && typeof prevElement === 'object') {
-    prevRef = prevElement.ref;
-    prevOwner = prevElement._owner;
-  }
-
-  var nextRef = null;
-  var nextOwner = null;
-  if (nextElement !== null && typeof nextElement === 'object') {
-    nextRef = nextElement.ref;
-    nextOwner = nextElement._owner;
-  }
-
-  return prevRef !== nextRef ||
-  // If owner changes but we have an unchanged function ref, don't update refs
-  typeof nextRef === 'string' && nextOwner !== prevOwner;
-};
-
-reactdomlibReactRef__ReactRef.detachRefs = function (instance, element) {
-  if (element === null || typeof element !== 'object') {
-    return;
-  }
-  var ref = element.ref;
-  if (ref != null) {
-    reactdomlibReactRef__detachRef(ref, instance, element._owner);
-  }
-};
-
-$m['react-dom/lib/ReactRef'].exports = reactdomlibReactRef__ReactRef;
-/*≠≠ node_modules/react-dom/lib/ReactRef.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactReconciler.js ==*/
-$m['react-dom/lib/ReactReconciler'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-var reactdomlibReactReconciler__ReactRef = $m['react-dom/lib/ReactRef'].exports;
-var reactdomlibReactReconciler__ReactInstrumentation = $m['react-dom/lib/ReactInstrumentation'].exports;
-
-var reactdomlibReactReconciler__warning = $m['fbjs/lib/warning'].exports;
-
-/**
- * Helper to call ReactRef.attachRefs with this composite component, split out
- * to avoid allocations in the transaction mount-ready queue.
- */
-function reactdomlibReactReconciler__attachRefs() {
-  reactdomlibReactReconciler__ReactRef.attachRefs(this, this._currentElement);
-}
-
-var reactdomlibReactReconciler__ReactReconciler = {
-
-  /**
-   * Initializes the component, renders markup, and registers event listeners.
-   *
-   * @param {ReactComponent} internalInstance
-   * @param {ReactReconcileTransaction|ReactServerRenderingTransaction} transaction
-   * @param {?object} the containing host component instance
-   * @param {?object} info about the host container
-   * @return {?string} Rendered markup to be inserted into the DOM.
-   * @final
-   * @internal
-   */
-  mountComponent: function (internalInstance, transaction, hostParent, hostContainerInfo, context, parentDebugID // 0 in production and for roots
-  ) {
-    if (process.env.NODE_ENV !== 'production') {
-      if (internalInstance._debugID !== 0) {
-        reactdomlibReactReconciler__ReactInstrumentation.debugTool.onBeforeMountComponent(internalInstance._debugID, internalInstance._currentElement, parentDebugID);
-      }
-    }
-    var markup = internalInstance.mountComponent(transaction, hostParent, hostContainerInfo, context, parentDebugID);
-    if (internalInstance._currentElement && internalInstance._currentElement.ref != null) {
-      transaction.getReactMountReady().enqueue(reactdomlibReactReconciler__attachRefs, internalInstance);
-    }
-    if (process.env.NODE_ENV !== 'production') {
-      if (internalInstance._debugID !== 0) {
-        reactdomlibReactReconciler__ReactInstrumentation.debugTool.onMountComponent(internalInstance._debugID);
-      }
-    }
-    return markup;
-  },
-
-  /**
-   * Returns a value that can be passed to
-   * ReactComponentEnvironment.replaceNodeWithMarkup.
-   */
-  getHostNode: function (internalInstance) {
-    return internalInstance.getHostNode();
-  },
-
-  /**
-   * Releases any resources allocated by `mountComponent`.
-   *
-   * @final
-   * @internal
-   */
-  unmountComponent: function (internalInstance, safely) {
-    if (process.env.NODE_ENV !== 'production') {
-      if (internalInstance._debugID !== 0) {
-        reactdomlibReactReconciler__ReactInstrumentation.debugTool.onBeforeUnmountComponent(internalInstance._debugID);
-      }
-    }
-    reactdomlibReactReconciler__ReactRef.detachRefs(internalInstance, internalInstance._currentElement);
-    internalInstance.unmountComponent(safely);
-    if (process.env.NODE_ENV !== 'production') {
-      if (internalInstance._debugID !== 0) {
-        reactdomlibReactReconciler__ReactInstrumentation.debugTool.onUnmountComponent(internalInstance._debugID);
-      }
-    }
-  },
-
-  /**
-   * Update a component using a new element.
-   *
-   * @param {ReactComponent} internalInstance
-   * @param {ReactElement} nextElement
-   * @param {ReactReconcileTransaction} transaction
-   * @param {object} context
-   * @internal
-   */
-  receiveComponent: function (internalInstance, nextElement, transaction, context) {
-    var prevElement = internalInstance._currentElement;
-
-    if (nextElement === prevElement && context === internalInstance._context) {
-      // Since elements are immutable after the owner is rendered,
-      // we can do a cheap identity compare here to determine if this is a
-      // superfluous reconcile. It's possible for state to be mutable but such
-      // change should trigger an update of the owner which would recreate
-      // the element. We explicitly check for the existence of an owner since
-      // it's possible for an element created outside a composite to be
-      // deeply mutated and reused.
-
-      // TODO: Bailing out early is just a perf optimization right?
-      // TODO: Removing the return statement should affect correctness?
-      return;
-    }
-
-    if (process.env.NODE_ENV !== 'production') {
-      if (internalInstance._debugID !== 0) {
-        reactdomlibReactReconciler__ReactInstrumentation.debugTool.onBeforeUpdateComponent(internalInstance._debugID, nextElement);
-      }
-    }
-
-    var refsChanged = reactdomlibReactReconciler__ReactRef.shouldUpdateRefs(prevElement, nextElement);
-
-    if (refsChanged) {
-      reactdomlibReactReconciler__ReactRef.detachRefs(internalInstance, prevElement);
-    }
-
-    internalInstance.receiveComponent(nextElement, transaction, context);
-
-    if (refsChanged && internalInstance._currentElement && internalInstance._currentElement.ref != null) {
-      transaction.getReactMountReady().enqueue(reactdomlibReactReconciler__attachRefs, internalInstance);
-    }
-
-    if (process.env.NODE_ENV !== 'production') {
-      if (internalInstance._debugID !== 0) {
-        reactdomlibReactReconciler__ReactInstrumentation.debugTool.onUpdateComponent(internalInstance._debugID);
-      }
-    }
-  },
-
-  /**
-   * Flush any dirty changes in a component.
-   *
-   * @param {ReactComponent} internalInstance
-   * @param {ReactReconcileTransaction} transaction
-   * @internal
-   */
-  performUpdateIfNecessary: function (internalInstance, transaction, updateBatchNumber) {
-    if (internalInstance._updateBatchNumber !== updateBatchNumber) {
-      // The component's enqueued batch number should always be the current
-      // batch or the following one.
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactReconciler__warning(internalInstance._updateBatchNumber == null || internalInstance._updateBatchNumber === updateBatchNumber + 1, 'performUpdateIfNecessary: Unexpected batch number (current %s, ' + 'pending %s)', updateBatchNumber, internalInstance._updateBatchNumber) : void 0;
-      return;
-    }
-    if (process.env.NODE_ENV !== 'production') {
-      if (internalInstance._debugID !== 0) {
-        reactdomlibReactReconciler__ReactInstrumentation.debugTool.onBeforeUpdateComponent(internalInstance._debugID, internalInstance._currentElement);
-      }
-    }
-    internalInstance.performUpdateIfNecessary(transaction);
-    if (process.env.NODE_ENV !== 'production') {
-      if (internalInstance._debugID !== 0) {
-        reactdomlibReactReconciler__ReactInstrumentation.debugTool.onUpdateComponent(internalInstance._debugID);
-      }
-    }
-  }
-
-};
-
-$m['react-dom/lib/ReactReconciler'].exports = reactdomlibReactReconciler__ReactReconciler;
-/*≠≠ node_modules/react-dom/lib/ReactReconciler.js ≠≠*/
-
-
 /*== node_modules/react-dom/lib/ReactNodeTypes.js ==*/
 $m['react-dom/lib/ReactNodeTypes'] = { exports: {} };
 /**
@@ -9397,7 +9296,7 @@ var reactdomlibReactNodeTypes__ReactNodeTypes = {
         return reactdomlibReactNodeTypes__ReactNodeTypes.HOST;
       }
     }
-    !false ? process.env.NODE_ENV !== 'production' ? reactdomlibReactNodeTypes__invariant(false, 'Unexpected node: %s', node) : reactdomlibReactNodeTypes___prodInvariant('26', node) : void 0;
+    !false ? 'development' !== 'production' ? reactdomlibReactNodeTypes__invariant(false, 'Unexpected node: %s', node) : reactdomlibReactNodeTypes___prodInvariant('26', node) : void 0;
   }
 };
 
@@ -9440,7 +9339,7 @@ var reactdomlibReactComponentEnvironment__ReactComponentEnvironment = {
 
   injection: {
     injectEnvironment: function (environment) {
-      !!reactdomlibReactComponentEnvironment__injected ? process.env.NODE_ENV !== 'production' ? reactdomlibReactComponentEnvironment__invariant(false, 'ReactCompositeComponent: injectEnvironment() can only be called once.') : reactdomlibReactComponentEnvironment___prodInvariant('104') : void 0;
+      !!reactdomlibReactComponentEnvironment__injected ? 'development' !== 'production' ? reactdomlibReactComponentEnvironment__invariant(false, 'ReactCompositeComponent: injectEnvironment() can only be called once.') : reactdomlibReactComponentEnvironment___prodInvariant('104') : void 0;
       reactdomlibReactComponentEnvironment__ReactComponentEnvironment.replaceNodeWithMarkup = environment.replaceNodeWithMarkup;
       reactdomlibReactComponentEnvironment__ReactComponentEnvironment.processChildrenUpdates = environment.processChildrenUpdates;
       reactdomlibReactComponentEnvironment__injected = true;
@@ -9477,7 +9376,7 @@ var reactdomlibReactCompositeComponent__ReactInstrumentation = $m['react-dom/lib
 var reactdomlibReactCompositeComponent__ReactNodeTypes = $m['react-dom/lib/ReactNodeTypes'].exports;
 var reactdomlibReactCompositeComponent__ReactReconciler = $m['react-dom/lib/ReactReconciler'].exports;
 
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   var reactdomlibReactCompositeComponent__checkReactTypeSpec = $m['react-dom/lib/checkReactTypeSpec'].exports;
 }
 
@@ -9502,9 +9401,9 @@ reactdomlibReactCompositeComponent__StatelessComponent.prototype.render = functi
 };
 
 function reactdomlibReactCompositeComponent__warnIfInvalidElement(Component, element) {
-  if (process.env.NODE_ENV !== 'production') {
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__warning(element === null || element === false || reactdomlibReactCompositeComponent__React.isValidElement(element), '%s(...): A valid React element (or null) must be returned. You may have ' + 'returned undefined, an array or some other invalid object.', Component.displayName || Component.name || 'Component') : void 0;
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__warning(!Component.childContextTypes, '%s(...): childContextTypes cannot be defined on a functional component.', Component.displayName || Component.name || 'Component') : void 0;
+  if ('development' !== 'production') {
+    'development' !== 'production' ? reactdomlibReactCompositeComponent__warning(element === null || element === false || reactdomlibReactCompositeComponent__React.isValidElement(element), '%s(...): A valid React element (or null) must be returned. You may have ' + 'returned undefined, an array or some other invalid object.', Component.displayName || Component.name || 'Component') : void 0;
+    'development' !== 'production' ? reactdomlibReactCompositeComponent__warning(!Component.childContextTypes, '%s(...): childContextTypes cannot be defined on a functional component.', Component.displayName || Component.name || 'Component') : void 0;
   }
 }
 
@@ -9607,7 +9506,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
     // ComponentWillUnmount shall only be called once
     this._calledComponentWillUnmount = false;
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       this._warnedAboutRefsInRender = false;
     }
   },
@@ -9647,7 +9546,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
     if (!doConstruct && (inst == null || inst.render == null)) {
       renderedElement = inst;
       reactdomlibReactCompositeComponent__warnIfInvalidElement(Component, renderedElement);
-      !(inst === null || inst === false || reactdomlibReactCompositeComponent__React.isValidElement(inst)) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__invariant(false, '%s(...): A valid React element (or null) must be returned. You may have returned undefined, an array or some other invalid object.', Component.displayName || Component.name || 'Component') : reactdomlibReactCompositeComponent___prodInvariant('105', Component.displayName || Component.name || 'Component') : void 0;
+      !(inst === null || inst === false || reactdomlibReactCompositeComponent__React.isValidElement(inst)) ? 'development' !== 'production' ? reactdomlibReactCompositeComponent__invariant(false, '%s(...): A valid React element (or null) must be returned. You may have returned undefined, an array or some other invalid object.', Component.displayName || Component.name || 'Component') : reactdomlibReactCompositeComponent___prodInvariant('105', Component.displayName || Component.name || 'Component') : void 0;
       inst = new reactdomlibReactCompositeComponent__StatelessComponent(Component);
       this._compositeType = reactdomlibReactCompositeComponent__CompositeTypes.StatelessFunctional;
     } else {
@@ -9658,17 +9557,17 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
       }
     }
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       // This will throw later in _renderValidatedComponent, but add an early
       // warning now to help debugging
       if (inst.render == null) {
-        process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__warning(false, '%s(...): No `render` method found on the returned component ' + 'instance: you may have forgotten to define `render`.', Component.displayName || Component.name || 'Component') : void 0;
+        'development' !== 'production' ? reactdomlibReactCompositeComponent__warning(false, '%s(...): No `render` method found on the returned component ' + 'instance: you may have forgotten to define `render`.', Component.displayName || Component.name || 'Component') : void 0;
       }
 
       var propsMutated = inst.props !== publicProps;
       var componentName = Component.displayName || Component.name || 'Component';
 
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__warning(inst.props === undefined || !propsMutated, '%s(...): When calling super() in `%s`, make sure to pass ' + 'up the same props that your component\'s constructor was passed.', componentName, componentName) : void 0;
+      'development' !== 'production' ? reactdomlibReactCompositeComponent__warning(inst.props === undefined || !propsMutated, '%s(...): When calling super() in `%s`, make sure to pass ' + 'up the same props that your component\'s constructor was passed.', componentName, componentName) : void 0;
     }
 
     // These should be set up in the constructor, but as a convenience for
@@ -9683,24 +9582,24 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
     // Store a reference from the instance back to the internal representation
     reactdomlibReactCompositeComponent__ReactInstanceMap.set(inst, this);
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       // Since plain JS classes are defined without any special initialization
       // logic, we can not catch common errors early. Therefore, we have to
       // catch them here, at initialization time, instead.
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__warning(!inst.getInitialState || inst.getInitialState.isReactClassApproved, 'getInitialState was defined on %s, a plain JavaScript class. ' + 'This is only supported for classes created using React.createClass. ' + 'Did you mean to define a state property instead?', this.getName() || 'a component') : void 0;
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__warning(!inst.getDefaultProps || inst.getDefaultProps.isReactClassApproved, 'getDefaultProps was defined on %s, a plain JavaScript class. ' + 'This is only supported for classes created using React.createClass. ' + 'Use a static property to define defaultProps instead.', this.getName() || 'a component') : void 0;
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__warning(!inst.propTypes, 'propTypes was defined as an instance property on %s. Use a static ' + 'property to define propTypes instead.', this.getName() || 'a component') : void 0;
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__warning(!inst.contextTypes, 'contextTypes was defined as an instance property on %s. Use a ' + 'static property to define contextTypes instead.', this.getName() || 'a component') : void 0;
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__warning(typeof inst.componentShouldUpdate !== 'function', '%s has a method called ' + 'componentShouldUpdate(). Did you mean shouldComponentUpdate()? ' + 'The name is phrased as a question because the function is ' + 'expected to return a value.', this.getName() || 'A component') : void 0;
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__warning(typeof inst.componentDidUnmount !== 'function', '%s has a method called ' + 'componentDidUnmount(). But there is no such lifecycle method. ' + 'Did you mean componentWillUnmount()?', this.getName() || 'A component') : void 0;
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__warning(typeof inst.componentWillRecieveProps !== 'function', '%s has a method called ' + 'componentWillRecieveProps(). Did you mean componentWillReceiveProps()?', this.getName() || 'A component') : void 0;
+      'development' !== 'production' ? reactdomlibReactCompositeComponent__warning(!inst.getInitialState || inst.getInitialState.isReactClassApproved || inst.state, 'getInitialState was defined on %s, a plain JavaScript class. ' + 'This is only supported for classes created using React.createClass. ' + 'Did you mean to define a state property instead?', this.getName() || 'a component') : void 0;
+      'development' !== 'production' ? reactdomlibReactCompositeComponent__warning(!inst.getDefaultProps || inst.getDefaultProps.isReactClassApproved, 'getDefaultProps was defined on %s, a plain JavaScript class. ' + 'This is only supported for classes created using React.createClass. ' + 'Use a static property to define defaultProps instead.', this.getName() || 'a component') : void 0;
+      'development' !== 'production' ? reactdomlibReactCompositeComponent__warning(!inst.propTypes, 'propTypes was defined as an instance property on %s. Use a static ' + 'property to define propTypes instead.', this.getName() || 'a component') : void 0;
+      'development' !== 'production' ? reactdomlibReactCompositeComponent__warning(!inst.contextTypes, 'contextTypes was defined as an instance property on %s. Use a ' + 'static property to define contextTypes instead.', this.getName() || 'a component') : void 0;
+      'development' !== 'production' ? reactdomlibReactCompositeComponent__warning(typeof inst.componentShouldUpdate !== 'function', '%s has a method called ' + 'componentShouldUpdate(). Did you mean shouldComponentUpdate()? ' + 'The name is phrased as a question because the function is ' + 'expected to return a value.', this.getName() || 'A component') : void 0;
+      'development' !== 'production' ? reactdomlibReactCompositeComponent__warning(typeof inst.componentDidUnmount !== 'function', '%s has a method called ' + 'componentDidUnmount(). But there is no such lifecycle method. ' + 'Did you mean componentWillUnmount()?', this.getName() || 'A component') : void 0;
+      'development' !== 'production' ? reactdomlibReactCompositeComponent__warning(typeof inst.componentWillRecieveProps !== 'function', '%s has a method called ' + 'componentWillRecieveProps(). Did you mean componentWillReceiveProps()?', this.getName() || 'A component') : void 0;
     }
 
     var initialState = inst.state;
     if (initialState === undefined) {
       inst.state = initialState = null;
     }
-    !(typeof initialState === 'object' && !Array.isArray(initialState)) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__invariant(false, '%s.state: must be set to an object or null', this.getName() || 'ReactCompositeComponent') : reactdomlibReactCompositeComponent___prodInvariant('106', this.getName() || 'ReactCompositeComponent') : void 0;
+    !(typeof initialState === 'object' && !Array.isArray(initialState)) ? 'development' !== 'production' ? reactdomlibReactCompositeComponent__invariant(false, '%s.state: must be set to an object or null', this.getName() || 'ReactCompositeComponent') : reactdomlibReactCompositeComponent___prodInvariant('106', this.getName() || 'ReactCompositeComponent') : void 0;
 
     this._pendingStateQueue = null;
     this._pendingReplaceState = false;
@@ -9714,7 +9613,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
     }
 
     if (inst.componentDidMount) {
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         transaction.getReactMountReady().enqueue(function () {
           reactdomlibReactCompositeComponent__measureLifeCyclePerf(function () {
             return inst.componentDidMount();
@@ -9729,7 +9628,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
   },
 
   _constructComponent: function (doConstruct, publicProps, publicContext, updateQueue) {
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       reactdomlibReactCompositeComponent__ReactCurrentOwner.current = this;
       try {
         return this._constructComponentWithoutOwner(doConstruct, publicProps, publicContext, updateQueue);
@@ -9745,7 +9644,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
     var Component = this._currentElement.type;
 
     if (doConstruct) {
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         return reactdomlibReactCompositeComponent__measureLifeCyclePerf(function () {
           return new Component(publicProps, publicContext, updateQueue);
         }, this._debugID, 'ctor');
@@ -9756,7 +9655,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
 
     // This can still be an instance in case of factory components
     // but we'll count this as time spent rendering as the more common case.
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       return reactdomlibReactCompositeComponent__measureLifeCyclePerf(function () {
         return Component(publicProps, publicContext, updateQueue);
       }, this._debugID, 'render');
@@ -9793,12 +9692,12 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
     var inst = this._instance;
 
     var debugID = 0;
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       debugID = this._debugID;
     }
 
     if (inst.componentWillMount) {
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         reactdomlibReactCompositeComponent__measureLifeCyclePerf(function () {
           return inst.componentWillMount();
         }, debugID, 'componentWillMount');
@@ -9825,7 +9724,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
 
     var markup = reactdomlibReactCompositeComponent__ReactReconciler.mountComponent(child, transaction, hostParent, hostContainerInfo, this._processChildContext(context), debugID);
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       if (debugID !== 0) {
         var childDebugIDs = child._debugID !== 0 ? [child._debugID] : [];
         reactdomlibReactCompositeComponent__ReactInstrumentation.debugTool.onSetChildren(debugID, childDebugIDs);
@@ -9859,7 +9758,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
         var name = this.getName() + '.componentWillUnmount()';
         reactdomlibReactCompositeComponent__ReactErrorUtils.invokeGuardedCallback(name, inst.componentWillUnmount.bind(inst));
       } else {
-        if (process.env.NODE_ENV !== 'production') {
+        if ('development' !== 'production') {
           reactdomlibReactCompositeComponent__measureLifeCyclePerf(function () {
             return inst.componentWillUnmount();
           }, this._debugID, 'componentWillUnmount');
@@ -9934,7 +9833,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
    */
   _processContext: function (context) {
     var maskedContext = this._maskContext(context);
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       var Component = this._currentElement.type;
       if (Component.contextTypes) {
         this._checkContextTypes(Component.contextTypes, maskedContext, 'context');
@@ -9954,7 +9853,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
     var childContext;
 
     if (inst.getChildContext) {
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         reactdomlibReactCompositeComponent__ReactInstrumentation.debugTool.onBeginProcessingChildContext();
         try {
           childContext = inst.getChildContext();
@@ -9967,12 +9866,12 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
     }
 
     if (childContext) {
-      !(typeof Component.childContextTypes === 'object') ? process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__invariant(false, '%s.getChildContext(): childContextTypes must be defined in order to use getChildContext().', this.getName() || 'ReactCompositeComponent') : reactdomlibReactCompositeComponent___prodInvariant('107', this.getName() || 'ReactCompositeComponent') : void 0;
-      if (process.env.NODE_ENV !== 'production') {
+      !(typeof Component.childContextTypes === 'object') ? 'development' !== 'production' ? reactdomlibReactCompositeComponent__invariant(false, '%s.getChildContext(): childContextTypes must be defined in order to use getChildContext().', this.getName() || 'ReactCompositeComponent') : reactdomlibReactCompositeComponent___prodInvariant('107', this.getName() || 'ReactCompositeComponent') : void 0;
+      if ('development' !== 'production') {
         this._checkContextTypes(Component.childContextTypes, childContext, 'childContext');
       }
       for (var name in childContext) {
-        !(name in Component.childContextTypes) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__invariant(false, '%s.getChildContext(): key "%s" is not defined in childContextTypes.', this.getName() || 'ReactCompositeComponent', name) : reactdomlibReactCompositeComponent___prodInvariant('108', this.getName() || 'ReactCompositeComponent', name) : void 0;
+        !(name in Component.childContextTypes) ? 'development' !== 'production' ? reactdomlibReactCompositeComponent__invariant(false, '%s.getChildContext(): key "%s" is not defined in childContextTypes.', this.getName() || 'ReactCompositeComponent', name) : reactdomlibReactCompositeComponent___prodInvariant('108', this.getName() || 'ReactCompositeComponent', name) : void 0;
       }
       return reactdomlibReactCompositeComponent___assign({}, currentContext, childContext);
     }
@@ -9988,7 +9887,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
    * @private
    */
   _checkContextTypes: function (typeSpecs, values, location) {
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       reactdomlibReactCompositeComponent__checkReactTypeSpec(typeSpecs, values, location, this.getName(), null, this._debugID);
     }
   },
@@ -10036,7 +9935,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
    */
   updateComponent: function (transaction, prevParentElement, nextParentElement, prevUnmaskedContext, nextUnmaskedContext) {
     var inst = this._instance;
-    !(inst != null) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__invariant(false, 'Attempted to update component `%s` that has already been unmounted (or failed to mount).', this.getName() || 'ReactCompositeComponent') : reactdomlibReactCompositeComponent___prodInvariant('136', this.getName() || 'ReactCompositeComponent') : void 0;
+    !(inst != null) ? 'development' !== 'production' ? reactdomlibReactCompositeComponent__invariant(false, 'Attempted to update component `%s` that has already been unmounted (or failed to mount).', this.getName() || 'ReactCompositeComponent') : reactdomlibReactCompositeComponent___prodInvariant('136', this.getName() || 'ReactCompositeComponent') : void 0;
 
     var willReceive = false;
     var nextContext;
@@ -10061,7 +9960,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
     // _pendingStateQueue which will ensure that any state updates gets
     // immediately reconciled instead of waiting for the next batch.
     if (willReceive && inst.componentWillReceiveProps) {
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         reactdomlibReactCompositeComponent__measureLifeCyclePerf(function () {
           return inst.componentWillReceiveProps(nextProps, nextContext);
         }, this._debugID, 'componentWillReceiveProps');
@@ -10075,7 +9974,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
 
     if (!this._pendingForceUpdate) {
       if (inst.shouldComponentUpdate) {
-        if (process.env.NODE_ENV !== 'production') {
+        if ('development' !== 'production') {
           shouldUpdate = reactdomlibReactCompositeComponent__measureLifeCyclePerf(function () {
             return inst.shouldComponentUpdate(nextProps, nextState, nextContext);
           }, this._debugID, 'shouldComponentUpdate');
@@ -10089,8 +9988,8 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
       }
     }
 
-    if (process.env.NODE_ENV !== 'production') {
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__warning(shouldUpdate !== undefined, '%s.shouldComponentUpdate(): Returned undefined instead of a ' + 'boolean value. Make sure to return true or false.', this.getName() || 'ReactCompositeComponent') : void 0;
+    if ('development' !== 'production') {
+      'development' !== 'production' ? reactdomlibReactCompositeComponent__warning(shouldUpdate !== undefined, '%s.shouldComponentUpdate(): Returned undefined instead of a ' + 'boolean value. Make sure to return true or false.', this.getName() || 'ReactCompositeComponent') : void 0;
     }
 
     this._updateBatchNumber = null;
@@ -10161,7 +10060,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
     }
 
     if (inst.componentWillUpdate) {
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         reactdomlibReactCompositeComponent__measureLifeCyclePerf(function () {
           return inst.componentWillUpdate(nextProps, nextState, nextContext);
         }, this._debugID, 'componentWillUpdate');
@@ -10179,7 +10078,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
     this._updateRenderedComponent(transaction, unmaskedContext);
 
     if (hasComponentDidUpdate) {
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         transaction.getReactMountReady().enqueue(function () {
           reactdomlibReactCompositeComponent__measureLifeCyclePerf(inst.componentDidUpdate.bind(inst, prevProps, prevState, prevContext), _this2._debugID, 'componentDidUpdate');
         });
@@ -10201,7 +10100,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
     var nextRenderedElement = this._renderValidatedComponent();
 
     var debugID = 0;
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       debugID = this._debugID;
     }
 
@@ -10219,7 +10118,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
 
       var nextMarkup = reactdomlibReactCompositeComponent__ReactReconciler.mountComponent(child, transaction, this._hostParent, this._hostContainerInfo, this._processChildContext(context), debugID);
 
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         if (debugID !== 0) {
           var childDebugIDs = child._debugID !== 0 ? [child._debugID] : [];
           reactdomlibReactCompositeComponent__ReactInstrumentation.debugTool.onSetChildren(debugID, childDebugIDs);
@@ -10246,7 +10145,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
     var inst = this._instance;
     var renderedElement;
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       renderedElement = reactdomlibReactCompositeComponent__measureLifeCyclePerf(function () {
         return inst.render();
       }, this._debugID, 'render');
@@ -10254,7 +10153,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
       renderedElement = inst.render();
     }
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       // We allow auto-mocks to proceed as if they're returning null.
       if (renderedElement === undefined && inst.render._isMockFunction) {
         // This is probably bad practice. Consider warning here and
@@ -10271,7 +10170,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
    */
   _renderValidatedComponent: function () {
     var renderedElement;
-    if (process.env.NODE_ENV !== 'production' || this._compositeType !== reactdomlibReactCompositeComponent__CompositeTypes.StatelessFunctional) {
+    if ('development' !== 'production' || this._compositeType !== reactdomlibReactCompositeComponent__CompositeTypes.StatelessFunctional) {
       reactdomlibReactCompositeComponent__ReactCurrentOwner.current = this;
       try {
         renderedElement = this._renderValidatedComponentWithoutOwnerOrContext();
@@ -10283,7 +10182,7 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
     }
     !(
     // TODO: An `isValidNode` function would probably be more appropriate
-    renderedElement === null || renderedElement === false || reactdomlibReactCompositeComponent__React.isValidElement(renderedElement)) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__invariant(false, '%s.render(): A valid React element (or null) must be returned. You may have returned undefined, an array or some other invalid object.', this.getName() || 'ReactCompositeComponent') : reactdomlibReactCompositeComponent___prodInvariant('109', this.getName() || 'ReactCompositeComponent') : void 0;
+    renderedElement === null || renderedElement === false || reactdomlibReactCompositeComponent__React.isValidElement(renderedElement)) ? 'development' !== 'production' ? reactdomlibReactCompositeComponent__invariant(false, '%s.render(): A valid React element (or null) must be returned. You may have returned undefined, an array or some other invalid object.', this.getName() || 'ReactCompositeComponent') : reactdomlibReactCompositeComponent___prodInvariant('109', this.getName() || 'ReactCompositeComponent') : void 0;
 
     return renderedElement;
   },
@@ -10298,11 +10197,11 @@ var reactdomlibReactCompositeComponent__ReactCompositeComponent = {
    */
   attachRef: function (ref, component) {
     var inst = this.getPublicInstance();
-    !(inst != null) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__invariant(false, 'Stateless function components cannot have refs.') : reactdomlibReactCompositeComponent___prodInvariant('110') : void 0;
+    !(inst != null) ? 'development' !== 'production' ? reactdomlibReactCompositeComponent__invariant(false, 'Stateless function components cannot have refs.') : reactdomlibReactCompositeComponent___prodInvariant('110') : void 0;
     var publicComponentInstance = component.getPublicInstance();
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       var componentName = component && component.getName ? component.getName() : 'a component';
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactCompositeComponent__warning(publicComponentInstance != null || component._compositeType !== reactdomlibReactCompositeComponent__CompositeTypes.StatelessFunctional, 'Stateless function components cannot be given refs ' + '(See ref "%s" in %s created by %s). ' + 'Attempts to access this ref will fail.', ref, componentName, this.getName()) : void 0;
+      'development' !== 'production' ? reactdomlibReactCompositeComponent__warning(publicComponentInstance != null || component._compositeType !== reactdomlibReactCompositeComponent__CompositeTypes.StatelessFunctional, 'Stateless function components cannot be given refs ' + '(See ref "%s" in %s created by %s). ' + 'Attempts to access this ref will fail.', ref, componentName, this.getName()) : void 0;
     }
     var refs = inst.refs === reactdomlibReactCompositeComponent__emptyObject ? inst.refs = {} : inst.refs;
     refs[ref] = publicComponentInstance;
@@ -10424,7 +10323,17 @@ function reactdomlibinstantiateReactComponent__instantiateReactComponent(node, s
     instance = reactdomlibinstantiateReactComponent__ReactEmptyComponent.create(reactdomlibinstantiateReactComponent__instantiateReactComponent);
   } else if (typeof node === 'object') {
     var element = node;
-    !(element && (typeof element.type === 'function' || typeof element.type === 'string')) ? process.env.NODE_ENV !== 'production' ? reactdomlibinstantiateReactComponent__invariant(false, 'Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s', element.type == null ? element.type : typeof element.type, reactdomlibinstantiateReactComponent__getDeclarationErrorAddendum(element._owner)) : reactdomlibinstantiateReactComponent___prodInvariant('130', element.type == null ? element.type : typeof element.type, reactdomlibinstantiateReactComponent__getDeclarationErrorAddendum(element._owner)) : void 0;
+    var type = element.type;
+    if (typeof type !== 'function' && typeof type !== 'string') {
+      var info = '';
+      if ('development' !== 'production') {
+        if (type === undefined || typeof type === 'object' && type !== null && Object.keys(type).length === 0) {
+          info += ' You likely forgot to export your component from the file ' + 'it\'s defined in.';
+        }
+      }
+      info += reactdomlibinstantiateReactComponent__getDeclarationErrorAddendum(element._owner);
+      !false ? 'development' !== 'production' ? reactdomlibinstantiateReactComponent__invariant(false, 'Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s', type == null ? type : typeof type, info) : reactdomlibinstantiateReactComponent___prodInvariant('130', type == null ? type : typeof type, info) : void 0;
+    }
 
     // Special case string values
     if (typeof element.type === 'string') {
@@ -10445,11 +10354,11 @@ function reactdomlibinstantiateReactComponent__instantiateReactComponent(node, s
   } else if (typeof node === 'string' || typeof node === 'number') {
     instance = reactdomlibinstantiateReactComponent__ReactHostComponent.createInstanceForText(node);
   } else {
-    !false ? process.env.NODE_ENV !== 'production' ? reactdomlibinstantiateReactComponent__invariant(false, 'Encountered invalid React node of type %s', typeof node) : reactdomlibinstantiateReactComponent___prodInvariant('131', typeof node) : void 0;
+    !false ? 'development' !== 'production' ? reactdomlibinstantiateReactComponent__invariant(false, 'Encountered invalid React node of type %s', typeof node) : reactdomlibinstantiateReactComponent___prodInvariant('131', typeof node) : void 0;
   }
 
-  if (process.env.NODE_ENV !== 'production') {
-    process.env.NODE_ENV !== 'production' ? reactdomlibinstantiateReactComponent__warning(typeof instance.mountComponent === 'function' && typeof instance.receiveComponent === 'function' && typeof instance.getHostNode === 'function' && typeof instance.unmountComponent === 'function', 'Only React Components can be mounted.') : void 0;
+  if ('development' !== 'production') {
+    'development' !== 'production' ? reactdomlibinstantiateReactComponent__warning(typeof instance.mountComponent === 'function' && typeof instance.receiveComponent === 'function' && typeof instance.getHostNode === 'function' && typeof instance.unmountComponent === 'function', 'Only React Components can be mounted.') : void 0;
   }
 
   // These two fields are used by the DOM and ART diffing algorithms
@@ -10458,13 +10367,13 @@ function reactdomlibinstantiateReactComponent__instantiateReactComponent(node, s
   instance._mountIndex = 0;
   instance._mountImage = null;
 
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     instance._debugID = shouldHaveDebugID ? reactdomlibinstantiateReactComponent__getNextDebugID() : 0;
   }
 
   // Internal instances should fully constructed at this point, so they should
   // not get any new fields added to them at this point.
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     if (Object.preventExtensions) {
       Object.preventExtensions(instance);
     }
@@ -10605,7 +10514,7 @@ var reactdomlibTransaction__TransactionImpl = {
    * @return {*} Return value from `method`.
    */
   perform: function (method, scope, a, b, c, d, e, f) {
-    !!this.isInTransaction() ? process.env.NODE_ENV !== 'production' ? reactdomlibTransaction__invariant(false, 'Transaction.perform(...): Cannot initialize a transaction when there is already an outstanding transaction.') : reactdomlibTransaction___prodInvariant('27') : void 0;
+    !!this.isInTransaction() ? 'development' !== 'production' ? reactdomlibTransaction__invariant(false, 'Transaction.perform(...): Cannot initialize a transaction when there is already an outstanding transaction.') : reactdomlibTransaction___prodInvariant('27') : void 0;
     var errorThrown;
     var ret;
     try {
@@ -10669,7 +10578,7 @@ var reactdomlibTransaction__TransactionImpl = {
    * invoked).
    */
   closeAll: function (startIndex) {
-    !this.isInTransaction() ? process.env.NODE_ENV !== 'production' ? reactdomlibTransaction__invariant(false, 'Transaction.closeAll(): Cannot close transaction when none are open.') : reactdomlibTransaction___prodInvariant('28') : void 0;
+    !this.isInTransaction() ? 'development' !== 'production' ? reactdomlibTransaction__invariant(false, 'Transaction.closeAll(): Cannot close transaction when none are open.') : reactdomlibTransaction___prodInvariant('28') : void 0;
     var transactionWrappers = this.transactionWrappers;
     for (var i = startIndex; i < transactionWrappers.length; i++) {
       var wrapper = transactionWrappers[i];
@@ -10772,20 +10681,9 @@ var reactdomlibPooledClass__fourArgumentPooler = function (a1, a2, a3, a4) {
   }
 };
 
-var reactdomlibPooledClass__fiveArgumentPooler = function (a1, a2, a3, a4, a5) {
-  var Klass = this;
-  if (Klass.instancePool.length) {
-    var instance = Klass.instancePool.pop();
-    Klass.call(instance, a1, a2, a3, a4, a5);
-    return instance;
-  } else {
-    return new Klass(a1, a2, a3, a4, a5);
-  }
-};
-
 var reactdomlibPooledClass__standardReleaser = function (instance) {
   var Klass = this;
-  !(instance instanceof Klass) ? process.env.NODE_ENV !== 'production' ? reactdomlibPooledClass__invariant(false, 'Trying to release an instance into a pool of a different type.') : reactdomlibPooledClass___prodInvariant('25') : void 0;
+  !(instance instanceof Klass) ? 'development' !== 'production' ? reactdomlibPooledClass__invariant(false, 'Trying to release an instance into a pool of a different type.') : reactdomlibPooledClass___prodInvariant('25') : void 0;
   instance.destructor();
   if (Klass.instancePool.length < Klass.poolSize) {
     Klass.instancePool.push(instance);
@@ -10822,8 +10720,7 @@ var reactdomlibPooledClass__PooledClass = {
   oneArgumentPooler: reactdomlibPooledClass__oneArgumentPooler,
   twoArgumentPooler: reactdomlibPooledClass__twoArgumentPooler,
   threeArgumentPooler: reactdomlibPooledClass__threeArgumentPooler,
-  fourArgumentPooler: reactdomlibPooledClass__fourArgumentPooler,
-  fiveArgumentPooler: reactdomlibPooledClass__fiveArgumentPooler
+  fourArgumentPooler: reactdomlibPooledClass__fourArgumentPooler
 };
 
 $m['react-dom/lib/PooledClass'].exports = reactdomlibPooledClass__PooledClass;
@@ -10903,7 +10800,7 @@ var reactdomlibCallbackQueue__CallbackQueue = function () {
     var contexts = this._contexts;
     var arg = this._arg;
     if (callbacks && contexts) {
-      !(callbacks.length === contexts.length) ? process.env.NODE_ENV !== 'production' ? reactdomlibCallbackQueue__invariant(false, 'Mismatched list of contexts in callback queue') : reactdomlibCallbackQueue___prodInvariant('24') : void 0;
+      !(callbacks.length === contexts.length) ? 'development' !== 'production' ? reactdomlibCallbackQueue__invariant(false, 'Mismatched list of contexts in callback queue') : reactdomlibCallbackQueue___prodInvariant('24') : void 0;
       this._callbacks = null;
       this._contexts = null;
       for (var i = 0; i < callbacks.length; i++) {
@@ -10982,7 +10879,7 @@ var reactdomlibReactUpdates__asapEnqueued = false;
 var reactdomlibReactUpdates__batchingStrategy = null;
 
 function reactdomlibReactUpdates__ensureInjected() {
-  !(reactdomlibReactUpdates__ReactUpdates.ReactReconcileTransaction && reactdomlibReactUpdates__batchingStrategy) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactUpdates__invariant(false, 'ReactUpdates: must inject a reconcile transaction class and batching strategy') : reactdomlibReactUpdates___prodInvariant('123') : void 0;
+  !(reactdomlibReactUpdates__ReactUpdates.ReactReconcileTransaction && reactdomlibReactUpdates__batchingStrategy) ? 'development' !== 'production' ? reactdomlibReactUpdates__invariant(false, 'ReactUpdates: must inject a reconcile transaction class and batching strategy') : reactdomlibReactUpdates___prodInvariant('123') : void 0;
 }
 
 var reactdomlibReactUpdates__NESTED_UPDATES = {
@@ -11063,7 +10960,7 @@ function reactdomlibReactUpdates__mountOrderComparator(c1, c2) {
 
 function reactdomlibReactUpdates__runBatchedUpdates(transaction) {
   var len = transaction.dirtyComponentsLength;
-  !(len === reactdomlibReactUpdates__dirtyComponents.length) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactUpdates__invariant(false, 'Expected flush transaction\'s stored dirty-components length (%s) to match dirty-components array length (%s).', len, reactdomlibReactUpdates__dirtyComponents.length) : reactdomlibReactUpdates___prodInvariant('124', len, reactdomlibReactUpdates__dirtyComponents.length) : void 0;
+  !(len === reactdomlibReactUpdates__dirtyComponents.length) ? 'development' !== 'production' ? reactdomlibReactUpdates__invariant(false, 'Expected flush transaction\'s stored dirty-components length (%s) to match dirty-components array length (%s).', len, reactdomlibReactUpdates__dirtyComponents.length) : reactdomlibReactUpdates___prodInvariant('124', len, reactdomlibReactUpdates__dirtyComponents.length) : void 0;
 
   // Since reconciling a component higher in the owner hierarchy usually (not
   // always -- see shouldComponentUpdate()) will reconcile children, reconcile
@@ -11165,21 +11062,21 @@ function reactdomlibReactUpdates__enqueueUpdate(component) {
  * if no updates are currently being performed.
  */
 function reactdomlibReactUpdates__asap(callback, context) {
-  !reactdomlibReactUpdates__batchingStrategy.isBatchingUpdates ? process.env.NODE_ENV !== 'production' ? reactdomlibReactUpdates__invariant(false, 'ReactUpdates.asap: Can\'t enqueue an asap callback in a context whereupdates are not being batched.') : reactdomlibReactUpdates___prodInvariant('125') : void 0;
+  !reactdomlibReactUpdates__batchingStrategy.isBatchingUpdates ? 'development' !== 'production' ? reactdomlibReactUpdates__invariant(false, 'ReactUpdates.asap: Can\'t enqueue an asap callback in a context whereupdates are not being batched.') : reactdomlibReactUpdates___prodInvariant('125') : void 0;
   reactdomlibReactUpdates__asapCallbackQueue.enqueue(callback, context);
   reactdomlibReactUpdates__asapEnqueued = true;
 }
 
 var reactdomlibReactUpdates__ReactUpdatesInjection = {
   injectReconcileTransaction: function (ReconcileTransaction) {
-    !ReconcileTransaction ? process.env.NODE_ENV !== 'production' ? reactdomlibReactUpdates__invariant(false, 'ReactUpdates: must provide a reconcile transaction class') : reactdomlibReactUpdates___prodInvariant('126') : void 0;
+    !ReconcileTransaction ? 'development' !== 'production' ? reactdomlibReactUpdates__invariant(false, 'ReactUpdates: must provide a reconcile transaction class') : reactdomlibReactUpdates___prodInvariant('126') : void 0;
     reactdomlibReactUpdates__ReactUpdates.ReactReconcileTransaction = ReconcileTransaction;
   },
 
   injectBatchingStrategy: function (_batchingStrategy) {
-    !_batchingStrategy ? process.env.NODE_ENV !== 'production' ? reactdomlibReactUpdates__invariant(false, 'ReactUpdates: must provide a batching strategy') : reactdomlibReactUpdates___prodInvariant('127') : void 0;
-    !(typeof _batchingStrategy.batchedUpdates === 'function') ? process.env.NODE_ENV !== 'production' ? reactdomlibReactUpdates__invariant(false, 'ReactUpdates: must provide a batchedUpdates() function') : reactdomlibReactUpdates___prodInvariant('128') : void 0;
-    !(typeof _batchingStrategy.isBatchingUpdates === 'boolean') ? process.env.NODE_ENV !== 'production' ? reactdomlibReactUpdates__invariant(false, 'ReactUpdates: must provide an isBatchingUpdates boolean attribute') : reactdomlibReactUpdates___prodInvariant('129') : void 0;
+    !_batchingStrategy ? 'development' !== 'production' ? reactdomlibReactUpdates__invariant(false, 'ReactUpdates: must provide a batching strategy') : reactdomlibReactUpdates___prodInvariant('127') : void 0;
+    !(typeof _batchingStrategy.batchedUpdates === 'function') ? 'development' !== 'production' ? reactdomlibReactUpdates__invariant(false, 'ReactUpdates: must provide a batchedUpdates() function') : reactdomlibReactUpdates___prodInvariant('128') : void 0;
+    !(typeof _batchingStrategy.isBatchingUpdates === 'boolean') ? 'development' !== 'production' ? reactdomlibReactUpdates__invariant(false, 'ReactUpdates: must provide an isBatchingUpdates boolean attribute') : reactdomlibReactUpdates___prodInvariant('129') : void 0;
     reactdomlibReactUpdates__batchingStrategy = _batchingStrategy;
   }
 };
@@ -11246,18 +11143,18 @@ function reactdomlibReactUpdateQueue__formatUnexpectedArgument(arg) {
 function reactdomlibReactUpdateQueue__getInternalInstanceReadyForUpdate(publicInstance, callerName) {
   var internalInstance = reactdomlibReactUpdateQueue__ReactInstanceMap.get(publicInstance);
   if (!internalInstance) {
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       var ctor = publicInstance.constructor;
       // Only warn when we have a callerName. Otherwise we should be silent.
       // We're probably calling from enqueueCallback. We don't want to warn
       // there because we already warned for the corresponding lifecycle method.
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactUpdateQueue__warning(!callerName, '%s(...): Can only update a mounted or mounting component. ' + 'This usually means you called %s() on an unmounted component. ' + 'This is a no-op. Please check the code for the %s component.', callerName, callerName, ctor && (ctor.displayName || ctor.name) || 'ReactClass') : void 0;
+      'development' !== 'production' ? reactdomlibReactUpdateQueue__warning(!callerName, '%s(...): Can only update a mounted or mounting component. ' + 'This usually means you called %s() on an unmounted component. ' + 'This is a no-op. Please check the code for the %s component.', callerName, callerName, ctor && (ctor.displayName || ctor.name) || 'ReactClass') : void 0;
     }
     return null;
   }
 
-  if (process.env.NODE_ENV !== 'production') {
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactUpdateQueue__warning(reactdomlibReactUpdateQueue__ReactCurrentOwner.current == null, '%s(...): Cannot update during an existing state transition (such as ' + 'within `render` or another component\'s constructor). Render methods ' + 'should be a pure function of props and state; constructor ' + 'side-effects are an anti-pattern, but can be moved to ' + '`componentWillMount`.', callerName) : void 0;
+  if ('development' !== 'production') {
+    'development' !== 'production' ? reactdomlibReactUpdateQueue__warning(reactdomlibReactUpdateQueue__ReactCurrentOwner.current == null, '%s(...): Cannot update during an existing state transition (such as ' + 'within `render` or another component\'s constructor). Render methods ' + 'should be a pure function of props and state; constructor ' + 'side-effects are an anti-pattern, but can be moved to ' + '`componentWillMount`.', callerName) : void 0;
   }
 
   return internalInstance;
@@ -11277,10 +11174,10 @@ var reactdomlibReactUpdateQueue__ReactUpdateQueue = {
    * @final
    */
   isMounted: function (publicInstance) {
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       var owner = reactdomlibReactUpdateQueue__ReactCurrentOwner.current;
       if (owner !== null) {
-        process.env.NODE_ENV !== 'production' ? reactdomlibReactUpdateQueue__warning(owner._warnedAboutRefsInRender, '%s is accessing isMounted inside its render() function. ' + 'render() should be a pure function of props and state. It should ' + 'never access something that requires stale data from the previous ' + 'render, such as refs. Move this logic to componentDidMount and ' + 'componentDidUpdate instead.', owner.getName() || 'A component') : void 0;
+        'development' !== 'production' ? reactdomlibReactUpdateQueue__warning(owner._warnedAboutRefsInRender, '%s is accessing isMounted inside its render() function. ' + 'render() should be a pure function of props and state. It should ' + 'never access something that requires stale data from the previous ' + 'render, such as refs. Move this logic to componentDidMount and ' + 'componentDidUpdate instead.', owner.getName() || 'A component') : void 0;
         owner._warnedAboutRefsInRender = true;
       }
     }
@@ -11398,9 +11295,9 @@ var reactdomlibReactUpdateQueue__ReactUpdateQueue = {
    * @internal
    */
   enqueueSetState: function (publicInstance, partialState) {
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       reactdomlibReactUpdateQueue__ReactInstrumentation.debugTool.onSetState();
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactUpdateQueue__warning(partialState != null, 'setState(...): You passed an undefined or null state object; ' + 'instead, use forceUpdate().') : void 0;
+      'development' !== 'production' ? reactdomlibReactUpdateQueue__warning(partialState != null, 'setState(...): You passed an undefined or null state object; ' + 'instead, use forceUpdate().') : void 0;
     }
 
     var internalInstance = reactdomlibReactUpdateQueue__getInternalInstanceReadyForUpdate(publicInstance, 'setState');
@@ -11423,7 +11320,7 @@ var reactdomlibReactUpdateQueue__ReactUpdateQueue = {
   },
 
   validateCallback: function (callback, callerName) {
-    !(!callback || typeof callback === 'function') ? process.env.NODE_ENV !== 'production' ? reactdomlibReactUpdateQueue__invariant(false, '%s(...): Expected the last optional `callback` argument to be a function. Instead received: %s.', callerName, reactdomlibReactUpdateQueue__formatUnexpectedArgument(callback)) : reactdomlibReactUpdateQueue___prodInvariant('122', callerName, reactdomlibReactUpdateQueue__formatUnexpectedArgument(callback)) : void 0;
+    !(!callback || typeof callback === 'function') ? 'development' !== 'production' ? reactdomlibReactUpdateQueue__invariant(false, '%s(...): Expected the last optional `callback` argument to be a function. Instead received: %s.', callerName, reactdomlibReactUpdateQueue__formatUnexpectedArgument(callback)) : reactdomlibReactUpdateQueue___prodInvariant('122', callerName, reactdomlibReactUpdateQueue__formatUnexpectedArgument(callback)) : void 0;
   }
 
 };
@@ -11503,7 +11400,7 @@ var reactdomlibvalidateDOMNesting__warning = $m['fbjs/lib/warning'].exports;
 
 var reactdomlibvalidateDOMNesting__validateDOMNesting = reactdomlibvalidateDOMNesting__emptyFunction;
 
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   // This validation code was written based on the HTML5 parsing spec:
   // https://html.spec.whatwg.org/multipage/syntax.html#has-an-element-in-scope
   //
@@ -11778,7 +11675,7 @@ if (process.env.NODE_ENV !== 'production') {
     var parentTag = parentInfo && parentInfo.tag;
 
     if (childText != null) {
-      process.env.NODE_ENV !== 'production' ? reactdomlibvalidateDOMNesting__warning(childTag == null, 'validateDOMNesting: when childText is passed, childTag should be null') : void 0;
+      'development' !== 'production' ? reactdomlibvalidateDOMNesting__warning(childTag == null, 'validateDOMNesting: when childText is passed, childTag should be null') : void 0;
       childTag = '#text';
     }
 
@@ -11846,9 +11743,9 @@ if (process.env.NODE_ENV !== 'production') {
         if (ancestorTag === 'table' && childTag === 'tr') {
           info += ' Add a <tbody> to your code to match the DOM tree generated by ' + 'the browser.';
         }
-        process.env.NODE_ENV !== 'production' ? reactdomlibvalidateDOMNesting__warning(false, 'validateDOMNesting(...): %s cannot appear as a child of <%s>.%s ' + 'See %s.%s', tagDisplayName, ancestorTag, whitespaceInfo, ownerInfo, info) : void 0;
+        'development' !== 'production' ? reactdomlibvalidateDOMNesting__warning(false, 'validateDOMNesting(...): %s cannot appear as a child of <%s>.%s ' + 'See %s.%s', tagDisplayName, ancestorTag, whitespaceInfo, ownerInfo, info) : void 0;
       } else {
-        process.env.NODE_ENV !== 'production' ? reactdomlibvalidateDOMNesting__warning(false, 'validateDOMNesting(...): %s cannot appear as a descendant of ' + '<%s>. See %s.', tagDisplayName, ancestorTag, ownerInfo) : void 0;
+        'development' !== 'production' ? reactdomlibvalidateDOMNesting__warning(false, 'validateDOMNesting(...): %s cannot appear as a descendant of ' + '<%s>. See %s.', tagDisplayName, ancestorTag, ownerInfo) : void 0;
       }
     }
   };
@@ -11893,7 +11790,7 @@ function reactdomlibReactDOMContainerInfo__ReactDOMContainerInfo(topLevelWrapper
     _tag: node ? node.nodeName.toLowerCase() : null,
     _namespaceURI: node ? node.namespaceURI : null
   };
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     info._ancestorInfo = node ? reactdomlibReactDOMContainerInfo__validateDOMNesting.updatedAncestorInfo(null, info._tag, null) : null;
   }
   return info;
@@ -11926,6 +11823,13 @@ var reactdomlibReactDOMComponentTree__ATTR_NAME = reactdomlibReactDOMComponentTr
 var reactdomlibReactDOMComponentTree__Flags = reactdomlibReactDOMComponentTree__ReactDOMComponentFlags;
 
 var reactdomlibReactDOMComponentTree__internalInstanceKey = '__reactInternalInstance$' + Math.random().toString(36).slice(2);
+
+/**
+ * Check if a given node should be cached.
+ */
+function reactdomlibReactDOMComponentTree__shouldPrecacheNode(node, nodeID) {
+  return node.nodeType === 1 && node.getAttribute(reactdomlibReactDOMComponentTree__ATTR_NAME) === String(nodeID) || node.nodeType === 8 && node.nodeValue === ' react-text: ' + nodeID + ' ' || node.nodeType === 8 && node.nodeValue === ' react-empty: ' + nodeID + ' ';
+}
 
 /**
  * Drill down (through composites and empty components) until we get a host or
@@ -11992,13 +11896,13 @@ function reactdomlibReactDOMComponentTree__precacheChildNodes(inst, node) {
     }
     // We assume the child nodes are in the same order as the child instances.
     for (; childNode !== null; childNode = childNode.nextSibling) {
-      if (childNode.nodeType === 1 && childNode.getAttribute(reactdomlibReactDOMComponentTree__ATTR_NAME) === String(childID) || childNode.nodeType === 8 && childNode.nodeValue === ' react-text: ' + childID + ' ' || childNode.nodeType === 8 && childNode.nodeValue === ' react-empty: ' + childID + ' ') {
+      if (reactdomlibReactDOMComponentTree__shouldPrecacheNode(childNode, childID)) {
         reactdomlibReactDOMComponentTree__precacheNode(childInst, childNode);
         continue outer;
       }
     }
     // We reached the end of the DOM children without finding an ID match.
-    !false ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMComponentTree__invariant(false, 'Unable to find element with ID %s.', childID) : reactdomlibReactDOMComponentTree___prodInvariant('32', childID) : void 0;
+    !false ? 'development' !== 'production' ? reactdomlibReactDOMComponentTree__invariant(false, 'Unable to find element with ID %s.', childID) : reactdomlibReactDOMComponentTree___prodInvariant('32', childID) : void 0;
   }
   inst._flags |= reactdomlibReactDOMComponentTree__Flags.hasCachedChildNodes;
 }
@@ -12057,7 +11961,7 @@ function reactdomlibReactDOMComponentTree__getInstanceFromNode(node) {
 function reactdomlibReactDOMComponentTree__getNodeFromInstance(inst) {
   // Without this first invariant, passing a non-DOM-component triggers the next
   // invariant for a missing parent, which is super confusing.
-  !(inst._hostNode !== undefined) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMComponentTree__invariant(false, 'getNodeFromInstance: Invalid argument.') : reactdomlibReactDOMComponentTree___prodInvariant('33') : void 0;
+  !(inst._hostNode !== undefined) ? 'development' !== 'production' ? reactdomlibReactDOMComponentTree__invariant(false, 'getNodeFromInstance: Invalid argument.') : reactdomlibReactDOMComponentTree___prodInvariant('33') : void 0;
 
   if (inst._hostNode) {
     return inst._hostNode;
@@ -12067,7 +11971,7 @@ function reactdomlibReactDOMComponentTree__getNodeFromInstance(inst) {
   var parents = [];
   while (!inst._hostNode) {
     parents.push(inst);
-    !inst._hostParent ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMComponentTree__invariant(false, 'React DOM tree root should always have a node reference.') : reactdomlibReactDOMComponentTree___prodInvariant('34') : void 0;
+    !inst._hostParent ? 'development' !== 'production' ? reactdomlibReactDOMComponentTree__invariant(false, 'React DOM tree root should always have a node reference.') : reactdomlibReactDOMComponentTree___prodInvariant('34') : void 0;
     inst = inst._hostParent;
   }
 
@@ -12289,7 +12193,7 @@ var reactdomlibaccumulateInto__invariant = $m['fbjs/lib/invariant'].exports;
  */
 
 function reactdomlibaccumulateInto__accumulateInto(current, next) {
-  !(next != null) ? process.env.NODE_ENV !== 'production' ? reactdomlibaccumulateInto__invariant(false, 'accumulateInto(...): Accumulated items must not be null or undefined.') : reactdomlibaccumulateInto___prodInvariant('30') : void 0;
+  !(next != null) ? 'development' !== 'production' ? reactdomlibaccumulateInto__invariant(false, 'accumulateInto(...): Accumulated items must not be null or undefined.') : reactdomlibaccumulateInto___prodInvariant('30') : void 0;
 
   if (current == null) {
     return next;
@@ -12350,14 +12254,14 @@ var reactdomlibEventPluginUtils__TreeTraversal;
 var reactdomlibEventPluginUtils__injection = {
   injectComponentTree: function (Injected) {
     reactdomlibEventPluginUtils__ComponentTree = Injected;
-    if (process.env.NODE_ENV !== 'production') {
-      process.env.NODE_ENV !== 'production' ? reactdomlibEventPluginUtils__warning(Injected && Injected.getNodeFromInstance && Injected.getInstanceFromNode, 'EventPluginUtils.injection.injectComponentTree(...): Injected ' + 'module is missing getNodeFromInstance or getInstanceFromNode.') : void 0;
+    if ('development' !== 'production') {
+      'development' !== 'production' ? reactdomlibEventPluginUtils__warning(Injected && Injected.getNodeFromInstance && Injected.getInstanceFromNode, 'EventPluginUtils.injection.injectComponentTree(...): Injected ' + 'module is missing getNodeFromInstance or getInstanceFromNode.') : void 0;
     }
   },
   injectTreeTraversal: function (Injected) {
     reactdomlibEventPluginUtils__TreeTraversal = Injected;
-    if (process.env.NODE_ENV !== 'production') {
-      process.env.NODE_ENV !== 'production' ? reactdomlibEventPluginUtils__warning(Injected && Injected.isAncestor && Injected.getLowestCommonAncestor, 'EventPluginUtils.injection.injectTreeTraversal(...): Injected ' + 'module is missing isAncestor or getLowestCommonAncestor.') : void 0;
+    if ('development' !== 'production') {
+      'development' !== 'production' ? reactdomlibEventPluginUtils__warning(Injected && Injected.isAncestor && Injected.getLowestCommonAncestor, 'EventPluginUtils.injection.injectTreeTraversal(...): Injected ' + 'module is missing isAncestor or getLowestCommonAncestor.') : void 0;
     }
   }
 };
@@ -12374,7 +12278,7 @@ function reactdomlibEventPluginUtils__isStartish(topLevelType) {
 }
 
 var reactdomlibEventPluginUtils__validateEventDispatches;
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   reactdomlibEventPluginUtils__validateEventDispatches = function (event) {
     var dispatchListeners = event._dispatchListeners;
     var dispatchInstances = event._dispatchInstances;
@@ -12385,7 +12289,7 @@ if (process.env.NODE_ENV !== 'production') {
     var instancesIsArr = Array.isArray(dispatchInstances);
     var instancesLen = instancesIsArr ? dispatchInstances.length : dispatchInstances ? 1 : 0;
 
-    process.env.NODE_ENV !== 'production' ? reactdomlibEventPluginUtils__warning(instancesIsArr === listenersIsArr && instancesLen === listenersLen, 'EventPluginUtils: Invalid `event`.') : void 0;
+    'development' !== 'production' ? reactdomlibEventPluginUtils__warning(instancesIsArr === listenersIsArr && instancesLen === listenersLen, 'EventPluginUtils: Invalid `event`.') : void 0;
   };
 }
 
@@ -12413,7 +12317,7 @@ function reactdomlibEventPluginUtils__executeDispatch(event, simulated, listener
 function reactdomlibEventPluginUtils__executeDispatchesInOrder(event, simulated) {
   var dispatchListeners = event._dispatchListeners;
   var dispatchInstances = event._dispatchInstances;
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     reactdomlibEventPluginUtils__validateEventDispatches(event);
   }
   if (Array.isArray(dispatchListeners)) {
@@ -12441,7 +12345,7 @@ function reactdomlibEventPluginUtils__executeDispatchesInOrder(event, simulated)
 function reactdomlibEventPluginUtils__executeDispatchesInOrderStopAtTrueImpl(event) {
   var dispatchListeners = event._dispatchListeners;
   var dispatchInstances = event._dispatchInstances;
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     reactdomlibEventPluginUtils__validateEventDispatches(event);
   }
   if (Array.isArray(dispatchListeners)) {
@@ -12482,12 +12386,12 @@ function reactdomlibEventPluginUtils__executeDispatchesInOrderStopAtTrue(event) 
  * @return {*} The return value of executing the single dispatch.
  */
 function reactdomlibEventPluginUtils__executeDirectDispatch(event) {
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     reactdomlibEventPluginUtils__validateEventDispatches(event);
   }
   var dispatchListener = event._dispatchListeners;
   var dispatchInstance = event._dispatchInstances;
-  !!Array.isArray(dispatchListener) ? process.env.NODE_ENV !== 'production' ? reactdomlibEventPluginUtils__invariant(false, 'executeDirectDispatch(...): Invalid `event`.') : reactdomlibEventPluginUtils___prodInvariant('103') : void 0;
+  !!Array.isArray(dispatchListener) ? 'development' !== 'production' ? reactdomlibEventPluginUtils__invariant(false, 'executeDirectDispatch(...): Invalid `event`.') : reactdomlibEventPluginUtils___prodInvariant('103') : void 0;
   event.currentTarget = dispatchListener ? reactdomlibEventPluginUtils__EventPluginUtils.getNodeFromInstance(dispatchInstance) : null;
   var res = dispatchListener ? dispatchListener(event) : null;
   event.currentTarget = null;
@@ -12680,7 +12584,7 @@ var reactdomlibEventPluginHub__EventPluginHub = {
    * @param {function} listener The callback to store.
    */
   putListener: function (inst, registrationName, listener) {
-    !(typeof listener === 'function') ? process.env.NODE_ENV !== 'production' ? reactdomlibEventPluginHub__invariant(false, 'Expected %s listener to be a function, instead got type %s', registrationName, typeof listener) : reactdomlibEventPluginHub___prodInvariant('94', registrationName, typeof listener) : void 0;
+    !(typeof listener === 'function') ? 'development' !== 'production' ? reactdomlibEventPluginHub__invariant(false, 'Expected %s listener to be a function, instead got type %s', registrationName, typeof listener) : reactdomlibEventPluginHub___prodInvariant('94', registrationName, typeof listener) : void 0;
 
     var key = reactdomlibEventPluginHub__getDictionaryKey(inst);
     var bankForRegistrationName = reactdomlibEventPluginHub__listenerBank[registrationName] || (reactdomlibEventPluginHub__listenerBank[registrationName] = {});
@@ -12804,7 +12708,7 @@ var reactdomlibEventPluginHub__EventPluginHub = {
     } else {
       reactdomlibEventPluginHub__forEachAccumulated(processingEventQueue, reactdomlibEventPluginHub__executeDispatchesAndReleaseTopLevel);
     }
-    !!reactdomlibEventPluginHub__eventQueue ? process.env.NODE_ENV !== 'production' ? reactdomlibEventPluginHub__invariant(false, 'processEventQueue(): Additional events were enqueued while processing an event queue. Support for this has not yet been implemented.') : reactdomlibEventPluginHub___prodInvariant('95') : void 0;
+    !!reactdomlibEventPluginHub__eventQueue ? 'development' !== 'production' ? reactdomlibEventPluginHub__invariant(false, 'processEventQueue(): Additional events were enqueued while processing an event queue. Support for this has not yet been implemented.') : reactdomlibEventPluginHub___prodInvariant('95') : void 0;
     // This would be a good time to rethrow if any of the event handlers threw.
     reactdomlibEventPluginHub__ReactErrorUtils.rethrowCaughtError();
   },
@@ -13504,11 +13408,11 @@ function reactdomlibReactMount__batchedMountComponentIntoNode(componentInstance,
  * @see {ReactMount.unmountComponentAtNode}
  */
 function reactdomlibReactMount__unmountComponentFromNode(instance, container, safely) {
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     reactdomlibReactMount__ReactInstrumentation.debugTool.onBeginFlush();
   }
   reactdomlibReactMount__ReactReconciler.unmountComponent(instance, safely);
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     reactdomlibReactMount__ReactInstrumentation.debugTool.onEndFlush();
   }
 
@@ -13596,7 +13500,7 @@ var reactdomlibReactMount__TopLevelWrapper = function () {
   this.rootID = reactdomlibReactMount__topLevelRootCounter++;
 };
 reactdomlibReactMount__TopLevelWrapper.prototype.isReactComponent = {};
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   reactdomlibReactMount__TopLevelWrapper.displayName = 'TopLevelWrapper';
 }
 reactdomlibReactMount__TopLevelWrapper.prototype.render = function () {
@@ -13673,9 +13577,9 @@ var reactdomlibReactMount__ReactMount = {
     // Various parts of our code (such as ReactCompositeComponent's
     // _renderValidatedComponent) assume that calls to render aren't nested;
     // verify that that's the case.
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactMount__warning(reactdomlibReactMount__ReactCurrentOwner.current == null, '_renderNewRootComponent(): Render methods should be a pure function ' + 'of props and state; triggering nested component updates from ' + 'render is not allowed. If necessary, trigger nested updates in ' + 'componentDidUpdate. Check the render method of %s.', reactdomlibReactMount__ReactCurrentOwner.current && reactdomlibReactMount__ReactCurrentOwner.current.getName() || 'ReactCompositeComponent') : void 0;
+    'development' !== 'production' ? reactdomlibReactMount__warning(reactdomlibReactMount__ReactCurrentOwner.current == null, '_renderNewRootComponent(): Render methods should be a pure function ' + 'of props and state; triggering nested component updates from ' + 'render is not allowed. If necessary, trigger nested updates in ' + 'componentDidUpdate. Check the render method of %s.', reactdomlibReactMount__ReactCurrentOwner.current && reactdomlibReactMount__ReactCurrentOwner.current.getName() || 'ReactCompositeComponent') : void 0;
 
-    !reactdomlibReactMount__isValidContainer(container) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactMount__invariant(false, '_registerComponent(...): Target container is not a DOM element.') : reactdomlibReactMount___prodInvariant('37') : void 0;
+    !reactdomlibReactMount__isValidContainer(container) ? 'development' !== 'production' ? reactdomlibReactMount__invariant(false, '_registerComponent(...): Target container is not a DOM element.') : reactdomlibReactMount___prodInvariant('37') : void 0;
 
     reactdomlibReactMount__ReactBrowserEventEmitter.ensureScrollValueMonitoring();
     var componentInstance = reactdomlibReactMount__instantiateReactComponent(nextElement, false);
@@ -13706,17 +13610,17 @@ var reactdomlibReactMount__ReactMount = {
    * @return {ReactComponent} Component instance rendered in `container`.
    */
   renderSubtreeIntoContainer: function (parentComponent, nextElement, container, callback) {
-    !(parentComponent != null && reactdomlibReactMount__ReactInstanceMap.has(parentComponent)) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactMount__invariant(false, 'parentComponent must be a valid React Component') : reactdomlibReactMount___prodInvariant('38') : void 0;
+    !(parentComponent != null && reactdomlibReactMount__ReactInstanceMap.has(parentComponent)) ? 'development' !== 'production' ? reactdomlibReactMount__invariant(false, 'parentComponent must be a valid React Component') : reactdomlibReactMount___prodInvariant('38') : void 0;
     return reactdomlibReactMount__ReactMount._renderSubtreeIntoContainer(parentComponent, nextElement, container, callback);
   },
 
   _renderSubtreeIntoContainer: function (parentComponent, nextElement, container, callback) {
     reactdomlibReactMount__ReactUpdateQueue.validateCallback(callback, 'ReactDOM.render');
-    !reactdomlibReactMount__React.isValidElement(nextElement) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactMount__invariant(false, 'ReactDOM.render(): Invalid component element.%s', typeof nextElement === 'string' ? ' Instead of passing a string like \'div\', pass ' + 'React.createElement(\'div\') or <div />.' : typeof nextElement === 'function' ? ' Instead of passing a class like Foo, pass ' + 'React.createElement(Foo) or <Foo />.' :
+    !reactdomlibReactMount__React.isValidElement(nextElement) ? 'development' !== 'production' ? reactdomlibReactMount__invariant(false, 'ReactDOM.render(): Invalid component element.%s', typeof nextElement === 'string' ? ' Instead of passing a string like \'div\', pass ' + 'React.createElement(\'div\') or <div />.' : typeof nextElement === 'function' ? ' Instead of passing a class like Foo, pass ' + 'React.createElement(Foo) or <Foo />.' :
     // Check if it quacks like an element
     nextElement != null && nextElement.props !== undefined ? ' This may be caused by unintentionally loading two independent ' + 'copies of React.' : '') : reactdomlibReactMount___prodInvariant('39', typeof nextElement === 'string' ? ' Instead of passing a string like \'div\', pass ' + 'React.createElement(\'div\') or <div />.' : typeof nextElement === 'function' ? ' Instead of passing a class like Foo, pass ' + 'React.createElement(Foo) or <Foo />.' : nextElement != null && nextElement.props !== undefined ? ' This may be caused by unintentionally loading two independent ' + 'copies of React.' : '') : void 0;
 
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactMount__warning(!container || !container.tagName || container.tagName.toUpperCase() !== 'BODY', 'render(): Rendering components directly into document.body is ' + 'discouraged, since its children are often manipulated by third-party ' + 'scripts and browser extensions. This may lead to subtle ' + 'reconciliation issues. Try rendering into a container element created ' + 'for your app.') : void 0;
+    'development' !== 'production' ? reactdomlibReactMount__warning(!container || !container.tagName || container.tagName.toUpperCase() !== 'BODY', 'render(): Rendering components directly into document.body is ' + 'discouraged, since its children are often manipulated by third-party ' + 'scripts and browser extensions. This may lead to subtle ' + 'reconciliation issues. Try rendering into a container element created ' + 'for your app.') : void 0;
 
     var nextWrappedElement = reactdomlibReactMount__React.createElement(reactdomlibReactMount__TopLevelWrapper, { child: nextElement });
 
@@ -13749,14 +13653,14 @@ var reactdomlibReactMount__ReactMount = {
     var containerHasReactMarkup = reactRootElement && !!reactdomlibReactMount__internalGetID(reactRootElement);
     var containerHasNonRootReactChild = reactdomlibReactMount__hasNonRootReactChild(container);
 
-    if (process.env.NODE_ENV !== 'production') {
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactMount__warning(!containerHasNonRootReactChild, 'render(...): Replacing React-rendered children with a new root ' + 'component. If you intended to update the children of this node, ' + 'you should instead have the existing children update their state ' + 'and render the new components instead of calling ReactDOM.render.') : void 0;
+    if ('development' !== 'production') {
+      'development' !== 'production' ? reactdomlibReactMount__warning(!containerHasNonRootReactChild, 'render(...): Replacing React-rendered children with a new root ' + 'component. If you intended to update the children of this node, ' + 'you should instead have the existing children update their state ' + 'and render the new components instead of calling ReactDOM.render.') : void 0;
 
       if (!containerHasReactMarkup || reactRootElement.nextSibling) {
         var rootElementSibling = reactRootElement;
         while (rootElementSibling) {
           if (reactdomlibReactMount__internalGetID(rootElementSibling)) {
-            process.env.NODE_ENV !== 'production' ? reactdomlibReactMount__warning(false, 'render(): Target node has markup rendered by React, but there ' + 'are unrelated nodes as well. This is most commonly caused by ' + 'white-space inserted around server-rendered markup.') : void 0;
+            'development' !== 'production' ? reactdomlibReactMount__warning(false, 'render(): Target node has markup rendered by React, but there ' + 'are unrelated nodes as well. This is most commonly caused by ' + 'white-space inserted around server-rendered markup.') : void 0;
             break;
           }
           rootElementSibling = rootElementSibling.nextSibling;
@@ -13802,12 +13706,12 @@ var reactdomlibReactMount__ReactMount = {
     // _renderValidatedComponent) assume that calls to render aren't nested;
     // verify that that's the case. (Strictly speaking, unmounting won't cause a
     // render but we still don't expect to be in a render call here.)
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactMount__warning(reactdomlibReactMount__ReactCurrentOwner.current == null, 'unmountComponentAtNode(): Render methods should be a pure function ' + 'of props and state; triggering nested component updates from render ' + 'is not allowed. If necessary, trigger nested updates in ' + 'componentDidUpdate. Check the render method of %s.', reactdomlibReactMount__ReactCurrentOwner.current && reactdomlibReactMount__ReactCurrentOwner.current.getName() || 'ReactCompositeComponent') : void 0;
+    'development' !== 'production' ? reactdomlibReactMount__warning(reactdomlibReactMount__ReactCurrentOwner.current == null, 'unmountComponentAtNode(): Render methods should be a pure function ' + 'of props and state; triggering nested component updates from render ' + 'is not allowed. If necessary, trigger nested updates in ' + 'componentDidUpdate. Check the render method of %s.', reactdomlibReactMount__ReactCurrentOwner.current && reactdomlibReactMount__ReactCurrentOwner.current.getName() || 'ReactCompositeComponent') : void 0;
 
-    !reactdomlibReactMount__isValidContainer(container) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactMount__invariant(false, 'unmountComponentAtNode(...): Target container is not a DOM element.') : reactdomlibReactMount___prodInvariant('40') : void 0;
+    !reactdomlibReactMount__isValidContainer(container) ? 'development' !== 'production' ? reactdomlibReactMount__invariant(false, 'unmountComponentAtNode(...): Target container is not a DOM element.') : reactdomlibReactMount___prodInvariant('40') : void 0;
 
-    if (process.env.NODE_ENV !== 'production') {
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactMount__warning(!reactdomlibReactMount__nodeIsRenderedByOtherInstance(container), 'unmountComponentAtNode(): The node you\'re attempting to unmount ' + 'was rendered by another copy of React.') : void 0;
+    if ('development' !== 'production') {
+      'development' !== 'production' ? reactdomlibReactMount__warning(!reactdomlibReactMount__nodeIsRenderedByOtherInstance(container), 'unmountComponentAtNode(): The node you\'re attempting to unmount ' + 'was rendered by another copy of React.') : void 0;
     }
 
     var prevComponent = reactdomlibReactMount__getTopLevelWrapperInContainer(container);
@@ -13819,8 +13723,8 @@ var reactdomlibReactMount__ReactMount = {
       // Check if the container itself is a React root node.
       var isContainerReactRoot = container.nodeType === 1 && container.hasAttribute(reactdomlibReactMount__ROOT_ATTR_NAME);
 
-      if (process.env.NODE_ENV !== 'production') {
-        process.env.NODE_ENV !== 'production' ? reactdomlibReactMount__warning(!containerHasNonRootReactChild, 'unmountComponentAtNode(): The node you\'re attempting to unmount ' + 'was rendered by React and is not a top-level container. %s', isContainerReactRoot ? 'You may have accidentally passed in a React root node instead ' + 'of its container.' : 'Instead, have the parent component update its state and ' + 'rerender in order to remove this component.') : void 0;
+      if ('development' !== 'production') {
+        'development' !== 'production' ? reactdomlibReactMount__warning(!containerHasNonRootReactChild, 'unmountComponentAtNode(): The node you\'re attempting to unmount ' + 'was rendered by React and is not a top-level container. %s', isContainerReactRoot ? 'You may have accidentally passed in a React root node instead ' + 'of its container.' : 'Instead, have the parent component update its state and ' + 'rerender in order to remove this component.') : void 0;
       }
 
       return false;
@@ -13831,7 +13735,7 @@ var reactdomlibReactMount__ReactMount = {
   },
 
   _mountImageIntoNode: function (markup, container, instance, shouldReuseMarkup, transaction) {
-    !reactdomlibReactMount__isValidContainer(container) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactMount__invariant(false, 'mountComponentIntoNode(...): Target container is not valid.') : reactdomlibReactMount___prodInvariant('41') : void 0;
+    !reactdomlibReactMount__isValidContainer(container) ? 'development' !== 'production' ? reactdomlibReactMount__invariant(false, 'mountComponentIntoNode(...): Target container is not valid.') : reactdomlibReactMount___prodInvariant('41') : void 0;
 
     if (shouldReuseMarkup) {
       var rootElement = reactdomlibReactMount__getReactRootElementInContainer(container);
@@ -13846,7 +13750,7 @@ var reactdomlibReactMount__ReactMount = {
         rootElement.setAttribute(reactdomlibReactMount__ReactMarkupChecksum.CHECKSUM_ATTR_NAME, checksum);
 
         var normalizedMarkup = markup;
-        if (process.env.NODE_ENV !== 'production') {
+        if ('development' !== 'production') {
           // because rootMarkup is retrieved from the DOM, various normalizations
           // will have occurred which will not be present in `markup`. Here,
           // insert markup into a <div> or <iframe> depending on the container
@@ -13868,15 +13772,15 @@ var reactdomlibReactMount__ReactMount = {
         var diffIndex = reactdomlibReactMount__firstDifferenceIndex(normalizedMarkup, rootMarkup);
         var difference = ' (client) ' + normalizedMarkup.substring(diffIndex - 20, diffIndex + 20) + '\n (server) ' + rootMarkup.substring(diffIndex - 20, diffIndex + 20);
 
-        !(container.nodeType !== reactdomlibReactMount__DOC_NODE_TYPE) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactMount__invariant(false, 'You\'re trying to render a component to the document using server rendering but the checksum was invalid. This usually means you rendered a different component type or props on the client from the one on the server, or your render() methods are impure. React cannot handle this case due to cross-browser quirks by rendering at the document root. You should look for environment dependent code in your components and ensure the props are the same client and server side:\n%s', difference) : reactdomlibReactMount___prodInvariant('42', difference) : void 0;
+        !(container.nodeType !== reactdomlibReactMount__DOC_NODE_TYPE) ? 'development' !== 'production' ? reactdomlibReactMount__invariant(false, 'You\'re trying to render a component to the document using server rendering but the checksum was invalid. This usually means you rendered a different component type or props on the client from the one on the server, or your render() methods are impure. React cannot handle this case due to cross-browser quirks by rendering at the document root. You should look for environment dependent code in your components and ensure the props are the same client and server side:\n%s', difference) : reactdomlibReactMount___prodInvariant('42', difference) : void 0;
 
-        if (process.env.NODE_ENV !== 'production') {
-          process.env.NODE_ENV !== 'production' ? reactdomlibReactMount__warning(false, 'React attempted to reuse markup in a container but the ' + 'checksum was invalid. This generally means that you are ' + 'using server rendering and the markup generated on the ' + 'server was not what the client was expecting. React injected ' + 'new markup to compensate which works but you have lost many ' + 'of the benefits of server rendering. Instead, figure out ' + 'why the markup being generated is different on the client ' + 'or server:\n%s', difference) : void 0;
+        if ('development' !== 'production') {
+          'development' !== 'production' ? reactdomlibReactMount__warning(false, 'React attempted to reuse markup in a container but the ' + 'checksum was invalid. This generally means that you are ' + 'using server rendering and the markup generated on the ' + 'server was not what the client was expecting. React injected ' + 'new markup to compensate which works but you have lost many ' + 'of the benefits of server rendering. Instead, figure out ' + 'why the markup being generated is different on the client ' + 'or server:\n%s', difference) : void 0;
         }
       }
     }
 
-    !(container.nodeType !== reactdomlibReactMount__DOC_NODE_TYPE) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactMount__invariant(false, 'You\'re trying to render a component to the document but you didn\'t use server rendering. We can\'t do this without using server rendering due to cross-browser quirks. See ReactDOMServer.renderToString() for server rendering.') : reactdomlibReactMount___prodInvariant('43') : void 0;
+    !(container.nodeType !== reactdomlibReactMount__DOC_NODE_TYPE) ? 'development' !== 'production' ? reactdomlibReactMount__invariant(false, 'You\'re trying to render a component to the document but you didn\'t use server rendering. We can\'t do this without using server rendering due to cross-browser quirks. See ReactDOMServer.renderToString() for server rendering.') : reactdomlibReactMount___prodInvariant('43') : void 0;
 
     if (transaction.useCreateElement) {
       while (container.lastChild) {
@@ -13888,7 +13792,7 @@ var reactdomlibReactMount__ReactMount = {
       reactdomlibReactMount__ReactDOMComponentTree.precacheNode(instance, container.firstChild);
     }
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       var hostNode = reactdomlibReactMount__ReactDOMComponentTree.getInstanceFromNode(container.firstChild);
       if (hostNode._debugID !== 0) {
         reactdomlibReactMount__ReactInstrumentation.debugTool.onHostOperation({
@@ -13986,10 +13890,10 @@ var reactdomlibfindDOMNode__warning = $m['fbjs/lib/warning'].exports;
  * @return {?DOMElement} The root node of this element.
  */
 function reactdomlibfindDOMNode__findDOMNode(componentOrElement) {
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     var owner = reactdomlibfindDOMNode__ReactCurrentOwner.current;
     if (owner !== null) {
-      process.env.NODE_ENV !== 'production' ? reactdomlibfindDOMNode__warning(owner._warnedAboutRefsInRender, '%s is accessing findDOMNode inside its render(). ' + 'render() should be a pure function of props and state. It should ' + 'never access something that requires stale data from the previous ' + 'render, such as refs. Move this logic to componentDidMount and ' + 'componentDidUpdate instead.', owner.getName() || 'A component') : void 0;
+      'development' !== 'production' ? reactdomlibfindDOMNode__warning(owner._warnedAboutRefsInRender, '%s is accessing findDOMNode inside its render(). ' + 'render() should be a pure function of props and state. It should ' + 'never access something that requires stale data from the previous ' + 'render, such as refs. Move this logic to componentDidMount and ' + 'componentDidUpdate instead.', owner.getName() || 'A component') : void 0;
       owner._warnedAboutRefsInRender = true;
     }
   }
@@ -14007,9 +13911,9 @@ function reactdomlibfindDOMNode__findDOMNode(componentOrElement) {
   }
 
   if (typeof componentOrElement.render === 'function') {
-    !false ? process.env.NODE_ENV !== 'production' ? reactdomlibfindDOMNode__invariant(false, 'findDOMNode was called on an unmounted component.') : reactdomlibfindDOMNode___prodInvariant('44') : void 0;
+    !false ? 'development' !== 'production' ? reactdomlibfindDOMNode__invariant(false, 'findDOMNode was called on an unmounted component.') : reactdomlibfindDOMNode___prodInvariant('44') : void 0;
   } else {
-    !false ? process.env.NODE_ENV !== 'production' ? reactdomlibfindDOMNode__invariant(false, 'Element appears to be neither ReactComponent nor DOMNode (keys: %s)', Object.keys(componentOrElement)) : reactdomlibfindDOMNode___prodInvariant('45', Object.keys(componentOrElement)) : void 0;
+    !false ? 'development' !== 'production' ? reactdomlibfindDOMNode__invariant(false, 'Element appears to be neither ReactComponent nor DOMNode (keys: %s)', Object.keys(componentOrElement)) : reactdomlibfindDOMNode___prodInvariant('45', Object.keys(componentOrElement)) : void 0;
   }
 }
 
@@ -14079,7 +13983,7 @@ var reactdomlibSyntheticEvent__EventInterface = {
  * @param {DOMEventTarget} nativeEventTarget Target node.
  */
 function reactdomlibSyntheticEvent__SyntheticEvent(dispatchConfig, targetInst, nativeEvent, nativeEventTarget) {
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     // these have a getter/setter for warnings
     delete this.nativeEvent;
     delete this.preventDefault;
@@ -14095,7 +13999,7 @@ function reactdomlibSyntheticEvent__SyntheticEvent(dispatchConfig, targetInst, n
     if (!Interface.hasOwnProperty(propName)) {
       continue;
     }
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       delete this[propName]; // this has a getter/setter for warnings
     }
     var normalize = Interface[propName];
@@ -14181,7 +14085,7 @@ reactdomlibSyntheticEvent___assign(reactdomlibSyntheticEvent__SyntheticEvent.pro
   destructor: function () {
     var Interface = this.constructor.Interface;
     for (var propName in Interface) {
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         Object.defineProperty(this, propName, reactdomlibSyntheticEvent__getPooledWarningPropertyDefinition(propName, Interface[propName]));
       } else {
         this[propName] = null;
@@ -14190,7 +14094,7 @@ reactdomlibSyntheticEvent___assign(reactdomlibSyntheticEvent__SyntheticEvent.pro
     for (var i = 0; i < reactdomlibSyntheticEvent__shouldBeReleasedProperties.length; i++) {
       this[reactdomlibSyntheticEvent__shouldBeReleasedProperties[i]] = null;
     }
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       Object.defineProperty(this, 'nativeEvent', reactdomlibSyntheticEvent__getPooledWarningPropertyDefinition('nativeEvent', null));
       Object.defineProperty(this, 'preventDefault', reactdomlibSyntheticEvent__getPooledWarningPropertyDefinition('preventDefault', reactdomlibSyntheticEvent__emptyFunction));
       Object.defineProperty(this, 'stopPropagation', reactdomlibSyntheticEvent__getPooledWarningPropertyDefinition('stopPropagation', reactdomlibSyntheticEvent__emptyFunction));
@@ -14201,7 +14105,7 @@ reactdomlibSyntheticEvent___assign(reactdomlibSyntheticEvent__SyntheticEvent.pro
 
 reactdomlibSyntheticEvent__SyntheticEvent.Interface = reactdomlibSyntheticEvent__EventInterface;
 
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   if (reactdomlibSyntheticEvent__isProxySupported) {
     /*eslint-disable no-func-assign */
     reactdomlibSyntheticEvent__SyntheticEvent = new Proxy(reactdomlibSyntheticEvent__SyntheticEvent, {
@@ -14212,7 +14116,7 @@ if (process.env.NODE_ENV !== 'production') {
         return new Proxy(constructor.apply(that, args), {
           set: function (target, prop, value) {
             if (prop !== 'isPersistent' && !target.constructor.Interface.hasOwnProperty(prop) && reactdomlibSyntheticEvent__shouldBeReleasedProperties.indexOf(prop) === -1) {
-              process.env.NODE_ENV !== 'production' ? reactdomlibSyntheticEvent__warning(reactdomlibSyntheticEvent__didWarnForAddedNewProperty || target.isPersistent(), 'This synthetic event is reused for performance reasons. If you\'re ' + 'seeing this, you\'re adding a new property in the synthetic event object. ' + 'The property is never released. See ' + 'https://fb.me/react-event-pooling for more information.') : void 0;
+              'development' !== 'production' ? reactdomlibSyntheticEvent__warning(reactdomlibSyntheticEvent__didWarnForAddedNewProperty || target.isPersistent(), 'This synthetic event is reused for performance reasons. If you\'re ' + 'seeing this, you\'re adding a new property in the synthetic event object. ' + 'The property is never released. See ' + 'https://fb.me/react-event-pooling for more information.') : void 0;
               reactdomlibSyntheticEvent__didWarnForAddedNewProperty = true;
             }
             target[prop] = value;
@@ -14281,7 +14185,7 @@ function reactdomlibSyntheticEvent__getPooledWarningPropertyDefinition(propName,
 
   function warn(action, result) {
     var warningCondition = false;
-    process.env.NODE_ENV !== 'production' ? reactdomlibSyntheticEvent__warning(warningCondition, 'This synthetic event is reused for performance reasons. If you\'re seeing this, ' + 'you\'re %s `%s` on a released/nullified synthetic event. %s. ' + 'If you must keep the original synthetic event around, use event.persist(). ' + 'See https://fb.me/react-event-pooling for more information.', action, propName, result) : void 0;
+    'development' !== 'production' ? reactdomlibSyntheticEvent__warning(warningCondition, 'This synthetic event is reused for performance reasons. If you\'re seeing this, ' + 'you\'re %s `%s` on a released/nullified synthetic event. %s. ' + 'If you must keep the original synthetic event around, use event.persist(). ' + 'See https://fb.me/react-event-pooling for more information.', action, propName, result) : void 0;
   }
 }
 /*≠≠ node_modules/react-dom/lib/SyntheticEvent.js ≠≠*/
@@ -14950,8 +14854,8 @@ function reactdomlibEventPropagators__listenerAtPhase(inst, event, propagationPh
  * "dispatch" object that pairs the event with the listener.
  */
 function reactdomlibEventPropagators__accumulateDirectionalDispatches(inst, phase, event) {
-  if (process.env.NODE_ENV !== 'production') {
-    process.env.NODE_ENV !== 'production' ? reactdomlibEventPropagators__warning(inst, 'Dispatching inst must not be null') : void 0;
+  if ('development' !== 'production') {
+    'development' !== 'production' ? reactdomlibEventPropagators__warning(inst, 'Dispatching inst must not be null') : void 0;
   }
   var listener = reactdomlibEventPropagators__listenerAtPhase(inst, event, phase);
   if (listener) {
@@ -15120,7 +15024,7 @@ var fbjslibEventListener__EventListener = {
         }
       };
     } else {
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         console.error('Attempted to listen to events during the capture phase on a ' + 'browser that does not support the capture phase. Your application ' + 'will not receive some events.');
       }
       return {
@@ -15331,7 +15235,7 @@ var reactdomlibSimpleEventPlugin__SimpleEventPlugin = {
         EventConstructor = reactdomlibSimpleEventPlugin__SyntheticClipboardEvent;
         break;
     }
-    !EventConstructor ? process.env.NODE_ENV !== 'production' ? reactdomlibSimpleEventPlugin__invariant(false, 'SimpleEventPlugin: Unhandled event type, `%s`.', topLevelType) : reactdomlibSimpleEventPlugin___prodInvariant('86', topLevelType) : void 0;
+    !EventConstructor ? 'development' !== 'production' ? reactdomlibSimpleEventPlugin__invariant(false, 'SimpleEventPlugin: Unhandled event type, `%s`.', topLevelType) : reactdomlibSimpleEventPlugin___prodInvariant('86', topLevelType) : void 0;
     var event = EventConstructor.getPooled(dispatchConfig, targetInst, nativeEvent, nativeEventTarget);
     reactdomlibSimpleEventPlugin__EventPropagators.accumulateTwoPhaseDispatches(event);
     return event;
@@ -16095,7 +15999,7 @@ var reactdomlibReactReconcileTransaction__ON_DOM_READY_QUEUEING = {
  */
 var reactdomlibReactReconcileTransaction__TRANSACTION_WRAPPERS = [reactdomlibReactReconcileTransaction__SELECTION_RESTORATION, reactdomlibReactReconcileTransaction__EVENT_SUPPRESSION, reactdomlibReactReconcileTransaction__ON_DOM_READY_QUEUEING];
 
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   reactdomlibReactReconcileTransaction__TRANSACTION_WRAPPERS.push({
     initialize: reactdomlibReactReconcileTransaction__ReactInstrumentation.debugTool.onBeginFlush,
     close: reactdomlibReactReconcileTransaction__ReactInstrumentation.debugTool.onEndFlush
@@ -16527,7 +16431,7 @@ fbjslibgetMarkupWrap__svgElements.forEach(function (nodeName) {
  * @return {?array} Markup wrap configuration, if applicable.
  */
 function fbjslibgetMarkupWrap__getMarkupWrap(nodeName) {
-  !!!fbjslibgetMarkupWrap__dummyNode ? process.env.NODE_ENV !== 'production' ? fbjslibgetMarkupWrap__invariant(false, 'Markup wrapping node not initialized') : fbjslibgetMarkupWrap__invariant(false) : void 0;
+  !!!fbjslibgetMarkupWrap__dummyNode ? 'development' !== 'production' ? fbjslibgetMarkupWrap__invariant(false, 'Markup wrapping node not initialized') : fbjslibgetMarkupWrap__invariant(false) : void 0;
   if (!fbjslibgetMarkupWrap__markupWrap.hasOwnProperty(nodeName)) {
     nodeName = '*';
   }
@@ -16576,13 +16480,13 @@ function fbjslibcreateArrayFromMixed__toArray(obj) {
 
   // Some browsers builtin objects can report typeof 'function' (e.g. NodeList
   // in old versions of Safari).
-  !(!Array.isArray(obj) && (typeof obj === 'object' || typeof obj === 'function')) ? process.env.NODE_ENV !== 'production' ? fbjslibcreateArrayFromMixed__invariant(false, 'toArray: Array-like object expected') : fbjslibcreateArrayFromMixed__invariant(false) : void 0;
+  !(!Array.isArray(obj) && (typeof obj === 'object' || typeof obj === 'function')) ? 'development' !== 'production' ? fbjslibcreateArrayFromMixed__invariant(false, 'toArray: Array-like object expected') : fbjslibcreateArrayFromMixed__invariant(false) : void 0;
 
-  !(typeof length === 'number') ? process.env.NODE_ENV !== 'production' ? fbjslibcreateArrayFromMixed__invariant(false, 'toArray: Object needs a length property') : fbjslibcreateArrayFromMixed__invariant(false) : void 0;
+  !(typeof length === 'number') ? 'development' !== 'production' ? fbjslibcreateArrayFromMixed__invariant(false, 'toArray: Object needs a length property') : fbjslibcreateArrayFromMixed__invariant(false) : void 0;
 
-  !(length === 0 || length - 1 in obj) ? process.env.NODE_ENV !== 'production' ? fbjslibcreateArrayFromMixed__invariant(false, 'toArray: Object should have keys for indices') : fbjslibcreateArrayFromMixed__invariant(false) : void 0;
+  !(length === 0 || length - 1 in obj) ? 'development' !== 'production' ? fbjslibcreateArrayFromMixed__invariant(false, 'toArray: Object should have keys for indices') : fbjslibcreateArrayFromMixed__invariant(false) : void 0;
 
-  !(typeof obj.callee !== 'function') ? process.env.NODE_ENV !== 'production' ? fbjslibcreateArrayFromMixed__invariant(false, 'toArray: Object can\'t be `arguments`. Use rest params ' + '(function(...args) {}) or Array.from() instead.') : fbjslibcreateArrayFromMixed__invariant(false) : void 0;
+  !(typeof obj.callee !== 'function') ? 'development' !== 'production' ? fbjslibcreateArrayFromMixed__invariant(false, 'toArray: Object can\'t be `arguments`. Use rest params ' + '(function(...args) {}) or Array.from() instead.') : fbjslibcreateArrayFromMixed__invariant(false) : void 0;
 
   // Old IE doesn't give collections access to hasOwnProperty. Assume inputs
   // without method will throw during the slice call and skip straight to the
@@ -16731,7 +16635,7 @@ function fbjslibcreateNodesFromMarkup__getNodeName(markup) {
  */
 function fbjslibcreateNodesFromMarkup__createNodesFromMarkup(markup, handleScript) {
   var node = fbjslibcreateNodesFromMarkup__dummyNode;
-  !!!fbjslibcreateNodesFromMarkup__dummyNode ? process.env.NODE_ENV !== 'production' ? fbjslibcreateNodesFromMarkup__invariant(false, 'createNodesFromMarkup dummy not initialized') : fbjslibcreateNodesFromMarkup__invariant(false) : void 0;
+  !!!fbjslibcreateNodesFromMarkup__dummyNode ? 'development' !== 'production' ? fbjslibcreateNodesFromMarkup__invariant(false, 'createNodesFromMarkup dummy not initialized') : fbjslibcreateNodesFromMarkup__invariant(false) : void 0;
   var nodeName = fbjslibcreateNodesFromMarkup__getNodeName(markup);
 
   var wrap = nodeName && fbjslibcreateNodesFromMarkup__getMarkupWrap(nodeName);
@@ -16748,7 +16652,7 @@ function fbjslibcreateNodesFromMarkup__createNodesFromMarkup(markup, handleScrip
 
   var scripts = node.getElementsByTagName('script');
   if (scripts.length) {
-    !handleScript ? process.env.NODE_ENV !== 'production' ? fbjslibcreateNodesFromMarkup__invariant(false, 'createNodesFromMarkup(...): Unexpected <script> element rendered.') : fbjslibcreateNodesFromMarkup__invariant(false) : void 0;
+    !handleScript ? 'development' !== 'production' ? fbjslibcreateNodesFromMarkup__invariant(false, 'createNodesFromMarkup(...): Unexpected <script> element rendered.') : fbjslibcreateNodesFromMarkup__invariant(false) : void 0;
     fbjslibcreateNodesFromMarkup__createArrayFromMixed(scripts).forEach(handleScript);
   }
 
@@ -16795,9 +16699,9 @@ var reactdomlibDanger__Danger = {
    * @internal
    */
   dangerouslyReplaceNodeWithMarkup: function (oldChild, markup) {
-    !reactdomlibDanger__ExecutionEnvironment.canUseDOM ? process.env.NODE_ENV !== 'production' ? reactdomlibDanger__invariant(false, 'dangerouslyReplaceNodeWithMarkup(...): Cannot render markup in a worker thread. Make sure `window` and `document` are available globally before requiring React when unit testing or use ReactDOMServer.renderToString() for server rendering.') : reactdomlibDanger___prodInvariant('56') : void 0;
-    !markup ? process.env.NODE_ENV !== 'production' ? reactdomlibDanger__invariant(false, 'dangerouslyReplaceNodeWithMarkup(...): Missing markup.') : reactdomlibDanger___prodInvariant('57') : void 0;
-    !(oldChild.nodeName !== 'HTML') ? process.env.NODE_ENV !== 'production' ? reactdomlibDanger__invariant(false, 'dangerouslyReplaceNodeWithMarkup(...): Cannot replace markup of the <html> node. This is because browser quirks make this unreliable and/or slow. If you want to render to the root you must use server rendering. See ReactDOMServer.renderToString().') : reactdomlibDanger___prodInvariant('58') : void 0;
+    !reactdomlibDanger__ExecutionEnvironment.canUseDOM ? 'development' !== 'production' ? reactdomlibDanger__invariant(false, 'dangerouslyReplaceNodeWithMarkup(...): Cannot render markup in a worker thread. Make sure `window` and `document` are available globally before requiring React when unit testing or use ReactDOMServer.renderToString() for server rendering.') : reactdomlibDanger___prodInvariant('56') : void 0;
+    !markup ? 'development' !== 'production' ? reactdomlibDanger__invariant(false, 'dangerouslyReplaceNodeWithMarkup(...): Missing markup.') : reactdomlibDanger___prodInvariant('57') : void 0;
+    !(oldChild.nodeName !== 'HTML') ? 'development' !== 'production' ? reactdomlibDanger__invariant(false, 'dangerouslyReplaceNodeWithMarkup(...): Cannot replace markup of the <html> node. This is because browser quirks make this unreliable and/or slow. If you want to render to the root you must use server rendering. See ReactDOMServer.renderToString().') : reactdomlibDanger___prodInvariant('58') : void 0;
 
     if (typeof markup === 'string') {
       var newChild = reactdomlibDanger__createNodesFromMarkup(markup, reactdomlibDanger__emptyFunction)[0];
@@ -16924,7 +16828,7 @@ function reactdomlibDOMChildrenOperations__replaceDelimitedText(openingComment, 
     }
   }
 
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     reactdomlibDOMChildrenOperations__ReactInstrumentation.debugTool.onHostOperation({
       instanceID: reactdomlibDOMChildrenOperations__ReactDOMComponentTree.getInstanceFromNode(openingComment)._debugID,
       type: 'replace text',
@@ -16934,7 +16838,7 @@ function reactdomlibDOMChildrenOperations__replaceDelimitedText(openingComment, 
 }
 
 var reactdomlibDOMChildrenOperations__dangerouslyReplaceNodeWithMarkup = reactdomlibDOMChildrenOperations__Danger.dangerouslyReplaceNodeWithMarkup;
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   reactdomlibDOMChildrenOperations__dangerouslyReplaceNodeWithMarkup = function (oldChild, markup, prevInstance) {
     reactdomlibDOMChildrenOperations__Danger.dangerouslyReplaceNodeWithMarkup(oldChild, markup);
     if (prevInstance._debugID !== 0) {
@@ -16973,7 +16877,7 @@ var reactdomlibDOMChildrenOperations__DOMChildrenOperations = {
    * @internal
    */
   processUpdates: function (parentNode, updates) {
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       var parentNodeDebugID = reactdomlibDOMChildrenOperations__ReactDOMComponentTree.getInstanceFromNode(parentNode)._debugID;
     }
 
@@ -16982,7 +16886,7 @@ var reactdomlibDOMChildrenOperations__DOMChildrenOperations = {
       switch (update.type) {
         case 'INSERT_MARKUP':
           reactdomlibDOMChildrenOperations__insertLazyTreeChildAt(parentNode, update.content, reactdomlibDOMChildrenOperations__getNodeAfter(parentNode, update.afterNode));
-          if (process.env.NODE_ENV !== 'production') {
+          if ('development' !== 'production') {
             reactdomlibDOMChildrenOperations__ReactInstrumentation.debugTool.onHostOperation({
               instanceID: parentNodeDebugID,
               type: 'insert child',
@@ -16992,7 +16896,7 @@ var reactdomlibDOMChildrenOperations__DOMChildrenOperations = {
           break;
         case 'MOVE_EXISTING':
           reactdomlibDOMChildrenOperations__moveChild(parentNode, update.fromNode, reactdomlibDOMChildrenOperations__getNodeAfter(parentNode, update.afterNode));
-          if (process.env.NODE_ENV !== 'production') {
+          if ('development' !== 'production') {
             reactdomlibDOMChildrenOperations__ReactInstrumentation.debugTool.onHostOperation({
               instanceID: parentNodeDebugID,
               type: 'move child',
@@ -17002,7 +16906,7 @@ var reactdomlibDOMChildrenOperations__DOMChildrenOperations = {
           break;
         case 'SET_MARKUP':
           reactdomlibDOMChildrenOperations__setInnerHTML(parentNode, update.content);
-          if (process.env.NODE_ENV !== 'production') {
+          if ('development' !== 'production') {
             reactdomlibDOMChildrenOperations__ReactInstrumentation.debugTool.onHostOperation({
               instanceID: parentNodeDebugID,
               type: 'replace children',
@@ -17012,7 +16916,7 @@ var reactdomlibDOMChildrenOperations__DOMChildrenOperations = {
           break;
         case 'TEXT_CONTENT':
           reactdomlibDOMChildrenOperations__setTextContent(parentNode, update.content);
-          if (process.env.NODE_ENV !== 'production') {
+          if ('development' !== 'production') {
             reactdomlibDOMChildrenOperations__ReactInstrumentation.debugTool.onHostOperation({
               instanceID: parentNodeDebugID,
               type: 'replace text',
@@ -17022,7 +16926,7 @@ var reactdomlibDOMChildrenOperations__DOMChildrenOperations = {
           break;
         case 'REMOVE_NODE':
           reactdomlibDOMChildrenOperations__removeChild(parentNode, update.fromNode);
-          if (process.env.NODE_ENV !== 'production') {
+          if ('development' !== 'production') {
             reactdomlibDOMChildrenOperations__ReactInstrumentation.debugTool.onHostOperation({
               instanceID: parentNodeDebugID,
               type: 'remove child',
@@ -17104,7 +17008,7 @@ reactdomlibReactDOMTextComponent___assign(reactdomlibReactDOMTextComponent__Reac
    * @internal
    */
   mountComponent: function (transaction, hostParent, hostContainerInfo, context) {
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       var parentInfo;
       if (hostParent != null) {
         parentInfo = hostParent._ancestorInfo;
@@ -17181,7 +17085,7 @@ reactdomlibReactDOMTextComponent___assign(reactdomlibReactDOMTextComponent__Reac
       var openingComment = reactdomlibReactDOMTextComponent__ReactDOMComponentTree.getNodeFromInstance(this);
       var node = openingComment.nextSibling;
       while (true) {
-        !(node != null) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMTextComponent__invariant(false, 'Missing closing comment for text component %s', this._domID) : reactdomlibReactDOMTextComponent___prodInvariant('67', this._domID) : void 0;
+        !(node != null) ? 'development' !== 'production' ? reactdomlibReactDOMTextComponent__invariant(false, 'Missing closing comment for text component %s', this._domID) : reactdomlibReactDOMTextComponent___prodInvariant('67', this._domID) : void 0;
         if (node.nodeType === 8 && node.nodeValue === ' /react-text ') {
           this._closingComment = node;
           break;
@@ -17227,8 +17131,8 @@ var reactdomlibReactDOMTreeTraversal__invariant = $m['fbjs/lib/invariant'].expor
  * different trees.
  */
 function reactdomlibReactDOMTreeTraversal__getLowestCommonAncestor(instA, instB) {
-  !('_hostNode' in instA) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMTreeTraversal__invariant(false, 'getNodeFromInstance: Invalid argument.') : reactdomlibReactDOMTreeTraversal___prodInvariant('33') : void 0;
-  !('_hostNode' in instB) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMTreeTraversal__invariant(false, 'getNodeFromInstance: Invalid argument.') : reactdomlibReactDOMTreeTraversal___prodInvariant('33') : void 0;
+  !('_hostNode' in instA) ? 'development' !== 'production' ? reactdomlibReactDOMTreeTraversal__invariant(false, 'getNodeFromInstance: Invalid argument.') : reactdomlibReactDOMTreeTraversal___prodInvariant('33') : void 0;
+  !('_hostNode' in instB) ? 'development' !== 'production' ? reactdomlibReactDOMTreeTraversal__invariant(false, 'getNodeFromInstance: Invalid argument.') : reactdomlibReactDOMTreeTraversal___prodInvariant('33') : void 0;
 
   var depthA = 0;
   for (var tempA = instA; tempA; tempA = tempA._hostParent) {
@@ -17267,8 +17171,8 @@ function reactdomlibReactDOMTreeTraversal__getLowestCommonAncestor(instA, instB)
  * Return if A is an ancestor of B.
  */
 function reactdomlibReactDOMTreeTraversal__isAncestor(instA, instB) {
-  !('_hostNode' in instA) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMTreeTraversal__invariant(false, 'isAncestor: Invalid argument.') : reactdomlibReactDOMTreeTraversal___prodInvariant('35') : void 0;
-  !('_hostNode' in instB) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMTreeTraversal__invariant(false, 'isAncestor: Invalid argument.') : reactdomlibReactDOMTreeTraversal___prodInvariant('35') : void 0;
+  !('_hostNode' in instA) ? 'development' !== 'production' ? reactdomlibReactDOMTreeTraversal__invariant(false, 'isAncestor: Invalid argument.') : reactdomlibReactDOMTreeTraversal___prodInvariant('35') : void 0;
+  !('_hostNode' in instB) ? 'development' !== 'production' ? reactdomlibReactDOMTreeTraversal__invariant(false, 'isAncestor: Invalid argument.') : reactdomlibReactDOMTreeTraversal___prodInvariant('35') : void 0;
 
   while (instB) {
     if (instB === instA) {
@@ -17283,7 +17187,7 @@ function reactdomlibReactDOMTreeTraversal__isAncestor(instA, instB) {
  * Return the parent instance of the passed-in instance.
  */
 function reactdomlibReactDOMTreeTraversal__getParentInstance(inst) {
-  !('_hostNode' in inst) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMTreeTraversal__invariant(false, 'getParentInstance: Invalid argument.') : reactdomlibReactDOMTreeTraversal___prodInvariant('36') : void 0;
+  !('_hostNode' in inst) ? 'development' !== 'production' ? reactdomlibReactDOMTreeTraversal__invariant(false, 'getParentInstance: Invalid argument.') : reactdomlibReactDOMTreeTraversal___prodInvariant('36') : void 0;
 
   return inst._hostParent;
 }
@@ -17430,9 +17334,9 @@ var reactdomlibReactServerUpdateQueue__ReactUpdateQueue = $m['react-dom/lib/Reac
 var reactdomlibReactServerUpdateQueue__warning = $m['fbjs/lib/warning'].exports;
 
 function reactdomlibReactServerUpdateQueue__warnNoop(publicInstance, callerName) {
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     var constructor = publicInstance.constructor;
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactServerUpdateQueue__warning(false, '%s(...): Can only update a mounting component. ' + 'This usually means you called %s() outside componentWillMount() on the server. ' + 'This is a no-op. Please check the code for the %s component.', callerName, callerName, constructor && (constructor.displayName || constructor.name) || 'ReactClass') : void 0;
+    'development' !== 'production' ? reactdomlibReactServerUpdateQueue__warning(false, '%s(...): Can only update a mounting component. ' + 'This usually means you called %s() outside componentWillMount() on the server. ' + 'This is a no-op. Please check the code for the %s component.', callerName, callerName, constructor && (constructor.displayName || constructor.name) || 'ReactClass') : void 0;
   }
 }
 
@@ -17572,7 +17476,7 @@ var reactdomlibReactServerRenderingTransaction__ReactServerUpdateQueue = $m['rea
  */
 var reactdomlibReactServerRenderingTransaction__TRANSACTION_WRAPPERS = [];
 
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   reactdomlibReactServerRenderingTransaction__TRANSACTION_WRAPPERS.push({
     initialize: reactdomlibReactServerRenderingTransaction__ReactInstrumentation.debugTool.onBeginFlush,
     close: reactdomlibReactServerRenderingTransaction__ReactInstrumentation.debugTool.onEndFlush
@@ -17745,7 +17649,7 @@ function reactdomlibtraverseAllChildren__traverseAllChildrenImpl(children, nameS
           subtreeCount += reactdomlibtraverseAllChildren__traverseAllChildrenImpl(child, nextName, callback, traverseContext);
         }
       } else {
-        if (process.env.NODE_ENV !== 'production') {
+        if ('development' !== 'production') {
           var mapsAsChildrenAddendum = '';
           if (reactdomlibtraverseAllChildren__ReactCurrentOwner.current) {
             var mapsAsChildrenOwnerName = reactdomlibtraverseAllChildren__ReactCurrentOwner.current.getName();
@@ -17753,7 +17657,7 @@ function reactdomlibtraverseAllChildren__traverseAllChildrenImpl(children, nameS
               mapsAsChildrenAddendum = ' Check the render method of `' + mapsAsChildrenOwnerName + '`.';
             }
           }
-          process.env.NODE_ENV !== 'production' ? reactdomlibtraverseAllChildren__warning(reactdomlibtraverseAllChildren__didWarnAboutMaps, 'Using Maps as children is not yet fully supported. It is an ' + 'experimental feature that might be removed. Convert it to a ' + 'sequence / iterable of keyed ReactElements instead.%s', mapsAsChildrenAddendum) : void 0;
+          'development' !== 'production' ? reactdomlibtraverseAllChildren__warning(reactdomlibtraverseAllChildren__didWarnAboutMaps, 'Using Maps as children is not yet fully supported. It is an ' + 'experimental feature that might be removed. Convert it to a ' + 'sequence / iterable of keyed ReactElements instead.%s', mapsAsChildrenAddendum) : void 0;
           reactdomlibtraverseAllChildren__didWarnAboutMaps = true;
         }
         // Iterator will provide entry [k,v] tuples rather than values.
@@ -17768,7 +17672,7 @@ function reactdomlibtraverseAllChildren__traverseAllChildrenImpl(children, nameS
       }
     } else if (type === 'object') {
       var addendum = '';
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         addendum = ' If you meant to render a collection of children, use an array ' + 'instead or wrap the object using createFragment(object) from the ' + 'React add-ons.';
         if (children._isReactElement) {
           addendum = ' It looks like you\'re using an element created by a different ' + 'version of React. Make sure to use only one copy of React.';
@@ -17781,7 +17685,7 @@ function reactdomlibtraverseAllChildren__traverseAllChildrenImpl(children, nameS
         }
       }
       var childrenString = String(children);
-      !false ? process.env.NODE_ENV !== 'production' ? reactdomlibtraverseAllChildren__invariant(false, 'Objects are not valid as a React child (found: %s).%s', childrenString === '[object Object]' ? 'object with keys {' + Object.keys(children).join(', ') + '}' : childrenString, addendum) : reactdomlibtraverseAllChildren___prodInvariant('31', childrenString === '[object Object]' ? 'object with keys {' + Object.keys(children).join(', ') + '}' : childrenString, addendum) : void 0;
+      !false ? 'development' !== 'production' ? reactdomlibtraverseAllChildren__invariant(false, 'Objects are not valid as a React child (found: %s).%s', childrenString === '[object Object]' ? 'object with keys {' + Object.keys(children).join(', ') + '}' : childrenString, addendum) : reactdomlibtraverseAllChildren___prodInvariant('31', childrenString === '[object Object]' ? 'object with keys {' + Object.keys(children).join(', ') + '}' : childrenString, addendum) : void 0;
     }
   }
 
@@ -17835,7 +17739,7 @@ var reactdomlibflattenChildren__warning = $m['fbjs/lib/warning'].exports;
 
 var reactdomlibflattenChildren__ReactComponentTreeHook;
 
-if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'test') {
+if (typeof process !== 'undefined' && process.env && 'development' === 'test') {
   // Temporary hack.
   // Inline requires don't work well with Jest:
   // https://github.com/facebook/react/issues/7240
@@ -17855,12 +17759,12 @@ function reactdomlibflattenChildren__flattenSingleChildIntoContext(traverseConte
   if (traverseContext && typeof traverseContext === 'object') {
     var result = traverseContext;
     var keyUnique = result[name] === undefined;
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       if (!reactdomlibflattenChildren__ReactComponentTreeHook) {
         reactdomlibflattenChildren__ReactComponentTreeHook = $m['react/lib/ReactComponentTreeHook'].exports;
       }
       if (!keyUnique) {
-        process.env.NODE_ENV !== 'production' ? reactdomlibflattenChildren__warning(false, 'flattenChildren(...): Encountered two children with the same key, ' + '`%s`. Child keys must be unique; when two children share a key, only ' + 'the first child will be used.%s', reactdomlibflattenChildren__KeyEscapeUtils.unescape(name), reactdomlibflattenChildren__ReactComponentTreeHook.getStackAddendumByID(selfDebugID)) : void 0;
+        'development' !== 'production' ? reactdomlibflattenChildren__warning(false, 'flattenChildren(...): Encountered two children with the same key, ' + '`%s`. Child keys must be unique; when two children share a key, only ' + 'the first child will be used.%s', reactdomlibflattenChildren__KeyEscapeUtils.unescape(name), reactdomlibflattenChildren__ReactComponentTreeHook.getStackAddendumByID(selfDebugID)) : void 0;
       }
     }
     if (keyUnique && child != null) {
@@ -17880,7 +17784,7 @@ function reactdomlibflattenChildren__flattenChildren(children, selfDebugID) {
   }
   var result = {};
 
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     reactdomlibflattenChildren__traverseAllChildren(children, function (traverseContext, child, name) {
       return reactdomlibflattenChildren__flattenSingleChildIntoContext(traverseContext, child, name, selfDebugID);
     }, result);
@@ -17916,7 +17820,7 @@ var reactdomlibReactChildReconciler__warning = $m['fbjs/lib/warning'].exports;
 
 var reactdomlibReactChildReconciler__ReactComponentTreeHook;
 
-if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'test') {
+if (typeof process !== 'undefined' && process.env && 'development' === 'test') {
   // Temporary hack.
   // Inline requires don't work well with Jest:
   // https://github.com/facebook/react/issues/7240
@@ -17928,12 +17832,12 @@ if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 't
 function reactdomlibReactChildReconciler__instantiateChild(childInstances, child, name, selfDebugID) {
   // We found a component instance.
   var keyUnique = childInstances[name] === undefined;
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     if (!reactdomlibReactChildReconciler__ReactComponentTreeHook) {
       reactdomlibReactChildReconciler__ReactComponentTreeHook = $m['react/lib/ReactComponentTreeHook'].exports;
     }
     if (!keyUnique) {
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactChildReconciler__warning(false, 'flattenChildren(...): Encountered two children with the same key, ' + '`%s`. Child keys must be unique; when two children share a key, only ' + 'the first child will be used.%s', reactdomlibReactChildReconciler__KeyEscapeUtils.unescape(name), reactdomlibReactChildReconciler__ReactComponentTreeHook.getStackAddendumByID(selfDebugID)) : void 0;
+      'development' !== 'production' ? reactdomlibReactChildReconciler__warning(false, 'flattenChildren(...): Encountered two children with the same key, ' + '`%s`. Child keys must be unique; when two children share a key, only ' + 'the first child will be used.%s', reactdomlibReactChildReconciler__KeyEscapeUtils.unescape(name), reactdomlibReactChildReconciler__ReactComponentTreeHook.getStackAddendumByID(selfDebugID)) : void 0;
     }
   }
   if (child != null && keyUnique) {
@@ -17962,7 +17866,7 @@ var reactdomlibReactChildReconciler__ReactChildReconciler = {
     }
     var childInstances = {};
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       reactdomlibReactChildReconciler__traverseAllChildren(nestedChildNodes, function (childInsts, child, name) {
         return reactdomlibReactChildReconciler__instantiateChild(childInsts, child, name, selfDebugID);
       }, childInstances);
@@ -18190,7 +18094,7 @@ function reactdomlibReactMultiChild__processQueue(inst, updateQueue) {
 }
 
 var reactdomlibReactMultiChild__setChildrenForInstrumentation = reactdomlibReactMultiChild__emptyFunction;
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   var reactdomlibReactMultiChild__getDebugID = function (inst) {
     if (!inst._debugID) {
       // Check for ART-like instances. TODO: This is silly/gross.
@@ -18231,7 +18135,7 @@ var reactdomlibReactMultiChild__ReactMultiChild = {
   Mixin: {
 
     _reconcilerInstantiateChildren: function (nestedChildren, transaction, context) {
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         var selfDebugID = reactdomlibReactMultiChild__getDebugID(this);
         if (this._currentElement) {
           try {
@@ -18248,7 +18152,7 @@ var reactdomlibReactMultiChild__ReactMultiChild = {
     _reconcilerUpdateChildren: function (prevChildren, nextNestedChildrenElements, mountImages, removedNodes, transaction, context) {
       var nextChildren;
       var selfDebugID = 0;
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         selfDebugID = reactdomlibReactMultiChild__getDebugID(this);
         if (this._currentElement) {
           try {
@@ -18284,7 +18188,7 @@ var reactdomlibReactMultiChild__ReactMultiChild = {
         if (children.hasOwnProperty(name)) {
           var child = children[name];
           var selfDebugID = 0;
-          if (process.env.NODE_ENV !== 'production') {
+          if ('development' !== 'production') {
             selfDebugID = reactdomlibReactMultiChild__getDebugID(this);
           }
           var mountImage = reactdomlibReactMultiChild__ReactReconciler.mountComponent(child, transaction, this, this._hostContainerInfo, context, selfDebugID);
@@ -18293,7 +18197,7 @@ var reactdomlibReactMultiChild__ReactMultiChild = {
         }
       }
 
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         reactdomlibReactMultiChild__setChildrenForInstrumentation.call(this, children);
       }
 
@@ -18312,7 +18216,7 @@ var reactdomlibReactMultiChild__ReactMultiChild = {
       reactdomlibReactMultiChild__ReactChildReconciler.unmountChildren(prevChildren, false);
       for (var name in prevChildren) {
         if (prevChildren.hasOwnProperty(name)) {
-          !false ? process.env.NODE_ENV !== 'production' ? reactdomlibReactMultiChild__invariant(false, 'updateTextContent called on non-empty component.') : reactdomlibReactMultiChild___prodInvariant('118') : void 0;
+          !false ? 'development' !== 'production' ? reactdomlibReactMultiChild__invariant(false, 'updateTextContent called on non-empty component.') : reactdomlibReactMultiChild___prodInvariant('118') : void 0;
         }
       }
       // Set new text content.
@@ -18332,7 +18236,7 @@ var reactdomlibReactMultiChild__ReactMultiChild = {
       reactdomlibReactMultiChild__ReactChildReconciler.unmountChildren(prevChildren, false);
       for (var name in prevChildren) {
         if (prevChildren.hasOwnProperty(name)) {
-          !false ? process.env.NODE_ENV !== 'production' ? reactdomlibReactMultiChild__invariant(false, 'updateTextContent called on non-empty component.') : reactdomlibReactMultiChild___prodInvariant('118') : void 0;
+          !false ? 'development' !== 'production' ? reactdomlibReactMultiChild__invariant(false, 'updateTextContent called on non-empty component.') : reactdomlibReactMultiChild___prodInvariant('118') : void 0;
         }
       }
       var updates = [reactdomlibReactMultiChild__makeSetMarkup(nextMarkup)];
@@ -18408,7 +18312,7 @@ var reactdomlibReactMultiChild__ReactMultiChild = {
       }
       this._renderedChildren = nextChildren;
 
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         reactdomlibReactMultiChild__setChildrenForInstrumentation.call(this, nextChildren);
       }
     },
@@ -18533,16 +18437,16 @@ var reactdomlibLinkedValueUtils__hasReadOnlyValue = {
 };
 
 function reactdomlibLinkedValueUtils___assertSingleLink(inputProps) {
-  !(inputProps.checkedLink == null || inputProps.valueLink == null) ? process.env.NODE_ENV !== 'production' ? reactdomlibLinkedValueUtils__invariant(false, 'Cannot provide a checkedLink and a valueLink. If you want to use checkedLink, you probably don\'t want to use valueLink and vice versa.') : reactdomlibLinkedValueUtils___prodInvariant('87') : void 0;
+  !(inputProps.checkedLink == null || inputProps.valueLink == null) ? 'development' !== 'production' ? reactdomlibLinkedValueUtils__invariant(false, 'Cannot provide a checkedLink and a valueLink. If you want to use checkedLink, you probably don\'t want to use valueLink and vice versa.') : reactdomlibLinkedValueUtils___prodInvariant('87') : void 0;
 }
 function reactdomlibLinkedValueUtils___assertValueLink(inputProps) {
   reactdomlibLinkedValueUtils___assertSingleLink(inputProps);
-  !(inputProps.value == null && inputProps.onChange == null) ? process.env.NODE_ENV !== 'production' ? reactdomlibLinkedValueUtils__invariant(false, 'Cannot provide a valueLink and a value or onChange event. If you want to use value or onChange, you probably don\'t want to use valueLink.') : reactdomlibLinkedValueUtils___prodInvariant('88') : void 0;
+  !(inputProps.value == null && inputProps.onChange == null) ? 'development' !== 'production' ? reactdomlibLinkedValueUtils__invariant(false, 'Cannot provide a valueLink and a value or onChange event. If you want to use value or onChange, you probably don\'t want to use valueLink.') : reactdomlibLinkedValueUtils___prodInvariant('88') : void 0;
 }
 
 function reactdomlibLinkedValueUtils___assertCheckedLink(inputProps) {
   reactdomlibLinkedValueUtils___assertSingleLink(inputProps);
-  !(inputProps.checked == null && inputProps.onChange == null) ? process.env.NODE_ENV !== 'production' ? reactdomlibLinkedValueUtils__invariant(false, 'Cannot provide a checkedLink and a checked property or onChange event. If you want to use checked or onChange, you probably don\'t want to use checkedLink') : reactdomlibLinkedValueUtils___prodInvariant('89') : void 0;
+  !(inputProps.checked == null && inputProps.onChange == null) ? 'development' !== 'production' ? reactdomlibLinkedValueUtils__invariant(false, 'Cannot provide a checkedLink and a checked property or onChange event. If you want to use checked or onChange, you probably don\'t want to use checkedLink') : reactdomlibLinkedValueUtils___prodInvariant('89') : void 0;
 }
 
 var reactdomlibLinkedValueUtils__propTypes = {
@@ -18588,7 +18492,7 @@ var reactdomlibLinkedValueUtils__LinkedValueUtils = {
         reactdomlibLinkedValueUtils__loggedTypeFailures[error.message] = true;
 
         var addendum = reactdomlibLinkedValueUtils__getDeclarationErrorAddendum(owner);
-        process.env.NODE_ENV !== 'production' ? reactdomlibLinkedValueUtils__warning(false, 'Failed form propType: %s%s', error.message, addendum) : void 0;
+        'development' !== 'production' ? reactdomlibLinkedValueUtils__warning(false, 'Failed form propType: %s%s', error.message, addendum) : void 0;
       }
     }
   },
@@ -18688,7 +18592,7 @@ function reactdomlibReactDOMTextarea__forceUpdateIfMounted() {
  */
 var reactdomlibReactDOMTextarea__ReactDOMTextarea = {
   getHostProps: function (inst, props) {
-    !(props.dangerouslySetInnerHTML == null) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMTextarea__invariant(false, '`dangerouslySetInnerHTML` does not make sense on <textarea>.') : reactdomlibReactDOMTextarea___prodInvariant('91') : void 0;
+    !(props.dangerouslySetInnerHTML == null) ? 'development' !== 'production' ? reactdomlibReactDOMTextarea__invariant(false, '`dangerouslySetInnerHTML` does not make sense on <textarea>.') : reactdomlibReactDOMTextarea___prodInvariant('91') : void 0;
 
     // Always set children to the same thing. In IE9, the selection range will
     // get reset if `textContent` is mutated.  We could add a check in setTextContent
@@ -18706,14 +18610,14 @@ var reactdomlibReactDOMTextarea__ReactDOMTextarea = {
   },
 
   mountWrapper: function (inst, props) {
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       reactdomlibReactDOMTextarea__LinkedValueUtils.checkPropTypes('textarea', props, inst._currentElement._owner);
       if (props.valueLink !== undefined && !reactdomlibReactDOMTextarea__didWarnValueLink) {
-        process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMTextarea__warning(false, '`valueLink` prop on `textarea` is deprecated; set `value` and `onChange` instead.') : void 0;
+        'development' !== 'production' ? reactdomlibReactDOMTextarea__warning(false, '`valueLink` prop on `textarea` is deprecated; set `value` and `onChange` instead.') : void 0;
         reactdomlibReactDOMTextarea__didWarnValueLink = true;
       }
       if (props.value !== undefined && props.defaultValue !== undefined && !reactdomlibReactDOMTextarea__didWarnValDefaultVal) {
-        process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMTextarea__warning(false, 'Textarea elements must be either controlled or uncontrolled ' + '(specify either the value prop, or the defaultValue prop, but not ' + 'both). Decide between using a controlled or uncontrolled textarea ' + 'and remove one of these props. More info: ' + 'https://fb.me/react-controlled-components') : void 0;
+        'development' !== 'production' ? reactdomlibReactDOMTextarea__warning(false, 'Textarea elements must be either controlled or uncontrolled ' + '(specify either the value prop, or the defaultValue prop, but not ' + 'both). Decide between using a controlled or uncontrolled textarea ' + 'and remove one of these props. More info: ' + 'https://fb.me/react-controlled-components') : void 0;
         reactdomlibReactDOMTextarea__didWarnValDefaultVal = true;
       }
     }
@@ -18727,12 +18631,12 @@ var reactdomlibReactDOMTextarea__ReactDOMTextarea = {
       // TODO (yungsters): Remove support for children content in <textarea>.
       var children = props.children;
       if (children != null) {
-        if (process.env.NODE_ENV !== 'production') {
-          process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMTextarea__warning(false, 'Use the `defaultValue` or `value` props instead of setting ' + 'children on <textarea>.') : void 0;
+        if ('development' !== 'production') {
+          'development' !== 'production' ? reactdomlibReactDOMTextarea__warning(false, 'Use the `defaultValue` or `value` props instead of setting ' + 'children on <textarea>.') : void 0;
         }
-        !(defaultValue == null) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMTextarea__invariant(false, 'If you supply `defaultValue` on a <textarea>, do not pass children.') : reactdomlibReactDOMTextarea___prodInvariant('92') : void 0;
+        !(defaultValue == null) ? 'development' !== 'production' ? reactdomlibReactDOMTextarea__invariant(false, 'If you supply `defaultValue` on a <textarea>, do not pass children.') : reactdomlibReactDOMTextarea___prodInvariant('92') : void 0;
         if (Array.isArray(children)) {
-          !(children.length <= 1) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMTextarea__invariant(false, '<textarea> can only have at most one child.') : reactdomlibReactDOMTextarea___prodInvariant('93') : void 0;
+          !(children.length <= 1) ? 'development' !== 'production' ? reactdomlibReactDOMTextarea__invariant(false, '<textarea> can only have at most one child.') : reactdomlibReactDOMTextarea___prodInvariant('93') : void 0;
           children = children[0];
         }
 
@@ -18778,9 +18682,15 @@ var reactdomlibReactDOMTextarea__ReactDOMTextarea = {
     // This is in postMount because we need access to the DOM node, which is not
     // available until after the component has mounted.
     var node = reactdomlibReactDOMTextarea__ReactDOMComponentTree.getNodeFromInstance(inst);
+    var textContent = node.textContent;
 
-    // Warning: node.value may be the empty string at this point (IE11) if placeholder is set.
-    node.value = node.textContent; // Detach value from defaultValue
+    // Only set node.value if textContent is equal to the expected
+    // initial value. In IE10/IE11 there is a bug where the placeholder attribute
+    // will populate textContent as well.
+    // https://developer.microsoft.com/microsoft-edge/platform/issues/101525/
+    if (textContent === inst._wrapperState.initialValue) {
+      node.value = textContent;
+    }
   }
 };
 
@@ -18852,7 +18762,7 @@ function reactdomlibReactDOMSelect__checkSelectPropTypes(inst, props) {
   reactdomlibReactDOMSelect__LinkedValueUtils.checkPropTypes('select', props, owner);
 
   if (props.valueLink !== undefined && !reactdomlibReactDOMSelect__didWarnValueLink) {
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMSelect__warning(false, '`valueLink` prop on `select` is deprecated; set `value` and `onChange` instead.') : void 0;
+    'development' !== 'production' ? reactdomlibReactDOMSelect__warning(false, '`valueLink` prop on `select` is deprecated; set `value` and `onChange` instead.') : void 0;
     reactdomlibReactDOMSelect__didWarnValueLink = true;
   }
 
@@ -18863,9 +18773,9 @@ function reactdomlibReactDOMSelect__checkSelectPropTypes(inst, props) {
     }
     var isArray = Array.isArray(props[propName]);
     if (props.multiple && !isArray) {
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMSelect__warning(false, 'The `%s` prop supplied to <select> must be an array if ' + '`multiple` is true.%s', propName, reactdomlibReactDOMSelect__getDeclarationErrorAddendum(owner)) : void 0;
+      'development' !== 'production' ? reactdomlibReactDOMSelect__warning(false, 'The `%s` prop supplied to <select> must be an array if ' + '`multiple` is true.%s', propName, reactdomlibReactDOMSelect__getDeclarationErrorAddendum(owner)) : void 0;
     } else if (!props.multiple && isArray) {
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMSelect__warning(false, 'The `%s` prop supplied to <select> must be a scalar ' + 'value if `multiple` is false.%s', propName, reactdomlibReactDOMSelect__getDeclarationErrorAddendum(owner)) : void 0;
+      'development' !== 'production' ? reactdomlibReactDOMSelect__warning(false, 'The `%s` prop supplied to <select> must be a scalar ' + 'value if `multiple` is false.%s', propName, reactdomlibReactDOMSelect__getDeclarationErrorAddendum(owner)) : void 0;
     }
   }
 }
@@ -18931,7 +18841,7 @@ var reactdomlibReactDOMSelect__ReactDOMSelect = {
   },
 
   mountWrapper: function (inst, props) {
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       reactdomlibReactDOMSelect__checkSelectPropTypes(inst, props);
     }
 
@@ -18945,7 +18855,7 @@ var reactdomlibReactDOMSelect__ReactDOMSelect = {
     };
 
     if (props.value !== undefined && props.defaultValue !== undefined && !reactdomlibReactDOMSelect__didWarnValueDefaultValue) {
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMSelect__warning(false, 'Select elements must be either controlled or uncontrolled ' + '(specify either the value prop, or the defaultValue prop, but not ' + 'both). Decide between using a controlled or uncontrolled select ' + 'element and remove one of these props. More info: ' + 'https://fb.me/react-controlled-components') : void 0;
+      'development' !== 'production' ? reactdomlibReactDOMSelect__warning(false, 'Select elements must be either controlled or uncontrolled ' + '(specify either the value prop, or the defaultValue prop, but not ' + 'both). Decide between using a controlled or uncontrolled select ' + 'element and remove one of these props. More info: ' + 'https://fb.me/react-controlled-components') : void 0;
       reactdomlibReactDOMSelect__didWarnValueDefaultValue = true;
     }
   },
@@ -19031,7 +18941,7 @@ function reactdomlibReactDOMOption__flattenChildren(children) {
       content += child;
     } else if (!reactdomlibReactDOMOption__didWarnInvalidOptionChildren) {
       reactdomlibReactDOMOption__didWarnInvalidOptionChildren = true;
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMOption__warning(false, 'Only strings and numbers are supported as <option> children.') : void 0;
+      'development' !== 'production' ? reactdomlibReactDOMOption__warning(false, 'Only strings and numbers are supported as <option> children.') : void 0;
     }
   });
 
@@ -19044,8 +18954,8 @@ function reactdomlibReactDOMOption__flattenChildren(children) {
 var reactdomlibReactDOMOption__ReactDOMOption = {
   mountWrapper: function (inst, props, hostParent) {
     // TODO (yungsters): Remove support for `selected` in <option>.
-    if (process.env.NODE_ENV !== 'production') {
-      process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMOption__warning(props.selected == null, 'Use the `defaultValue` or `value` props on <select> instead of ' + 'setting `selected` on <option>.') : void 0;
+    if ('development' !== 'production') {
+      'development' !== 'production' ? reactdomlibReactDOMOption__warning(props.selected == null, 'Use the `defaultValue` or `value` props on <select> instead of ' + 'setting `selected` on <option>.') : void 0;
     }
 
     // Look up whether this option is 'selected'
@@ -19185,7 +19095,7 @@ function reactdomlibDOMPropertyOperations__isAttributeNameSafe(attributeName) {
     return true;
   }
   reactdomlibDOMPropertyOperations__illegalAttributeNameCache[attributeName] = true;
-  process.env.NODE_ENV !== 'production' ? reactdomlibDOMPropertyOperations__warning(false, 'Invalid attribute name: `%s`', attributeName) : void 0;
+  'development' !== 'production' ? reactdomlibDOMPropertyOperations__warning(false, 'Invalid attribute name: `%s`', attributeName) : void 0;
   return false;
 }
 
@@ -19299,7 +19209,7 @@ var reactdomlibDOMPropertyOperations__DOMPropertyOperations = {
       return;
     }
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       var payload = {};
       payload[name] = value;
       reactdomlibDOMPropertyOperations__ReactInstrumentation.debugTool.onHostOperation({
@@ -19320,7 +19230,7 @@ var reactdomlibDOMPropertyOperations__DOMPropertyOperations = {
       node.setAttribute(name, '' + value);
     }
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       var payload = {};
       payload[name] = value;
       reactdomlibDOMPropertyOperations__ReactInstrumentation.debugTool.onHostOperation({
@@ -19339,7 +19249,7 @@ var reactdomlibDOMPropertyOperations__DOMPropertyOperations = {
    */
   deleteValueForAttribute: function (node, name) {
     node.removeAttribute(name);
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       reactdomlibDOMPropertyOperations__ReactInstrumentation.debugTool.onHostOperation({
         instanceID: reactdomlibDOMPropertyOperations__ReactDOMComponentTree.getInstanceFromNode(node)._debugID,
         type: 'remove attribute',
@@ -19374,7 +19284,7 @@ var reactdomlibDOMPropertyOperations__DOMPropertyOperations = {
       node.removeAttribute(name);
     }
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       reactdomlibDOMPropertyOperations__ReactInstrumentation.debugTool.onHostOperation({
         instanceID: reactdomlibDOMPropertyOperations__ReactDOMComponentTree.getInstanceFromNode(node)._debugID,
         type: 'remove attribute',
@@ -19475,25 +19385,25 @@ var reactdomlibReactDOMInput__ReactDOMInput = {
   },
 
   mountWrapper: function (inst, props) {
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       reactdomlibReactDOMInput__LinkedValueUtils.checkPropTypes('input', props, inst._currentElement._owner);
 
       var owner = inst._currentElement._owner;
 
       if (props.valueLink !== undefined && !reactdomlibReactDOMInput__didWarnValueLink) {
-        process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMInput__warning(false, '`valueLink` prop on `input` is deprecated; set `value` and `onChange` instead.') : void 0;
+        'development' !== 'production' ? reactdomlibReactDOMInput__warning(false, '`valueLink` prop on `input` is deprecated; set `value` and `onChange` instead.') : void 0;
         reactdomlibReactDOMInput__didWarnValueLink = true;
       }
       if (props.checkedLink !== undefined && !reactdomlibReactDOMInput__didWarnCheckedLink) {
-        process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMInput__warning(false, '`checkedLink` prop on `input` is deprecated; set `value` and `onChange` instead.') : void 0;
+        'development' !== 'production' ? reactdomlibReactDOMInput__warning(false, '`checkedLink` prop on `input` is deprecated; set `value` and `onChange` instead.') : void 0;
         reactdomlibReactDOMInput__didWarnCheckedLink = true;
       }
       if (props.checked !== undefined && props.defaultChecked !== undefined && !reactdomlibReactDOMInput__didWarnCheckedDefaultChecked) {
-        process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMInput__warning(false, '%s contains an input of type %s with both checked and defaultChecked props. ' + 'Input elements must be either controlled or uncontrolled ' + '(specify either the checked prop, or the defaultChecked prop, but not ' + 'both). Decide between using a controlled or uncontrolled input ' + 'element and remove one of these props. More info: ' + 'https://fb.me/react-controlled-components', owner && owner.getName() || 'A component', props.type) : void 0;
+        'development' !== 'production' ? reactdomlibReactDOMInput__warning(false, '%s contains an input of type %s with both checked and defaultChecked props. ' + 'Input elements must be either controlled or uncontrolled ' + '(specify either the checked prop, or the defaultChecked prop, but not ' + 'both). Decide between using a controlled or uncontrolled input ' + 'element and remove one of these props. More info: ' + 'https://fb.me/react-controlled-components', owner && owner.getName() || 'A component', props.type) : void 0;
         reactdomlibReactDOMInput__didWarnCheckedDefaultChecked = true;
       }
       if (props.value !== undefined && props.defaultValue !== undefined && !reactdomlibReactDOMInput__didWarnValueDefaultValue) {
-        process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMInput__warning(false, '%s contains an input of type %s with both value and defaultValue props. ' + 'Input elements must be either controlled or uncontrolled ' + '(specify either the value prop, or the defaultValue prop, but not ' + 'both). Decide between using a controlled or uncontrolled input ' + 'element and remove one of these props. More info: ' + 'https://fb.me/react-controlled-components', owner && owner.getName() || 'A component', props.type) : void 0;
+        'development' !== 'production' ? reactdomlibReactDOMInput__warning(false, '%s contains an input of type %s with both value and defaultValue props. ' + 'Input elements must be either controlled or uncontrolled ' + '(specify either the value prop, or the defaultValue prop, but not ' + 'both). Decide between using a controlled or uncontrolled input ' + 'element and remove one of these props. More info: ' + 'https://fb.me/react-controlled-components', owner && owner.getName() || 'A component', props.type) : void 0;
         reactdomlibReactDOMInput__didWarnValueDefaultValue = true;
       }
     }
@@ -19506,7 +19416,7 @@ var reactdomlibReactDOMInput__ReactDOMInput = {
       onChange: reactdomlibReactDOMInput___handleChange.bind(inst)
     };
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       inst._wrapperState.controlled = reactdomlibReactDOMInput__isControlled(props);
     }
   },
@@ -19514,16 +19424,16 @@ var reactdomlibReactDOMInput__ReactDOMInput = {
   updateWrapper: function (inst) {
     var props = inst._currentElement.props;
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       var controlled = reactdomlibReactDOMInput__isControlled(props);
       var owner = inst._currentElement._owner;
 
       if (!inst._wrapperState.controlled && controlled && !reactdomlibReactDOMInput__didWarnUncontrolledToControlled) {
-        process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMInput__warning(false, '%s is changing an uncontrolled input of type %s to be controlled. ' + 'Input elements should not switch from uncontrolled to controlled (or vice versa). ' + 'Decide between using a controlled or uncontrolled input ' + 'element for the lifetime of the component. More info: https://fb.me/react-controlled-components', owner && owner.getName() || 'A component', props.type) : void 0;
+        'development' !== 'production' ? reactdomlibReactDOMInput__warning(false, '%s is changing an uncontrolled input of type %s to be controlled. ' + 'Input elements should not switch from uncontrolled to controlled (or vice versa). ' + 'Decide between using a controlled or uncontrolled input ' + 'element for the lifetime of the component. More info: https://fb.me/react-controlled-components', owner && owner.getName() || 'A component', props.type) : void 0;
         reactdomlibReactDOMInput__didWarnUncontrolledToControlled = true;
       }
       if (inst._wrapperState.controlled && !controlled && !reactdomlibReactDOMInput__didWarnControlledToUncontrolled) {
-        process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMInput__warning(false, '%s is changing a controlled input of type %s to be uncontrolled. ' + 'Input elements should not switch from controlled to uncontrolled (or vice versa). ' + 'Decide between using a controlled or uncontrolled input ' + 'element for the lifetime of the component. More info: https://fb.me/react-controlled-components', owner && owner.getName() || 'A component', props.type) : void 0;
+        'development' !== 'production' ? reactdomlibReactDOMInput__warning(false, '%s is changing a controlled input of type %s to be uncontrolled. ' + 'Input elements should not switch from controlled to uncontrolled (or vice versa). ' + 'Decide between using a controlled or uncontrolled input ' + 'element for the lifetime of the component. More info: https://fb.me/react-controlled-components', owner && owner.getName() || 'A component', props.type) : void 0;
         reactdomlibReactDOMInput__didWarnControlledToUncontrolled = true;
       }
     }
@@ -19548,7 +19458,17 @@ var reactdomlibReactDOMInput__ReactDOMInput = {
       }
     } else {
       if (props.value == null && props.defaultValue != null) {
-        node.defaultValue = '' + props.defaultValue;
+        // In Chrome, assigning defaultValue to certain input types triggers input validation.
+        // For number inputs, the display value loses trailing decimal points. For email inputs,
+        // Chrome raises "The specified value <x> is not a valid email address".
+        //
+        // Here we check to see if the defaultValue has actually changed, avoiding these problems
+        // when the user is inputting text
+        //
+        // https://github.com/facebook/react/issues/7253
+        if (node.defaultValue !== '' + props.defaultValue) {
+          node.defaultValue = '' + props.defaultValue;
+        }
       }
       if (props.checked == null && props.defaultChecked != null) {
         node.defaultChecked = !!props.defaultChecked;
@@ -19644,7 +19564,7 @@ function reactdomlibReactDOMInput___handleChange(event) {
       // That's probably okay; we don't support it just as we don't support
       // mixing React radio buttons with non-React ones.
       var otherInstance = reactdomlibReactDOMInput__ReactDOMComponentTree.getInstanceFromNode(otherNode);
-      !otherInstance ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMInput__invariant(false, 'ReactDOMInput: Mixing React and non-React radio inputs with the same `name` is not supported.') : reactdomlibReactDOMInput___prodInvariant('90') : void 0;
+      !otherInstance ? 'development' !== 'production' ? reactdomlibReactDOMInput__invariant(false, 'ReactDOMInput: Mixing React and non-React radio inputs with the same `name` is not supported.') : reactdomlibReactDOMInput___prodInvariant('90') : void 0;
       // If this is a controlled radio button group, forcing the input that
       // was previously checked to update will cause it to be come re-checked
       // as appropriate.
@@ -19750,7 +19670,7 @@ function reactdomlibdangerousStyleValue__dangerousStyleValue(name, value, compon
   }
 
   if (typeof value === 'string') {
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       // Allow '0' to pass through without warning. 0 is already special and
       // doesn't require units, so we don't need to warn about it.
       if (component && value !== '0') {
@@ -19768,7 +19688,7 @@ function reactdomlibdangerousStyleValue__dangerousStyleValue(name, value, compon
           }
         }
         if (!warned) {
-          process.env.NODE_ENV !== 'production' ? reactdomlibdangerousStyleValue__warning(false, 'a `%s` tag (owner: `%s`) was passed a numeric string value ' + 'for CSS property `%s` (value: `%s`) which will be treated ' + 'as a unitless number in a future version of React.', component._currentElement.type, ownerName || 'unknown', name, value) : void 0;
+          'development' !== 'production' ? reactdomlibdangerousStyleValue__warning(false, 'a `%s` tag (owner: `%s`) was passed a numeric string value ' + 'for CSS property `%s` (value: `%s`) which will be treated ' + 'as a unitless number in a future version of React.', component._currentElement.type, ownerName || 'unknown', name, value) : void 0;
         }
       }
     }
@@ -19865,7 +19785,7 @@ if (reactdomlibCSSPropertyOperations__ExecutionEnvironment.canUseDOM) {
   }
 }
 
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   // 'msTransform' is correct, but the other prefixes should be capitalized
   var reactdomlibCSSPropertyOperations__badVendoredStyleNamePattern = /^(?:webkit|moz|o)[A-Z]/;
 
@@ -19882,7 +19802,7 @@ if (process.env.NODE_ENV !== 'production') {
     }
 
     reactdomlibCSSPropertyOperations__warnedStyleNames[name] = true;
-    process.env.NODE_ENV !== 'production' ? reactdomlibCSSPropertyOperations__warning(false, 'Unsupported style property %s. Did you mean %s?%s', name, reactdomlibCSSPropertyOperations__camelizeStyleName(name), reactdomlibCSSPropertyOperations__checkRenderMessage(owner)) : void 0;
+    'development' !== 'production' ? reactdomlibCSSPropertyOperations__warning(false, 'Unsupported style property %s. Did you mean %s?%s', name, reactdomlibCSSPropertyOperations__camelizeStyleName(name), reactdomlibCSSPropertyOperations__checkRenderMessage(owner)) : void 0;
   };
 
   var reactdomlibCSSPropertyOperations__warnBadVendoredStyleName = function (name, owner) {
@@ -19891,7 +19811,7 @@ if (process.env.NODE_ENV !== 'production') {
     }
 
     reactdomlibCSSPropertyOperations__warnedStyleNames[name] = true;
-    process.env.NODE_ENV !== 'production' ? reactdomlibCSSPropertyOperations__warning(false, 'Unsupported vendor-prefixed style property %s. Did you mean %s?%s', name, name.charAt(0).toUpperCase() + name.slice(1), reactdomlibCSSPropertyOperations__checkRenderMessage(owner)) : void 0;
+    'development' !== 'production' ? reactdomlibCSSPropertyOperations__warning(false, 'Unsupported vendor-prefixed style property %s. Did you mean %s?%s', name, name.charAt(0).toUpperCase() + name.slice(1), reactdomlibCSSPropertyOperations__checkRenderMessage(owner)) : void 0;
   };
 
   var reactdomlibCSSPropertyOperations__warnStyleValueWithSemicolon = function (name, value, owner) {
@@ -19900,7 +19820,7 @@ if (process.env.NODE_ENV !== 'production') {
     }
 
     reactdomlibCSSPropertyOperations__warnedStyleValues[value] = true;
-    process.env.NODE_ENV !== 'production' ? reactdomlibCSSPropertyOperations__warning(false, 'Style property values shouldn\'t contain a semicolon.%s ' + 'Try "%s: %s" instead.', reactdomlibCSSPropertyOperations__checkRenderMessage(owner), name, value.replace(reactdomlibCSSPropertyOperations__badStyleValueWithSemicolonPattern, '')) : void 0;
+    'development' !== 'production' ? reactdomlibCSSPropertyOperations__warning(false, 'Style property values shouldn\'t contain a semicolon.%s ' + 'Try "%s: %s" instead.', reactdomlibCSSPropertyOperations__checkRenderMessage(owner), name, value.replace(reactdomlibCSSPropertyOperations__badStyleValueWithSemicolonPattern, '')) : void 0;
   };
 
   var reactdomlibCSSPropertyOperations__warnStyleValueIsNaN = function (name, value, owner) {
@@ -19909,7 +19829,7 @@ if (process.env.NODE_ENV !== 'production') {
     }
 
     reactdomlibCSSPropertyOperations__warnedForNaNValue = true;
-    process.env.NODE_ENV !== 'production' ? reactdomlibCSSPropertyOperations__warning(false, '`NaN` is an invalid value for the `%s` css style property.%s', name, reactdomlibCSSPropertyOperations__checkRenderMessage(owner)) : void 0;
+    'development' !== 'production' ? reactdomlibCSSPropertyOperations__warning(false, '`NaN` is an invalid value for the `%s` css style property.%s', name, reactdomlibCSSPropertyOperations__checkRenderMessage(owner)) : void 0;
   };
 
   var reactdomlibCSSPropertyOperations__checkRenderMessage = function (owner) {
@@ -19971,7 +19891,7 @@ var reactdomlibCSSPropertyOperations__CSSPropertyOperations = {
         continue;
       }
       var styleValue = styles[styleName];
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         reactdomlibCSSPropertyOperations__warnValidStyle(styleName, styleValue, component);
       }
       if (styleValue != null) {
@@ -19991,7 +19911,7 @@ var reactdomlibCSSPropertyOperations__CSSPropertyOperations = {
    * @param {ReactDOMComponent} component
    */
   setValueForStyles: function (node, styles, component) {
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       reactdomlibCSSPropertyOperations__ReactInstrumentation.debugTool.onHostOperation({
         instanceID: component._debugID,
         type: 'update styles',
@@ -20004,7 +19924,7 @@ var reactdomlibCSSPropertyOperations__CSSPropertyOperations = {
       if (!styles.hasOwnProperty(styleName)) {
         continue;
       }
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         reactdomlibCSSPropertyOperations__warnValidStyle(styleName, styles[styleName], component);
       }
       var styleValue = reactdomlibCSSPropertyOperations__dangerousStyleValue(styleName, styles[styleName], component);
@@ -20186,7 +20106,7 @@ function reactdomlibReactDOMComponent__checkAndWarnForMutatedStyle(style1, style
 
   reactdomlibReactDOMComponent__styleMutationWarning[hash] = true;
 
-  process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMComponent__warning(false, '`%s` was passed a style object that has previously been mutated. ' + 'Mutating `style` is deprecated. Consider cloning it beforehand. Check ' + 'the `render` %s. Previous style: %s. Mutated style: %s.', componentName, owner ? 'of `' + ownerName + '`' : 'using <' + componentName + '>', reactdomlibReactDOMComponent__friendlyStringify(style1), reactdomlibReactDOMComponent__friendlyStringify(style2)) : void 0;
+  'development' !== 'production' ? reactdomlibReactDOMComponent__warning(false, '`%s` was passed a style object that has previously been mutated. ' + 'Mutating `style` is deprecated. Consider cloning it beforehand. Check ' + 'the `render` %s. Previous style: %s. Mutated style: %s.', componentName, owner ? 'of `' + ownerName + '`' : 'using <' + componentName + '>', reactdomlibReactDOMComponent__friendlyStringify(style1), reactdomlibReactDOMComponent__friendlyStringify(style2)) : void 0;
 }
 
 /**
@@ -20199,28 +20119,28 @@ function reactdomlibReactDOMComponent__assertValidProps(component, props) {
   }
   // Note the use of `==` which checks for null or undefined.
   if (reactdomlibReactDOMComponent__voidElementTags[component._tag]) {
-    !(props.children == null && props.dangerouslySetInnerHTML == null) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMComponent__invariant(false, '%s is a void element tag and must neither have `children` nor use `dangerouslySetInnerHTML`.%s', component._tag, component._currentElement._owner ? ' Check the render method of ' + component._currentElement._owner.getName() + '.' : '') : reactdomlibReactDOMComponent___prodInvariant('137', component._tag, component._currentElement._owner ? ' Check the render method of ' + component._currentElement._owner.getName() + '.' : '') : void 0;
+    !(props.children == null && props.dangerouslySetInnerHTML == null) ? 'development' !== 'production' ? reactdomlibReactDOMComponent__invariant(false, '%s is a void element tag and must neither have `children` nor use `dangerouslySetInnerHTML`.%s', component._tag, component._currentElement._owner ? ' Check the render method of ' + component._currentElement._owner.getName() + '.' : '') : reactdomlibReactDOMComponent___prodInvariant('137', component._tag, component._currentElement._owner ? ' Check the render method of ' + component._currentElement._owner.getName() + '.' : '') : void 0;
   }
   if (props.dangerouslySetInnerHTML != null) {
-    !(props.children == null) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMComponent__invariant(false, 'Can only set one of `children` or `props.dangerouslySetInnerHTML`.') : reactdomlibReactDOMComponent___prodInvariant('60') : void 0;
-    !(typeof props.dangerouslySetInnerHTML === 'object' && reactdomlibReactDOMComponent__HTML in props.dangerouslySetInnerHTML) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMComponent__invariant(false, '`props.dangerouslySetInnerHTML` must be in the form `{__html: ...}`. Please visit https://fb.me/react-invariant-dangerously-set-inner-html for more information.') : reactdomlibReactDOMComponent___prodInvariant('61') : void 0;
+    !(props.children == null) ? 'development' !== 'production' ? reactdomlibReactDOMComponent__invariant(false, 'Can only set one of `children` or `props.dangerouslySetInnerHTML`.') : reactdomlibReactDOMComponent___prodInvariant('60') : void 0;
+    !(typeof props.dangerouslySetInnerHTML === 'object' && reactdomlibReactDOMComponent__HTML in props.dangerouslySetInnerHTML) ? 'development' !== 'production' ? reactdomlibReactDOMComponent__invariant(false, '`props.dangerouslySetInnerHTML` must be in the form `{__html: ...}`. Please visit https://fb.me/react-invariant-dangerously-set-inner-html for more information.') : reactdomlibReactDOMComponent___prodInvariant('61') : void 0;
   }
-  if (process.env.NODE_ENV !== 'production') {
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMComponent__warning(props.innerHTML == null, 'Directly setting property `innerHTML` is not permitted. ' + 'For more information, lookup documentation on `dangerouslySetInnerHTML`.') : void 0;
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMComponent__warning(props.suppressContentEditableWarning || !props.contentEditable || props.children == null, 'A component is `contentEditable` and contains `children` managed by ' + 'React. It is now your responsibility to guarantee that none of ' + 'those nodes are unexpectedly modified or duplicated. This is ' + 'probably not intentional.') : void 0;
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMComponent__warning(props.onFocusIn == null && props.onFocusOut == null, 'React uses onFocus and onBlur instead of onFocusIn and onFocusOut. ' + 'All React events are normalized to bubble, so onFocusIn and onFocusOut ' + 'are not needed/supported by React.') : void 0;
+  if ('development' !== 'production') {
+    'development' !== 'production' ? reactdomlibReactDOMComponent__warning(props.innerHTML == null, 'Directly setting property `innerHTML` is not permitted. ' + 'For more information, lookup documentation on `dangerouslySetInnerHTML`.') : void 0;
+    'development' !== 'production' ? reactdomlibReactDOMComponent__warning(props.suppressContentEditableWarning || !props.contentEditable || props.children == null, 'A component is `contentEditable` and contains `children` managed by ' + 'React. It is now your responsibility to guarantee that none of ' + 'those nodes are unexpectedly modified or duplicated. This is ' + 'probably not intentional.') : void 0;
+    'development' !== 'production' ? reactdomlibReactDOMComponent__warning(props.onFocusIn == null && props.onFocusOut == null, 'React uses onFocus and onBlur instead of onFocusIn and onFocusOut. ' + 'All React events are normalized to bubble, so onFocusIn and onFocusOut ' + 'are not needed/supported by React.') : void 0;
   }
-  !(props.style == null || typeof props.style === 'object') ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMComponent__invariant(false, 'The `style` prop expects a mapping from style properties to values, not a string. For example, style={{marginRight: spacing + \'em\'}} when using JSX.%s', reactdomlibReactDOMComponent__getDeclarationErrorAddendum(component)) : reactdomlibReactDOMComponent___prodInvariant('62', reactdomlibReactDOMComponent__getDeclarationErrorAddendum(component)) : void 0;
+  !(props.style == null || typeof props.style === 'object') ? 'development' !== 'production' ? reactdomlibReactDOMComponent__invariant(false, 'The `style` prop expects a mapping from style properties to values, not a string. For example, style={{marginRight: spacing + \'em\'}} when using JSX.%s', reactdomlibReactDOMComponent__getDeclarationErrorAddendum(component)) : reactdomlibReactDOMComponent___prodInvariant('62', reactdomlibReactDOMComponent__getDeclarationErrorAddendum(component)) : void 0;
 }
 
 function reactdomlibReactDOMComponent__enqueuePutListener(inst, registrationName, listener, transaction) {
   if (transaction instanceof reactdomlibReactDOMComponent__ReactServerRenderingTransaction) {
     return;
   }
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     // IE8 has no API for event capturing and the `onScroll` event doesn't
     // bubble.
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMComponent__warning(registrationName !== 'onScroll' || reactdomlibReactDOMComponent__isEventSupported('scroll', true), 'This browser doesn\'t support the `onScroll` event') : void 0;
+    'development' !== 'production' ? reactdomlibReactDOMComponent__warning(registrationName !== 'onScroll' || reactdomlibReactDOMComponent__isEventSupported('scroll', true), 'This browser doesn\'t support the `onScroll` event') : void 0;
   }
   var containerInfo = inst._hostContainerInfo;
   var isDocumentFragment = containerInfo._node && containerInfo._node.nodeType === reactdomlibReactDOMComponent__DOC_FRAGMENT_TYPE;
@@ -20254,7 +20174,7 @@ function reactdomlibReactDOMComponent__optionPostMount() {
 }
 
 var reactdomlibReactDOMComponent__setAndValidateContentChildDev = reactdomlibReactDOMComponent__emptyFunction;
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   reactdomlibReactDOMComponent__setAndValidateContentChildDev = function (content) {
     var hasExistingContent = this._contentDebugID != null;
     var debugID = this._debugID;
@@ -20314,9 +20234,9 @@ function reactdomlibReactDOMComponent__trapBubbledEventsLocal() {
   var inst = this;
   // If a component renders to null or if another component fatals and causes
   // the state of the tree to be corrupted, `node` here can be null.
-  !inst._rootNodeID ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMComponent__invariant(false, 'Must be mounted to trap events') : reactdomlibReactDOMComponent___prodInvariant('63') : void 0;
+  !inst._rootNodeID ? 'development' !== 'production' ? reactdomlibReactDOMComponent__invariant(false, 'Must be mounted to trap events') : reactdomlibReactDOMComponent___prodInvariant('63') : void 0;
   var node = reactdomlibReactDOMComponent__getNode(inst);
-  !node ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMComponent__invariant(false, 'trapBubbledEvent(...): Requires node to be rendered.') : reactdomlibReactDOMComponent___prodInvariant('64') : void 0;
+  !node ? 'development' !== 'production' ? reactdomlibReactDOMComponent__invariant(false, 'trapBubbledEvent(...): Requires node to be rendered.') : reactdomlibReactDOMComponent___prodInvariant('64') : void 0;
 
   switch (inst._tag) {
     case 'iframe':
@@ -20399,7 +20319,7 @@ var reactdomlibReactDOMComponent__hasOwnProperty = {}.hasOwnProperty;
 
 function reactdomlibReactDOMComponent__validateDangerousTag(tag) {
   if (!reactdomlibReactDOMComponent__hasOwnProperty.call(reactdomlibReactDOMComponent__validatedTagCache, tag)) {
-    !reactdomlibReactDOMComponent__VALID_TAG_REGEX.test(tag) ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMComponent__invariant(false, 'Invalid tag: %s', tag) : reactdomlibReactDOMComponent___prodInvariant('65', tag) : void 0;
+    !reactdomlibReactDOMComponent__VALID_TAG_REGEX.test(tag) ? 'development' !== 'production' ? reactdomlibReactDOMComponent__invariant(false, 'Invalid tag: %s', tag) : reactdomlibReactDOMComponent___prodInvariant('65', tag) : void 0;
     reactdomlibReactDOMComponent__validatedTagCache[tag] = true;
   }
 }
@@ -20441,7 +20361,7 @@ function reactdomlibReactDOMComponent__ReactDOMComponent(element) {
   this._wrapperState = null;
   this._topLevelWrapper = null;
   this._flags = 0;
-  if (process.env.NODE_ENV !== 'production') {
+  if ('development' !== 'production') {
     this._ancestorInfo = null;
     reactdomlibReactDOMComponent__setAndValidateContentChildDev.call(this, null);
   }
@@ -20530,7 +20450,7 @@ reactdomlibReactDOMComponent__ReactDOMComponent.Mixin = {
     }
     this._namespaceURI = namespaceURI;
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       var parentInfo;
       if (hostParent != null) {
         parentInfo = hostParent._ancestorInfo;
@@ -20649,7 +20569,7 @@ reactdomlibReactDOMComponent__ReactDOMComponent.Mixin = {
       } else {
         if (propKey === reactdomlibReactDOMComponent__STYLE) {
           if (propValue) {
-            if (process.env.NODE_ENV !== 'production') {
+            if ('development' !== 'production') {
               // See `_updateDOMProperties`. style block
               this._previousStyle = propValue;
             }
@@ -20708,7 +20628,7 @@ reactdomlibReactDOMComponent__ReactDOMComponent.Mixin = {
       if (contentToUse != null) {
         // TODO: Validate that text is allowed as a child of this node
         ret = reactdomlibReactDOMComponent__escapeTextContentForBrowser(contentToUse);
-        if (process.env.NODE_ENV !== 'production') {
+        if ('development' !== 'production') {
           reactdomlibReactDOMComponent__setAndValidateContentChildDev.call(this, contentToUse);
         }
       } else if (childrenToUse != null) {
@@ -20743,12 +20663,18 @@ reactdomlibReactDOMComponent__ReactDOMComponent.Mixin = {
     } else {
       var contentToUse = reactdomlibReactDOMComponent__CONTENT_TYPES[typeof props.children] ? props.children : null;
       var childrenToUse = contentToUse != null ? null : props.children;
+      // TODO: Validate that text is allowed as a child of this node
       if (contentToUse != null) {
-        // TODO: Validate that text is allowed as a child of this node
-        if (process.env.NODE_ENV !== 'production') {
-          reactdomlibReactDOMComponent__setAndValidateContentChildDev.call(this, contentToUse);
+        // Avoid setting textContent when the text is empty. In IE11 setting
+        // textContent on a text area will cause the placeholder to not
+        // show within the textarea until it has been focused and blurred again.
+        // https://github.com/facebook/react/issues/6731#issuecomment-254874553
+        if (contentToUse !== '') {
+          if ('development' !== 'production') {
+            reactdomlibReactDOMComponent__setAndValidateContentChildDev.call(this, contentToUse);
+          }
+          reactdomlibReactDOMComponent__DOMLazyTree.queueText(lazyTree, contentToUse);
         }
-        reactdomlibReactDOMComponent__DOMLazyTree.queueText(lazyTree, contentToUse);
       } else if (childrenToUse != null) {
         var mountImages = this.mountChildren(childrenToUse, transaction, context);
         for (var i = 0; i < mountImages.length; i++) {
@@ -20883,7 +20809,7 @@ reactdomlibReactDOMComponent__ReactDOMComponent.Mixin = {
       }
       if (propKey === reactdomlibReactDOMComponent__STYLE) {
         if (nextProp) {
-          if (process.env.NODE_ENV !== 'production') {
+          if ('development' !== 'production') {
             reactdomlibReactDOMComponent__checkAndWarnForMutatedStyle(this._previousStyleCopy, this._previousStyle, this);
             this._previousStyle = nextProp;
           }
@@ -20965,7 +20891,7 @@ reactdomlibReactDOMComponent__ReactDOMComponent.Mixin = {
       this.updateChildren(null, transaction, context);
     } else if (lastHasContentOrHtml && !nextHasContentOrHtml) {
       this.updateTextContent('');
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         reactdomlibReactDOMComponent__ReactInstrumentation.debugTool.onSetChildren(this._debugID, []);
       }
     }
@@ -20973,7 +20899,7 @@ reactdomlibReactDOMComponent__ReactDOMComponent.Mixin = {
     if (nextContent != null) {
       if (lastContent !== nextContent) {
         this.updateTextContent('' + nextContent);
-        if (process.env.NODE_ENV !== 'production') {
+        if ('development' !== 'production') {
           reactdomlibReactDOMComponent__setAndValidateContentChildDev.call(this, nextContent);
         }
       }
@@ -20981,11 +20907,11 @@ reactdomlibReactDOMComponent__ReactDOMComponent.Mixin = {
       if (lastHtml !== nextHtml) {
         this.updateMarkup('' + nextHtml);
       }
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         reactdomlibReactDOMComponent__ReactInstrumentation.debugTool.onSetChildren(this._debugID, []);
       }
     } else if (nextChildren != null) {
-      if (process.env.NODE_ENV !== 'production') {
+      if ('development' !== 'production') {
         reactdomlibReactDOMComponent__setAndValidateContentChildDev.call(this, null);
       }
 
@@ -21029,7 +20955,7 @@ reactdomlibReactDOMComponent__ReactDOMComponent.Mixin = {
          * take advantage of React's reconciliation for styling and <title>
          * management. So we just document it and throw in dangerous cases.
          */
-        !false ? process.env.NODE_ENV !== 'production' ? reactdomlibReactDOMComponent__invariant(false, '<%s> tried to unmount. Because of cross-browser quirks it is impossible to unmount some top-level components (eg <html>, <head>, and <body>) reliably and efficiently. To fix this, have a single top-level component that never unmounts render these elements.', this._tag) : reactdomlibReactDOMComponent___prodInvariant('66', this._tag) : void 0;
+        !false ? 'development' !== 'production' ? reactdomlibReactDOMComponent__invariant(false, '<%s> tried to unmount. Because of cross-browser quirks it is impossible to unmount some top-level components (eg <html>, <head>, and <body>) reliably and efficiently. To fix this, have a single top-level component that never unmounts render these elements.', this._tag) : reactdomlibReactDOMComponent___prodInvariant('66', this._tag) : void 0;
         break;
     }
 
@@ -21040,7 +20966,7 @@ reactdomlibReactDOMComponent__ReactDOMComponent.Mixin = {
     this._domID = 0;
     this._wrapperState = null;
 
-    if (process.env.NODE_ENV !== 'production') {
+    if ('development' !== 'production') {
       reactdomlibReactDOMComponent__setAndValidateContentChildDev.call(this, null);
     }
   },
@@ -22475,7 +22401,7 @@ if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined' && typeof __REACT_DEVT
   });
 }
 
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   var reactdomlibReactDOM__ExecutionEnvironment = $m['fbjs/lib/ExecutionEnvironment'].exports;
   if (reactdomlibReactDOM__ExecutionEnvironment.canUseDOM && window.top === window.self) {
 
@@ -22490,13 +22416,13 @@ if (process.env.NODE_ENV !== 'production') {
     }
 
     var reactdomlibReactDOM__testFunc = function testFn() {};
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactDOM__warning((reactdomlibReactDOM__testFunc.name || reactdomlibReactDOM__testFunc.toString()).indexOf('testFn') !== -1, 'It looks like you\'re using a minified copy of the development build ' + 'of React. When deploying React apps to production, make sure to use ' + 'the production build which skips development warnings and is faster. ' + 'See https://fb.me/react-minification for more details.') : void 0;
+    'development' !== 'production' ? reactdomlibReactDOM__warning((reactdomlibReactDOM__testFunc.name || reactdomlibReactDOM__testFunc.toString()).indexOf('testFn') !== -1, 'It looks like you\'re using a minified copy of the development build ' + 'of React. When deploying React apps to production, make sure to use ' + 'the production build which skips development warnings and is faster. ' + 'See https://fb.me/react-minification for more details.') : void 0;
 
     // If we're in IE8, check to see if we are in compatibility mode and provide
     // information on preventing compatibility mode
     var reactdomlibReactDOM__ieCompatibilityMode = document.documentMode && document.documentMode < 8;
 
-    process.env.NODE_ENV !== 'production' ? reactdomlibReactDOM__warning(!reactdomlibReactDOM__ieCompatibilityMode, 'Internet Explorer is running in compatibility mode; please add the ' + 'following tag to your HTML to prevent this from happening: ' + '<meta http-equiv="X-UA-Compatible" content="IE=edge" />') : void 0;
+    'development' !== 'production' ? reactdomlibReactDOM__warning(!reactdomlibReactDOM__ieCompatibilityMode, 'Internet Explorer is running in compatibility mode; please add the ' + 'following tag to your HTML to prevent this from happening: ' + '<meta http-equiv="X-UA-Compatible" content="IE=edge" />') : void 0;
 
     var reactdomlibReactDOM__expectedFeatures = [
     // shims
@@ -22504,14 +22430,14 @@ if (process.env.NODE_ENV !== 'production') {
 
     for (var reactdomlibReactDOM__i = 0; reactdomlibReactDOM__i < reactdomlibReactDOM__expectedFeatures.length; reactdomlibReactDOM__i++) {
       if (!reactdomlibReactDOM__expectedFeatures[reactdomlibReactDOM__i]) {
-        process.env.NODE_ENV !== 'production' ? reactdomlibReactDOM__warning(false, 'One or more ES5 shims expected by React are not available: ' + 'https://fb.me/react-warning-polyfills') : void 0;
+        'development' !== 'production' ? reactdomlibReactDOM__warning(false, 'One or more ES5 shims expected by React are not available: ' + 'https://fb.me/react-warning-polyfills') : void 0;
         break;
       }
     }
   }
 }
 
-if (process.env.NODE_ENV !== 'production') {
+if ('development' !== 'production') {
   var reactdomlibReactDOM__ReactInstrumentation = $m['react-dom/lib/ReactInstrumentation'].exports;
   var reactdomlibReactDOM__ReactDOMUnknownPropertyHook = $m['react-dom/lib/ReactDOMUnknownPropertyHook'].exports;
   var reactdomlibReactDOM__ReactDOMNullInputValuePropHook = $m['react-dom/lib/ReactDOMNullInputValuePropHook'].exports;
@@ -22535,6 +22461,158 @@ $m['@yr/component/lib/react-browser'].exports = {
   ReactDOM: $m['react-dom/lib/ReactDOM'].exports
 };
 /*≠≠ node_modules/@yr/component/lib/react-browser.js ≠≠*/
+
+
+/*== node_modules/@yr/component/lib/Component.js ==*/
+$m['@yr/component/lib/Component'] = { exports: {} };
+
+/**
+ * Base component class (client)
+ */
+
+var yrcomponentlibComponent___require = $m['@yr/component/lib/react-browser'].exports,
+    yrcomponentlibComponent__React = yrcomponentlibComponent___require.React;
+
+var yrcomponentlibComponent__assign = $m['object-assign'].exports;
+var yrcomponentlibComponent__clock = $m['@yr/clock'].exports;
+var yrcomponentlibComponent__Debug = $m['debug'].exports;
+var yrcomponentlibComponent__isEqual = $m['@yr/is-equal'].exports;
+
+var yrcomponentlibComponent__DEFAULT_TRANSITION_DURATION = 250;
+var yrcomponentlibComponent__TIMEOUT = 20;
+
+var yrcomponentlibComponent__debug = yrcomponentlibComponent__Debug('yr:component');
+
+$m['@yr/component/lib/Component'].exports = function (_React$Component) {
+  babelHelpers.inherits(Component, _React$Component);
+
+  /**
+   * Constructor
+   * @param {Object} props
+   */
+  function Component(props) {
+    babelHelpers.classCallCheck(this, Component);
+
+    var _this = babelHelpers.possibleConstructorReturn(this, _React$Component.call(this, props));
+
+    _this.__timerID = 0;
+    _this.__transitionDuration = 'getTransitionDuration' in _this ? _this.getTransitionDuration() : yrcomponentlibComponent__DEFAULT_TRANSITION_DURATION;
+    // Set up initial state
+    _this.state = yrcomponentlibComponent__assign({}, _this.__state);
+    // Autobind mixin methods
+    if (_this.__bindableMethods) {
+      _this.__bindableMethods.forEach(function (method) {
+        _this[method] = _this[method].bind(_this);
+      });
+    }
+    return _this;
+  }
+
+  /**
+   * React: render
+   * @returns {React}
+   */
+
+  Component.prototype.render = function render() {
+    return this.__render(this.props, this.state);
+  };
+
+  /**
+   * React: shouldComponentUpdate
+   * @param {Object} nextProps
+   * @param {Object} nextState
+   * @returns {Boolean}
+   */
+
+  Component.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps, nextState) {
+    var changed = 'isEqual' in nextProps ? !this.props.isEqual(nextProps) : !yrcomponentlibComponent__isEqual(nextProps, this.props, null, yrcomponentlibComponent__debug);
+
+    if (!changed) {
+      changed = !yrcomponentlibComponent__isEqual(nextState, this.state, null, yrcomponentlibComponent__debug);
+      if (changed) yrcomponentlibComponent__debug('state changed for %s', this.displayName);
+    } else {
+      yrcomponentlibComponent__debug('props changed for %s', this.displayName);
+    }
+
+    if (changed && this.shouldComponentTransition(nextProps, nextState)) {
+      this.willTransition(nextState);
+    }
+
+    return changed;
+  };
+
+  /**
+   * Determine if component should transition based on 'nextProps' or 'nextState'
+   * @param {Object} nextProps
+   * @param {Object} nextState
+   * @returns {Boolean}
+   */
+
+  Component.prototype.shouldComponentTransition = function shouldComponentTransition(nextProps, nextState) {
+    return false;
+  };
+
+  /**
+   * Update 'state' for transition
+   * @param {Object} state
+   */
+
+  Component.prototype.willTransition = function willTransition(state) {
+    var _this2 = this;
+
+    if (this.__timerID) yrcomponentlibComponent__clock.cancel(this.__timerID);
+
+    // Generally a bad idea...
+    state.visibility = !state.visibility ? 1 : 2;
+
+    // frame/immediate doesn't leave enough time for redraw between states
+    this.__timerID = yrcomponentlibComponent__clock.timeout(yrcomponentlibComponent__TIMEOUT, function () {
+      _this2.isTransitioning();
+    });
+  };
+
+  /**
+   * Trigger transition state change
+   */
+
+  Component.prototype.isTransitioning = function isTransitioning() {
+    var _this3 = this;
+
+    this.setState({
+      visibility: this.state.visibility == 1 ? 2 : 1
+    });
+
+    this.__timerID = yrcomponentlibComponent__clock.timeout(this.__transitionDuration, function () {
+      _this3.didTransition();
+    });
+  };
+
+  /**
+   * Trigger transition state change
+   */
+
+  Component.prototype.didTransition = function didTransition() {
+    this.__timerID = 0;
+
+    this.setState({
+      visibility: this.state.visibility == 2 ? 3 : 0
+    });
+  };
+
+  /**
+   * React: componentWillUnmount
+   */
+
+  Component.prototype.componentWillUnmount = function componentWillUnmount() {
+    // Reset
+    if (this.state && this.state.visibility) this.state.visibility = 0;
+    if (this.__timerID) yrcomponentlibComponent__clock.cancel(this.__timerID);
+    if (this.__componentWillUnmount) this.__componentWillUnmount();
+  };
+
+  return Component;
+}(yrcomponentlibComponent__React.Component);
+/*≠≠ node_modules/@yr/component/lib/Component.js ≠≠*/
 
 
 /*== node_modules/@yr/component/index.js ==*/
@@ -22674,7 +22752,7 @@ function yrcomponent__processProps(props, specification) {
 
   if (!data) return;
 
-  if (process.env.NODE_ENV == 'development' && 'browser' == 'browser') {
+  if ('development' == 'development' && 'browser' == 'browser') {
     var ReactSecret = $m['react/lib/ReactPropTypesSecret'].exports;
 
     // Validate prop types
@@ -22688,14 +22766,14 @@ function yrcomponent__processProps(props, specification) {
 /*≠≠ node_modules/@yr/component/index.js ≠≠*/
 
 
-/*== src/js/lib/utils.js ==*/
-$m['src/js/lib/utils'] = { exports: {} };
+/*== src/lib/utils.js ==*/
+$m['src/lib/utils'] = { exports: {} };
 
-var srcjslibutils__component = $m['@yr/component'].exports;
+var srclibutils__component = $m['@yr/component'].exports;
 
-var srcjslibutils__MAX_WIDTH = 100;
+var srclibutils__MAX_WIDTH = 100;
 
-$m['src/js/lib/utils'].exports = {
+$m['src/lib/utils'].exports = {
   /**
    * Parse 'options'
    * @param {Object} options
@@ -22717,7 +22795,7 @@ $m['src/js/lib/utils'].exports = {
     opts.tint = options.tint || 1;
     opts.winter = options.winter;
     opts.variation = options.variation != null ? '' + options.variation : '';
-    opts.class = opts.primitive + opts.variation + '-primitive';
+    opts.class = '' + opts.primitive + opts.variation + '-primitive';
 
     return opts;
   },
@@ -22730,121 +22808,121 @@ $m['src/js/lib/utils'].exports = {
    * @returns {React}
    */
   getElement: function getElement(link, options) {
-    return srcjslibutils__component.el('use', {
+    return srclibutils__component.el('use', {
       className: options.class,
       xlinkHref: link,
       x: 0,
       y: 0,
       width: 100,
       height: 100,
-      transform: options.flip ? 'translate(' + (srcjslibutils__MAX_WIDTH * options.scaleX + options.x) + ',' + options.scaleY * options.y + ') scale(' + -1 * options.scaleX + ', ' + options.scaleY + ')' : 'translate(' + options.x + ',' + options.y + ') scale(' + options.scaleX + ', ' + options.scaleY + ')'
+      transform: options.flip ? 'translate(' + (srclibutils__MAX_WIDTH * options.scaleX + options.x) + ',' + options.scaleY * options.y + ') scale(' + -1 * options.scaleX + ', ' + options.scaleY + ')' : 'translate(' + options.x + ',' + options.y + ') scale(' + options.scaleX + ',' + options.scaleY + ')'
     });
   }
 };
-/*≠≠ src/js/lib/utils.js ≠≠*/
+/*≠≠ src/lib/utils.js ≠≠*/
 
 
-/*== src/js/lib/primitives/precipitation.js ==*/
-$m['src/js/lib/primitives/precipitation'] = { exports: {} };
+/*== src/lib/primitives/precipitation.js ==*/
+$m['src/lib/primitives/precipitation'] = { exports: {} };
 
-var srcjslibprimitivesprecipitation__utils = $m['src/js/lib/utils'].exports;
+var srclibprimitivesprecipitation__utils = $m['src/lib/utils'].exports;
 
 /**
  * Render precipitation svg primitive
  * @param {Object} options
  * @returns {String}
  */
-$m['src/js/lib/primitives/precipitation'].exports = function render(options) {
-  return srcjslibprimitivesprecipitation__utils.getElement('#' + options.primitive, options);
+$m['src/lib/primitives/precipitation'].exports = function render(options) {
+  return srclibprimitivesprecipitation__utils.getElement('#' + options.primitive, options);
 };
-/*≠≠ src/js/lib/primitives/precipitation.js ≠≠*/
+/*≠≠ src/lib/primitives/precipitation.js ≠≠*/
 
 
-/*== src/js/lib/primitives/lightning.js ==*/
-$m['src/js/lib/primitives/lightning'] = { exports: {} };
+/*== src/lib/primitives/lightning.js ==*/
+$m['src/lib/primitives/lightning'] = { exports: {} };
 
-var srcjslibprimitiveslightning__utils = $m['src/js/lib/utils'].exports;
+var srclibprimitiveslightning__utils = $m['src/lib/utils'].exports;
 
 /**
  * Render lightning svg primitive
  * @param {Object} options
  * @returns {String}
  */
-$m['src/js/lib/primitives/lightning'].exports = function render(options) {
-  return srcjslibprimitiveslightning__utils.getElement('#lightning', options);
+$m['src/lib/primitives/lightning'].exports = function render(options) {
+  return srclibprimitiveslightning__utils.getElement('#lightning', options);
 };
-/*≠≠ src/js/lib/primitives/lightning.js ≠≠*/
+/*≠≠ src/lib/primitives/lightning.js ≠≠*/
 
 
-/*== src/js/lib/primitives/fog.js ==*/
-$m['src/js/lib/primitives/fog'] = { exports: {} };
+/*== src/lib/primitives/fog.js ==*/
+$m['src/lib/primitives/fog'] = { exports: {} };
 
-var srcjslibprimitivesfog__utils = $m['src/js/lib/utils'].exports;
+var srclibprimitivesfog__utils = $m['src/lib/utils'].exports;
 
 /**
  * Render fog svg primitive
  * @param {Object} options
  * @returns {String}
  */
-$m['src/js/lib/primitives/fog'].exports = function render(options) {
-  return srcjslibprimitivesfog__utils.getElement('#fog', options);
+$m['src/lib/primitives/fog'].exports = function render(options) {
+  return srclibprimitivesfog__utils.getElement('#fog', options);
 };
-/*≠≠ src/js/lib/primitives/fog.js ≠≠*/
+/*≠≠ src/lib/primitives/fog.js ≠≠*/
 
 
-/*== src/js/lib/primitives/cloud.js ==*/
-$m['src/js/lib/primitives/cloud'] = { exports: {} };
+/*== src/lib/primitives/cloud.js ==*/
+$m['src/lib/primitives/cloud'] = { exports: {} };
 
-var srcjslibprimitivescloud__utils = $m['src/js/lib/utils'].exports;
+var srclibprimitivescloud__utils = $m['src/lib/utils'].exports;
 
 /**
  * Render cloud svg primitive
  * @param {Object} options
  * @returns {String}
  */
-$m['src/js/lib/primitives/cloud'].exports = function render(options) {
-  return srcjslibprimitivescloud__utils.getElement('#cloud', options);
+$m['src/lib/primitives/cloud'].exports = function render(options) {
+  return srclibprimitivescloud__utils.getElement('#cloud', options);
 };
-/*≠≠ src/js/lib/primitives/cloud.js ≠≠*/
+/*≠≠ src/lib/primitives/cloud.js ≠≠*/
 
 
-/*== src/js/lib/primitives/celestial.js ==*/
-$m['src/js/lib/primitives/celestial'] = { exports: {} };
+/*== src/lib/primitives/celestial.js ==*/
+$m['src/lib/primitives/celestial'] = { exports: {} };
 
-var srcjslibprimitivescelestial__utils = $m['src/js/lib/utils'].exports;
+var srclibprimitivescelestial__utils = $m['src/lib/utils'].exports;
 
 /**
  * Render sun, winter sun, or moon svg primitive
  * @param {Object} options
  * @returns {String}
  */
-$m['src/js/lib/primitives/celestial'].exports = function render() {
+$m['src/lib/primitives/celestial'].exports = function render() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-  return srcjslibprimitivescelestial__utils.getElement(options.primitive == 'moon' ? '#moon' : options.winter ? '#sunWinter' : '#sun', options);
+  return srclibprimitivescelestial__utils.getElement(options.primitive == 'moon' ? '#moon' : options.winter ? '#sunWinter' : '#sun', options);
 };
-/*≠≠ src/js/lib/primitives/celestial.js ≠≠*/
+/*≠≠ src/lib/primitives/celestial.js ≠≠*/
 
 
-/*== src/js/lib/primitives/index.js ==*/
-$m['src/js/lib/primitives/index'] = { exports: {} };
+/*== src/lib/primitives/index.js ==*/
+$m['src/lib/primitives/index'] = { exports: {} };
 
-var srcjslibprimitivesindex__celestial = $m['src/js/lib/primitives/celestial'].exports;
-var srcjslibprimitivesindex__cloud = $m['src/js/lib/primitives/cloud'].exports;
-var srcjslibprimitivesindex__fog = $m['src/js/lib/primitives/fog'].exports;
-var srcjslibprimitivesindex__lightning = $m['src/js/lib/primitives/lightning'].exports;
-var srcjslibprimitivesindex__precipitation = $m['src/js/lib/primitives/precipitation'].exports;
+var srclibprimitivesindex__celestial = $m['src/lib/primitives/celestial'].exports;
+var srclibprimitivesindex__cloud = $m['src/lib/primitives/cloud'].exports;
+var srclibprimitivesindex__fog = $m['src/lib/primitives/fog'].exports;
+var srclibprimitivesindex__lightning = $m['src/lib/primitives/lightning'].exports;
+var srclibprimitivesindex__precipitation = $m['src/lib/primitives/precipitation'].exports;
 
-$m['src/js/lib/primitives/index'].exports = {
-  cloud: srcjslibprimitivesindex__cloud,
-  fog: srcjslibprimitivesindex__fog,
-  lightning: srcjslibprimitivesindex__lightning,
-  moon: srcjslibprimitivesindex__celestial,
-  raindrop: srcjslibprimitivesindex__precipitation,
-  snowflake: srcjslibprimitivesindex__precipitation,
-  sun: srcjslibprimitivesindex__celestial
+$m['src/lib/primitives/index'].exports = {
+  cloud: srclibprimitivesindex__cloud,
+  fog: srclibprimitivesindex__fog,
+  lightning: srclibprimitivesindex__lightning,
+  moon: srclibprimitivesindex__celestial,
+  raindrop: srclibprimitivesindex__precipitation,
+  snowflake: srclibprimitivesindex__precipitation,
+  sun: srclibprimitivesindex__celestial
 };
-/*≠≠ src/js/lib/primitives/index.js ≠≠*/
+/*≠≠ src/lib/primitives/index.js ≠≠*/
 
 
 /*== node_modules/@yr/graphics-component/index.js ==*/
@@ -22907,9 +22985,9 @@ $m['@yr/graphics-component'].exports = {
 
         var rootImagePath = props.rootImagePath || options.rootImagePath || '';
 
-        if (rootImagePath && rootImagePath.charAt(rootImagePath.length - 1) != '/') rootImagePath += '/';
+        if (rootImagePath && rootImagePath.charAt(rootImagePath.length - 1) !== '/') rootImagePath += '/';
 
-        if (type == yrgraphicscomponent__TYPE_SVG) {
+        if (type === yrgraphicscomponent__TYPE_SVG) {
           var children = options.renderInnerSvg ? options.renderInnerSvg(id) : [yrgraphicscomponent__el('use', { xlinkHref: '#' + id, x: 0, y: 0, width: 100, height: 100 })];
 
           if (!Array.isArray(children)) children = [children];
@@ -22927,7 +23005,7 @@ $m['@yr/graphics-component'].exports = {
             width: options.width || '25px',
             viewBox: '0 0 100 100'
           });
-        } else if (type == yrgraphicscomponent__TYPE_IMG) {
+        } else if (type === yrgraphicscomponent__TYPE_IMG) {
           return yrgraphicscomponent__el('img', { src: '' + rootImagePath + id + '.png' });
         }
       }
@@ -22937,8 +23015,8 @@ $m['@yr/graphics-component'].exports = {
 /*≠≠ node_modules/@yr/graphics-component/index.js ≠≠*/
 
 
-/*== src/js/index.js ==*/
-$m['src/js/index'] = { exports: {} };
+/*== src/lib/index.js ==*/
+$m['src/lib/index'] = { exports: {} };
 
 /**
  * Yr weather symbols
@@ -22947,12 +23025,12 @@ $m['src/js/index'] = { exports: {} };
  * @license MIT
  */
 
-var srcjsindex__graphicsComponent = $m['@yr/graphics-component'].exports;
-var srcjsindex__primitives = $m['src/js/lib/primitives/index'].exports;
-var srcjsindex__recipes = $m['src/js/lib/recipes'].exports;
-var srcjsindex__utils = $m['src/js/lib/utils'].exports;
+var srclibindex__graphicsComponent = $m['@yr/graphics-component'].exports;
+var srclibindex__primitives = $m['src/lib/primitives/index'].exports;
+var srclibindex__recipes = $m['src/lib/recipes'].exports;
+var srclibindex__utils = $m['src/lib/utils'].exports;
 
-$m['src/js/index'].exports = {
+$m['src/lib/index'].exports = {
   /**
    * Instance factory
    * @param {Object} options
@@ -22961,9 +23039,9 @@ $m['src/js/index'].exports = {
   create: function create() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-    options.renderInnerSvg = srcjsindex__renderInnerSvg;
+    options.renderInnerSvg = srclibindex__renderInnerSvg;
 
-    return srcjsindex__graphicsComponent.create(options);
+    return srclibindex__graphicsComponent.create(options);
   }
 };
 
@@ -22972,18 +23050,18 @@ $m['src/js/index'].exports = {
  * @param {String} id
  * @returns {String}
  */
-function srcjsindex__renderInnerSvg(id) {
-  var recipe = srcjsindex__recipes[id];
+function srclibindex__renderInnerSvg(id) {
+  var recipe = srclibindex__recipes[id];
 
   if (!recipe) return null;
 
   return recipe.map(function (item) {
-    var options = srcjsindex__utils.parse(item);
+    var options = srclibindex__utils.parse(item);
 
-    return srcjsindex__primitives[options.primitive](options);
+    return srclibindex__primitives[options.primitive](options);
   });
 }
-/*≠≠ src/js/index.js ≠≠*/
+/*≠≠ src/lib/index.js ≠≠*/
 
 
 /*== node_modules/@yr/graphics-component/previewGrid.js ==*/
@@ -22994,11 +23072,13 @@ var yrgraphicscomponentpreviewGrid___require = $m['@yr/component'].exports,
     yrgraphicscomponentpreviewGrid__stateless = yrgraphicscomponentpreviewGrid___require.stateless;
 
 $m['@yr/graphics-component/previewGrid'].exports = yrgraphicscomponentpreviewGrid__stateless({
-    render: function render(props) {
-        return yrgraphicscomponentpreviewGrid__el('div', { children: props.ids.map(function (id) {
-                return yrgraphicscomponentpreviewGrid__el('div', { className: 'graphic', id: 'graphic-' + id }, yrgraphicscomponentpreviewGrid__el('h2', {}, id), yrgraphicscomponentpreviewGrid__el('span', { className: 'graphics-group' }, props.graphic({ id: id, type: 'svg', fallback: true }), yrgraphicscomponentpreviewGrid__el('h3', {}, 'svg')), yrgraphicscomponentpreviewGrid__el('span', { className: 'graphics-group' }, props.graphic({ id: id, type: 'img' }), yrgraphicscomponentpreviewGrid__el('h3', {}, 'png')));
-            }) });
-    }
+  render: function render(props) {
+    return yrgraphicscomponentpreviewGrid__el('div', {
+      children: props.ids.map(function (id) {
+        return yrgraphicscomponentpreviewGrid__el('div', { className: 'graphic', id: 'graphic-' + id }, yrgraphicscomponentpreviewGrid__el('h2', {}, id), yrgraphicscomponentpreviewGrid__el('span', { className: 'graphics-group' }, props.graphic({ id: id, type: 'svg', fallback: true }), yrgraphicscomponentpreviewGrid__el('h3', {}, 'svg')), yrgraphicscomponentpreviewGrid__el('span', { className: 'graphics-group' }, props.graphic({ id: id, type: 'img' }), yrgraphicscomponentpreviewGrid__el('h3', {}, 'png')));
+      })
+    });
+  }
 });
 /*≠≠ node_modules/@yr/graphics-component/previewGrid.js ≠≠*/
 
@@ -23009,8 +23089,8 @@ var srcpreviewpreview___require = $m['@yr/component'].exports,
     srcpreviewpreview__ReactDOM = srcpreviewpreview___require.ReactDOM;
 
 var srcpreviewpreview__grid = $m['@yr/graphics-component/previewGrid'].exports;
-var srcpreviewpreview__recipes = $m['src/js/lib/recipes'].exports;
-var srcpreviewpreview__symbolComponent = $m['src/js/index'].exports;
+var srcpreviewpreview__recipes = $m['src/lib/recipes'].exports;
+var srcpreviewpreview__symbolComponent = $m['src/lib/index'].exports;
 
 var srcpreviewpreview__el = document.getElementById('viewport');
 var srcpreviewpreview__symbol = srcpreviewpreview__symbolComponent.create({ rootImagePath: 'png' });

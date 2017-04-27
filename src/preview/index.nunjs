@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Yr weather symbols</title>
-  <link inline href="../../node_modules/@yr/graphics-component/src/previewGrid.css">
+  <link inline href="@yr/graphics-component/src/previewGrid.css">
   <link inline rel="stylesheet" type="text/css" href="../index.css">
 </head>
 <body>

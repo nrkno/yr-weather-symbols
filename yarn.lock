@@ -23,8 +23,8 @@
     react-dom "15.4.2"
 
 "@yr/graphics-component@3.1.x":
-  version "3.1.7"
-  resolved "https://registry.yarnpkg.com/@yr/graphics-component/-/graphics-component-3.1.7.tgz#c00fcfb7e700765ad08111782abc2841ac0bbffb"
+  version "3.1.9"
+  resolved "https://registry.yarnpkg.com/@yr/graphics-component/-/graphics-component-3.1.9.tgz#baf345350e3a653033f333303edb583ce3e53c75"
   dependencies:
     "@yr/component" "3.1.x"
   optionalDependencies:
