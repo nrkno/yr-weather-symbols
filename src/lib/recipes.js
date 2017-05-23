@@ -54,14 +54,14 @@ const base = {
     {
       primitive: 'moon',
       x: 15,
-      y: 5
+      y: 15
     }
   ],
   moon2: [
     {
       primitive: 'moon',
       x: 5,
-      y: 5
+      y: 15
     }
   ],
   moon3: [

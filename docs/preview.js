@@ -60,67 +60,6 @@ if ('browser' != 'browser') {
 })(typeof global === "undefined" ? self : global);
 
 (function () {
-/*== node_modules/react/lib/KeyEscapeUtils.js ==*/
-$m['react/lib/KeyEscapeUtils'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-/**
- * Escape and wrap key so it is safe to use as a reactid
- *
- * @param {string} key to be escaped.
- * @return {string} the escaped key.
- */
-
-function reactlibKeyEscapeUtils__escape(key) {
-  var escapeRegex = /[=:]/g;
-  var escaperLookup = {
-    '=': '=0',
-    ':': '=2'
-  };
-  var escapedString = ('' + key).replace(escapeRegex, function (match) {
-    return escaperLookup[match];
-  });
-
-  return '$' + escapedString;
-}
-
-/**
- * Unescape and unwrap key for human-readable display
- *
- * @param {string} key to unescape.
- * @return {string} the unescaped key.
- */
-function reactlibKeyEscapeUtils__unescape(key) {
-  var unescapeRegex = /(=0|=2)/g;
-  var unescaperLookup = {
-    '=0': '=',
-    '=2': ':'
-  };
-  var keySubstring = key[0] === '.' && key[1] === '$' ? key.substring(2) : key.substring(1);
-
-  return ('' + keySubstring).replace(unescapeRegex, function (match) {
-    return unescaperLookup[match];
-  });
-}
-
-var reactlibKeyEscapeUtils__KeyEscapeUtils = {
-  escape: reactlibKeyEscapeUtils__escape,
-  unescape: reactlibKeyEscapeUtils__unescape
-};
-
-$m['react/lib/KeyEscapeUtils'].exports = reactlibKeyEscapeUtils__KeyEscapeUtils;
-/*≠≠ node_modules/react/lib/KeyEscapeUtils.js ≠≠*/
-
-
 /*== node_modules/react/lib/ReactPropTypesSecret.js ==*/
 $m['react/lib/ReactPropTypesSecret'] = { exports: {} };
 /**
@@ -138,6 +77,48 @@ var reactlibReactPropTypesSecret__ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THI
 
 $m['react/lib/ReactPropTypesSecret'].exports = reactlibReactPropTypesSecret__ReactPropTypesSecret;
 /*≠≠ node_modules/react/lib/ReactPropTypesSecret.js ≠≠*/
+
+
+/*== node_modules/fbjs/lib/getActiveElement.js ==*/
+$m['fbjs/lib/getActiveElement'] = { exports: {} };
+
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @typechecks
+ */
+
+/* eslint-disable fb-www/typeof-undefined */
+
+/**
+ * Same as document.activeElement but wraps in a try-catch block. In IE it is
+ * not safe to call document.activeElement if there is nothing focused.
+ *
+ * The activeElement will be null only if the document or document body is not
+ * yet defined.
+ *
+ * @param {?DOMDocument} doc Defaults to current document.
+ * @return {?DOMElement}
+ */
+function fbjslibgetActiveElement__getActiveElement(doc) /*?DOMElement*/{
+  doc = doc || (typeof document !== 'undefined' ? document : undefined);
+  if (typeof doc === 'undefined') {
+    return null;
+  }
+  try {
+    return doc.activeElement || doc.body;
+  } catch (e) {
+    return doc.body;
+  }
+}
+
+$m['fbjs/lib/getActiveElement'].exports = fbjslibgetActiveElement__getActiveElement;
+/*≠≠ node_modules/fbjs/lib/getActiveElement.js ≠≠*/
 
 
 /*== node_modules/ms/index.js ==*/
@@ -187,7 +168,7 @@ $m['ms'].exports = function (val, options) {
 
 function ms__parse(str) {
   str = String(str);
-  if (str.length > 10000) {
+  if (str.length > 100) {
     return;
   }
   var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str);
@@ -288,46 +269,57 @@ function ms__plural(ms, n, name) {
 /*≠≠ node_modules/ms/index.js ≠≠*/
 
 
-/*== node_modules/fbjs/lib/getActiveElement.js ==*/
-$m['fbjs/lib/getActiveElement'] = { exports: {} };
-
+/*== node_modules/react-dom/lib/isTextInputElement.js ==*/
+$m['react-dom/lib/isTextInputElement'] = { exports: {} };
 /**
- * Copyright (c) 2013-present, Facebook, Inc.
+ * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * @typechecks
+ * 
  */
-
-/* eslint-disable fb-www/typeof-undefined */
 
 /**
- * Same as document.activeElement but wraps in a try-catch block. In IE it is
- * not safe to call document.activeElement if there is nothing focused.
- *
- * The activeElement will be null only if the document or document body is not
- * yet defined.
- *
- * @param {?DOMDocument} doc Defaults to current document.
- * @return {?DOMElement}
+ * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/the-input-element.html#input-type-attr-summary
  */
-function fbjslibgetActiveElement__getActiveElement(doc) /*?DOMElement*/{
-  doc = doc || (typeof document !== 'undefined' ? document : undefined);
-  if (typeof doc === 'undefined') {
-    return null;
+
+var reactdomlibisTextInputElement__supportedInputTypes = {
+  'color': true,
+  'date': true,
+  'datetime': true,
+  'datetime-local': true,
+  'email': true,
+  'month': true,
+  'number': true,
+  'password': true,
+  'range': true,
+  'search': true,
+  'tel': true,
+  'text': true,
+  'time': true,
+  'url': true,
+  'week': true
+};
+
+function reactdomlibisTextInputElement__isTextInputElement(elem) {
+  var nodeName = elem && elem.nodeName && elem.nodeName.toLowerCase();
+
+  if (nodeName === 'input') {
+    return !!reactdomlibisTextInputElement__supportedInputTypes[elem.type];
   }
-  try {
-    return doc.activeElement || doc.body;
-  } catch (e) {
-    return doc.body;
+
+  if (nodeName === 'textarea') {
+    return true;
   }
+
+  return false;
 }
 
-$m['fbjs/lib/getActiveElement'].exports = fbjslibgetActiveElement__getActiveElement;
-/*≠≠ node_modules/fbjs/lib/getActiveElement.js ≠≠*/
+$m['react-dom/lib/isTextInputElement'].exports = reactdomlibisTextInputElement__isTextInputElement;
+/*≠≠ node_modules/react-dom/lib/isTextInputElement.js ≠≠*/
 
 
 /*== node_modules/fbjs/lib/focusNode.js ==*/
@@ -359,7 +351,7 @@ $m['fbjs/lib/focusNode'].exports = fbjslibfocusNode__focusNode;
 /*≠≠ node_modules/fbjs/lib/focusNode.js ≠≠*/
 
 
-/*== node_modules/@yr/clock/node_mo...nce-now/lib/performance-now.js ==*/
+/*== node_modules/performance-now/lib/performance-now.js ==*/
 $m['performance-now'] = { exports: {} };
 // Generated by CoffeeScript 1.12.2
 (function () {
@@ -389,42 +381,6 @@ $m['performance-now'] = { exports: {} };
     loadTime = Date.now();
   } else {
     $m['performance-now'].exports = function () {
-      return new Date().getTime() - loadTime;
-    };
-    loadTime = new Date().getTime();
-  }
-}).call(undefined);
-/*≠≠ node_modules/@yr/clock/node_mo...nce-now/lib/performance-now.js ≠≠*/
-
-
-/*== node_modules/performance-now/lib/performance-now.js ==*/
-$m['performance-now#0.2.0'] = { exports: {} };
-// Generated by CoffeeScript 1.7.1
-(function () {
-  var getNanoSeconds, hrtime, loadTime;
-
-  if (typeof performance !== "undefined" && performance !== null && performance.now) {
-    $m['performance-now#0.2.0'].exports = function () {
-      return performance.now();
-    };
-  } else if (typeof process !== "undefined" && process !== null && process.hrtime) {
-    $m['performance-now#0.2.0'].exports = function () {
-      return (getNanoSeconds() - loadTime) / 1e6;
-    };
-    hrtime = process.hrtime;
-    getNanoSeconds = function getNanoSeconds() {
-      var hr;
-      hr = hrtime();
-      return hr[0] * 1e9 + hr[1];
-    };
-    loadTime = getNanoSeconds();
-  } else if (Date.now) {
-    $m['performance-now#0.2.0'].exports = function () {
-      return Date.now() - loadTime;
-    };
-    loadTime = Date.now();
-  } else {
-    $m['performance-now#0.2.0'].exports = function () {
       return new Date().getTime() - loadTime;
     };
     loadTime = new Date().getTime();
@@ -1751,449 +1707,6 @@ $m['react-dom/lib/ARIADOMPropertyConfig'].exports = reactdomlibARIADOMPropertyCo
 /*≠≠ node_modules/react-dom/lib/ARIADOMPropertyConfig.js ≠≠*/
 
 
-/*== node_modules/react-dom/lib/getEventTarget.js ==*/
-$m['react-dom/lib/getEventTarget'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-/**
- * Gets the target node from a native browser event by accounting for
- * inconsistencies in browser DOM APIs.
- *
- * @param {object} nativeEvent Native browser event.
- * @return {DOMEventTarget} Target node.
- */
-
-function reactdomlibgetEventTarget__getEventTarget(nativeEvent) {
-  var target = nativeEvent.target || nativeEvent.srcElement || window;
-
-  // Normalize SVG <use> element events #4963
-  if (target.correspondingUseElement) {
-    target = target.correspondingUseElement;
-  }
-
-  // Safari may fire events on text nodes (Node.TEXT_NODE is 3).
-  // @see http://www.quirksmode.org/js/events_properties.html
-  return target.nodeType === 3 ? target.parentNode : target;
-}
-
-$m['react-dom/lib/getEventTarget'].exports = reactdomlibgetEventTarget__getEventTarget;
-/*≠≠ node_modules/react-dom/lib/getEventTarget.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/shouldUpdateReactComponent.js ==*/
-$m['react-dom/lib/shouldUpdateReactComponent'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-/**
- * Given a `prevElement` and `nextElement`, determines if the existing
- * instance should be updated as opposed to being destroyed or replaced by a new
- * instance. Both arguments are elements. This ensures that this logic can
- * operate on stateless trees without any backing instance.
- *
- * @param {?object} prevElement
- * @param {?object} nextElement
- * @return {boolean} True if the existing instance should be updated.
- * @protected
- */
-
-function reactdomlibshouldUpdateReactComponent__shouldUpdateReactComponent(prevElement, nextElement) {
-  var prevEmpty = prevElement === null || prevElement === false;
-  var nextEmpty = nextElement === null || nextElement === false;
-  if (prevEmpty || nextEmpty) {
-    return prevEmpty === nextEmpty;
-  }
-
-  var prevType = typeof prevElement;
-  var nextType = typeof nextElement;
-  if (prevType === 'string' || prevType === 'number') {
-    return nextType === 'string' || nextType === 'number';
-  } else {
-    return nextType === 'object' && prevElement.type === nextElement.type && prevElement.key === nextElement.key;
-  }
-}
-
-$m['react-dom/lib/shouldUpdateReactComponent'].exports = reactdomlibshouldUpdateReactComponent__shouldUpdateReactComponent;
-/*≠≠ node_modules/react-dom/lib/shouldUpdateReactComponent.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/cre...icrosoftUnsafeLocalFunction.js ==*/
-$m['react-dom/lib/createMicrosoftUnsafeLocalFunction'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-/* globals MSApp */
-
-/**
- * Create a function which has 'unsafe' privileges (required by windows8 apps)
- */
-
-var reactdomlibcreateMicrosoftUnsafeLocalFunction__createMicrosoftUnsafeLocalFunction = function (func) {
-  if (typeof MSApp !== 'undefined' && MSApp.execUnsafeLocalFunction) {
-    return function (arg0, arg1, arg2, arg3) {
-      MSApp.execUnsafeLocalFunction(function () {
-        return func(arg0, arg1, arg2, arg3);
-      });
-    };
-  } else {
-    return func;
-  }
-};
-
-$m['react-dom/lib/createMicrosoftUnsafeLocalFunction'].exports = reactdomlibcreateMicrosoftUnsafeLocalFunction__createMicrosoftUnsafeLocalFunction;
-/*≠≠ node_modules/react-dom/lib/cre...icrosoftUnsafeLocalFunction.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/DOMNamespaces.js ==*/
-$m['react-dom/lib/DOMNamespaces'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-var reactdomlibDOMNamespaces__DOMNamespaces = {
-  html: 'http://www.w3.org/1999/xhtml',
-  mathml: 'http://www.w3.org/1998/Math/MathML',
-  svg: 'http://www.w3.org/2000/svg'
-};
-
-$m['react-dom/lib/DOMNamespaces'].exports = reactdomlibDOMNamespaces__DOMNamespaces;
-/*≠≠ node_modules/react-dom/lib/DOMNamespaces.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/getEventModifierState.js ==*/
-$m['react-dom/lib/getEventModifierState'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-/**
- * Translation from modifier key to the associated property in the event.
- * @see http://www.w3.org/TR/DOM-Level-3-Events/#keys-Modifiers
- */
-
-var reactdomlibgetEventModifierState__modifierKeyToProp = {
-  'Alt': 'altKey',
-  'Control': 'ctrlKey',
-  'Meta': 'metaKey',
-  'Shift': 'shiftKey'
-};
-
-// IE8 does not implement getModifierState so we simply map it to the only
-// modifier keys exposed by the event itself, does not support Lock-keys.
-// Currently, all major browsers except Chrome seems to support Lock-keys.
-function reactdomlibgetEventModifierState__modifierStateGetter(keyArg) {
-  var syntheticEvent = this;
-  var nativeEvent = syntheticEvent.nativeEvent;
-  if (nativeEvent.getModifierState) {
-    return nativeEvent.getModifierState(keyArg);
-  }
-  var keyProp = reactdomlibgetEventModifierState__modifierKeyToProp[keyArg];
-  return keyProp ? !!nativeEvent[keyProp] : false;
-}
-
-function reactdomlibgetEventModifierState__getEventModifierState(nativeEvent) {
-  return reactdomlibgetEventModifierState__modifierStateGetter;
-}
-
-$m['react-dom/lib/getEventModifierState'].exports = reactdomlibgetEventModifierState__getEventModifierState;
-/*≠≠ node_modules/react-dom/lib/getEventModifierState.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/getNextDebugID.js ==*/
-$m['react-dom/lib/getNextDebugID'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-var reactdomlibgetNextDebugID__nextDebugID = 1;
-
-function reactdomlibgetNextDebugID__getNextDebugID() {
-  return reactdomlibgetNextDebugID__nextDebugID++;
-}
-
-$m['react-dom/lib/getNextDebugID'].exports = reactdomlibgetNextDebugID__getNextDebugID;
-/*≠≠ node_modules/react-dom/lib/getNextDebugID.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/getEventCharCode.js ==*/
-$m['react-dom/lib/getEventCharCode'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-/**
- * `charCode` represents the actual "character code" and is safe to use with
- * `String.fromCharCode`. As such, only keys that correspond to printable
- * characters produce a valid `charCode`, the only exception to this is Enter.
- * The Tab-key is considered non-printable and does not have a `charCode`,
- * presumably because it does not produce a tab-character in browsers.
- *
- * @param {object} nativeEvent Native browser event.
- * @return {number} Normalized `charCode` property.
- */
-
-function reactdomlibgetEventCharCode__getEventCharCode(nativeEvent) {
-  var charCode;
-  var keyCode = nativeEvent.keyCode;
-
-  if ('charCode' in nativeEvent) {
-    charCode = nativeEvent.charCode;
-
-    // FF does not set `charCode` for the Enter-key, check against `keyCode`.
-    if (charCode === 0 && keyCode === 13) {
-      charCode = 13;
-    }
-  } else {
-    // IE8 does not implement `charCode`, but `keyCode` has the correct value.
-    charCode = keyCode;
-  }
-
-  // Some non-printable keys are reported in `charCode`/`keyCode`, discard them.
-  // Must not discard the (non-)printable Enter-key.
-  if (charCode >= 32 || charCode === 13) {
-    return charCode;
-  }
-
-  return 0;
-}
-
-$m['react-dom/lib/getEventCharCode'].exports = reactdomlibgetEventCharCode__getEventCharCode;
-/*≠≠ node_modules/react-dom/lib/getEventCharCode.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactEmptyComponent.js ==*/
-$m['react-dom/lib/ReactEmptyComponent'] = { exports: {} };
-/**
- * Copyright 2014-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-var reactdomlibReactEmptyComponent__emptyComponentFactory;
-
-var reactdomlibReactEmptyComponent__ReactEmptyComponentInjection = {
-  injectEmptyComponentFactory: function (factory) {
-    reactdomlibReactEmptyComponent__emptyComponentFactory = factory;
-  }
-};
-
-var reactdomlibReactEmptyComponent__ReactEmptyComponent = {
-  create: function (instantiate) {
-    return reactdomlibReactEmptyComponent__emptyComponentFactory(instantiate);
-  }
-};
-
-reactdomlibReactEmptyComponent__ReactEmptyComponent.injection = reactdomlibReactEmptyComponent__ReactEmptyComponentInjection;
-
-$m['react-dom/lib/ReactEmptyComponent'].exports = reactdomlibReactEmptyComponent__ReactEmptyComponent;
-/*≠≠ node_modules/react-dom/lib/ReactEmptyComponent.js ≠≠*/
-
-
-/*== node_modules/fbjs/lib/shallowEqual.js ==*/
-$m['fbjs/lib/shallowEqual'] = { exports: {} };
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @typechecks
- * 
- */
-
-/*eslint-disable no-self-compare */
-
-var fbjslibshallowEqual__hasOwnProperty = Object.prototype.hasOwnProperty;
-
-/**
- * inlined Object.is polyfill to avoid requiring consumers ship their own
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
- */
-function fbjslibshallowEqual__is(x, y) {
-  // SameValue algorithm
-  if (x === y) {
-    // Steps 1-5, 7-10
-    // Steps 6.b-6.e: +0 != -0
-    // Added the nonzero y check to make Flow happy, but it is redundant
-    return x !== 0 || y !== 0 || 1 / x === 1 / y;
-  } else {
-    // Step 6.a: NaN == NaN
-    return x !== x && y !== y;
-  }
-}
-
-/**
- * Performs equality by iterating through keys on an object and returning false
- * when any key has values which are not strictly equal between the arguments.
- * Returns true when the values of all keys are strictly equal.
- */
-function fbjslibshallowEqual__shallowEqual(objA, objB) {
-  if (fbjslibshallowEqual__is(objA, objB)) {
-    return true;
-  }
-
-  if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) {
-    return false;
-  }
-
-  var keysA = Object.keys(objA);
-  var keysB = Object.keys(objB);
-
-  if (keysA.length !== keysB.length) {
-    return false;
-  }
-
-  // Test for A's keys different from B.
-  for (var i = 0; i < keysA.length; i++) {
-    if (!fbjslibshallowEqual__hasOwnProperty.call(objB, keysA[i]) || !fbjslibshallowEqual__is(objA[keysA[i]], objB[keysA[i]])) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-$m['fbjs/lib/shallowEqual'].exports = fbjslibshallowEqual__shallowEqual;
-/*≠≠ node_modules/fbjs/lib/shallowEqual.js ≠≠*/
-
-
-/*== node_modules/fbjs/lib/emptyObject.js ==*/
-$m['fbjs/lib/emptyObject'] = { exports: {} };
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-var fbjslibemptyObject__emptyObject = {};
-
-if ('development' !== 'production') {
-  Object.freeze(fbjslibemptyObject__emptyObject);
-}
-
-$m['fbjs/lib/emptyObject'].exports = fbjslibemptyObject__emptyObject;
-/*≠≠ node_modules/fbjs/lib/emptyObject.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactPropTypesSecret.js ==*/
-$m['react-dom/lib/ReactPropTypesSecret'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-var reactdomlibReactPropTypesSecret__ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
-
-$m['react-dom/lib/ReactPropTypesSecret'].exports = reactdomlibReactPropTypesSecret__ReactPropTypesSecret;
-/*≠≠ node_modules/react-dom/lib/ReactPropTypesSecret.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactPropTypeLocationNames.js ==*/
-$m['react-dom/lib/ReactPropTypeLocationNames'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * 
- */
-
-var reactdomlibReactPropTypeLocationNames__ReactPropTypeLocationNames = {};
-
-if ('development' !== 'production') {
-  reactdomlibReactPropTypeLocationNames__ReactPropTypeLocationNames = {
-    prop: 'prop',
-    context: 'context',
-    childContext: 'child context'
-  };
-}
-
-$m['react-dom/lib/ReactPropTypeLocationNames'].exports = reactdomlibReactPropTypeLocationNames__ReactPropTypeLocationNames;
-/*≠≠ node_modules/react-dom/lib/ReactPropTypeLocationNames.js ≠≠*/
-
-
-/*== node_modules/react-dom/lib/ReactVersion.js ==*/
-$m['react-dom/lib/ReactVersion'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-$m['react-dom/lib/ReactVersion'].exports = '15.4.2';
-/*≠≠ node_modules/react-dom/lib/ReactVersion.js ≠≠*/
-
-
 /*== src/lib/recipes.js ==*/
 $m['src/lib/recipes'] = { exports: {} };
 
@@ -2238,12 +1751,12 @@ var srclibrecipes__base = {
   moon1: [{
     primitive: 'moon',
     x: 15,
-    y: 5
+    y: 15
   }],
   moon2: [{
     primitive: 'moon',
     x: 5,
-    y: 5
+    y: 15
   }],
   moon3: [{
     primitive: 'moon',
@@ -2755,6 +2268,449 @@ $m['src/lib/recipes'].exports = {
   34: srclibrecipes__base['29']
 };
 /*≠≠ src/lib/recipes.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/shouldUpdateReactComponent.js ==*/
+$m['react-dom/lib/shouldUpdateReactComponent'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+/**
+ * Given a `prevElement` and `nextElement`, determines if the existing
+ * instance should be updated as opposed to being destroyed or replaced by a new
+ * instance. Both arguments are elements. This ensures that this logic can
+ * operate on stateless trees without any backing instance.
+ *
+ * @param {?object} prevElement
+ * @param {?object} nextElement
+ * @return {boolean} True if the existing instance should be updated.
+ * @protected
+ */
+
+function reactdomlibshouldUpdateReactComponent__shouldUpdateReactComponent(prevElement, nextElement) {
+  var prevEmpty = prevElement === null || prevElement === false;
+  var nextEmpty = nextElement === null || nextElement === false;
+  if (prevEmpty || nextEmpty) {
+    return prevEmpty === nextEmpty;
+  }
+
+  var prevType = typeof prevElement;
+  var nextType = typeof nextElement;
+  if (prevType === 'string' || prevType === 'number') {
+    return nextType === 'string' || nextType === 'number';
+  } else {
+    return nextType === 'object' && prevElement.type === nextElement.type && prevElement.key === nextElement.key;
+  }
+}
+
+$m['react-dom/lib/shouldUpdateReactComponent'].exports = reactdomlibshouldUpdateReactComponent__shouldUpdateReactComponent;
+/*≠≠ node_modules/react-dom/lib/shouldUpdateReactComponent.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/cre...icrosoftUnsafeLocalFunction.js ==*/
+$m['react-dom/lib/createMicrosoftUnsafeLocalFunction'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+/* globals MSApp */
+
+/**
+ * Create a function which has 'unsafe' privileges (required by windows8 apps)
+ */
+
+var reactdomlibcreateMicrosoftUnsafeLocalFunction__createMicrosoftUnsafeLocalFunction = function (func) {
+  if (typeof MSApp !== 'undefined' && MSApp.execUnsafeLocalFunction) {
+    return function (arg0, arg1, arg2, arg3) {
+      MSApp.execUnsafeLocalFunction(function () {
+        return func(arg0, arg1, arg2, arg3);
+      });
+    };
+  } else {
+    return func;
+  }
+};
+
+$m['react-dom/lib/createMicrosoftUnsafeLocalFunction'].exports = reactdomlibcreateMicrosoftUnsafeLocalFunction__createMicrosoftUnsafeLocalFunction;
+/*≠≠ node_modules/react-dom/lib/cre...icrosoftUnsafeLocalFunction.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/DOMNamespaces.js ==*/
+$m['react-dom/lib/DOMNamespaces'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+var reactdomlibDOMNamespaces__DOMNamespaces = {
+  html: 'http://www.w3.org/1999/xhtml',
+  mathml: 'http://www.w3.org/1998/Math/MathML',
+  svg: 'http://www.w3.org/2000/svg'
+};
+
+$m['react-dom/lib/DOMNamespaces'].exports = reactdomlibDOMNamespaces__DOMNamespaces;
+/*≠≠ node_modules/react-dom/lib/DOMNamespaces.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/getEventTarget.js ==*/
+$m['react-dom/lib/getEventTarget'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+/**
+ * Gets the target node from a native browser event by accounting for
+ * inconsistencies in browser DOM APIs.
+ *
+ * @param {object} nativeEvent Native browser event.
+ * @return {DOMEventTarget} Target node.
+ */
+
+function reactdomlibgetEventTarget__getEventTarget(nativeEvent) {
+  var target = nativeEvent.target || nativeEvent.srcElement || window;
+
+  // Normalize SVG <use> element events #4963
+  if (target.correspondingUseElement) {
+    target = target.correspondingUseElement;
+  }
+
+  // Safari may fire events on text nodes (Node.TEXT_NODE is 3).
+  // @see http://www.quirksmode.org/js/events_properties.html
+  return target.nodeType === 3 ? target.parentNode : target;
+}
+
+$m['react-dom/lib/getEventTarget'].exports = reactdomlibgetEventTarget__getEventTarget;
+/*≠≠ node_modules/react-dom/lib/getEventTarget.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/getNextDebugID.js ==*/
+$m['react-dom/lib/getNextDebugID'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var reactdomlibgetNextDebugID__nextDebugID = 1;
+
+function reactdomlibgetNextDebugID__getNextDebugID() {
+  return reactdomlibgetNextDebugID__nextDebugID++;
+}
+
+$m['react-dom/lib/getNextDebugID'].exports = reactdomlibgetNextDebugID__getNextDebugID;
+/*≠≠ node_modules/react-dom/lib/getNextDebugID.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/getEventModifierState.js ==*/
+$m['react-dom/lib/getEventModifierState'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+/**
+ * Translation from modifier key to the associated property in the event.
+ * @see http://www.w3.org/TR/DOM-Level-3-Events/#keys-Modifiers
+ */
+
+var reactdomlibgetEventModifierState__modifierKeyToProp = {
+  'Alt': 'altKey',
+  'Control': 'ctrlKey',
+  'Meta': 'metaKey',
+  'Shift': 'shiftKey'
+};
+
+// IE8 does not implement getModifierState so we simply map it to the only
+// modifier keys exposed by the event itself, does not support Lock-keys.
+// Currently, all major browsers except Chrome seems to support Lock-keys.
+function reactdomlibgetEventModifierState__modifierStateGetter(keyArg) {
+  var syntheticEvent = this;
+  var nativeEvent = syntheticEvent.nativeEvent;
+  if (nativeEvent.getModifierState) {
+    return nativeEvent.getModifierState(keyArg);
+  }
+  var keyProp = reactdomlibgetEventModifierState__modifierKeyToProp[keyArg];
+  return keyProp ? !!nativeEvent[keyProp] : false;
+}
+
+function reactdomlibgetEventModifierState__getEventModifierState(nativeEvent) {
+  return reactdomlibgetEventModifierState__modifierStateGetter;
+}
+
+$m['react-dom/lib/getEventModifierState'].exports = reactdomlibgetEventModifierState__getEventModifierState;
+/*≠≠ node_modules/react-dom/lib/getEventModifierState.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactEmptyComponent.js ==*/
+$m['react-dom/lib/ReactEmptyComponent'] = { exports: {} };
+/**
+ * Copyright 2014-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+var reactdomlibReactEmptyComponent__emptyComponentFactory;
+
+var reactdomlibReactEmptyComponent__ReactEmptyComponentInjection = {
+  injectEmptyComponentFactory: function (factory) {
+    reactdomlibReactEmptyComponent__emptyComponentFactory = factory;
+  }
+};
+
+var reactdomlibReactEmptyComponent__ReactEmptyComponent = {
+  create: function (instantiate) {
+    return reactdomlibReactEmptyComponent__emptyComponentFactory(instantiate);
+  }
+};
+
+reactdomlibReactEmptyComponent__ReactEmptyComponent.injection = reactdomlibReactEmptyComponent__ReactEmptyComponentInjection;
+
+$m['react-dom/lib/ReactEmptyComponent'].exports = reactdomlibReactEmptyComponent__ReactEmptyComponent;
+/*≠≠ node_modules/react-dom/lib/ReactEmptyComponent.js ≠≠*/
+
+
+/*== node_modules/fbjs/lib/shallowEqual.js ==*/
+$m['fbjs/lib/shallowEqual'] = { exports: {} };
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * @typechecks
+ * 
+ */
+
+/*eslint-disable no-self-compare */
+
+var fbjslibshallowEqual__hasOwnProperty = Object.prototype.hasOwnProperty;
+
+/**
+ * inlined Object.is polyfill to avoid requiring consumers ship their own
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+ */
+function fbjslibshallowEqual__is(x, y) {
+  // SameValue algorithm
+  if (x === y) {
+    // Steps 1-5, 7-10
+    // Steps 6.b-6.e: +0 != -0
+    // Added the nonzero y check to make Flow happy, but it is redundant
+    return x !== 0 || y !== 0 || 1 / x === 1 / y;
+  } else {
+    // Step 6.a: NaN == NaN
+    return x !== x && y !== y;
+  }
+}
+
+/**
+ * Performs equality by iterating through keys on an object and returning false
+ * when any key has values which are not strictly equal between the arguments.
+ * Returns true when the values of all keys are strictly equal.
+ */
+function fbjslibshallowEqual__shallowEqual(objA, objB) {
+  if (fbjslibshallowEqual__is(objA, objB)) {
+    return true;
+  }
+
+  if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) {
+    return false;
+  }
+
+  var keysA = Object.keys(objA);
+  var keysB = Object.keys(objB);
+
+  if (keysA.length !== keysB.length) {
+    return false;
+  }
+
+  // Test for A's keys different from B.
+  for (var i = 0; i < keysA.length; i++) {
+    if (!fbjslibshallowEqual__hasOwnProperty.call(objB, keysA[i]) || !fbjslibshallowEqual__is(objA[keysA[i]], objB[keysA[i]])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+$m['fbjs/lib/shallowEqual'].exports = fbjslibshallowEqual__shallowEqual;
+/*≠≠ node_modules/fbjs/lib/shallowEqual.js ≠≠*/
+
+
+/*== node_modules/fbjs/lib/emptyObject.js ==*/
+$m['fbjs/lib/emptyObject'] = { exports: {} };
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+var fbjslibemptyObject__emptyObject = {};
+
+if ('development' !== 'production') {
+  Object.freeze(fbjslibemptyObject__emptyObject);
+}
+
+$m['fbjs/lib/emptyObject'].exports = fbjslibemptyObject__emptyObject;
+/*≠≠ node_modules/fbjs/lib/emptyObject.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactPropTypesSecret.js ==*/
+$m['react-dom/lib/ReactPropTypesSecret'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var reactdomlibReactPropTypesSecret__ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
+
+$m['react-dom/lib/ReactPropTypesSecret'].exports = reactdomlibReactPropTypesSecret__ReactPropTypesSecret;
+/*≠≠ node_modules/react-dom/lib/ReactPropTypesSecret.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactPropTypeLocationNames.js ==*/
+$m['react-dom/lib/ReactPropTypeLocationNames'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ * 
+ */
+
+var reactdomlibReactPropTypeLocationNames__ReactPropTypeLocationNames = {};
+
+if ('development' !== 'production') {
+  reactdomlibReactPropTypeLocationNames__ReactPropTypeLocationNames = {
+    prop: 'prop',
+    context: 'context',
+    childContext: 'child context'
+  };
+}
+
+$m['react-dom/lib/ReactPropTypeLocationNames'].exports = reactdomlibReactPropTypeLocationNames__ReactPropTypeLocationNames;
+/*≠≠ node_modules/react-dom/lib/ReactPropTypeLocationNames.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/getEventCharCode.js ==*/
+$m['react-dom/lib/getEventCharCode'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+/**
+ * `charCode` represents the actual "character code" and is safe to use with
+ * `String.fromCharCode`. As such, only keys that correspond to printable
+ * characters produce a valid `charCode`, the only exception to this is Enter.
+ * The Tab-key is considered non-printable and does not have a `charCode`,
+ * presumably because it does not produce a tab-character in browsers.
+ *
+ * @param {object} nativeEvent Native browser event.
+ * @return {number} Normalized `charCode` property.
+ */
+
+function reactdomlibgetEventCharCode__getEventCharCode(nativeEvent) {
+  var charCode;
+  var keyCode = nativeEvent.keyCode;
+
+  if ('charCode' in nativeEvent) {
+    charCode = nativeEvent.charCode;
+
+    // FF does not set `charCode` for the Enter-key, check against `keyCode`.
+    if (charCode === 0 && keyCode === 13) {
+      charCode = 13;
+    }
+  } else {
+    // IE8 does not implement `charCode`, but `keyCode` has the correct value.
+    charCode = keyCode;
+  }
+
+  // Some non-printable keys are reported in `charCode`/`keyCode`, discard them.
+  // Must not discard the (non-)printable Enter-key.
+  if (charCode >= 32 || charCode === 13) {
+    return charCode;
+  }
+
+  return 0;
+}
+
+$m['react-dom/lib/getEventCharCode'].exports = reactdomlibgetEventCharCode__getEventCharCode;
+/*≠≠ node_modules/react-dom/lib/getEventCharCode.js ≠≠*/
+
+
+/*== node_modules/react-dom/lib/ReactVersion.js ==*/
+$m['react-dom/lib/ReactVersion'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
+
+$m['react-dom/lib/ReactVersion'].exports = '15.4.2';
+/*≠≠ node_modules/react-dom/lib/ReactVersion.js ≠≠*/
 
 
 /*== node_modules/@yr/runtime/index.js ==*/
@@ -3453,8 +3409,8 @@ function yrisequal__isEqualArray(arr1, arr2) {
 /*≠≠ node_modules/@yr/is-equal/index.js ≠≠*/
 
 
-/*== node_modules/react-dom/lib/isTextInputElement.js ==*/
-$m['react-dom/lib/isTextInputElement'] = { exports: {} };
+/*== node_modules/react/lib/KeyEscapeUtils.js ==*/
+$m['react/lib/KeyEscapeUtils'] = { exports: {} };
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -3467,43 +3423,51 @@ $m['react-dom/lib/isTextInputElement'] = { exports: {} };
  */
 
 /**
- * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/the-input-element.html#input-type-attr-summary
+ * Escape and wrap key so it is safe to use as a reactid
+ *
+ * @param {string} key to be escaped.
+ * @return {string} the escaped key.
  */
 
-var reactdomlibisTextInputElement__supportedInputTypes = {
-  'color': true,
-  'date': true,
-  'datetime': true,
-  'datetime-local': true,
-  'email': true,
-  'month': true,
-  'number': true,
-  'password': true,
-  'range': true,
-  'search': true,
-  'tel': true,
-  'text': true,
-  'time': true,
-  'url': true,
-  'week': true
-};
+function reactlibKeyEscapeUtils__escape(key) {
+  var escapeRegex = /[=:]/g;
+  var escaperLookup = {
+    '=': '=0',
+    ':': '=2'
+  };
+  var escapedString = ('' + key).replace(escapeRegex, function (match) {
+    return escaperLookup[match];
+  });
 
-function reactdomlibisTextInputElement__isTextInputElement(elem) {
-  var nodeName = elem && elem.nodeName && elem.nodeName.toLowerCase();
-
-  if (nodeName === 'input') {
-    return !!reactdomlibisTextInputElement__supportedInputTypes[elem.type];
-  }
-
-  if (nodeName === 'textarea') {
-    return true;
-  }
-
-  return false;
+  return '$' + escapedString;
 }
 
-$m['react-dom/lib/isTextInputElement'].exports = reactdomlibisTextInputElement__isTextInputElement;
-/*≠≠ node_modules/react-dom/lib/isTextInputElement.js ≠≠*/
+/**
+ * Unescape and unwrap key for human-readable display
+ *
+ * @param {string} key to unescape.
+ * @return {string} the unescaped key.
+ */
+function reactlibKeyEscapeUtils__unescape(key) {
+  var unescapeRegex = /(=0|=2)/g;
+  var unescaperLookup = {
+    '=0': '=',
+    '=2': ':'
+  };
+  var keySubstring = key[0] === '.' && key[1] === '$' ? key.substring(2) : key.substring(1);
+
+  return ('' + keySubstring).replace(unescapeRegex, function (match) {
+    return unescaperLookup[match];
+  });
+}
+
+var reactlibKeyEscapeUtils__KeyEscapeUtils = {
+  escape: reactlibKeyEscapeUtils__escape,
+  unescape: reactlibKeyEscapeUtils__unescape
+};
+
+$m['react/lib/KeyEscapeUtils'].exports = reactlibKeyEscapeUtils__KeyEscapeUtils;
+/*≠≠ node_modules/react/lib/KeyEscapeUtils.js ≠≠*/
 
 
 /*== node_modules/debug/src/debug.js ==*/
@@ -3748,20 +3712,20 @@ function debug__useColors() {
   // NB: In an Electron preload script, document will be defined but not fully
   // initialized. Since we know we're in Chrome, we'll just detect this case
   // explicitly
-  if (typeof window !== 'undefined' && window && typeof window.process !== 'undefined' && window.process.type === 'renderer') {
+  if (typeof window !== 'undefined' && window.process && window.process.type === 'renderer') {
     return true;
   }
 
   // is webkit? http://stackoverflow.com/a/16459606/376773
   // document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
-  return typeof document !== 'undefined' && document && 'WebkitAppearance' in document.documentElement.style ||
+  return typeof document !== 'undefined' && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance ||
   // is firebug? http://stackoverflow.com/a/398120/376773
-  typeof window !== 'undefined' && window && window.console && (console.firebug || console.exception && console.table) ||
+  typeof window !== 'undefined' && window.console && (window.console.firebug || window.console.exception && window.console.table) ||
   // is firefox >= v31?
   // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
-  typeof navigator !== 'undefined' && navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31 ||
+  typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31 ||
   // double check webkit in userAgent just in case we are in a worker
-  typeof navigator !== 'undefined' && navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/);
+  typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/);
 }
 
 /**
@@ -3888,7 +3852,7 @@ function debug__localstorage() {
 
 /*== node_modules/raf/index.js ==*/
 $m['raf'] = { exports: {} };
-var raf__now = $m['performance-now#0.2.0'].exports,
+var raf__now = $m['performance-now'].exports,
     raf__root = typeof window === 'undefined' ? global : window,
     raf__vendors = ['moz', 'webkit'],
     raf__suffix = 'AnimationFrame',
@@ -3974,23 +3938,20 @@ $m['@yr/clock'] = { exports: {} };
  * @license MIT
  */
 
-var yrclock__Debug = $m['debug'].exports;
+var yrclock__debugFactory = $m['debug'].exports;
 var yrclock__raf = $m['raf'].exports;
 var yrclock__now = $m['performance-now'].exports;
 
 var yrclock__INTERVAL_CUTOFF = 1000;
 var yrclock__INTERVAL_MAX = 600000;
 
-var yrclock__debug = yrclock__Debug('yr:clock');
-var yrclock__isDev = 'development' == 'development';
-var yrclock__hasImmediate = 'setImmediate' in (typeof global !== 'undefined' ? global : window);
-var yrclock__queue = {};
-var yrclock__rafHandle = 0;
-var yrclock__stHandle = 0;
+var yrclock__debug = yrclock__debugFactory('yr:clock');
+var yrclock__isDev = 'development' === 'development';
+var yrclock__resolved = Promise.resolve();
+var yrclock__timeoutQueue = [];
+var yrclock__hasNextTick = typeof process !== 'undefined' && 'nextTick' in process;
+var yrclock__runTimeoutId = 0;
 var yrclock__uid = 0;
-
-// Add polyfills
-yrclock__raf.polyfill();
 
 $m['@yr/clock'].exports = {
   /**
@@ -3998,45 +3959,39 @@ $m['@yr/clock'].exports = {
    * @param {Object} features
    */
   initialize: function initialize(features) {
-    var hidden = features.hidden;
-    var visibilityChange = features.visibilityChange;
+    var nextTick = features.nextTick,
+        hidden = features.hidden,
+        visibilityChange = features.visibilityChange;
 
-    if (hidden) {
-      document.addEventListener(visibilityChange, function (evt) {
-        if (document[hidden]) {
-          yrclock__debug('disable while hidden');
-          yrclock__stop();
-        } else {
-          yrclock__debug('enable while visible');
-          if ('development' == 'development') {
-            var current = yrclock__now();
+    // Register for visibilityChange event
 
-            for (var id in yrclock__queue) {
-              var item = yrclock__queue[id];
-
-              if (item.time <= current) {
-                yrclock__debug('timeout should trigger for "%s"', id);
-              } else {
-                var date = new Date();
-
-                date.setMilliseconds(date.getMilliseconds() + item.time - current);
-                yrclock__debug('timeout for "%s" expected at %s', id, date.toLocaleTimeString());
-              }
-            }
-          }
-          yrclock__run();
-        }
-      }, false);
+    if (hidden !== undefined && visibilityChange !== undefined) {
+      document.addEventListener(visibilityChange, yrclock__onVisibilityChangeFactory(hidden), false);
+    }
+    // Disable nextTick (testing)
+    if (nextTick !== undefined && !nextTick) {
+      yrclock__hasNextTick = false;
     }
   },
 
   /**
-   * Call 'fn' on next loop turn
+   * Call 'fn' on next tick
    * @param {Function} fn
-   * @returns {Number}
    */
   immediate: function immediate(fn) {
-    return yrclock__hasImmediate ? setImmediate(fn) : setTimeout(fn, 0);
+    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    if (yrclock__hasNextTick) {
+      var _process;
+
+      (_process = process).nextTick.apply(_process, [fn].concat(args));
+    } else {
+      yrclock__resolved.then(function () {
+        fn.apply(undefined, args);
+      });
+    }
   },
 
   /**
@@ -4056,15 +4011,34 @@ $m['@yr/clock'].exports = {
    * @returns {String|Number|Object}
    */
   timeout: function timeout(duration, fn, id) {
-    if (duration <= 0) return this.immediate(fn);
+    for (var _len2 = arguments.length, args = Array(_len2 > 3 ? _len2 - 3 : 0), _key2 = 3; _key2 < _len2; _key2++) {
+      args[_key2 - 3] = arguments[_key2];
+    }
 
-    var time = yrclock__now() + duration;
+    if (duration <= 0) {
+      return this.immediate.apply(this, [fn].concat(args));
+    }
 
     id = id || 'c::' + ++yrclock__uid;
-    // Existing ids will be overwritten/cancelled
-    yrclock__queue[id] = { fn: fn, time: time };
+    var time = yrclock__now() + duration;
+    var exists = false;
 
-    if (yrclock__debug.enabled) {
+    // Recycle existing
+    for (var i = 0, n = yrclock__timeoutQueue.length; i < n; i++) {
+      if (yrclock__timeoutQueue[i].id === id) {
+        yrclock__timeoutQueue[i].fn = fn;
+        yrclock__timeoutQueue[i].args = args;
+        yrclock__timeoutQueue[i].time = time;
+        yrclock__timeoutQueue[i].cancelled = false;
+        exists = true;
+        break;
+      }
+    }
+    if (!exists) {
+      yrclock__timeoutQueue.push({ id: id, fn: fn, args: args, time: time, cancelled: false });
+    }
+
+    if (yrclock__isDev) {
       var date = new Date();
 
       date.setMilliseconds(date.getMilliseconds() + duration);
@@ -4077,28 +4051,29 @@ $m['@yr/clock'].exports = {
   },
 
   /**
-   * Cancel immediate/timeout with 'id'
+   * Cancel frame/timeout with 'id'
    * @param {String|Number} id
-   * @returns {String|Number}
    */
   cancel: function cancel(id) {
+    if (id === undefined) {
+      return;
+    }
+
     switch (typeof id) {
+      // Frame
+      case 'number':
+        yrclock__debug('frame canceled for "%d"', id);
+        yrclock__raf.cancel(id);
+        break;
       // Timeout
       case 'string':
-        if (id in yrclock__queue) {
-          yrclock__debug('timeout canceled for "%s"', id);
-          delete yrclock__queue[id];
+        for (var i = 0, n = yrclock__timeoutQueue.length; i < n; i++) {
+          if (yrclock__timeoutQueue[i].id === id) {
+            yrclock__debug('timeout canceled for "%s"', id);
+            yrclock__timeoutQueue[i].cancelled = true;
+            break;
+          }
         }
-        return '';
-      // Frame raf or immediate setTimeout
-      case 'number':
-        yrclock__raf.cancel(id);
-        clearTimeout(id);
-        return 0;
-      // Immediate setImmediate
-      case 'object':
-        clearImmediate(id);
-        return null;
     }
   }
 };
@@ -4112,36 +4087,36 @@ function yrclock__run() {
   var running = false;
 
   // Reset
-  if (yrclock__rafHandle || yrclock__stHandle) yrclock__stop();
+  if (yrclock__runTimeoutId > 0) {
+    yrclock__stop();
+  }
 
-  for (var id in yrclock__queue) {
-    var item = yrclock__queue[id];
+  for (var i = yrclock__timeoutQueue.length - 1; i >= 0; i--) {
+    var item = yrclock__timeoutQueue[i];
 
-    if (item != null && item.time != null) {
+    if (!item.cancelled) {
       var duration = item.time - current;
 
       if (duration <= 0) {
-        if (yrclock__isDev) yrclock__debug('timeout triggered for "%s" at %s', id, new Date().toLocaleTimeString());
-        delete yrclock__queue[id];
-        item.fn();
+        if (yrclock__isDev) {
+          yrclock__debug('timeout triggered for "%s" at %s', item.id, new Date().toLocaleTimeString());
+        }
+        item.fn.apply(item, item.args);
+        yrclock__timeoutQueue.splice(i, 1);
       } else {
         // Store smallest duration
-        if (duration < interval) interval = duration;
+        if (duration < interval) {
+          interval = duration;
+        }
         running = true;
       }
-    } else {
-      delete yrclock__queue[id];
     }
   }
 
   // Loop
   if (running) {
     // Use raf if requested interval is less than cutoff
-    if (interval < yrclock__INTERVAL_CUTOFF) {
-      yrclock__rafHandle = yrclock__raf(yrclock__run);
-    } else {
-      yrclock__stHandle = setTimeout(yrclock__run, interval);
-    }
+    yrclock__runTimeoutId = interval < yrclock__INTERVAL_CUTOFF ? yrclock__raf(yrclock__run) : setTimeout(yrclock__run, interval);
   }
 }
 
@@ -4149,10 +4124,44 @@ function yrclock__run() {
  * Stop running
  */
 function yrclock__stop() {
-  if (yrclock__rafHandle) yrclock__raf.cancel(yrclock__rafHandle);
-  if (yrclock__stHandle) clearTimeout(yrclock__stHandle);
-  yrclock__rafHandle = 0;
-  yrclock__stHandle = 0;
+  if (yrclock__runTimeoutId > 0) {
+    yrclock__raf.cancel(yrclock__runTimeoutId);
+    clearTimeout(yrclock__runTimeoutId);
+  }
+  yrclock__runTimeoutId = 0;
+}
+
+/**
+ * Generate visibilityChange handler
+ * @param {String} hidden
+ * @returns {Function}
+ */
+function yrclock__onVisibilityChangeFactory(hidden) {
+  return function onVisibilityChange(evt) {
+    if (document[hidden]) {
+      yrclock__debug('disable while hidden');
+      yrclock__stop();
+    } else {
+      yrclock__debug('enable while visible');
+      if ('development' === 'development') {
+        var current = yrclock__now();
+
+        for (var i = 0, n = yrclock__timeoutQueue.length; i < n; i++) {
+          var item = yrclock__timeoutQueue[i];
+
+          if (item.time <= current) {
+            yrclock__debug('timeout should trigger for "%s"', item.id);
+          } else {
+            var date = new Date();
+
+            date.setMilliseconds(date.getMilliseconds() + item.time - current);
+            yrclock__debug('timeout for "%s" expected at %s', item.id, date.toLocaleTimeString());
+          }
+        }
+      }
+      yrclock__run();
+    }
+  };
 }
 /*≠≠ node_modules/@yr/clock/index.js ≠≠*/
 
