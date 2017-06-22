@@ -3958,7 +3958,7 @@ $m['@yr/clock'].exports = {
    * Initialize with visibility api "features"
    * @param {Object} features
    */
-  initialize: function initialize(features) {
+  init: function init(features) {
     var nextTick = features.nextTick,
         hidden = features.hidden,
         visibilityChange = features.visibilityChange;
@@ -4083,16 +4083,18 @@ $m['@yr/clock'].exports = {
  */
 function yrclock__run() {
   var current = yrclock__now();
+  var queue = yrclock__timeoutQueue.slice();
   var interval = yrclock__INTERVAL_MAX;
-  var running = false;
+
+  yrclock__timeoutQueue.length = 0;
 
   // Reset
   if (yrclock__runTimeoutId > 0) {
     yrclock__stop();
   }
 
-  for (var i = yrclock__timeoutQueue.length - 1; i >= 0; i--) {
-    var item = yrclock__timeoutQueue[i];
+  for (var i = queue.length - 1; i >= 0; i--) {
+    var item = queue[i];
 
     if (!item.cancelled) {
       var duration = item.time - current;
@@ -4101,20 +4103,19 @@ function yrclock__run() {
         if (yrclock__isDev) {
           yrclock__debug('timeout triggered for "%s" at %s', item.id, new Date().toLocaleTimeString());
         }
-        item.fn.apply(item, item.args);
-        yrclock__timeoutQueue.splice(i, 1);
+        item.fn.apply(item.fn, item.args);
       } else {
         // Store smallest duration
         if (duration < interval) {
           interval = duration;
         }
-        running = true;
+        yrclock__timeoutQueue.push(item);
       }
     }
   }
 
   // Loop
-  if (running) {
+  if (yrclock__timeoutQueue.length > 0) {
     // Use raf if requested interval is less than cutoff
     yrclock__runTimeoutId = interval < yrclock__INTERVAL_CUTOFF ? yrclock__raf(yrclock__run) : setTimeout(yrclock__run, interval);
   }
