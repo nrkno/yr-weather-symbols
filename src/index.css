@@ -29,8 +29,17 @@
 .sun-primitive {
   color: #ffee8a;
   fill: #ffaf22;
-  stroke: #ffaf22;
 }
+.sun-inner{
+  fill: #FFAF22;
+}
+.sun-outer{
+  fill: #FFE266;
+}
+.sun-glow{
+  fill: #FFDC7B;
+}
+
 .sunWinter-primitive {
   color: #ffee8a;
   fill: #fbbe40;
