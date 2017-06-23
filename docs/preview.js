@@ -1776,13 +1776,13 @@ var srclibrecipes__base = {
   '03': [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 1
   }],
   40: [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 2
   }, {
     primitive: 'raindrop',
@@ -1796,7 +1796,7 @@ var srclibrecipes__base = {
   '05': [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 3
   }, {
     primitive: 'raindrop',
@@ -1814,7 +1814,7 @@ var srclibrecipes__base = {
   41: [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 4
   }, {
     primitive: 'raindrop',
@@ -1840,7 +1840,7 @@ var srclibrecipes__base = {
   42: [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 2
   }, {
     primitive: 'snowflake',
@@ -1854,7 +1854,7 @@ var srclibrecipes__base = {
   '07': [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 3
   }, {
     primitive: 'snowflake',
@@ -1872,7 +1872,7 @@ var srclibrecipes__base = {
   43: [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 4
   }, {
     primitive: 'snowflake',
@@ -1898,7 +1898,7 @@ var srclibrecipes__base = {
   44: [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 2
   }, {
     primitive: 'snowflake',
@@ -1930,7 +1930,7 @@ var srclibrecipes__base = {
   45: [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 4
   }, {
     primitive: 'snowflake',
@@ -1956,7 +1956,7 @@ var srclibrecipes__base = {
   24: [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 2
   }, {
     primitive: 'raindrop',
@@ -1974,7 +1974,7 @@ var srclibrecipes__base = {
   '06': [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 3
   }, {
     primitive: 'raindrop',
@@ -1996,7 +1996,7 @@ var srclibrecipes__base = {
   25: [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 4
   }, {
     primitive: 'raindrop',
@@ -2026,7 +2026,7 @@ var srclibrecipes__base = {
   26: [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 2
   }, {
     primitive: 'snowflake',
@@ -2044,7 +2044,7 @@ var srclibrecipes__base = {
   20: [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 3
   }, {
     primitive: 'snowflake',
@@ -2066,7 +2066,7 @@ var srclibrecipes__base = {
   27: [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 4
   }, {
     primitive: 'snowflake',
@@ -2096,7 +2096,7 @@ var srclibrecipes__base = {
   28: [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 2
   }, {
     primitive: 'snowflake',
@@ -2114,7 +2114,7 @@ var srclibrecipes__base = {
   21: [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 3
   }, {
     primitive: 'snowflake',
@@ -2136,7 +2136,7 @@ var srclibrecipes__base = {
   29: [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 4
   }, {
     primitive: 'snowflake',
@@ -2235,7 +2235,7 @@ $m['src/lib/recipes'].exports = {
   15: [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 1
   }, {
     primitive: 'fog',

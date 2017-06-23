@@ -1,32 +1,25 @@
 .cloud0-primitive {
   color: #c6c6c6;
   fill: #efefef;
-  stroke: #fff;
-  stroke-width: 5px;
 }
 .cloud1-primitive {
   color: #aaa;
   fill: #e5e5e5;
-  stroke: #fff;
-  stroke-width: 5px;
 }
 .cloud2-primitive {
   color: #828282;
   fill: #cccccc;
-  stroke: #fff;
-  stroke-width: 5px;
 }
 .cloud3-primitive {
   color: #696969;
   fill: #b2b2b2;
-  stroke: #fff;
-  stroke-width: 5px;
 }
 .cloud4-primitive {
   color: #424242;
   fill: #999999;
-  stroke: #fff;
-  stroke-width: 5px;
+}
+.cloud-outline {
+  fill: white;
 }
 .fog-primitive {
   color: #999999;

@@ -87,7 +87,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 1
     }
   ],
@@ -95,7 +95,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 2
     },
     {
@@ -113,7 +113,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 3
     },
     {
@@ -136,7 +136,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 4
     },
     {
@@ -169,7 +169,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 2
     },
     {
@@ -187,7 +187,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 3
     },
     {
@@ -210,7 +210,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 4
     },
     {
@@ -243,7 +243,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 2
     },
     {
@@ -284,7 +284,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 4
     },
     {
@@ -317,7 +317,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 2
     },
     {
@@ -340,7 +340,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 3
     },
     {
@@ -368,7 +368,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 4
     },
     {
@@ -406,7 +406,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 2
     },
     {
@@ -429,7 +429,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 3
     },
     {
@@ -457,7 +457,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 4
     },
     {
@@ -495,7 +495,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 2
     },
     {
@@ -518,7 +518,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 3
     },
     {
@@ -546,7 +546,7 @@ const base = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 4
     },
     {
@@ -653,7 +653,7 @@ module.exports = {
     {
       primitive: 'cloud',
       x: 5,
-      y: 25,
+      y: 18,
       variation: 1
     },
     {
