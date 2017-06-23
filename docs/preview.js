@@ -1723,8 +1723,8 @@ var srclibrecipes__base = {
   }],
   sun3: [{
     primitive: 'sun',
-    x: 0,
-    y: 0,
+    x: 3,
+    y: 3,
     scaleX: 0.666666667,
     scaleY: 0.666666667
   }],
@@ -1912,7 +1912,7 @@ var srclibrecipes__base = {
   '08': [{
     primitive: 'cloud',
     x: 5,
-    y: 25,
+    y: 18,
     variation: 3
   }, {
     primitive: 'snowflake',

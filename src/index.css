@@ -25,16 +25,19 @@
   color: #999999;
   fill: #e5e5e5;
 }
-
+/*
 .sun-primitive {
   color: #ffee8a;
   fill: #ffaf22;
 }
+*/
 .sun-inner{
   fill: #FFAF22;
 }
 .sun-outer{
   fill: #FFE266;
+  stroke: rgba(0,0,0,0.1);
+  -webkit-box-shadow: 2px,2px,10px,#000;
 }
 .sun-glow{
   fill: #FFDC7B;
