@@ -1,6 +1,7 @@
 .cloud0-primitive {
   color: #c6c6c6;
   fill: #efefef;
+  stroke: #000;
 }
 .cloud1-primitive {
   color: #aaa;
@@ -35,7 +36,7 @@
 }
 
 .moon-primitive {
-  fill: #354246;
+  fill: #D1901C;
 }
 
 .raindrop-primitive {
