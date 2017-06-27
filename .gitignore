@@ -2,3 +2,4 @@ node_modules
 npm-debug.log
 /lib
 /index.*
+.DS_Store
