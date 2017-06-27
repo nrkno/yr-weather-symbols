@@ -18,7 +18,7 @@
   color: #424242;
   fill: #999999;
 }
-.cloud-outline {
+.cloud-stroke {
   fill: white;
 }
 .fog-primitive {
@@ -63,13 +63,3 @@
 .lightning-primitive {
   fill: #ffdd15;
 }
-
-
-/* remove */
-img{
-  display: none;
-}
-
-.graphics-group h3{
-    display: none;
-  }
