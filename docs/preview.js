@@ -1761,7 +1761,7 @@ var srclibrecipes__base = {
   moon3: [{
     primitive: 'moon',
     x: 0,
-    y: 3,
+    y: 0,
     scaleX: 0.714285714,
     scaleY: 0.714285714
   }],
