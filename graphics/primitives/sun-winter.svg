@@ -1,12 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100" height="100" viewBox="0 0 100 100">
   <defs>
-    <symbol id="a" data-name="sun-winter" viewBox="0 0 90 43">
-      <polygon points="70.71 8.86 85.96 2 4.18 2 4.07 2.05 19.43 8.88 9.58 22.54 26.3 20.78 24.61 37.53 38.21 27.64 45.12 43 51.95 27.64 65.61 37.48 63.84 20.76 80.6 22.46 70.71 8.86"/>
-      <path d="M20,2a24.84,24.84,0,0,0,3.34,12.5A25,25,0,0,0,57.5,23.65,25,25,0,0,0,70,2Z"/>
-      <path d="M24,2a20.85,20.85,0,0,0,2.79,10.5A21,21,0,0,0,55.5,20.19,21,21,0,0,0,66,2Z"/>
+    <radialGradient id="a" cx="45.03" cy="1.08" r="42.64" gradientUnits="userSpaceOnUse">
+      <stop offset="0.5" stop-color="#bda35c"/>
+      <stop offset="0.61" stop-color="#eaca71"/>
+      <stop offset="0.67" stop-color="#ffdc7b"/>
+      <stop offset="1" stop-color="#ffdc7b"/>
+    </radialGradient>
+    <linearGradient id="b" x1="34.38" y1="-6.75" x2="56.55" y2="19.68" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffaf22"/>
+      <stop offset="0.99" stop-color="#f09900"/>
+    </linearGradient>
+    <symbol id="c" data-name="sun-winter" viewBox="0 0 90 43">
+      <polygon points="70.64 8.86 85.89 2 4.11 2 4 2.05 19.36 8.88 9.52 22.54 26.24 20.78 24.54 37.53 38.14 27.64 45.05 43 51.88 27.64 65.54 37.48 63.78 20.76 80.53 22.46 70.64 8.86" fill="url(#a)"/>
+      <path d="M19.94,2a24.84,24.84,0,0,0,3.34,12.5,25,25,0,0,0,34.16,9.15A25,25,0,0,0,69.93,2Z" fill="#ffe266"/>
+      <path d="M24,2a20.85,20.85,0,0,0,2.79,10.5,21,21,0,0,0,28.69,7.69A21,21,0,0,0,65.91,2Z" fill="url(#b)"/>
       <path d="M88.29,2.7H1.71A1.56,1.56,0,0,1,0,1.35,1.56,1.56,0,0,1,1.71,0H88.29A1.56,1.56,0,0,1,90,1.35,1.56,1.56,0,0,1,88.29,2.7Z"/>
     </symbol>
   </defs>
   <title>sun-winter</title>
-  <use width="90" height="43" transform="translate(0 0)" xlink:href="#a"/>
+  <use width="90" height="43" transform="translate(0 0)" xlink:href="#c"/>
 </svg>

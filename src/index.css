@@ -25,41 +25,12 @@
   color: #999999;
   fill: #e5e5e5;
 }
-/*
-.sun-primitive {
-  color: #ffee8a;
-  fill: #ffaf22;
-}
-
-.sun-inner{
-  fill: #FFAF22;
-}
-*/
-.sun-outer{
-  fill: #FFE266;
-}
-.sun-glow{
-  fill: #FFDC7B;
-}
-
-.sunWinter-primitive {
-  color: #ffee8a;
-  fill: #fbbe40;
-  stroke: #f5b93f;
-}
-
-.moon-primitive {
-  fill: #D1901C;
-}
-
 .raindrop-primitive {
   fill: #0062bf;
 }
-
 .snowflake-primitive {
   fill: #47c0e3;
 }
-
 .lightning-primitive {
   fill: #ffdd15;
 }

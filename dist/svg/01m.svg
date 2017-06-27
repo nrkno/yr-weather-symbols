@@ -1,9 +1,6 @@
-<svg x="0" y="0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style type="text/css"><![CDATA[.sun-primitive {
-  color: #ffee8a;
-  fill: #ffaf22;
-}]]></style><symbol id="sunWinter">
-		<polygon class="sun-glow" points="70.71 8.86 85.96 2 4.18 2 4.07 2.05 19.43 8.88 9.58 22.54 26.3 20.78 24.61 37.53 38.21 27.64 45.12 43 51.95 27.64 65.61 37.48 63.84 20.76 80.6 22.46 70.71 8.86"></polygon>
-		<path class="sun-outer" d="M20,2a24.84,24.84,0,0,0,3.34,12.5A25,25,0,0,0,57.5,23.65,25,25,0,0,0,70,2Z"></path>
-		<path class="sun-inner" d="M24,2a20.85,20.85,0,0,0,2.79,10.5A21,21,0,0,0,55.5,20.19,21,21,0,0,0,66,2Z" fill="url(#sun-grad)"></path>
+<svg x="0" y="0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style type="text/css"><![CDATA[undefined]]></style><symbol id="sunWinter">
+		<polygon class="sun-glow" fill="url(#sun-winter-glow-grad)" points="70.71 8.86 85.96 2 4.18 2 4.07 2.05 19.43 8.88 9.58 22.54 26.3 20.78 24.61 37.53 38.21 27.64 45.12 43 51.95 27.64 65.61 37.48 63.84 20.76 80.6 22.46 70.71 8.86"></polygon>
+		<path class="sun-outer" fill="#ffe266" d="M20,2a24.84,24.84,0,0,0,3.34,12.5A25,25,0,0,0,57.5,23.65,25,25,0,0,0,70,2Z"></path>
+		<path class="sun-inner" d="M24,2a20.85,20.85,0,0,0,2.79,10.5A21,21,0,0,0,55.5,20.19,21,21,0,0,0,66,2Z" fill="url(#sun-inner-grad)"></path>
 		<path fill="#333333" d="M88.29,2.7H1.71A1.56,1.56,0,0,1,0,1.35,1.56,1.56,0,0,1,1.71,0H88.29A1.56,1.56,0,0,1,90,1.35,1.56,1.56,0,0,1,88.29,2.7Z"></path>
 	</symbol><use xlink:href="#sunWinter" class="sun-primitive" x="0" y="0" width="100" height="100" transform="translate(5,37) scale(1,1)"></use></svg>

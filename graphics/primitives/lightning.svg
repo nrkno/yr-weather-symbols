@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100" height="100" viewBox="0 0 100 100">
   <defs>
     <symbol id="a" data-name="lightning" viewBox="0 0 14.6 40">
-      <polygon points="14.6 18.42 7.74 15.39 10.55 0 0 19.49 7.08 22.51 2.49 40 14.6 18.42"/>
+      <polygon points="14.6 18.42 7.74 15.39 10.55 0 0 19.49 7.08 22.51 2.49 40 14.6 18.42" fill="#ffc524"/>
     </symbol>
   </defs>
   <title>lightning</title>
