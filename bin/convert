@@ -45,4 +45,5 @@ for (const id in recipes) {
 }
 
 convert.run(dir, graphics, [30, 38, 48, 100, 200]);
-fs.writeFileSync(path.resolve(dir, 'svg', 'symbolsDefs.svg'), defs);
+
+fs.writeFileSync(path.resolve(dir, 'symbolsDefs.svg'), defs);
