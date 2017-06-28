@@ -10,15 +10,13 @@
 			<stop offset="100%" stop-color="#dbb700" />
 		</linearGradient>
     <radialGradient id="sun-glow-grad" cx="41" cy="41" r="41" gradientUnits="userSpaceOnUse">
-      <stop offset="50%" stop-color="#bda35c"/>
-      <stop offset="61%" stop-color="#eaca71"/>
-      <stop offset="67%" stop-color="#ffdc7b"/>
+      <stop offset="58%" stop-color="#c9b468"/>
+      <stop offset="67%" stop-color="#f5d376"/>
       <stop offset="100%" stop-color="#ffdc7b"/>
     </radialGradient>
     <radialGradient id="sun-winter-glow-grad" cx="45" cy="2" r="42" gradientUnits="userSpaceOnUse">
-      <stop offset="50%" stop-color="#bda35c"/>
-      <stop offset="61%" stop-color="#eaca71"/>
-      <stop offset="67%" stop-color="#ffdc7b"/>
+      <stop offset="58%" stop-color="#eaca71"/>
+      <stop offset="67%" stop-color="#f5d376"/>
       <stop offset="100%" stop-color="#ffdc7b"/>
     </radialGradient>
 	</defs>
