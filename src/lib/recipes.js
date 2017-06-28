@@ -4,24 +4,24 @@ const base = {
   sun1: [
     {
       primitive: 'sun',
-      x: 5,
-      y: 5
+      x: 9,
+      y: 9
     }
   ],
   sun2: [
     {
       primitive: 'sun',
-      x: 0,
-      y: 0
+      x: 4,
+      y: 9
     }
   ],
   sun3: [
     {
       primitive: 'sun',
       x: 3,
-      y: 3,
-      scaleX: 0.666666667,
-      scaleY: 0.666666667
+      y: 7,
+      scaleX: 0.58,
+      scaleY: 0.58
     }
   ],
   sunWinter1: [
@@ -44,31 +44,31 @@ const base = {
     {
       primitive: 'sun',
       x: 0,
-      y: 23,
-      scaleX: 0.666666667,
-      scaleY: 0.666666667,
+      y: 21,
+      scaleX: 0.65,
+      scaleY: 0.65,
       winter: true
     }
   ],
   moon1: [
     {
       primitive: 'moon',
-      x: 15,
-      y: 15
+      x: 20,
+      y: 20
     }
   ],
   moon2: [
     {
       primitive: 'moon',
-      x: 5,
-      y: 15
+      x: 15,
+      y: 20
     }
   ],
   moon3: [
     {
       primitive: 'moon',
-      x: 0,
-      y: 0,
+      x: 2,
+      y: 5,
       scaleX: 0.714285714,
       scaleY: 0.714285714
     }
@@ -76,17 +76,17 @@ const base = {
   '02': [
     {
       primitive: 'cloud',
-      x: 35,
-      y: 37.5,
-      scaleX: 0.714285714,
-      scaleY: 0.714285714,
+      x: 43,
+      y: 37,
+      scaleX: 0.63,
+      scaleY: 0.63,
       variation: 1
     }
   ],
   '03': [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 1
     }
@@ -94,7 +94,7 @@ const base = {
   40: [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 2
     },
@@ -112,7 +112,7 @@ const base = {
   '05': [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 3
     },
@@ -135,7 +135,7 @@ const base = {
   41: [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 4
     },
@@ -168,7 +168,7 @@ const base = {
   42: [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 2
     },
@@ -186,7 +186,7 @@ const base = {
   '07': [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 3
     },
@@ -209,7 +209,7 @@ const base = {
   43: [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 4
     },
@@ -242,7 +242,7 @@ const base = {
   44: [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 2
     },
@@ -260,7 +260,7 @@ const base = {
   '08': [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 3
     },
@@ -283,7 +283,7 @@ const base = {
   45: [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 4
     },
@@ -316,7 +316,7 @@ const base = {
   24: [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 2
     },
@@ -339,7 +339,7 @@ const base = {
   '06': [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 3
     },
@@ -367,7 +367,7 @@ const base = {
   25: [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 4
     },
@@ -405,7 +405,7 @@ const base = {
   26: [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 2
     },
@@ -428,7 +428,7 @@ const base = {
   20: [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 3
     },
@@ -456,7 +456,7 @@ const base = {
   27: [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 4
     },
@@ -494,7 +494,7 @@ const base = {
   28: [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 2
     },
@@ -517,7 +517,7 @@ const base = {
   21: [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 3
     },
@@ -545,7 +545,7 @@ const base = {
   29: [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 4
     },
@@ -652,7 +652,7 @@ module.exports = {
   15: [
     {
       primitive: 'cloud',
-      x: 5,
+      x: 3,
       y: 18,
       variation: 1
     },
@@ -665,8 +665,8 @@ module.exports = {
   '04': [
     {
       primitive: 'cloud',
-      x: 5,
-      y: 25,
+      x: 3,
+      y: 18,
       variation: 1
     }
   ],

@@ -11,7 +11,7 @@ const utils = require('../src/lib/utils');
 
 const dir = process.argv[2];
 const graphics = [];
-let defs = '<?xml version="1.0" encoding="utf-8"?>\n<svg id="symbolDefs" style="display:none;">\n'
+let defs = '<?xml version="1.0" encoding="utf-8"?>\n<svg id="symbolDefs" style="position:absolute; height:0; width:0;">\n'
 
 for (const id in recipes) {
   const recipe = recipes[id];
@@ -27,7 +27,12 @@ for (const id in recipes) {
     const use = `<use xlink:href="${elProps.xlinkHref}" class="${elProps.className}" x="0" y="0" width="100" height="100" transform="${elProps.transform}"></use>`;
     let symbol = opts.primitive;
 
-    if (opts.winter) symbol += 'Winter';
+    if (opts.winter) {
+      symbol += 'Winter';
+    }
+    if (symbol === 'cloud') {
+      styles.push('cloud-stroke');
+    }
 
     styles.push(opts.class);
     symbols.push(symbol);
