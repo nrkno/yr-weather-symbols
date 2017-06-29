@@ -2,8 +2,8 @@
 <defs>
 <radialGradient id="sun-winter-glow-grad" cx="45" cy="2" r="42" gradientUnits="userSpaceOnUse">
       <stop offset="58%" stop-color="#c9b468"/>
-      <stop offset="67%" stop-color="#f5d376"/>
-      <stop offset="100%" stop-color="#ffdc7b"/>
+      <stop offset="67%" stop-color="#ffce47"/>
+      <stop offset="100%" stop-color="#ffce47"/>
     </radialGradient>
 <linearGradient id="sun-inner-grad" x1="0%" y1="0%" x2="100%" y2="100%">
 			<stop offset="0%" stop-color="#ffaf22" />
