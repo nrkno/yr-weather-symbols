@@ -1723,10 +1723,10 @@ var srclibrecipes__base = {
   }],
   sun3: [{
     primitive: 'sun',
-    x: 3,
-    y: 7,
-    scaleX: 0.58,
-    scaleY: 0.58
+    x: 0,
+    y: 2,
+    scaleX: 0.7,
+    scaleY: 0.7
   }],
   sunWinter1: [{
     primitive: 'sun',
@@ -1744,8 +1744,8 @@ var srclibrecipes__base = {
     primitive: 'sun',
     x: 0,
     y: 21,
-    scaleX: 0.65,
-    scaleY: 0.65,
+    scaleX: 0.7,
+    scaleY: 0.7,
     winter: true
   }],
   moon1: [{
