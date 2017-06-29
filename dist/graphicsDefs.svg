@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg id="symbolPrimitiveDefs" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position:absolute; height:0; width:0;">
+<svg id="symbolPrimitiveDefs" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="0" width="0" style="position:absolute;">
 	<defs>
 		<linearGradient id="sun-inner-grad" x1="0%" y1="0%" x2="100%" y2="100%">
 			<stop offset="0%" stop-color="#ffaf22" />
