@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg id="symbolDefs" style="display:none;">
+<svg id="symbolDefs" height="0" width="0" style="position:absolute;">
   <symbol id="s10">
     <use xlink:href="#cloud" class="cloud4-primitive" x="0" y="0" width="100" height="100" transform="translate(5,25) scale(1,1)"></use>
     <use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(18,78) scale(1,1)"></use>
