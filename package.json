@@ -5,7 +5,7 @@
   "author": "alexander.pope@nrk.no",
   "dependencies": {
     "@yr/component": "3.1.x",
-    "@yr/graphics-component": "3.2.x"
+    "@yr/graphics-component": "3.2.1"
   },
   "devDependencies": {
     "babel-plugin-syntax-trailing-function-commas": "6.22.0",
@@ -31,7 +31,7 @@
     "babel-plugin-transform-es5-property-mutators": "6.24.1",
     "babel-plugin-transform-exponentiation-operator": "6.24.1",
     "babel-plugin-transform-object-rest-spread": "6.23.0",
-    "buddy": "6.x.x",
+    "buddy": "6.13.7",
     "buddy-plugin-imagemin": "5.3.1",
     "buddy-plugin-nunjucks": "3.0.1",
     "buddy-server": "3.1.0",

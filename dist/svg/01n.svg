@@ -1,8 +1,8 @@
 <svg x="0" y="0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <defs>
-<linearGradient id="moon-grad" x1="0%" y1="10%" x2="100%" y2="0%">
-			<stop offset="0%" stop-color="#d1a24f" />
-			<stop offset="100%" stop-color="#dbb700" />
+<linearGradient id="moon-grad" x1="0%" y1="50%" x2="100%" y2="0%">
+			<stop offset="0%" stop-color="#686e73" />
+			<stop offset="100%" stop-color="#8b919c" />
 		</linearGradient>
 </defs>
 <symbol id="moon">

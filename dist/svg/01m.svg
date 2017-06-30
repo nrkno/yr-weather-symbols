@@ -1,9 +1,9 @@
 <svg x="0" y="0" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <defs>
 <radialGradient id="sun-winter-glow-grad" cx="45" cy="2" r="42" gradientUnits="userSpaceOnUse">
-      <stop offset="58%" stop-color="#c9b468"/>
+      <stop offset="54%" stop-color="#d6b849"/>
       <stop offset="67%" stop-color="#ffce47"/>
-      <stop offset="100%" stop-color="#ffce47"/>
+      <stop offset="100%" stop-color="#ffd357"/>
     </radialGradient>
 <linearGradient id="sun-inner-grad" x1="0%" y1="0%" x2="100%" y2="100%">
 			<stop offset="0%" stop-color="#ffaf22" />
