@@ -1743,7 +1743,7 @@ var srclibrecipes__base = {
   sunWinter3: [{
     primitive: 'sun',
     x: 0,
-    y: 21,
+    y: 19,
     scaleX: 0.7,
     scaleY: 0.7,
     winter: true

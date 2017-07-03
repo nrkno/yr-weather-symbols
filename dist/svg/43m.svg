@@ -18,7 +18,7 @@
 <radialGradient id="sun-winter-glow-grad" cx="45" cy="2" r="42" gradientUnits="userSpaceOnUse">
       <stop offset="54%" stop-color="#d6b849"/>
       <stop offset="67%" stop-color="#ffce47"/>
-      <stop offset="100%" stop-color="#ffd357"/>
+      <stop offset="100%" stop-color="#ffdb73"/>
     </radialGradient>
 <linearGradient id="sun-inner-grad" x1="0%" y1="0%" x2="100%" y2="100%">
 			<stop offset="0%" stop-color="#ffaf22" />
@@ -37,12 +37,12 @@
 		<image x="5" y="14" width="85" height="43" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFYAAAAkCAMAAAAkYj0PAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAVUExURSgoKExpcaCgoFBQUG5ublBQUISEhI1fsT0AAAAHdFJOUxsACBsPFRpGXuFgAAABWElEQVRIx7XV25bDIAgF0BMu/v8nF/E+iWlqHNKVN3cpIMXxL4GFM3SQfTazkUyxk63oLYwlVSy2silXkS/wUrZS2a3ZCn1zsdSw7UUYijuHsTa1IvfwWrbSXLkc4N9r27JViwmM1UtWXA3hohQ41m6vl8FQZi7wu2z7KXPW4uRiZS+2AmdXN7DdQEQWQHYHlt6z0dXBBa2xeeVktiZc1jDoF5eGkI4d4MjKc7cNbZ3bqjocLLx5oPDYTaIftcfvAvcs2GFxVsJTOP1wO1jGdUSLaz/DWA1Tl45+Tkqul2ArcPzayGq8JafOUffP3TUp6JQs+Rptc6vtmtBkUw+dv0NzWG0PYf8O7Ym09+ITXyXOPZqEX95aFe3PKxRsL2XV3HR+ZALirPSF0ceHp6F51WBv1A22VaW2GHWzWvat8LOAPf4CrjrA+neNK7+PQBf/DmmLrId09/QDWyESBsibwBUAAAAASUVORK5CYII="></image>
 	</symbol>
 <symbol id="snowflake">
-		<path d="M4.6,10.6l1.5-3.3l2.1,2.9c0.3,0.4,0.8,0.5,1.2,0.2c0.4-0.3,0.5-0.9,0.2-1.2L7.6,6.3L11.2,6c0.5,0,0.9-0.5,0.8-1 c0-0.5-0.5-0.8-1-0.8L7.5,4.5L9,1.3c0.2-0.4,0-1-0.4-1.2s-1,0-1.2,0.4L5.8,3.8L3.8,0.8C3.5,0.4,2.9,0.3,2.5,0.6 C2.4,0.7,2.3,0.8,2.3,1C2.1,1.2,2.1,1.6,2.3,1.8l2.1,2.9L0.8,5.1c-0.3,0-0.6,0.2-0.7,0.5C0,5.8,0,5.9,0,6.1c0,0.5,0.5,0.8,1,0.8 l3.6-0.3L3,9.8c-0.2,0.4,0,1,0.4,1.2C3.9,11.2,4.4,11,4.6,10.6z"></path>
+		<path d="M11.68,4.47H8.85L10.27,2A1.35,1.35,0,1,0,7.93.67L6.51,3.12,5.1.67A1.35,1.35,0,0,0,3.26.18,1.35,1.35,0,0,0,2.76,2L4.18,4.47H1.35a1.35,1.35,0,1,0,0,2.7H4.18L2.76,9.62a1.35,1.35,0,0,0,.49,1.84A1.39,1.39,0,0,0,5.1,11L6.51,8.52,7.93,11a1.35,1.35,0,1,0,2.34-1.35L8.85,7.17h2.83a1.35,1.35,0,1,0,0-2.7Z"></path>
 	</symbol>
 <symbol id="raindrop">
-		<path d="M1.9,13c-0.3,0-0.5-0.1-0.8-0.2c-1-0.4-1.4-1.6-0.9-2.6l4.2-9.1c0.4-1,1.6-1.4,2.5-0.9c1,0.4,1.4,1.6,0.9,2.6l-4.2,9.1 C3.3,12.6,2.6,13,1.9,13z"></path>
+		<path d="M2.5,13A2.5,2.5,0,0,1,.21,9.51l3.55-8a2.5,2.5,0,0,1,4.57,2l-3.55,8A2.5,2.5,0,0,1,2.5,13Z"></path>
 	</symbol>
-<use xlink:href="#sunWinter" class="sun-primitive" x="0" y="0" width="100" height="100" transform="translate(0,21) scale(0.7,0.7)"></use>
+<use xlink:href="#sunWinter" class="sun-primitive" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
 <use xlink:href="#cloud" class="cloud4-primitive" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
 <use xlink:href="#snowflake" class="snowflake-primitive" x="0" y="0" width="100" height="100" transform="translate(15,79) scale(1,1)"></use>
 <use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(32,86) scale(1,1)"></use>
