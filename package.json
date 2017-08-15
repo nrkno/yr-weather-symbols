@@ -4,8 +4,8 @@
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no",
   "dependencies": {
-    "@yr/component": "3.1.x",
-    "@yr/graphics-component": "3.2.x"
+    "@yr/component": "6.1.0-beta.1",
+    "@yr/graphics-component": "6.0.0-beta.1"
   },
   "devDependencies": {
     "babel-plugin-syntax-trailing-function-commas": "6.22.0",
@@ -34,7 +34,6 @@
     "buddy": "6.x.x",
     "buddy-plugin-imagemin": "5.3.1",
     "buddy-plugin-nunjucks": "3.0.1",
-    "react-dom": "15.6.x",
     "svg-to-png": "3.1.*"
   },
   "main": "src/lib/index.js",

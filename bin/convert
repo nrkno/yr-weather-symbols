@@ -24,7 +24,7 @@ for (const id in recipes) {
   recipe.forEach(recipe => {
     const opts = utils.parse(recipe);
     const elProps = primitives[opts.primitive](opts).props;
-    const use = `<use xlink:href="${elProps.xlinkHref}" class="${elProps.className}" x="0" y="0" width="100" height="100" transform="${elProps.transform}"></use>`;
+    const use = `<use xlink:href="${elProps['xlink:href']}" class="${elProps.className}" x="0" y="0" width="100" height="100" transform="${elProps.transform}"></use>`;
     let symbol = opts.primitive;
 
     if (opts.winter) {

@@ -12,5 +12,5 @@
 		<path stroke-width="2" stroke-miterlimit="10" d="M73.4,1.8c0,15.7-12.7,28.4-28.3,28.4S16.7,17.5,16.7,1.8H73.4z"></path>
 		<path fill="#333333" stroke-width="0" d="M88.3,2.7H1.7C0.8,2.7,0,2.1,0,1.4S0.8,0,1.7,0h86.6C89.2,0,90,0.6,90,1.4S89.2,2.7,88.3,2.7z"></path>
 	</symbol>
-<use xlink:href="#sunWinter" class="sun-primitive" x="0" y="0" width="100" height="100" transform="translate(5,37) scale(1,1)"></use>
+<use xlink:href="#sunWinter" class="undefined" x="0" y="0" width="100" height="100" transform="translate(5,37) scale(1,1)"></use>
 </svg>

@@ -11,5 +11,5 @@
 		<circle fill="currentColor" opacity="0.95" stroke-width="0" stroke-opacity="0" cx="45" cy="45" r="39"></circle>
 		<circle stroke-width="2" stroke-miterlimit="10" cx="45" cy="45" r="31.5"></circle>
 	</symbol>
-<use xlink:href="#sun" class="sun-primitive" x="0" y="0" width="100" height="100" transform="translate(5,5) scale(1,1)"></use>
+<use xlink:href="#sun" class="undefined" x="0" y="0" width="100" height="100" transform="translate(5,5) scale(1,1)"></use>
 </svg>
