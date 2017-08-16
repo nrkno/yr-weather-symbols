@@ -10,26 +10,24 @@
     performance-now "2.1.0"
     raf "3.3.2"
 
-"@yr/component@6.1.0-beta.1":
-  version "6.1.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@yr/component/-/component-6.1.0-beta.1.tgz#6ecf30a3e790ac5fb8fa86a3c77dcc89829f22d0"
+"@yr/component@6.1.0-beta.2", "@yr/component@6.1.0-beta.x":
+  version "6.1.0-beta.2"
+  resolved "https://registry.yarnpkg.com/@yr/component/-/component-6.1.0-beta.2.tgz#ec366cc602f3f25ea904c2b16a37dafdf28dd966"
   dependencies:
     "@yr/clock" "2.0.x"
     "@yr/is-equal" "1.0.x"
     "@yr/runtime" "2.0.x"
     debug "2.x.x"
-    inferno "3.7.1"
-    inferno-component "3.7.1"
-    inferno-create-element "3.7.1"
-    inferno-server "3.7.1"
     object-assign "4.1.x"
+    preact "8.2.1"
+    preact-render-to-string "3.6.3"
     prop-types "15.5.10"
 
-"@yr/graphics-component@6.0.0-beta.1":
-  version "6.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@yr/graphics-component/-/graphics-component-6.0.0-beta.1.tgz#ef82a4b912bb74caa7a090ebcabab03196fc8301"
+"@yr/graphics-component@6.0.0-beta.2":
+  version "6.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/@yr/graphics-component/-/graphics-component-6.0.0-beta.2.tgz#dda92b16b467da2a654d0de39a28fc6fa7ca3d45"
   dependencies:
-    "@yr/component" "6.1.0-beta.1"
+    "@yr/component" "6.1.0-beta.x"
   optionalDependencies:
     buddy-server "*"
 
@@ -645,8 +643,8 @@ babel-types@^6.24.1, babel-types@^6.25.0:
     to-fast-properties "^1.0.1"
 
 babylon@^6.17.2:
-  version "6.17.4"
-  resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.17.4.tgz#3e8b7402b88d22c3423e137a1577883b15ff869a"
+  version "6.18.0"
+  resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.18.0.tgz#af2f3b88fa6f5c1e4c634d1a0f8eac4f55b395e3"
 
 balanced-match@^0.4.2:
   version "0.4.2"
@@ -747,9 +745,9 @@ braces@^1.8.2:
     preserve "^0.2.0"
     repeat-element "^1.1.2"
 
-browserslist@2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-2.3.2.tgz#343ff101cce799d5eaf0b742e17d0d21efc2d379"
+browserslist@2.3.3, browserslist@^2.1.5:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-2.3.3.tgz#2b0cabc4d28489f682598605858a0782f14b154c"
   dependencies:
     caniuse-lite "^1.0.30000715"
     electron-to-chromium "^1.3.18"
@@ -760,13 +758,6 @@ browserslist@^1.3.6, browserslist@^1.5.2, browserslist@^1.7.6:
   dependencies:
     caniuse-db "^1.0.30000639"
     electron-to-chromium "^1.2.7"
-
-browserslist@^2.1.5:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-2.3.3.tgz#2b0cabc4d28489f682598605858a0782f14b154c"
-  dependencies:
-    caniuse-lite "^1.0.30000715"
-    electron-to-chromium "^1.3.18"
 
 buddy-cli@6.1.0:
   version "6.1.0"
@@ -803,8 +794,8 @@ buddy-server@*:
     websocket "1.0.24"
 
 buddy@6.x.x:
-  version "6.14.1"
-  resolved "https://registry.yarnpkg.com/buddy/-/buddy-6.14.1.tgz#167f77583038660629d1c4759e41d6cf50d5550c"
+  version "6.14.2"
+  resolved "https://registry.yarnpkg.com/buddy/-/buddy-6.14.2.tgz#1dd57793bf8ba3054e7ad97fedb5528973da02c4"
   dependencies:
     async "2.5.0"
     autoprefixer "7.1.2"
@@ -812,7 +803,7 @@ buddy@6.x.x:
     babel-plugin-external-helpers "6.22.0"
     babel-plugin-minify-dead-code-elimination "0.2.0"
     babel-plugin-transform-es2015-modules-commonjs "6.24.1"
-    browserslist "2.3.2"
+    browserslist "2.3.3"
     buddy-cli "6.1.0"
     chalk "2.1.0"
     chokidar "1.7.0"
@@ -2147,46 +2138,6 @@ indexes-of@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/indexes-of/-/indexes-of-1.0.1.tgz#f30f716c8e2bd346c7b67d3df3915566a7c05607"
 
-inferno-component@3.7.1:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/inferno-component/-/inferno-component-3.7.1.tgz#145496541661b7c350fca9a0137f4c7f2f8a4a07"
-  dependencies:
-    inferno "3.7.1"
-    inferno-shared "3.7.1"
-    inferno-vnode-flags "3.7.1"
-
-inferno-create-element@3.7.1:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/inferno-create-element/-/inferno-create-element-3.7.1.tgz#17a957c7f991e30da6f1869c9f8d0e6089caefc5"
-  dependencies:
-    inferno "3.7.1"
-    inferno-component "3.7.1"
-    inferno-shared "3.7.1"
-    inferno-vnode-flags "3.7.1"
-
-inferno-server@3.7.1:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/inferno-server/-/inferno-server-3.7.1.tgz#7ab50d3852130e33357f3bb1f6ee8b41b8e6dcbf"
-  dependencies:
-    inferno "3.7.1"
-    inferno-shared "3.7.1"
-    inferno-vnode-flags "3.7.1"
-
-inferno-shared@3.7.1:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/inferno-shared/-/inferno-shared-3.7.1.tgz#3dc6a8b26ceb91e3baf7eb875809802c65bd7929"
-
-inferno-vnode-flags@3.7.1:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/inferno-vnode-flags/-/inferno-vnode-flags-3.7.1.tgz#75483848c2d3cb16522c35abdc99e79b0967dd03"
-
-inferno@3.7.1:
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/inferno/-/inferno-3.7.1.tgz#11a2d485e53c3ae21b15b06fb2cf4973830946dd"
-  dependencies:
-    inferno-shared "3.7.1"
-    inferno-vnode-flags "3.7.1"
-
 inflight@^1.0.4:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/inflight/-/inflight-1.0.6.tgz#49bd6331d7d02d0c09bc910a1075ba8165b56df9"
@@ -3411,6 +3362,16 @@ postcss@^5.0.10, postcss@^5.0.11, postcss@^5.0.12, postcss@^5.0.13, postcss@^5.0
     source-map "^0.5.6"
     supports-color "^3.2.3"
 
+preact-render-to-string@3.6.3:
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/preact-render-to-string/-/preact-render-to-string-3.6.3.tgz#481d0d5bdac9192d3347557437d5cd00aa312043"
+  dependencies:
+    pretty-format "^3.5.1"
+
+preact@8.2.1:
+  version "8.2.1"
+  resolved "https://registry.yarnpkg.com/preact/-/preact-8.2.1.tgz#674243df0c847884d019834044aa2fcd311e72ed"
+
 prepend-http@^1.0.0, prepend-http@^1.0.1:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-1.0.4.tgz#d4f4562b0ce3696e41ac52d0e002e57a635dc6dc"
@@ -3422,6 +3383,10 @@ preserve@^0.2.0:
 pretty-bytes@4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/pretty-bytes/-/pretty-bytes-4.0.2.tgz#b2bf82e7350d65c6c33aa95aaa5a4f6327f61cd9"
+
+pretty-format@^3.5.1:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-3.8.0.tgz#bfbed56d5e9a776645f4b1ff7aa1a3ac4fa3c385"
 
 private@^0.1.6:
   version "0.1.7"

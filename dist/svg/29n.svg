@@ -34,12 +34,12 @@
 <symbol id="lightning">
 		<polygon points="14.6,18.4 7.7,15.4 10.6,0 0,19.5 7.1,22.5 2.5,40 "></polygon>
 	</symbol>
-<use xlink:href="#moon" class="undefined" x="0" y="0" width="100" height="100" transform="translate(0,3) scale(0.714285714,0.714285714)"></use>
-<use xlink:href="#cloud" class="undefined" x="0" y="0" width="100" height="100" transform="translate(5,25) scale(1,1)"></use>
-<use xlink:href="#snowflake" class="undefined" x="0" y="0" width="100" height="100" transform="translate(13,79) scale(1,1)"></use>
-<use xlink:href="#snowflake" class="undefined" x="0" y="0" width="100" height="100" transform="translate(27,88) scale(1,1)"></use>
-<use xlink:href="#lightning" class="undefined" x="0" y="0" width="100" height="100" transform="translate(42,51) scale(1,1)"></use>
-<use xlink:href="#snowflake" class="undefined" x="0" y="0" width="100" height="100" transform="translate(55,79) scale(1,1)"></use>
-<use xlink:href="#snowflake" class="undefined" x="0" y="0" width="100" height="100" transform="translate(69,88) scale(1,1)"></use>
-<use xlink:href="#snowflake" class="undefined" x="0" y="0" width="100" height="100" transform="translate(83,79) scale(1,1)"></use>
+<use xlink:href="#moon" class="moon-primitive" x="0" y="0" width="100" height="100" transform="translate(0,3) scale(0.714285714,0.714285714)"></use>
+<use xlink:href="#cloud" class="cloud4-primitive" x="0" y="0" width="100" height="100" transform="translate(5,25) scale(1,1)"></use>
+<use xlink:href="#snowflake" class="snowflake-primitive" x="0" y="0" width="100" height="100" transform="translate(13,79) scale(1,1)"></use>
+<use xlink:href="#snowflake" class="snowflake-primitive" x="0" y="0" width="100" height="100" transform="translate(27,88) scale(1,1)"></use>
+<use xlink:href="#lightning" class="lightning-primitive" x="0" y="0" width="100" height="100" transform="translate(42,51) scale(1,1)"></use>
+<use xlink:href="#snowflake" class="snowflake-primitive" x="0" y="0" width="100" height="100" transform="translate(55,79) scale(1,1)"></use>
+<use xlink:href="#snowflake" class="snowflake-primitive" x="0" y="0" width="100" height="100" transform="translate(69,88) scale(1,1)"></use>
+<use xlink:href="#snowflake" class="snowflake-primitive" x="0" y="0" width="100" height="100" transform="translate(83,79) scale(1,1)"></use>
 </svg>

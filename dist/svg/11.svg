@@ -28,11 +28,11 @@
 <symbol id="lightning">
 		<polygon points="14.6,18.4 7.7,15.4 10.6,0 0,19.5 7.1,22.5 2.5,40 "></polygon>
 	</symbol>
-<use xlink:href="#cloud" class="undefined" x="0" y="0" width="100" height="100" transform="translate(5,25) scale(1,1)"></use>
-<use xlink:href="#raindrop" class="undefined" x="0" y="0" width="100" height="100" transform="translate(18,78) scale(1,1)"></use>
-<use xlink:href="#raindrop" class="undefined" x="0" y="0" width="100" height="100" transform="translate(29,87) scale(1,1)"></use>
-<use xlink:href="#lightning" class="undefined" x="0" y="0" width="100" height="100" transform="translate(42,51) scale(1,1)"></use>
-<use xlink:href="#raindrop" class="undefined" x="0" y="0" width="100" height="100" transform="translate(55,79) scale(1,1)"></use>
-<use xlink:href="#raindrop" class="undefined" x="0" y="0" width="100" height="100" transform="translate(68,78) scale(1,1)"></use>
-<use xlink:href="#raindrop" class="undefined" x="0" y="0" width="100" height="100" transform="translate(82,87) scale(1,1)"></use>
+<use xlink:href="#cloud" class="cloud4-primitive" x="0" y="0" width="100" height="100" transform="translate(5,25) scale(1,1)"></use>
+<use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(18,78) scale(1,1)"></use>
+<use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(29,87) scale(1,1)"></use>
+<use xlink:href="#lightning" class="lightning-primitive" x="0" y="0" width="100" height="100" transform="translate(42,51) scale(1,1)"></use>
+<use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(55,79) scale(1,1)"></use>
+<use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(68,78) scale(1,1)"></use>
+<use xlink:href="#raindrop" class="raindrop-primitive" x="0" y="0" width="100" height="100" transform="translate(82,87) scale(1,1)"></use>
 </svg>

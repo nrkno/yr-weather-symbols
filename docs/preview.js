@@ -60,152 +60,97 @@ if ('browser' != 'browser') {
 })(typeof global === "undefined" ? self : global);
 
 (function () {
-/*== node_modules/ms/index.js ==*/
-$m['ms'] = { exports: {} };
-/**
- * Helpers.
- */
+/*== node_modules/object-assign/index.js ==*/
+$m['object-assign'] = { exports: {} };
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
 
-var ms__s = 1000;
-var ms__m = ms__s * 60;
-var ms__h = ms__m * 60;
-var ms__d = ms__h * 24;
-var ms__y = ms__d * 365.25;
+/* eslint-disable no-unused-vars */
+var objectassign__getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var objectassign__hasOwnProperty = Object.prototype.hasOwnProperty;
+var objectassign__propIsEnumerable = Object.prototype.propertyIsEnumerable;
 
-/**
- * Parse or format the given `val`.
- *
- * Options:
- *
- *  - `long` verbose formatting [false]
- *
- * @param {String|Number} val
- * @param {Object} [options]
- * @throws {Error} throw an error if val is not a non-empty string or a number
- * @return {String|Number}
- * @api public
- */
+function objectassign__toObject(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
 
-$m['ms'].exports = function (val, options) {
-  options = options || {};
-  var type = typeof val;
-  if (type === 'string' && val.length > 0) {
-    return ms__parse(val);
-  } else if (type === 'number' && isNaN(val) === false) {
-    return options.long ? ms__fmtLong(val) : ms__fmtShort(val);
-  }
-  throw new Error('val is not a non-empty string or a valid number. val=' + JSON.stringify(val));
+	return Object(val);
+}
+
+function objectassign__shouldUseNative() {
+	try {
+		if (!Object.assign) {
+			return false;
+		}
+
+		// Detect buggy property enumeration order in older V8 versions.
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+		var test1 = new String('abc'); // eslint-disable-line no-new-wrappers
+		test1[5] = 'de';
+		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test2 = {};
+		for (var i = 0; i < 10; i++) {
+			test2['_' + String.fromCharCode(i)] = i;
+		}
+		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+			return test2[n];
+		});
+		if (order2.join('') !== '0123456789') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test3 = {};
+		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+			test3[letter] = letter;
+		});
+		if (Object.keys(Object.assign({}, test3)).join('') !== 'abcdefghijklmnopqrst') {
+			return false;
+		}
+
+		return true;
+	} catch (err) {
+		// We don't expect any of the above to throw, but better to be safe.
+		return false;
+	}
+}
+
+$m['object-assign'].exports = objectassign__shouldUseNative() ? Object.assign : function (target, source) {
+	var from;
+	var to = objectassign__toObject(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (objectassign__hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (objectassign__getOwnPropertySymbols) {
+			symbols = objectassign__getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (objectassign__propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
 };
-
-/**
- * Parse the given `str` and return milliseconds.
- *
- * @param {String} str
- * @return {Number}
- * @api private
- */
-
-function ms__parse(str) {
-  str = String(str);
-  if (str.length > 100) {
-    return;
-  }
-  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str);
-  if (!match) {
-    return;
-  }
-  var n = parseFloat(match[1]);
-  var type = (match[2] || 'ms').toLowerCase();
-  switch (type) {
-    case 'years':
-    case 'year':
-    case 'yrs':
-    case 'yr':
-    case 'y':
-      return n * ms__y;
-    case 'days':
-    case 'day':
-    case 'd':
-      return n * ms__d;
-    case 'hours':
-    case 'hour':
-    case 'hrs':
-    case 'hr':
-    case 'h':
-      return n * ms__h;
-    case 'minutes':
-    case 'minute':
-    case 'mins':
-    case 'min':
-    case 'm':
-      return n * ms__m;
-    case 'seconds':
-    case 'second':
-    case 'secs':
-    case 'sec':
-    case 's':
-      return n * ms__s;
-    case 'milliseconds':
-    case 'millisecond':
-    case 'msecs':
-    case 'msec':
-    case 'ms':
-      return n;
-    default:
-      return undefined;
-  }
-}
-
-/**
- * Short format for `ms`.
- *
- * @param {Number} ms
- * @return {String}
- * @api private
- */
-
-function ms__fmtShort(ms) {
-  if (ms >= ms__d) {
-    return Math.round(ms / ms__d) + 'd';
-  }
-  if (ms >= ms__h) {
-    return Math.round(ms / ms__h) + 'h';
-  }
-  if (ms >= ms__m) {
-    return Math.round(ms / ms__m) + 'm';
-  }
-  if (ms >= ms__s) {
-    return Math.round(ms / ms__s) + 's';
-  }
-  return ms + 'ms';
-}
-
-/**
- * Long format for `ms`.
- *
- * @param {Number} ms
- * @return {String}
- * @api private
- */
-
-function ms__fmtLong(ms) {
-  return ms__plural(ms, ms__d, 'day') || ms__plural(ms, ms__h, 'hour') || ms__plural(ms, ms__m, 'minute') || ms__plural(ms, ms__s, 'second') || ms + ' ms';
-}
-
-/**
- * Pluralization helper.
- */
-
-function ms__plural(ms, n, name) {
-  if (ms < n) {
-    return;
-  }
-  if (ms < n * 1.5) {
-    return Math.floor(ms / n) + ' ' + name;
-  }
-  return Math.ceil(ms / n) + ' ' + name + 's';
-}
-/*≠≠ node_modules/ms/index.js ≠≠*/
+/*≠≠ node_modules/object-assign/index.js ≠≠*/
 
 
 /*== node_modules/@yr/runtime/index.js ==*/
@@ -891,97 +836,461 @@ $m['src/lib/recipes'].exports = {
 /*≠≠ src/lib/recipes.js ≠≠*/
 
 
-/*== node_modules/object-assign/index.js ==*/
-$m['object-assign'] = { exports: {} };
-/*
-object-assign
-(c) Sindre Sorhus
-@license MIT
-*/
-
-/* eslint-disable no-unused-vars */
-var objectassign__getOwnPropertySymbols = Object.getOwnPropertySymbols;
-var objectassign__hasOwnProperty = Object.prototype.hasOwnProperty;
-var objectassign__propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-function objectassign__toObject(val) {
-	if (val === null || val === undefined) {
-		throw new TypeError('Object.assign cannot be called with null or undefined');
-	}
-
-	return Object(val);
-}
-
-function objectassign__shouldUseNative() {
-	try {
-		if (!Object.assign) {
-			return false;
-		}
-
-		// Detect buggy property enumeration order in older V8 versions.
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-		var test1 = new String('abc'); // eslint-disable-line no-new-wrappers
-		test1[5] = 'de';
-		if (Object.getOwnPropertyNames(test1)[0] === '5') {
-			return false;
-		}
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-		var test2 = {};
-		for (var i = 0; i < 10; i++) {
-			test2['_' + String.fromCharCode(i)] = i;
-		}
-		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
-			return test2[n];
-		});
-		if (order2.join('') !== '0123456789') {
-			return false;
-		}
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-		var test3 = {};
-		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
-			test3[letter] = letter;
-		});
-		if (Object.keys(Object.assign({}, test3)).join('') !== 'abcdefghijklmnopqrst') {
-			return false;
-		}
-
-		return true;
-	} catch (err) {
-		// We don't expect any of the above to throw, but better to be safe.
-		return false;
-	}
-}
-
-$m['object-assign'].exports = objectassign__shouldUseNative() ? Object.assign : function (target, source) {
-	var from;
-	var to = objectassign__toObject(target);
-	var symbols;
-
-	for (var s = 1; s < arguments.length; s++) {
-		from = Object(arguments[s]);
-
-		for (var key in from) {
-			if (objectassign__hasOwnProperty.call(from, key)) {
-				to[key] = from[key];
-			}
-		}
-
-		if (objectassign__getOwnPropertySymbols) {
-			symbols = objectassign__getOwnPropertySymbols(from);
-			for (var i = 0; i < symbols.length; i++) {
-				if (objectassign__propIsEnumerable.call(from, symbols[i])) {
-					to[symbols[i]] = from[symbols[i]];
-				}
-			}
-		}
-	}
-
-	return to;
-};
-/*≠≠ node_modules/object-assign/index.js ≠≠*/
+/*== node_modules/preact/dist/preact.js ==*/
+$m['preact'] = { exports: {} };
+!function () {
+    function VNode() {}
+    function h(nodeName, attributes) {
+        var lastSimple,
+            child,
+            simple,
+            i,
+            children = EMPTY_CHILDREN;
+        for (i = arguments.length; i-- > 2;) stack.push(arguments[i]);
+        if (attributes && null != attributes.children) {
+            if (!stack.length) stack.push(attributes.children);
+            delete attributes.children;
+        }
+        while (stack.length) if ((child = stack.pop()) && void 0 !== child.pop) for (i = child.length; i--;) stack.push(child[i]);else {
+            if ('boolean' == typeof child) child = null;
+            if (simple = 'function' != typeof nodeName) if (null == child) child = '';else if ('number' == typeof child) child = String(child);else if ('string' != typeof child) simple = !1;
+            if (simple && lastSimple) children[children.length - 1] += child;else if (children === EMPTY_CHILDREN) children = [child];else children.push(child);
+            lastSimple = simple;
+        }
+        var p = new VNode();
+        p.nodeName = nodeName;
+        p.children = children;
+        p.attributes = null == attributes ? void 0 : attributes;
+        p.key = null == attributes ? void 0 : attributes.key;
+        if (void 0 !== options.vnode) options.vnode(p);
+        return p;
+    }
+    function extend(obj, props) {
+        for (var i in props) obj[i] = props[i];
+        return obj;
+    }
+    function cloneElement(vnode, props) {
+        return h(vnode.nodeName, extend(extend({}, vnode.attributes), props), arguments.length > 2 ? [].slice.call(arguments, 2) : vnode.children);
+    }
+    function enqueueRender(component) {
+        if (!component.__d && (component.__d = !0) && 1 == items.push(component)) (options.debounceRendering || defer)(rerender);
+    }
+    function rerender() {
+        var p,
+            list = items;
+        items = [];
+        while (p = list.pop()) if (p.__d) renderComponent(p);
+    }
+    function isSameNodeType(node, vnode, hydrating) {
+        if ('string' == typeof vnode || 'number' == typeof vnode) return void 0 !== node.splitText;
+        if ('string' == typeof vnode.nodeName) return !node._componentConstructor && isNamedNode(node, vnode.nodeName);else return hydrating || node._componentConstructor === vnode.nodeName;
+    }
+    function isNamedNode(node, nodeName) {
+        return node.__n === nodeName || node.nodeName.toLowerCase() === nodeName.toLowerCase();
+    }
+    function getNodeProps(vnode) {
+        var props = extend({}, vnode.attributes);
+        props.children = vnode.children;
+        var defaultProps = vnode.nodeName.defaultProps;
+        if (void 0 !== defaultProps) for (var i in defaultProps) if (void 0 === props[i]) props[i] = defaultProps[i];
+        return props;
+    }
+    function createNode(nodeName, isSvg) {
+        var node = isSvg ? document.createElementNS('http://www.w3.org/2000/svg', nodeName) : document.createElement(nodeName);
+        node.__n = nodeName;
+        return node;
+    }
+    function removeNode(node) {
+        var parentNode = node.parentNode;
+        if (parentNode) parentNode.removeChild(node);
+    }
+    function setAccessor(node, name, old, value, isSvg) {
+        if ('className' === name) name = 'class';
+        if ('key' === name) ;else if ('ref' === name) {
+            if (old) old(null);
+            if (value) value(node);
+        } else if ('class' === name && !isSvg) node.className = value || '';else if ('style' === name) {
+            if (!value || 'string' == typeof value || 'string' == typeof old) node.style.cssText = value || '';
+            if (value && 'object' == typeof value) {
+                if ('string' != typeof old) for (var i in old) if (!(i in value)) node.style[i] = '';
+                for (var i in value) node.style[i] = 'number' == typeof value[i] && !1 === IS_NON_DIMENSIONAL.test(i) ? value[i] + 'px' : value[i];
+            }
+        } else if ('dangerouslySetInnerHTML' === name) {
+            if (value) node.innerHTML = value.__html || '';
+        } else if ('o' == name[0] && 'n' == name[1]) {
+            var useCapture = name !== (name = name.replace(/Capture$/, ''));
+            name = name.toLowerCase().substring(2);
+            if (value) {
+                if (!old) node.addEventListener(name, eventProxy, useCapture);
+            } else node.removeEventListener(name, eventProxy, useCapture);
+            (node.__l || (node.__l = {}))[name] = value;
+        } else if ('list' !== name && 'type' !== name && !isSvg && name in node) {
+            setProperty(node, name, null == value ? '' : value);
+            if (null == value || !1 === value) node.removeAttribute(name);
+        } else {
+            var ns = isSvg && name !== (name = name.replace(/^xlink\:?/, ''));
+            if (null == value || !1 === value) {
+                if (ns) node.removeAttributeNS('http://www.w3.org/1999/xlink', name.toLowerCase());else node.removeAttribute(name);
+            } else if ('function' != typeof value) if (ns) node.setAttributeNS('http://www.w3.org/1999/xlink', name.toLowerCase(), value);else node.setAttribute(name, value);
+        }
+    }
+    function setProperty(node, name, value) {
+        try {
+            node[name] = value;
+        } catch (e) {}
+    }
+    function eventProxy(e) {
+        return this.__l[e.type](options.event && options.event(e) || e);
+    }
+    function flushMounts() {
+        var c;
+        while (c = mounts.pop()) {
+            if (options.afterMount) options.afterMount(c);
+            if (c.componentDidMount) c.componentDidMount();
+        }
+    }
+    function diff(dom, vnode, context, mountAll, parent, componentRoot) {
+        if (!diffLevel++) {
+            isSvgMode = null != parent && void 0 !== parent.ownerSVGElement;
+            hydrating = null != dom && !('__preactattr_' in dom);
+        }
+        var ret = idiff(dom, vnode, context, mountAll, componentRoot);
+        if (parent && ret.parentNode !== parent) parent.appendChild(ret);
+        if (! --diffLevel) {
+            hydrating = !1;
+            if (!componentRoot) flushMounts();
+        }
+        return ret;
+    }
+    function idiff(dom, vnode, context, mountAll, componentRoot) {
+        var out = dom,
+            prevSvgMode = isSvgMode;
+        if (null == vnode || 'boolean' == typeof vnode) vnode = '';
+        if ('string' == typeof vnode || 'number' == typeof vnode) {
+            if (dom && void 0 !== dom.splitText && dom.parentNode && (!dom._component || componentRoot)) {
+                if (dom.nodeValue != vnode) dom.nodeValue = vnode;
+            } else {
+                out = document.createTextNode(vnode);
+                if (dom) {
+                    if (dom.parentNode) dom.parentNode.replaceChild(out, dom);
+                    recollectNodeTree(dom, !0);
+                }
+            }
+            out.__preactattr_ = !0;
+            return out;
+        }
+        var vnodeName = vnode.nodeName;
+        if ('function' == typeof vnodeName) return buildComponentFromVNode(dom, vnode, context, mountAll);
+        isSvgMode = 'svg' === vnodeName ? !0 : 'foreignObject' === vnodeName ? !1 : isSvgMode;
+        vnodeName = String(vnodeName);
+        if (!dom || !isNamedNode(dom, vnodeName)) {
+            out = createNode(vnodeName, isSvgMode);
+            if (dom) {
+                while (dom.firstChild) out.appendChild(dom.firstChild);
+                if (dom.parentNode) dom.parentNode.replaceChild(out, dom);
+                recollectNodeTree(dom, !0);
+            }
+        }
+        var fc = out.firstChild,
+            props = out.__preactattr_,
+            vchildren = vnode.children;
+        if (null == props) {
+            props = out.__preactattr_ = {};
+            for (var a = out.attributes, i = a.length; i--;) props[a[i].name] = a[i].value;
+        }
+        if (!hydrating && vchildren && 1 === vchildren.length && 'string' == typeof vchildren[0] && null != fc && void 0 !== fc.splitText && null == fc.nextSibling) {
+            if (fc.nodeValue != vchildren[0]) fc.nodeValue = vchildren[0];
+        } else if (vchildren && vchildren.length || null != fc) innerDiffNode(out, vchildren, context, mountAll, hydrating || null != props.dangerouslySetInnerHTML);
+        diffAttributes(out, vnode.attributes, props);
+        isSvgMode = prevSvgMode;
+        return out;
+    }
+    function innerDiffNode(dom, vchildren, context, mountAll, isHydrating) {
+        var j,
+            c,
+            f,
+            vchild,
+            child,
+            originalChildren = dom.childNodes,
+            children = [],
+            keyed = {},
+            keyedLen = 0,
+            min = 0,
+            len = originalChildren.length,
+            childrenLen = 0,
+            vlen = vchildren ? vchildren.length : 0;
+        if (0 !== len) for (var i = 0; i < len; i++) {
+            var _child = originalChildren[i],
+                props = _child.__preactattr_,
+                key = vlen && props ? _child._component ? _child._component.__k : props.key : null;
+            if (null != key) {
+                keyedLen++;
+                keyed[key] = _child;
+            } else if (props || (void 0 !== _child.splitText ? isHydrating ? _child.nodeValue.trim() : !0 : isHydrating)) children[childrenLen++] = _child;
+        }
+        if (0 !== vlen) for (var i = 0; i < vlen; i++) {
+            vchild = vchildren[i];
+            child = null;
+            var key = vchild.key;
+            if (null != key) {
+                if (keyedLen && void 0 !== keyed[key]) {
+                    child = keyed[key];
+                    keyed[key] = void 0;
+                    keyedLen--;
+                }
+            } else if (!child && min < childrenLen) for (j = min; j < childrenLen; j++) if (void 0 !== children[j] && isSameNodeType(c = children[j], vchild, isHydrating)) {
+                child = c;
+                children[j] = void 0;
+                if (j === childrenLen - 1) childrenLen--;
+                if (j === min) min++;
+                break;
+            }
+            child = idiff(child, vchild, context, mountAll);
+            f = originalChildren[i];
+            if (child && child !== dom && child !== f) if (null == f) dom.appendChild(child);else if (child === f.nextSibling) removeNode(f);else dom.insertBefore(child, f);
+        }
+        if (keyedLen) for (var i in keyed) if (void 0 !== keyed[i]) recollectNodeTree(keyed[i], !1);
+        while (min <= childrenLen) if (void 0 !== (child = children[childrenLen--])) recollectNodeTree(child, !1);
+    }
+    function recollectNodeTree(node, unmountOnly) {
+        var component = node._component;
+        if (component) unmountComponent(component);else {
+            if (null != node.__preactattr_ && node.__preactattr_.ref) node.__preactattr_.ref(null);
+            if (!1 === unmountOnly || null == node.__preactattr_) removeNode(node);
+            removeChildren(node);
+        }
+    }
+    function removeChildren(node) {
+        node = node.lastChild;
+        while (node) {
+            var next = node.previousSibling;
+            recollectNodeTree(node, !0);
+            node = next;
+        }
+    }
+    function diffAttributes(dom, attrs, old) {
+        var name;
+        for (name in old) if ((!attrs || null == attrs[name]) && null != old[name]) setAccessor(dom, name, old[name], old[name] = void 0, isSvgMode);
+        for (name in attrs) if (!('children' === name || 'innerHTML' === name || name in old && attrs[name] === ('value' === name || 'checked' === name ? dom[name] : old[name]))) setAccessor(dom, name, old[name], old[name] = attrs[name], isSvgMode);
+    }
+    function collectComponent(component) {
+        var name = component.constructor.name;
+        (components[name] || (components[name] = [])).push(component);
+    }
+    function createComponent(Ctor, props, context) {
+        var inst,
+            list = components[Ctor.name];
+        if (Ctor.prototype && Ctor.prototype.render) {
+            inst = new Ctor(props, context);
+            Component.call(inst, props, context);
+        } else {
+            inst = new Component(props, context);
+            inst.constructor = Ctor;
+            inst.render = doRender;
+        }
+        if (list) for (var i = list.length; i--;) if (list[i].constructor === Ctor) {
+            inst.__b = list[i].__b;
+            list.splice(i, 1);
+            break;
+        }
+        return inst;
+    }
+    function doRender(props, state, context) {
+        return this.constructor(props, context);
+    }
+    function setComponentProps(component, props, opts, context, mountAll) {
+        if (!component.__x) {
+            component.__x = !0;
+            if (component.__r = props.ref) delete props.ref;
+            if (component.__k = props.key) delete props.key;
+            if (!component.base || mountAll) {
+                if (component.componentWillMount) component.componentWillMount();
+            } else if (component.componentWillReceiveProps) component.componentWillReceiveProps(props, context);
+            if (context && context !== component.context) {
+                if (!component.__c) component.__c = component.context;
+                component.context = context;
+            }
+            if (!component.__p) component.__p = component.props;
+            component.props = props;
+            component.__x = !1;
+            if (0 !== opts) if (1 === opts || !1 !== options.syncComponentUpdates || !component.base) renderComponent(component, 1, mountAll);else enqueueRender(component);
+            if (component.__r) component.__r(component);
+        }
+    }
+    function renderComponent(component, opts, mountAll, isChild) {
+        if (!component.__x) {
+            var rendered,
+                inst,
+                cbase,
+                props = component.props,
+                state = component.state,
+                context = component.context,
+                previousProps = component.__p || props,
+                previousState = component.__s || state,
+                previousContext = component.__c || context,
+                isUpdate = component.base,
+                nextBase = component.__b,
+                initialBase = isUpdate || nextBase,
+                initialChildComponent = component._component,
+                skip = !1;
+            if (isUpdate) {
+                component.props = previousProps;
+                component.state = previousState;
+                component.context = previousContext;
+                if (2 !== opts && component.shouldComponentUpdate && !1 === component.shouldComponentUpdate(props, state, context)) skip = !0;else if (component.componentWillUpdate) component.componentWillUpdate(props, state, context);
+                component.props = props;
+                component.state = state;
+                component.context = context;
+            }
+            component.__p = component.__s = component.__c = component.__b = null;
+            component.__d = !1;
+            if (!skip) {
+                rendered = component.render(props, state, context);
+                if (component.getChildContext) context = extend(extend({}, context), component.getChildContext());
+                var toUnmount,
+                    base,
+                    childComponent = rendered && rendered.nodeName;
+                if ('function' == typeof childComponent) {
+                    var childProps = getNodeProps(rendered);
+                    inst = initialChildComponent;
+                    if (inst && inst.constructor === childComponent && childProps.key == inst.__k) setComponentProps(inst, childProps, 1, context, !1);else {
+                        toUnmount = inst;
+                        component._component = inst = createComponent(childComponent, childProps, context);
+                        inst.__b = inst.__b || nextBase;
+                        inst.__u = component;
+                        setComponentProps(inst, childProps, 0, context, !1);
+                        renderComponent(inst, 1, mountAll, !0);
+                    }
+                    base = inst.base;
+                } else {
+                    cbase = initialBase;
+                    toUnmount = initialChildComponent;
+                    if (toUnmount) cbase = component._component = null;
+                    if (initialBase || 1 === opts) {
+                        if (cbase) cbase._component = null;
+                        base = diff(cbase, rendered, context, mountAll || !isUpdate, initialBase && initialBase.parentNode, !0);
+                    }
+                }
+                if (initialBase && base !== initialBase && inst !== initialChildComponent) {
+                    var baseParent = initialBase.parentNode;
+                    if (baseParent && base !== baseParent) {
+                        baseParent.replaceChild(base, initialBase);
+                        if (!toUnmount) {
+                            initialBase._component = null;
+                            recollectNodeTree(initialBase, !1);
+                        }
+                    }
+                }
+                if (toUnmount) unmountComponent(toUnmount);
+                component.base = base;
+                if (base && !isChild) {
+                    var componentRef = component,
+                        t = component;
+                    while (t = t.__u) (componentRef = t).base = base;
+                    base._component = componentRef;
+                    base._componentConstructor = componentRef.constructor;
+                }
+            }
+            if (!isUpdate || mountAll) mounts.unshift(component);else if (!skip) {
+                if (component.componentDidUpdate) component.componentDidUpdate(previousProps, previousState, previousContext);
+                if (options.afterUpdate) options.afterUpdate(component);
+            }
+            if (null != component.__h) while (component.__h.length) component.__h.pop().call(component);
+            if (!diffLevel && !isChild) flushMounts();
+        }
+    }
+    function buildComponentFromVNode(dom, vnode, context, mountAll) {
+        var c = dom && dom._component,
+            originalComponent = c,
+            oldDom = dom,
+            isDirectOwner = c && dom._componentConstructor === vnode.nodeName,
+            isOwner = isDirectOwner,
+            props = getNodeProps(vnode);
+        while (c && !isOwner && (c = c.__u)) isOwner = c.constructor === vnode.nodeName;
+        if (c && isOwner && (!mountAll || c._component)) {
+            setComponentProps(c, props, 3, context, mountAll);
+            dom = c.base;
+        } else {
+            if (originalComponent && !isDirectOwner) {
+                unmountComponent(originalComponent);
+                dom = oldDom = null;
+            }
+            c = createComponent(vnode.nodeName, props, context);
+            if (dom && !c.__b) {
+                c.__b = dom;
+                oldDom = null;
+            }
+            setComponentProps(c, props, 1, context, mountAll);
+            dom = c.base;
+            if (oldDom && dom !== oldDom) {
+                oldDom._component = null;
+                recollectNodeTree(oldDom, !1);
+            }
+        }
+        return dom;
+    }
+    function unmountComponent(component) {
+        if (options.beforeUnmount) options.beforeUnmount(component);
+        var base = component.base;
+        component.__x = !0;
+        if (component.componentWillUnmount) component.componentWillUnmount();
+        component.base = null;
+        var inner = component._component;
+        if (inner) unmountComponent(inner);else if (base) {
+            if (base.__preactattr_ && base.__preactattr_.ref) base.__preactattr_.ref(null);
+            component.__b = base;
+            removeNode(base);
+            collectComponent(component);
+            removeChildren(base);
+        }
+        if (component.__r) component.__r(null);
+    }
+    function Component(props, context) {
+        this.__d = !0;
+        this.context = context;
+        this.props = props;
+        this.state = this.state || {};
+    }
+    function render(vnode, parent, merge) {
+        return diff(merge, vnode, {}, !1, parent, !1);
+    }
+    var options = {};
+    var stack = [];
+    var EMPTY_CHILDREN = [];
+    var defer = 'function' == typeof Promise ? Promise.resolve().then.bind(Promise.resolve()) : setTimeout;
+    var IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
+    var items = [];
+    var mounts = [];
+    var diffLevel = 0;
+    var isSvgMode = !1;
+    var hydrating = !1;
+    var components = {};
+    extend(Component.prototype, {
+        setState: function (state, callback) {
+            var s = this.state;
+            if (!this.__s) this.__s = extend({}, s);
+            extend(s, 'function' == typeof state ? state(s, this.props) : state);
+            if (callback) (this.__h = this.__h || []).push(callback);
+            enqueueRender(this);
+        },
+        forceUpdate: function (callback) {
+            if (callback) (this.__h = this.__h || []).push(callback);
+            renderComponent(this, 2);
+        },
+        render: function () {}
+    });
+    var preact = {
+        h: h,
+        createElement: h,
+        cloneElement: cloneElement,
+        Component: Component,
+        render: render,
+        rerender: rerender,
+        options: options
+    };
+    if ('undefined' != typeof $m['preact']) $m['preact'].exports = preact;else self.preact = preact;
+}();
+/*≠≠ node_modules/preact/dist/preact.js ≠≠*/
 
 
 /*== node_modules/prop-types/lib/ReactPropTypesSecret.js ==*/
@@ -999,6 +1308,154 @@ var proptypeslibReactPropTypesSecret__ReactPropTypesSecret = 'SECRET_DO_NOT_PASS
 
 $m['prop-types/lib/ReactPropTypesSecret'].exports = proptypeslibReactPropTypesSecret__ReactPropTypesSecret;
 /*≠≠ node_modules/prop-types/lib/ReactPropTypesSecret.js ≠≠*/
+
+
+/*== node_modules/ms/index.js ==*/
+$m['ms'] = { exports: {} };
+/**
+ * Helpers.
+ */
+
+var ms__s = 1000;
+var ms__m = ms__s * 60;
+var ms__h = ms__m * 60;
+var ms__d = ms__h * 24;
+var ms__y = ms__d * 365.25;
+
+/**
+ * Parse or format the given `val`.
+ *
+ * Options:
+ *
+ *  - `long` verbose formatting [false]
+ *
+ * @param {String|Number} val
+ * @param {Object} [options]
+ * @throws {Error} throw an error if val is not a non-empty string or a number
+ * @return {String|Number}
+ * @api public
+ */
+
+$m['ms'].exports = function (val, options) {
+  options = options || {};
+  var type = typeof val;
+  if (type === 'string' && val.length > 0) {
+    return ms__parse(val);
+  } else if (type === 'number' && isNaN(val) === false) {
+    return options.long ? ms__fmtLong(val) : ms__fmtShort(val);
+  }
+  throw new Error('val is not a non-empty string or a valid number. val=' + JSON.stringify(val));
+};
+
+/**
+ * Parse the given `str` and return milliseconds.
+ *
+ * @param {String} str
+ * @return {Number}
+ * @api private
+ */
+
+function ms__parse(str) {
+  str = String(str);
+  if (str.length > 100) {
+    return;
+  }
+  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str);
+  if (!match) {
+    return;
+  }
+  var n = parseFloat(match[1]);
+  var type = (match[2] || 'ms').toLowerCase();
+  switch (type) {
+    case 'years':
+    case 'year':
+    case 'yrs':
+    case 'yr':
+    case 'y':
+      return n * ms__y;
+    case 'days':
+    case 'day':
+    case 'd':
+      return n * ms__d;
+    case 'hours':
+    case 'hour':
+    case 'hrs':
+    case 'hr':
+    case 'h':
+      return n * ms__h;
+    case 'minutes':
+    case 'minute':
+    case 'mins':
+    case 'min':
+    case 'm':
+      return n * ms__m;
+    case 'seconds':
+    case 'second':
+    case 'secs':
+    case 'sec':
+    case 's':
+      return n * ms__s;
+    case 'milliseconds':
+    case 'millisecond':
+    case 'msecs':
+    case 'msec':
+    case 'ms':
+      return n;
+    default:
+      return undefined;
+  }
+}
+
+/**
+ * Short format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function ms__fmtShort(ms) {
+  if (ms >= ms__d) {
+    return Math.round(ms / ms__d) + 'd';
+  }
+  if (ms >= ms__h) {
+    return Math.round(ms / ms__h) + 'h';
+  }
+  if (ms >= ms__m) {
+    return Math.round(ms / ms__m) + 'm';
+  }
+  if (ms >= ms__s) {
+    return Math.round(ms / ms__s) + 's';
+  }
+  return ms + 'ms';
+}
+
+/**
+ * Long format for `ms`.
+ *
+ * @param {Number} ms
+ * @return {String}
+ * @api private
+ */
+
+function ms__fmtLong(ms) {
+  return ms__plural(ms, ms__d, 'day') || ms__plural(ms, ms__h, 'hour') || ms__plural(ms, ms__m, 'minute') || ms__plural(ms, ms__s, 'second') || ms + ' ms';
+}
+
+/**
+ * Pluralization helper.
+ */
+
+function ms__plural(ms, n, name) {
+  if (ms < n) {
+    return;
+  }
+  if (ms < n * 1.5) {
+    return Math.floor(ms / n) + ' ' + name;
+  }
+  return Math.ceil(ms / n) + ' ' + name + 's';
+}
+/*≠≠ node_modules/ms/index.js ≠≠*/
 
 
 /*== node_modules/performance-now/lib/performance-now.js ==*/
@@ -1037,2671 +1494,6 @@ $m['performance-now'] = { exports: {} };
   }
 }).call(this);
 /*≠≠ node_modules/performance-now/lib/performance-now.js ≠≠*/
-
-
-/*== node_modules/inferno/dist/index.js ==*/
-$m['inferno/dist/index'] = { exports: {} };
-
-Object.defineProperty($m['inferno/dist/index'].exports, '__esModule', { value: true });
-
-/**
- * @module Inferno-Shared
- */ /** TypeDoc Comment */
-var infernodistindex__NO_OP = "$NO_OP";
-var infernodistindex__ERROR_MSG = "a runtime error occured! Use Inferno in development environment to find the error.";
-// This should be boolean and not reference to window.document
-var infernodistindex__isBrowser = !!(typeof window !== "undefined" && window.document);
-// this is MUCH faster than .constructor === Array and instanceof Array
-// in Node 7 and the later versions of V8, slower in older versions though
-var infernodistindex__isArray = Array.isArray;
-function infernodistindex__isStatefulComponent(o) {
-    return !infernodistindex__isUndefined(o.prototype) && !infernodistindex__isUndefined(o.prototype.render);
-}
-function infernodistindex__isStringOrNumber(o) {
-    var type = typeof o;
-    return type === "string" || type === "number";
-}
-function infernodistindex__isNullOrUndef(o) {
-    return infernodistindex__isUndefined(o) || infernodistindex__isNull(o);
-}
-function infernodistindex__isInvalid(o) {
-    return infernodistindex__isNull(o) || o === false || infernodistindex__isTrue(o) || infernodistindex__isUndefined(o);
-}
-function infernodistindex__isFunction(o) {
-    return typeof o === "function";
-}
-function infernodistindex__isString(o) {
-    return typeof o === "string";
-}
-function infernodistindex__isNumber(o) {
-    return typeof o === "number";
-}
-function infernodistindex__isNull(o) {
-    return o === null;
-}
-function infernodistindex__isTrue(o) {
-    return o === true;
-}
-function infernodistindex__isUndefined(o) {
-    return o === void 0;
-}
-function infernodistindex__isObject(o) {
-    return typeof o === "object";
-}
-function infernodistindex__throwError(message) {
-    if (!message) {
-        message = infernodistindex__ERROR_MSG;
-    }
-    throw new Error("Inferno Error: " + message);
-}
-function infernodistindex__warning(message) {
-    // tslint:disable-next-line:no-console
-    console.warn(message);
-}
-function infernodistindex__combineFrom(first, second) {
-    var out = {};
-    if (first) {
-        for (var key in first) {
-            out[key] = first[key];
-        }
-    }
-    if (second) {
-        for (var key$1 in second) {
-            out[key$1] = second[key$1];
-        }
-    }
-    return out;
-}
-function infernodistindex__Lifecycle() {
-    this.listeners = [];
-}
-infernodistindex__Lifecycle.prototype.addListener = function addListener(callback) {
-    this.listeners.push(callback);
-};
-infernodistindex__Lifecycle.prototype.trigger = function trigger() {
-    var listeners = this.listeners;
-    var listener;
-    // We need to remove current listener from array when calling it, because more listeners might be added
-    while (listener = listeners.shift()) {
-        listener();
-    }
-};
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-var infernodistindex__options = {
-    afterMount: null,
-    afterRender: null,
-    afterUpdate: null,
-    beforeRender: null,
-    beforeUnmount: null,
-    createVNode: null,
-    findDOMNodeEnabled: false,
-    recyclingEnabled: false,
-    roots: []
-};
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-var infernodistindex__xlinkNS = "http://www.w3.org/1999/xlink";
-var infernodistindex__xmlNS = "http://www.w3.org/XML/1998/namespace";
-var infernodistindex__svgNS = "http://www.w3.org/2000/svg";
-var infernodistindex__strictProps = new Set();
-infernodistindex__strictProps.add("volume");
-infernodistindex__strictProps.add("defaultChecked");
-var infernodistindex__booleanProps = new Set();
-infernodistindex__booleanProps.add("muted");
-infernodistindex__booleanProps.add("scoped");
-infernodistindex__booleanProps.add("loop");
-infernodistindex__booleanProps.add("open");
-infernodistindex__booleanProps.add("checked");
-infernodistindex__booleanProps.add("default");
-infernodistindex__booleanProps.add("capture");
-infernodistindex__booleanProps.add("disabled");
-infernodistindex__booleanProps.add("readOnly");
-infernodistindex__booleanProps.add("required");
-infernodistindex__booleanProps.add("autoplay");
-infernodistindex__booleanProps.add("controls");
-infernodistindex__booleanProps.add("seamless");
-infernodistindex__booleanProps.add("reversed");
-infernodistindex__booleanProps.add("allowfullscreen");
-infernodistindex__booleanProps.add("novalidate");
-infernodistindex__booleanProps.add("hidden");
-infernodistindex__booleanProps.add("autoFocus");
-infernodistindex__booleanProps.add("selected");
-infernodistindex__booleanProps.add("indeterminate");
-var infernodistindex__namespaces = new Map();
-infernodistindex__namespaces.set("xlink:href", infernodistindex__xlinkNS);
-infernodistindex__namespaces.set("xlink:arcrole", infernodistindex__xlinkNS);
-infernodistindex__namespaces.set("xlink:actuate", infernodistindex__xlinkNS);
-infernodistindex__namespaces.set("xlink:show", infernodistindex__xlinkNS);
-infernodistindex__namespaces.set("xlink:role", infernodistindex__xlinkNS);
-infernodistindex__namespaces.set("xlink:title", infernodistindex__xlinkNS);
-infernodistindex__namespaces.set("xlink:type", infernodistindex__xlinkNS);
-infernodistindex__namespaces.set("xml:base", infernodistindex__xmlNS);
-infernodistindex__namespaces.set("xml:lang", infernodistindex__xmlNS);
-infernodistindex__namespaces.set("xml:space", infernodistindex__xmlNS);
-var infernodistindex__isUnitlessNumber = new Set();
-infernodistindex__isUnitlessNumber.add("animationIterationCount");
-infernodistindex__isUnitlessNumber.add("borderImageOutset");
-infernodistindex__isUnitlessNumber.add("borderImageSlice");
-infernodistindex__isUnitlessNumber.add("borderImageWidth");
-infernodistindex__isUnitlessNumber.add("boxFlex");
-infernodistindex__isUnitlessNumber.add("boxFlexGroup");
-infernodistindex__isUnitlessNumber.add("boxOrdinalGroup");
-infernodistindex__isUnitlessNumber.add("columnCount");
-infernodistindex__isUnitlessNumber.add("flex");
-infernodistindex__isUnitlessNumber.add("flexGrow");
-infernodistindex__isUnitlessNumber.add("flexPositive");
-infernodistindex__isUnitlessNumber.add("flexShrink");
-infernodistindex__isUnitlessNumber.add("flexNegative");
-infernodistindex__isUnitlessNumber.add("flexOrder");
-infernodistindex__isUnitlessNumber.add("gridRow");
-infernodistindex__isUnitlessNumber.add("gridColumn");
-infernodistindex__isUnitlessNumber.add("fontWeight");
-infernodistindex__isUnitlessNumber.add("lineClamp");
-infernodistindex__isUnitlessNumber.add("lineHeight");
-infernodistindex__isUnitlessNumber.add("opacity");
-infernodistindex__isUnitlessNumber.add("order");
-infernodistindex__isUnitlessNumber.add("orphans");
-infernodistindex__isUnitlessNumber.add("tabSize");
-infernodistindex__isUnitlessNumber.add("widows");
-infernodistindex__isUnitlessNumber.add("zIndex");
-infernodistindex__isUnitlessNumber.add("zoom");
-infernodistindex__isUnitlessNumber.add("fillOpacity");
-infernodistindex__isUnitlessNumber.add("floodOpacity");
-infernodistindex__isUnitlessNumber.add("stopOpacity");
-infernodistindex__isUnitlessNumber.add("strokeDasharray");
-infernodistindex__isUnitlessNumber.add("strokeDashoffset");
-infernodistindex__isUnitlessNumber.add("strokeMiterlimit");
-infernodistindex__isUnitlessNumber.add("strokeOpacity");
-infernodistindex__isUnitlessNumber.add("strokeWidth");
-var infernodistindex__skipProps = new Set();
-infernodistindex__skipProps.add("children");
-infernodistindex__skipProps.add("childrenType");
-infernodistindex__skipProps.add("defaultValue");
-infernodistindex__skipProps.add("ref");
-infernodistindex__skipProps.add("key");
-infernodistindex__skipProps.add("checked");
-infernodistindex__skipProps.add("multiple");
-var infernodistindex__delegatedEvents = new Set();
-infernodistindex__delegatedEvents.add("onClick");
-infernodistindex__delegatedEvents.add("onMouseDown");
-infernodistindex__delegatedEvents.add("onMouseUp");
-infernodistindex__delegatedEvents.add("onMouseMove");
-infernodistindex__delegatedEvents.add("onSubmit");
-infernodistindex__delegatedEvents.add("onDblClick");
-infernodistindex__delegatedEvents.add("onKeyDown");
-infernodistindex__delegatedEvents.add("onKeyUp");
-infernodistindex__delegatedEvents.add("onKeyPress");
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-var infernodistindex__isiOS = infernodistindex__isBrowser && !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
-var infernodistindex__delegatedEvents$1 = new Map();
-function infernodistindex__handleEvent(name, lastEvent, nextEvent, dom) {
-    var delegatedRoots = infernodistindex__delegatedEvents$1.get(name);
-    if (nextEvent) {
-        if (!delegatedRoots) {
-            delegatedRoots = { items: new Map(), docEvent: null };
-            delegatedRoots.docEvent = infernodistindex__attachEventToDocument(name, delegatedRoots);
-            infernodistindex__delegatedEvents$1.set(name, delegatedRoots);
-        }
-        if (!lastEvent) {
-            if (infernodistindex__isiOS && name === "onClick") {
-                infernodistindex__trapClickOnNonInteractiveElement(dom);
-            }
-        }
-        delegatedRoots.items.set(dom, nextEvent);
-    } else if (delegatedRoots) {
-        var items = delegatedRoots.items;
-        if (items.delete(dom)) {
-            // If any items were deleted, check if listener need to be removed
-            if (items.size === 0) {
-                document.removeEventListener(infernodistindex__normalizeEventName(name), delegatedRoots.docEvent);
-                infernodistindex__delegatedEvents$1.delete(name);
-            }
-        }
-    }
-}
-function infernodistindex__dispatchEvents(event, target, items, count, isClick, eventData) {
-    var dom = target;
-    while (count > 0) {
-        var eventsToTrigger = items.get(dom);
-        if (eventsToTrigger) {
-            count--;
-            // linkEvent object
-            eventData.dom = dom;
-            if (eventsToTrigger.event) {
-                eventsToTrigger.event(eventsToTrigger.data, event);
-            } else {
-                eventsToTrigger(event);
-            }
-            if (event.cancelBubble) {
-                return;
-            }
-        }
-        dom = dom.parentNode;
-        // Html Nodes can be nested fe: span inside button in that scenario browser does not handle disabled attribute on parent,
-        // because the event listener is on document.body
-        // Don't process clicks on disabled elements
-        if (dom === null || isClick && dom.disabled) {
-            return;
-        }
-    }
-}
-function infernodistindex__normalizeEventName(name) {
-    return name.substr(2).toLowerCase();
-}
-function infernodistindex__stopPropagation() {
-    this.cancelBubble = true;
-    this.stopImmediatePropagation();
-}
-function infernodistindex__attachEventToDocument(name, delegatedRoots) {
-    var docEvent = function (event) {
-        var count = delegatedRoots.items.size;
-        if (count > 0) {
-            event.stopPropagation = infernodistindex__stopPropagation;
-            // Event data needs to be object to save reference to currentTarget getter
-            var eventData = {
-                dom: document
-            };
-            try {
-                Object.defineProperty(event, "currentTarget", {
-                    configurable: true,
-                    get: function get() {
-                        return eventData.dom;
-                    }
-                });
-            } catch (e) {
-                /* safari7 and phantomJS will crash */
-            }
-            infernodistindex__dispatchEvents(event, event.target, delegatedRoots.items, count, event.type === "click", eventData);
-        }
-    };
-    document.addEventListener(infernodistindex__normalizeEventName(name), docEvent);
-    return docEvent;
-}
-// tslint:disable-next-line:no-empty
-function infernodistindex__emptyFn() {}
-function infernodistindex__trapClickOnNonInteractiveElement(dom) {
-    // Mobile Safari does not fire properly bubble click events on
-    // non-interactive elements, which means delegated click listeners do not
-    // fire. The workaround for this bug involves attaching an empty click
-    // listener on the target node.
-    // http://www.quirksmode.org/blog/archives/2010/09/click_event_del.html
-    // Just set it using the onclick property so that we don't have to manage any
-    // bookkeeping for it. Not sure if we need to clear it when the listener is
-    // removed.
-    // TODO: Only do this for the relevant Safaris maybe?
-    dom.onclick = infernodistindex__emptyFn;
-}
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-function infernodistindex__isCheckedType(type) {
-    return type === "checkbox" || type === "radio";
-}
-function infernodistindex__onTextInputChange(e) {
-    var vNode = this.vNode;
-    var props = vNode.props || infernodistindex__EMPTY_OBJ;
-    var dom = vNode.dom;
-    var previousValue = props.value;
-    if (props.onInput) {
-        var event = props.onInput;
-        if (event.event) {
-            event.event(event.data, e);
-        } else {
-            event(e);
-        }
-    } else if (props.oninput) {
-        props.oninput(e);
-    }
-    // the user may have updated the vNode from the above onInput events syncronously
-    // so we need to get it from the context of `this` again
-    var newVNode = this.vNode;
-    var newProps = newVNode.props || infernodistindex__EMPTY_OBJ;
-    // If render is going async there is no value change yet, it will come back to process input soon
-    if (previousValue !== newProps.value) {
-        // When this happens we need to store current cursor position and restore it, to avoid jumping
-        infernodistindex__applyValue(newProps, dom);
-    }
-}
-function infernodistindex__wrappedOnChange(e) {
-    var props = this.vNode.props || infernodistindex__EMPTY_OBJ;
-    var event = props.onChange;
-    if (event.event) {
-        event.event(event.data, e);
-    } else {
-        event(e);
-    }
-}
-function infernodistindex__onCheckboxChange(e) {
-    e.stopPropagation(); // This click should not propagate its for internal use
-    var vNode = this.vNode;
-    var props = vNode.props || infernodistindex__EMPTY_OBJ;
-    var dom = vNode.dom;
-    if (props.onClick) {
-        var event = props.onClick;
-        if (event.event) {
-            event.event(event.data, e);
-        } else {
-            event(e);
-        }
-    } else if (props.onclick) {
-        props.onclick(e);
-    }
-    // the user may have updated the vNode from the above onInput events syncronously
-    // so we need to get it from the context of `this` again
-    var newVNode = this.vNode;
-    var newProps = newVNode.props || infernodistindex__EMPTY_OBJ;
-    // If render is going async there is no value change yet, it will come back to process input soon
-    infernodistindex__applyValue(newProps, dom);
-}
-function infernodistindex__processInput(vNode, dom, nextPropsOrEmpty, mounting, isControlled) {
-    infernodistindex__applyValue(nextPropsOrEmpty, dom);
-    if (isControlled) {
-        dom.vNode = vNode; // TODO: Remove this when implementing Fiber's
-        if (mounting) {
-            if (infernodistindex__isCheckedType(nextPropsOrEmpty.type)) {
-                dom.onclick = infernodistindex__onCheckboxChange;
-                dom.onclick.wrapped = true;
-            } else {
-                dom.oninput = infernodistindex__onTextInputChange;
-                dom.oninput.wrapped = true;
-            }
-            if (nextPropsOrEmpty.onChange) {
-                dom.onchange = infernodistindex__wrappedOnChange;
-                dom.onchange.wrapped = true;
-            }
-        }
-    }
-}
-function infernodistindex__applyValue(nextPropsOrEmpty, dom) {
-    var type = nextPropsOrEmpty.type;
-    var value = nextPropsOrEmpty.value;
-    var checked = nextPropsOrEmpty.checked;
-    var multiple = nextPropsOrEmpty.multiple;
-    var defaultValue = nextPropsOrEmpty.defaultValue;
-    var hasValue = !infernodistindex__isNullOrUndef(value);
-    if (type && type !== dom.type) {
-        dom.setAttribute("type", type);
-    }
-    if (multiple && multiple !== dom.multiple) {
-        dom.multiple = multiple;
-    }
-    if (!infernodistindex__isNullOrUndef(defaultValue) && !hasValue) {
-        dom.defaultValue = defaultValue + "";
-    }
-    if (infernodistindex__isCheckedType(type)) {
-        if (hasValue) {
-            dom.value = value;
-        }
-        if (!infernodistindex__isNullOrUndef(checked)) {
-            dom.checked = checked;
-        }
-    } else {
-        if (hasValue && dom.value !== value) {
-            dom.defaultValue = value;
-            dom.value = value;
-        } else if (!infernodistindex__isNullOrUndef(checked)) {
-            dom.checked = checked;
-        }
-    }
-}
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-function infernodistindex__updateChildOptionGroup(vNode, value) {
-    var type = vNode.type;
-    if (type === "optgroup") {
-        var children = vNode.children;
-        if (infernodistindex__isArray(children)) {
-            for (var i = 0, len = children.length; i < len; i++) {
-                infernodistindex__updateChildOption(children[i], value);
-            }
-        } else if (infernodistindex__isVNode(children)) {
-            infernodistindex__updateChildOption(children, value);
-        }
-    } else {
-        infernodistindex__updateChildOption(vNode, value);
-    }
-}
-function infernodistindex__updateChildOption(vNode, value) {
-    var props = vNode.props || infernodistindex__EMPTY_OBJ;
-    var dom = vNode.dom;
-    // we do this as multiple may have changed
-    dom.value = props.value;
-    if (infernodistindex__isArray(value) && value.indexOf(props.value) !== -1 || props.value === value) {
-        dom.selected = true;
-    } else if (!infernodistindex__isNullOrUndef(value) || !infernodistindex__isNullOrUndef(props.selected)) {
-        dom.selected = props.selected || false;
-    }
-}
-function infernodistindex__onSelectChange(e) {
-    var vNode = this.vNode;
-    var props = vNode.props || infernodistindex__EMPTY_OBJ;
-    var dom = vNode.dom;
-    var previousValue = props.value;
-    if (props.onChange) {
-        var event = props.onChange;
-        if (event.event) {
-            event.event(event.data, e);
-        } else {
-            event(e);
-        }
-    } else if (props.onchange) {
-        props.onchange(e);
-    }
-    // the user may have updated the vNode from the above onInput events syncronously
-    // so we need to get it from the context of `this` again
-    var newVNode = this.vNode;
-    var newProps = newVNode.props || infernodistindex__EMPTY_OBJ;
-    // If render is going async there is no value change yet, it will come back to process input soon
-    if (previousValue !== newProps.value) {
-        // When this happens we need to store current cursor position and restore it, to avoid jumping
-        infernodistindex__applyValue$1(newVNode, dom, newProps, false);
-    }
-}
-function infernodistindex__processSelect(vNode, dom, nextPropsOrEmpty, mounting, isControlled) {
-    infernodistindex__applyValue$1(vNode, dom, nextPropsOrEmpty, mounting);
-    if (isControlled) {
-        dom.vNode = vNode; // TODO: Remove this when implementing Fiber's
-        if (mounting) {
-            dom.onchange = infernodistindex__onSelectChange;
-            dom.onchange.wrapped = true;
-        }
-    }
-}
-function infernodistindex__applyValue$1(vNode, dom, nextPropsOrEmpty, mounting) {
-    if (nextPropsOrEmpty.multiple !== dom.multiple) {
-        dom.multiple = nextPropsOrEmpty.multiple;
-    }
-    var children = vNode.children;
-    if (!infernodistindex__isInvalid(children)) {
-        var value = nextPropsOrEmpty.value;
-        if (mounting && infernodistindex__isNullOrUndef(value)) {
-            value = nextPropsOrEmpty.defaultValue;
-        }
-        if (infernodistindex__isArray(children)) {
-            for (var i = 0, len = children.length; i < len; i++) {
-                infernodistindex__updateChildOptionGroup(children[i], value);
-            }
-        } else if (infernodistindex__isVNode(children)) {
-            infernodistindex__updateChildOptionGroup(children, value);
-        }
-    }
-}
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-function infernodistindex__wrappedOnChange$1(e) {
-    var props = this.vNode.props || infernodistindex__EMPTY_OBJ;
-    var event = props.onChange;
-    if (event.event) {
-        event.event(event.data, e);
-    } else {
-        event(e);
-    }
-}
-function infernodistindex__onTextareaInputChange(e) {
-    var vNode = this.vNode;
-    var props = vNode.props || infernodistindex__EMPTY_OBJ;
-    var previousValue = props.value;
-    if (props.onInput) {
-        var event = props.onInput;
-        if (event.event) {
-            event.event(event.data, e);
-        } else {
-            event(e);
-        }
-    } else if (props.oninput) {
-        props.oninput(e);
-    }
-    // the user may have updated the vNode from the above onInput events syncronously
-    // so we need to get it from the context of `this` again
-    var newVNode = this.vNode;
-    var newProps = newVNode.props || infernodistindex__EMPTY_OBJ;
-    // If render is going async there is no value change yet, it will come back to process input soon
-    if (previousValue !== newProps.value) {
-        // When this happens we need to store current cursor position and restore it, to avoid jumping
-        infernodistindex__applyValue$2(newVNode, vNode.dom, false);
-    }
-}
-function infernodistindex__processTextarea(vNode, dom, nextPropsOrEmpty, mounting, isControlled) {
-    infernodistindex__applyValue$2(nextPropsOrEmpty, dom, mounting);
-    if (isControlled) {
-        dom.vNode = vNode; // TODO: Remove this when implementing Fiber's
-        if (mounting) {
-            dom.oninput = infernodistindex__onTextareaInputChange;
-            dom.oninput.wrapped = true;
-            if (nextPropsOrEmpty.onChange) {
-                dom.onchange = infernodistindex__wrappedOnChange$1;
-                dom.onchange.wrapped = true;
-            }
-        }
-    }
-}
-function infernodistindex__applyValue$2(nextPropsOrEmpty, dom, mounting) {
-    var value = nextPropsOrEmpty.value;
-    var domValue = dom.value;
-    if (infernodistindex__isNullOrUndef(value)) {
-        if (mounting) {
-            var defaultValue = nextPropsOrEmpty.defaultValue;
-            if (!infernodistindex__isNullOrUndef(defaultValue)) {
-                if (defaultValue !== domValue) {
-                    dom.defaultValue = defaultValue;
-                    dom.value = defaultValue;
-                }
-            } else if (domValue !== "") {
-                dom.defaultValue = "";
-                dom.value = "";
-            }
-        }
-    } else {
-        /* There is value so keep it controlled */
-        if (domValue !== value) {
-            dom.defaultValue = value;
-            dom.value = value;
-        }
-    }
-}
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-/**
- * There is currently no support for switching same input between controlled and nonControlled
- * If that ever becomes a real issue, then re design controlled elements
- * Currently user must choose either controlled or non-controlled and stick with that
- */
-function infernodistindex__processElement(flags, vNode, dom, nextPropsOrEmpty, mounting, isControlled) {
-    if (flags & 512 /* InputElement */) {
-            infernodistindex__processInput(vNode, dom, nextPropsOrEmpty, mounting, isControlled);
-        }
-    if (flags & 2048 /* SelectElement */) {
-            infernodistindex__processSelect(vNode, dom, nextPropsOrEmpty, mounting, isControlled);
-        }
-    if (flags & 1024 /* TextareaElement */) {
-            infernodistindex__processTextarea(vNode, dom, nextPropsOrEmpty, mounting, isControlled);
-        }
-}
-function infernodistindex__isControlledFormElement(nextPropsOrEmpty) {
-    return nextPropsOrEmpty.type && infernodistindex__isCheckedType(nextPropsOrEmpty.type) ? !infernodistindex__isNullOrUndef(nextPropsOrEmpty.checked) : !infernodistindex__isNullOrUndef(nextPropsOrEmpty.value);
-}
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-function infernodistindex__normalizeChildNodes(parentDom) {
-    var dom = parentDom.firstChild;
-    while (dom) {
-        if (dom.nodeType === 8) {
-            if (dom.data === "!") {
-                var placeholder = document.createTextNode("");
-                parentDom.replaceChild(placeholder, dom);
-                dom = dom.nextSibling;
-            } else {
-                var lastDom = dom.previousSibling;
-                parentDom.removeChild(dom);
-                dom = lastDom || parentDom.firstChild;
-            }
-        } else {
-            dom = dom.nextSibling;
-        }
-    }
-}
-function infernodistindex__hydrateComponent(vNode, dom, lifecycle, context, isSVG, isClass) {
-    var type = vNode.type;
-    var ref = vNode.ref;
-    var props = vNode.props || infernodistindex__EMPTY_OBJ;
-    if (isClass) {
-        var _isSVG = dom.namespaceURI === infernodistindex__svgNS;
-        var instance = infernodistindex__createClassComponentInstance(vNode, type, props, context, _isSVG, lifecycle);
-        var input = instance._lastInput;
-        instance._vNode = vNode;
-        infernodistindex__hydrate(input, dom, lifecycle, instance._childContext, _isSVG);
-        vNode.dom = input.dom;
-        infernodistindex__mountClassComponentCallbacks(vNode, ref, instance, lifecycle);
-        instance._updating = false; // Mount finished allow going sync
-        if (infernodistindex__options.findDOMNodeEnabled) {
-            infernodistindex__componentToDOMNodeMap.set(instance, dom);
-        }
-    } else {
-        var input$1 = infernodistindex__createFunctionalComponentInput(vNode, type, props, context);
-        infernodistindex__hydrate(input$1, dom, lifecycle, context, isSVG);
-        vNode.children = input$1;
-        vNode.dom = input$1.dom;
-        infernodistindex__mountFunctionalComponentCallbacks(props, ref, dom, lifecycle);
-    }
-    return dom;
-}
-function infernodistindex__hydrateElement(vNode, dom, lifecycle, context, isSVG) {
-    var children = vNode.children;
-    var props = vNode.props;
-    var className = vNode.className;
-    var flags = vNode.flags;
-    var ref = vNode.ref;
-    isSVG = isSVG || (flags & 128 /* SvgElement */) > 0;
-    if (dom.nodeType !== 1 || dom.tagName.toLowerCase() !== vNode.type) {
-        if ('development' !== "production") {
-            infernodistindex__warning("Inferno hydration: Server-side markup doesn't match client-side markup or Initial render target is not empty");
-        }
-        var newDom = infernodistindex__mountElement(vNode, null, lifecycle, context, isSVG);
-        vNode.dom = newDom;
-        infernodistindex__replaceChild(dom.parentNode, newDom, dom);
-        return newDom;
-    }
-    vNode.dom = dom;
-    if (!infernodistindex__isInvalid(children)) {
-        infernodistindex__hydrateChildren(children, dom, lifecycle, context, isSVG);
-    } else if (dom.firstChild !== null) {
-        dom.textContent = ""; // dom has content, but VNode has no children remove everything from DOM
-    }
-    if (props) {
-        var hasControlledValue = false;
-        var isFormElement = (flags & 3584 /* FormElement */) > 0;
-        if (isFormElement) {
-            hasControlledValue = infernodistindex__isControlledFormElement(props);
-        }
-        for (var prop in props) {
-            // do not add a hasOwnProperty check here, it affects performance
-            infernodistindex__patchProp(prop, null, props[prop], dom, isSVG, hasControlledValue);
-        }
-        if (isFormElement) {
-            infernodistindex__processElement(flags, vNode, dom, props, true, hasControlledValue);
-        }
-    }
-    if (!infernodistindex__isNullOrUndef(className)) {
-        if (isSVG) {
-            dom.setAttribute("class", className);
-        } else {
-            dom.className = className;
-        }
-    } else {
-        if (dom.className !== "") {
-            dom.removeAttribute("class");
-        }
-    }
-    if (ref) {
-        infernodistindex__mountRef(dom, ref, lifecycle);
-    }
-    return dom;
-}
-function infernodistindex__hydrateChildren(children, parentDom, lifecycle, context, isSVG) {
-    infernodistindex__normalizeChildNodes(parentDom);
-    var dom = parentDom.firstChild;
-    if (infernodistindex__isStringOrNumber(children)) {
-        if (!infernodistindex__isNull(dom) && dom.nodeType === 3) {
-            if (dom.nodeValue !== children) {
-                dom.nodeValue = children;
-            }
-        } else if (children === "") {
-            parentDom.appendChild(document.createTextNode(""));
-        } else {
-            parentDom.textContent = children;
-        }
-        if (!infernodistindex__isNull(dom)) {
-            dom = dom.nextSibling;
-        }
-    } else if (infernodistindex__isArray(children)) {
-        for (var i = 0, len = children.length; i < len; i++) {
-            var child = children[i];
-            if (!infernodistindex__isNull(child) && infernodistindex__isObject(child)) {
-                if (!infernodistindex__isNull(dom)) {
-                    var nextSibling = dom.nextSibling;
-                    infernodistindex__hydrate(child, dom, lifecycle, context, isSVG);
-                    dom = nextSibling;
-                } else {
-                    infernodistindex__mount(child, parentDom, lifecycle, context, isSVG);
-                }
-            }
-        }
-    } else {
-        // It's VNode
-        if (!infernodistindex__isNull(dom)) {
-            infernodistindex__hydrate(children, dom, lifecycle, context, isSVG);
-            dom = dom.nextSibling;
-        } else {
-            infernodistindex__mount(children, parentDom, lifecycle, context, isSVG);
-        }
-    }
-    // clear any other DOM nodes, there should be only a single entry for the root
-    while (dom) {
-        var nextSibling$1 = dom.nextSibling;
-        parentDom.removeChild(dom);
-        dom = nextSibling$1;
-    }
-}
-function infernodistindex__hydrateText(vNode, dom) {
-    if (dom.nodeType !== 3) {
-        var newDom = infernodistindex__mountText(vNode, null);
-        vNode.dom = newDom;
-        infernodistindex__replaceChild(dom.parentNode, newDom, dom);
-        return newDom;
-    }
-    var text = vNode.children;
-    if (dom.nodeValue !== text) {
-        dom.nodeValue = text;
-    }
-    vNode.dom = dom;
-    return dom;
-}
-function infernodistindex__hydrateVoid(vNode, dom) {
-    vNode.dom = dom;
-    return dom;
-}
-function infernodistindex__hydrate(vNode, dom, lifecycle, context, isSVG) {
-    var flags = vNode.flags;
-    if (flags & 28 /* Component */) {
-            infernodistindex__hydrateComponent(vNode, dom, lifecycle, context, isSVG, (flags & 4 /* ComponentClass */) > 0);
-        } else if (flags & 3970 /* Element */) {
-            infernodistindex__hydrateElement(vNode, dom, lifecycle, context, isSVG);
-        } else if (flags & 1 /* Text */) {
-            infernodistindex__hydrateText(vNode, dom);
-        } else if (flags & 4096 /* Void */) {
-            infernodistindex__hydrateVoid(vNode, dom);
-        } else {
-        if ('development' !== "production") {
-            infernodistindex__throwError("hydrate() expects a valid VNode, instead it received an object with the type \"" + typeof vNode + "\".");
-        }
-        infernodistindex__throwError();
-    }
-}
-function infernodistindex__hydrateRoot(input, parentDom, lifecycle) {
-    if (!infernodistindex__isNull(parentDom)) {
-        var dom = parentDom.firstChild;
-        if (!infernodistindex__isNull(dom)) {
-            infernodistindex__hydrate(input, dom, lifecycle, infernodistindex__EMPTY_OBJ, false);
-            dom = parentDom.firstChild;
-            // clear any other DOM nodes, there should be only a single entry for the root
-            while (dom = dom.nextSibling) {
-                parentDom.removeChild(dom);
-            }
-            return true;
-        }
-    }
-    return false;
-}
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-var infernodistindex__componentPools = new Map();
-var infernodistindex__elementPools = new Map();
-function infernodistindex__recycleElement(vNode, lifecycle, context, isSVG) {
-    var tag = vNode.type;
-    var pools = infernodistindex__elementPools.get(tag);
-    if (!infernodistindex__isUndefined(pools)) {
-        var key = vNode.key;
-        var pool = key === null ? pools.nonKeyed : pools.keyed.get(key);
-        if (!infernodistindex__isUndefined(pool)) {
-            var recycledVNode = pool.pop();
-            if (!infernodistindex__isUndefined(recycledVNode)) {
-                infernodistindex__patchElement(recycledVNode, vNode, null, lifecycle, context, isSVG, true);
-                return vNode.dom;
-            }
-        }
-    }
-    return null;
-}
-function infernodistindex__poolElement(vNode) {
-    var tag = vNode.type;
-    var key = vNode.key;
-    var pools = infernodistindex__elementPools.get(tag);
-    if (infernodistindex__isUndefined(pools)) {
-        pools = {
-            keyed: new Map(),
-            nonKeyed: []
-        };
-        infernodistindex__elementPools.set(tag, pools);
-    }
-    if (infernodistindex__isNull(key)) {
-        pools.nonKeyed.push(vNode);
-    } else {
-        var pool = pools.keyed.get(key);
-        if (infernodistindex__isUndefined(pool)) {
-            pool = [];
-            pools.keyed.set(key, pool);
-        }
-        pool.push(vNode);
-    }
-}
-function infernodistindex__recycleComponent(vNode, lifecycle, context, isSVG) {
-    var type = vNode.type;
-    var pools = infernodistindex__componentPools.get(type);
-    if (!infernodistindex__isUndefined(pools)) {
-        var key = vNode.key;
-        var pool = key === null ? pools.nonKeyed : pools.keyed.get(key);
-        if (!infernodistindex__isUndefined(pool)) {
-            var recycledVNode = pool.pop();
-            if (!infernodistindex__isUndefined(recycledVNode)) {
-                var flags = vNode.flags;
-                var failed = infernodistindex__patchComponent(recycledVNode, vNode, null, lifecycle, context, isSVG, (flags & 4 /* ComponentClass */) > 0, true);
-                if (!failed) {
-                    return vNode.dom;
-                }
-            }
-        }
-    }
-    return null;
-}
-function infernodistindex__poolComponent(vNode) {
-    var hooks = vNode.ref;
-    var nonRecycleHooks = hooks && (hooks.onComponentWillMount || hooks.onComponentWillUnmount || hooks.onComponentDidMount || hooks.onComponentWillUpdate || hooks.onComponentDidUpdate);
-    if (nonRecycleHooks) {
-        return;
-    }
-    var type = vNode.type;
-    var key = vNode.key;
-    var pools = infernodistindex__componentPools.get(type);
-    if (infernodistindex__isUndefined(pools)) {
-        pools = {
-            keyed: new Map(),
-            nonKeyed: []
-        };
-        infernodistindex__componentPools.set(type, pools);
-    }
-    if (infernodistindex__isNull(key)) {
-        pools.nonKeyed.push(vNode);
-    } else {
-        var pool = pools.keyed.get(key);
-        if (infernodistindex__isUndefined(pool)) {
-            pool = [];
-            pools.keyed.set(key, pool);
-        }
-        pool.push(vNode);
-    }
-}
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-function infernodistindex__unmount(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
-    var flags = vNode.flags;
-    if (flags & 28 /* Component */) {
-            infernodistindex__unmountComponent(vNode, parentDom, lifecycle, canRecycle, isRecycling);
-        } else if (flags & 3970 /* Element */) {
-            infernodistindex__unmountElement(vNode, parentDom, lifecycle, canRecycle, isRecycling);
-        } else if (flags & (1 /* Text */ | 4096 /* Void */)) {
-        infernodistindex__unmountVoidOrText(vNode, parentDom);
-    }
-}
-function infernodistindex__unmountVoidOrText(vNode, parentDom) {
-    if (!infernodistindex__isNull(parentDom)) {
-        infernodistindex__removeChild(parentDom, vNode.dom);
-    }
-}
-function infernodistindex__unmountComponent(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
-    var instance = vNode.children;
-    var flags = vNode.flags;
-    var isStatefulComponent$$1 = flags & 4;
-    var props = vNode.props || infernodistindex__EMPTY_OBJ;
-    var ref = vNode.ref;
-    var dom = vNode.dom;
-    if (!isRecycling) {
-        if (isStatefulComponent$$1) {
-            if (!instance._unmounted) {
-                if (!infernodistindex__isNull(infernodistindex__options.beforeUnmount)) {
-                    infernodistindex__options.beforeUnmount(vNode);
-                }
-                if (!infernodistindex__isUndefined(instance.componentWillUnmount)) {
-                    instance.componentWillUnmount();
-                }
-                if (ref && !isRecycling) {
-                    ref(null);
-                }
-                instance._unmounted = true;
-                if (infernodistindex__options.findDOMNodeEnabled) {
-                    infernodistindex__componentToDOMNodeMap.delete(instance);
-                }
-                infernodistindex__unmount(instance._lastInput, null, instance._lifecycle, false, isRecycling);
-            }
-        } else {
-            if (!infernodistindex__isNullOrUndef(ref)) {
-                if (!infernodistindex__isNullOrUndef(ref.onComponentWillUnmount)) {
-                    ref.onComponentWillUnmount(dom, props);
-                }
-            }
-            infernodistindex__unmount(instance, null, lifecycle, false, isRecycling);
-        }
-    }
-    if (parentDom) {
-        infernodistindex__removeChild(parentDom, dom);
-    }
-    if (infernodistindex__options.recyclingEnabled && !isStatefulComponent$$1 && (parentDom || canRecycle)) {
-        infernodistindex__poolComponent(vNode);
-    }
-}
-function infernodistindex__unmountElement(vNode, parentDom, lifecycle, canRecycle, isRecycling) {
-    var dom = vNode.dom;
-    var ref = vNode.ref;
-    var props = vNode.props;
-    if (ref && !isRecycling) {
-        infernodistindex__unmountRef(ref);
-    }
-    var children = vNode.children;
-    if (!infernodistindex__isNullOrUndef(children)) {
-        infernodistindex__unmountChildren$1(children, lifecycle, isRecycling);
-    }
-    if (!infernodistindex__isNull(props)) {
-        for (var name in props) {
-            // do not add a hasOwnProperty check here, it affects performance
-            if (props[name] !== null && infernodistindex__isAttrAnEvent(name)) {
-                infernodistindex__patchEvent(name, props[name], null, dom);
-                // We need to set this null, because same props otherwise come back if SCU returns false and we are recyling
-                props[name] = null;
-            }
-        }
-    }
-    if (!infernodistindex__isNull(parentDom)) {
-        infernodistindex__removeChild(parentDom, dom);
-    }
-    if (infernodistindex__options.recyclingEnabled && (parentDom || canRecycle)) {
-        infernodistindex__poolElement(vNode);
-    }
-}
-function infernodistindex__unmountChildren$1(children, lifecycle, isRecycling) {
-    if (infernodistindex__isArray(children)) {
-        for (var i = 0, len = children.length; i < len; i++) {
-            var child = children[i];
-            if (!infernodistindex__isInvalid(child) && infernodistindex__isObject(child)) {
-                infernodistindex__unmount(child, null, lifecycle, false, isRecycling);
-            }
-        }
-    } else if (infernodistindex__isObject(children)) {
-        infernodistindex__unmount(children, null, lifecycle, false, isRecycling);
-    }
-}
-function infernodistindex__unmountRef(ref) {
-    if (infernodistindex__isFunction(ref)) {
-        ref(null);
-    } else {
-        if (infernodistindex__isInvalid(ref)) {
-            return;
-        }
-        if ('development' !== "production") {
-            infernodistindex__throwError('string "refs" are not supported in Inferno 1.0. Use callback "refs" instead.');
-        }
-        infernodistindex__throwError();
-    }
-}
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-// rather than use a Map, like we did before, we can use an array here
-// given there shouldn't be THAT many roots on the page, the difference
-// in performance is huge: https://esbench.com/bench/5802a691330ab09900a1a2da
-var infernodistindex__componentToDOMNodeMap = new Map();
-var infernodistindex__roots = infernodistindex__options.roots;
-/**
- * When inferno.options.findDOMNOdeEnabled is true, this function will return DOM Node by component instance
- * @param ref Component instance
- * @returns {*|null} returns dom node
- */
-function infernodistindex__findDOMNode(ref) {
-    if (!infernodistindex__options.findDOMNodeEnabled) {
-        if ('development' !== "production") {
-            infernodistindex__throwError("findDOMNode() has been disabled, use Inferno.options.findDOMNodeEnabled = true; enabled findDOMNode(). Warning this can significantly impact performance!");
-        }
-        infernodistindex__throwError();
-    }
-    var dom = ref && ref.nodeType ? ref : null;
-    return infernodistindex__componentToDOMNodeMap.get(ref) || dom;
-}
-function infernodistindex__getRoot(dom) {
-    for (var i = 0, len = infernodistindex__roots.length; i < len; i++) {
-        var root = infernodistindex__roots[i];
-        if (root.dom === dom) {
-            return root;
-        }
-    }
-    return null;
-}
-function infernodistindex__setRoot(dom, input, lifecycle) {
-    var root = {
-        dom: dom,
-        input: input,
-        lifecycle: lifecycle
-    };
-    infernodistindex__roots.push(root);
-    return root;
-}
-function infernodistindex__removeRoot(root) {
-    for (var i = 0, len = infernodistindex__roots.length; i < len; i++) {
-        if (infernodistindex__roots[i] === root) {
-            infernodistindex__roots.splice(i, 1);
-            return;
-        }
-    }
-}
-if ('development' !== "production") {
-    if (infernodistindex__isBrowser && document.body === null) {
-        infernodistindex__warning('Inferno warning: you cannot initialize inferno without "document.body". Wait on "DOMContentLoaded" event, add script to bottom of body, or use async/defer attributes on script tag.');
-    }
-}
-var infernodistindex__documentBody = infernodistindex__isBrowser ? document.body : null;
-/**
- * Renders virtual node tree into parent node.
- * @param {VNode | null | string | number} input vNode to be rendered
- * @param parentDom DOM node which content will be replaced by virtual node
- * @returns {InfernoChildren} rendered virtual node
- */
-function infernodistindex__render(input, parentDom) {
-    if (infernodistindex__documentBody === parentDom) {
-        if ('development' !== "production") {
-            infernodistindex__throwError('you cannot render() to the "document.body". Use an empty element as a container instead.');
-        }
-        infernodistindex__throwError();
-    }
-    if (input === infernodistindex__NO_OP) {
-        return;
-    }
-    var root = infernodistindex__getRoot(parentDom);
-    if (infernodistindex__isNull(root)) {
-        var lifecycle = new infernodistindex__Lifecycle();
-        if (!infernodistindex__isInvalid(input)) {
-            if (input.dom) {
-                input = infernodistindex__directClone(input);
-            }
-            if (!infernodistindex__hydrateRoot(input, parentDom, lifecycle)) {
-                infernodistindex__mount(input, parentDom, lifecycle, infernodistindex__EMPTY_OBJ, false);
-            }
-            root = infernodistindex__setRoot(parentDom, input, lifecycle);
-            lifecycle.trigger();
-        }
-    } else {
-        var lifecycle$1 = root.lifecycle;
-        lifecycle$1.listeners = [];
-        if (infernodistindex__isNullOrUndef(input)) {
-            infernodistindex__unmount(root.input, parentDom, lifecycle$1, false, false);
-            infernodistindex__removeRoot(root);
-        } else {
-            if (input.dom) {
-                input = infernodistindex__directClone(input);
-            }
-            infernodistindex__patch(root.input, input, parentDom, lifecycle$1, infernodistindex__EMPTY_OBJ, false, false);
-        }
-        root.input = input;
-        lifecycle$1.trigger();
-    }
-    if (root) {
-        var rootInput = root.input;
-        if (rootInput && rootInput.flags & 28 /* Component */) {
-                return rootInput.children;
-            }
-    }
-}
-function infernodistindex__createRenderer(parentDom) {
-    return function renderer(lastInput, nextInput) {
-        if (!parentDom) {
-            parentDom = lastInput;
-        }
-        infernodistindex__render(nextInput, parentDom);
-    };
-}
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-function infernodistindex__patch(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling) {
-    if (lastVNode !== nextVNode) {
-        var lastFlags = lastVNode.flags;
-        var nextFlags = nextVNode.flags;
-        if (nextFlags & 28 /* Component */) {
-                var isClass = (nextFlags & 4 /* ComponentClass */) > 0;
-                if (lastFlags & 28 /* Component */) {
-                        infernodistindex__patchComponent(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isClass, isRecycling);
-                    } else {
-                    infernodistindex__replaceVNode(parentDom, infernodistindex__mountComponent(nextVNode, null, lifecycle, context, isSVG, isClass), lastVNode, lifecycle, isRecycling);
-                }
-            } else if (nextFlags & 3970 /* Element */) {
-                if (lastFlags & 3970 /* Element */) {
-                        infernodistindex__patchElement(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling);
-                    } else {
-                    infernodistindex__replaceVNode(parentDom, infernodistindex__mountElement(nextVNode, null, lifecycle, context, isSVG), lastVNode, lifecycle, isRecycling);
-                }
-            } else if (nextFlags & 1 /* Text */) {
-                if (lastFlags & 1 /* Text */) {
-                        infernodistindex__patchText(lastVNode, nextVNode);
-                    } else {
-                    infernodistindex__replaceVNode(parentDom, infernodistindex__mountText(nextVNode, null), lastVNode, lifecycle, isRecycling);
-                }
-            } else if (nextFlags & 4096 /* Void */) {
-                if (lastFlags & 4096 /* Void */) {
-                        infernodistindex__patchVoid(lastVNode, nextVNode);
-                    } else {
-                    infernodistindex__replaceVNode(parentDom, infernodistindex__mountVoid(nextVNode, null), lastVNode, lifecycle, isRecycling);
-                }
-            } else {
-            // Error case: mount new one replacing old one
-            infernodistindex__replaceLastChildAndUnmount(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling);
-        }
-    }
-}
-function infernodistindex__unmountChildren(children, dom, lifecycle, isRecycling) {
-    if (infernodistindex__isVNode(children)) {
-        infernodistindex__unmount(children, dom, lifecycle, true, isRecycling);
-    } else if (infernodistindex__isArray(children)) {
-        infernodistindex__removeAllChildren(dom, children, lifecycle, isRecycling);
-    } else {
-        dom.textContent = "";
-    }
-}
-function infernodistindex__patchElement(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling) {
-    var nextTag = nextVNode.type;
-    var lastTag = lastVNode.type;
-    if (lastTag !== nextTag) {
-        infernodistindex__replaceWithNewNode(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling);
-    } else {
-        var dom = lastVNode.dom;
-        var lastProps = lastVNode.props;
-        var nextProps = nextVNode.props;
-        var lastChildren = lastVNode.children;
-        var nextChildren = nextVNode.children;
-        var lastFlags = lastVNode.flags;
-        var nextFlags = nextVNode.flags;
-        var nextRef = nextVNode.ref;
-        var lastClassName = lastVNode.className;
-        var nextClassName = nextVNode.className;
-        nextVNode.dom = dom;
-        isSVG = isSVG || (nextFlags & 128 /* SvgElement */) > 0;
-        if (lastChildren !== nextChildren) {
-            var childrenIsSVG = isSVG === true && nextVNode.type !== "foreignObject";
-            infernodistindex__patchChildren(lastFlags, nextFlags, lastChildren, nextChildren, dom, lifecycle, context, childrenIsSVG, isRecycling);
-        }
-        // inlined patchProps  -- starts --
-        if (lastProps !== nextProps) {
-            var lastPropsOrEmpty = lastProps || infernodistindex__EMPTY_OBJ;
-            var nextPropsOrEmpty = nextProps || infernodistindex__EMPTY_OBJ;
-            var hasControlledValue = false;
-            if (nextPropsOrEmpty !== infernodistindex__EMPTY_OBJ) {
-                var isFormElement = (nextFlags & 3584 /* FormElement */) > 0;
-                if (isFormElement) {
-                    hasControlledValue = infernodistindex__isControlledFormElement(nextPropsOrEmpty);
-                }
-                for (var prop in nextPropsOrEmpty) {
-                    // do not add a hasOwnProperty check here, it affects performance
-                    var nextValue = nextPropsOrEmpty[prop];
-                    var lastValue = lastPropsOrEmpty[prop];
-                    infernodistindex__patchProp(prop, lastValue, nextValue, dom, isSVG, hasControlledValue);
-                }
-                if (isFormElement) {
-                    // When inferno is recycling form element, we need to process it like it would be mounting
-                    infernodistindex__processElement(nextFlags, nextVNode, dom, nextPropsOrEmpty, isRecycling, hasControlledValue);
-                }
-            }
-            if (lastPropsOrEmpty !== infernodistindex__EMPTY_OBJ) {
-                for (var prop$1 in lastPropsOrEmpty) {
-                    // do not add a hasOwnProperty check here, it affects performance
-                    if (infernodistindex__isNullOrUndef(nextPropsOrEmpty[prop$1]) && !infernodistindex__isNullOrUndef(lastPropsOrEmpty[prop$1])) {
-                        infernodistindex__removeProp(prop$1, lastPropsOrEmpty[prop$1], dom, nextFlags);
-                    }
-                }
-            }
-        }
-        // inlined patchProps  -- ends --
-        if (lastClassName !== nextClassName) {
-            if (infernodistindex__isNullOrUndef(nextClassName)) {
-                dom.removeAttribute("class");
-            } else {
-                if (isSVG) {
-                    dom.setAttribute("class", nextClassName);
-                } else {
-                    dom.className = nextClassName;
-                }
-            }
-        }
-        if (nextRef) {
-            if (lastVNode.ref !== nextRef || isRecycling) {
-                infernodistindex__mountRef(dom, nextRef, lifecycle);
-            }
-        }
-    }
-}
-function infernodistindex__patchChildren(lastFlags, nextFlags, lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling) {
-    var patchArray = false;
-    var patchKeyed = false;
-    if (nextFlags & 64 /* HasNonKeyedChildren */) {
-            patchArray = true;
-        } else if ((lastFlags & 32 /* HasKeyedChildren */) > 0 && (nextFlags & 32 /* HasKeyedChildren */) > 0) {
-        patchKeyed = true;
-        patchArray = true;
-    } else if (infernodistindex__isInvalid(nextChildren)) {
-        infernodistindex__unmountChildren(lastChildren, dom, lifecycle, isRecycling);
-    } else if (infernodistindex__isInvalid(lastChildren)) {
-        if (infernodistindex__isStringOrNumber(nextChildren)) {
-            infernodistindex__setTextContent(dom, nextChildren);
-        } else {
-            if (infernodistindex__isArray(nextChildren)) {
-                infernodistindex__mountArrayChildren(nextChildren, dom, lifecycle, context, isSVG);
-            } else {
-                infernodistindex__mount(nextChildren, dom, lifecycle, context, isSVG);
-            }
-        }
-    } else if (infernodistindex__isStringOrNumber(nextChildren)) {
-        if (infernodistindex__isStringOrNumber(lastChildren)) {
-            infernodistindex__updateTextContent(dom, nextChildren);
-        } else {
-            infernodistindex__unmountChildren(lastChildren, dom, lifecycle, isRecycling);
-            infernodistindex__setTextContent(dom, nextChildren);
-        }
-    } else if (infernodistindex__isArray(nextChildren)) {
-        if (infernodistindex__isArray(lastChildren)) {
-            patchArray = true;
-            if (infernodistindex__isKeyed(lastChildren, nextChildren)) {
-                patchKeyed = true;
-            }
-        } else {
-            infernodistindex__unmountChildren(lastChildren, dom, lifecycle, isRecycling);
-            infernodistindex__mountArrayChildren(nextChildren, dom, lifecycle, context, isSVG);
-        }
-    } else if (infernodistindex__isArray(lastChildren)) {
-        infernodistindex__removeAllChildren(dom, lastChildren, lifecycle, isRecycling);
-        infernodistindex__mount(nextChildren, dom, lifecycle, context, isSVG);
-    } else if (infernodistindex__isVNode(nextChildren)) {
-        if (infernodistindex__isVNode(lastChildren)) {
-            infernodistindex__patch(lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling);
-        } else {
-            infernodistindex__unmountChildren(lastChildren, dom, lifecycle, isRecycling);
-            infernodistindex__mount(nextChildren, dom, lifecycle, context, isSVG);
-        }
-    }
-    if (patchArray) {
-        if (patchKeyed) {
-            infernodistindex__patchKeyedChildren(lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling);
-        } else {
-            infernodistindex__patchNonKeyedChildren(lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling);
-        }
-    }
-}
-function infernodistindex__patchComponent(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isClass, isRecycling) {
-    var lastType = lastVNode.type;
-    var nextType = nextVNode.type;
-    var lastKey = lastVNode.key;
-    var nextKey = nextVNode.key;
-    if (lastType !== nextType || lastKey !== nextKey) {
-        infernodistindex__replaceWithNewNode(lastVNode, nextVNode, parentDom, lifecycle, context, isSVG, isRecycling);
-        return false;
-    } else {
-        var nextProps = nextVNode.props || infernodistindex__EMPTY_OBJ;
-        if (isClass) {
-            var instance = lastVNode.children;
-            instance._updating = true;
-            if (instance._unmounted) {
-                if (infernodistindex__isNull(parentDom)) {
-                    return true;
-                }
-                infernodistindex__replaceChild(parentDom, infernodistindex__mountComponent(nextVNode, null, lifecycle, context, isSVG, (nextVNode.flags & 4 /* ComponentClass */) > 0), lastVNode.dom);
-            } else {
-                var hasComponentDidUpdate = !infernodistindex__isUndefined(instance.componentDidUpdate);
-                var nextState = instance.state;
-                // When component has componentDidUpdate hook, we need to clone lastState or will be modified by reference during update
-                var lastState = hasComponentDidUpdate ? infernodistindex__combineFrom(nextState, null) : nextState;
-                var lastProps = instance.props;
-                var childContext;
-                if (!infernodistindex__isNullOrUndef(instance.getChildContext)) {
-                    childContext = instance.getChildContext();
-                }
-                nextVNode.children = instance;
-                instance._isSVG = isSVG;
-                if (infernodistindex__isNullOrUndef(childContext)) {
-                    childContext = context;
-                } else {
-                    childContext = infernodistindex__combineFrom(context, childContext);
-                }
-                var lastInput = instance._lastInput;
-                var nextInput = instance._updateComponent(lastState, nextState, lastProps, nextProps, context, false, false);
-                var didUpdate = true;
-                instance._childContext = childContext;
-                if (infernodistindex__isInvalid(nextInput)) {
-                    nextInput = infernodistindex__createVoidVNode();
-                } else if (nextInput === infernodistindex__NO_OP) {
-                    nextInput = lastInput;
-                    didUpdate = false;
-                } else if (infernodistindex__isStringOrNumber(nextInput)) {
-                    nextInput = infernodistindex__createTextVNode(nextInput, null);
-                } else if (infernodistindex__isArray(nextInput)) {
-                    if ('development' !== "production") {
-                        infernodistindex__throwError("a valid Inferno VNode (or null) must be returned from a component render. You may have returned an array or an invalid object.");
-                    }
-                    infernodistindex__throwError();
-                } else if (infernodistindex__isObject(nextInput)) {
-                    if (!infernodistindex__isNull(nextInput.dom)) {
-                        nextInput = infernodistindex__directClone(nextInput);
-                    }
-                }
-                if (nextInput.flags & 28 /* Component */) {
-                        nextInput.parentVNode = nextVNode;
-                    } else if (lastInput.flags & 28 /* Component */) {
-                        lastInput.parentVNode = nextVNode;
-                    }
-                instance._lastInput = nextInput;
-                instance._vNode = nextVNode;
-                if (didUpdate) {
-                    infernodistindex__patch(lastInput, nextInput, parentDom, lifecycle, childContext, isSVG, isRecycling);
-                    if (hasComponentDidUpdate && instance.componentDidUpdate) {
-                        instance.componentDidUpdate(lastProps, lastState);
-                    }
-                    if (!infernodistindex__isNull(infernodistindex__options.afterUpdate)) {
-                        infernodistindex__options.afterUpdate(nextVNode);
-                    }
-                    if (infernodistindex__options.findDOMNodeEnabled) {
-                        infernodistindex__componentToDOMNodeMap.set(instance, nextInput.dom);
-                    }
-                }
-                nextVNode.dom = nextInput.dom;
-            }
-            instance._updating = false;
-        } else {
-            var shouldUpdate = true;
-            var lastProps$1 = lastVNode.props;
-            var nextHooks = nextVNode.ref;
-            var nextHooksDefined = !infernodistindex__isNullOrUndef(nextHooks);
-            var lastInput$1 = lastVNode.children;
-            var nextInput$1 = lastInput$1;
-            nextVNode.dom = lastVNode.dom;
-            nextVNode.children = lastInput$1;
-            if (lastKey !== nextKey) {
-                shouldUpdate = true;
-            } else {
-                if (nextHooksDefined && !infernodistindex__isNullOrUndef(nextHooks.onComponentShouldUpdate)) {
-                    shouldUpdate = nextHooks.onComponentShouldUpdate(lastProps$1, nextProps);
-                }
-            }
-            if (shouldUpdate !== false) {
-                if (nextHooksDefined && !infernodistindex__isNullOrUndef(nextHooks.onComponentWillUpdate)) {
-                    nextHooks.onComponentWillUpdate(lastProps$1, nextProps);
-                }
-                nextInput$1 = nextType(nextProps, context);
-                if (infernodistindex__isInvalid(nextInput$1)) {
-                    nextInput$1 = infernodistindex__createVoidVNode();
-                } else if (infernodistindex__isStringOrNumber(nextInput$1) && nextInput$1 !== infernodistindex__NO_OP) {
-                    nextInput$1 = infernodistindex__createTextVNode(nextInput$1, null);
-                } else if (infernodistindex__isArray(nextInput$1)) {
-                    if ('development' !== "production") {
-                        infernodistindex__throwError("a valid Inferno VNode (or null) must be returned from a component render. You may have returned an array or an invalid object.");
-                    }
-                    infernodistindex__throwError();
-                } else if (infernodistindex__isObject(nextInput$1)) {
-                    if (!infernodistindex__isNull(nextInput$1.dom)) {
-                        nextInput$1 = infernodistindex__directClone(nextInput$1);
-                    }
-                }
-                if (nextInput$1 !== infernodistindex__NO_OP) {
-                    infernodistindex__patch(lastInput$1, nextInput$1, parentDom, lifecycle, context, isSVG, isRecycling);
-                    nextVNode.children = nextInput$1;
-                    if (nextHooksDefined && !infernodistindex__isNullOrUndef(nextHooks.onComponentDidUpdate)) {
-                        nextHooks.onComponentDidUpdate(lastProps$1, nextProps);
-                    }
-                    nextVNode.dom = nextInput$1.dom;
-                }
-            }
-            if (nextInput$1.flags & 28 /* Component */) {
-                    nextInput$1.parentVNode = nextVNode;
-                } else if (lastInput$1.flags & 28 /* Component */) {
-                    lastInput$1.parentVNode = nextVNode;
-                }
-        }
-    }
-    return false;
-}
-function infernodistindex__patchText(lastVNode, nextVNode) {
-    var nextText = nextVNode.children;
-    var dom = lastVNode.dom;
-    nextVNode.dom = dom;
-    if (lastVNode.children !== nextText) {
-        dom.nodeValue = nextText;
-    }
-}
-function infernodistindex__patchVoid(lastVNode, nextVNode) {
-    nextVNode.dom = lastVNode.dom;
-}
-function infernodistindex__patchNonKeyedChildren(lastChildren, nextChildren, dom, lifecycle, context, isSVG, isRecycling) {
-    var lastChildrenLength = lastChildren.length;
-    var nextChildrenLength = nextChildren.length;
-    var commonLength = lastChildrenLength > nextChildrenLength ? nextChildrenLength : lastChildrenLength;
-    var i = 0;
-    for (; i < commonLength; i++) {
-        var nextChild = nextChildren[i];
-        if (nextChild.dom) {
-            nextChild = nextChildren[i] = infernodistindex__directClone(nextChild);
-        }
-        infernodistindex__patch(lastChildren[i], nextChild, dom, lifecycle, context, isSVG, isRecycling);
-    }
-    if (lastChildrenLength < nextChildrenLength) {
-        for (i = commonLength; i < nextChildrenLength; i++) {
-            var nextChild$1 = nextChildren[i];
-            if (nextChild$1.dom) {
-                nextChild$1 = nextChildren[i] = infernodistindex__directClone(nextChild$1);
-            }
-            infernodistindex__appendChild(dom, infernodistindex__mount(nextChild$1, null, lifecycle, context, isSVG));
-        }
-    } else if (nextChildrenLength === 0) {
-        infernodistindex__removeAllChildren(dom, lastChildren, lifecycle, isRecycling);
-    } else if (lastChildrenLength > nextChildrenLength) {
-        for (i = commonLength; i < lastChildrenLength; i++) {
-            infernodistindex__unmount(lastChildren[i], dom, lifecycle, false, isRecycling);
-        }
-    }
-}
-function infernodistindex__patchKeyedChildren(a, b, dom, lifecycle, context, isSVG, isRecycling) {
-    var aLength = a.length;
-    var bLength = b.length;
-    var aEnd = aLength - 1;
-    var bEnd = bLength - 1;
-    var aStart = 0;
-    var bStart = 0;
-    var i;
-    var j;
-    var aNode;
-    var bNode;
-    var nextNode;
-    var nextPos;
-    var node;
-    if (aLength === 0) {
-        if (bLength > 0) {
-            infernodistindex__mountArrayChildren(b, dom, lifecycle, context, isSVG);
-        }
-        return;
-    } else if (bLength === 0) {
-        infernodistindex__removeAllChildren(dom, a, lifecycle, isRecycling);
-        return;
-    }
-    var aStartNode = a[aStart];
-    var bStartNode = b[bStart];
-    var aEndNode = a[aEnd];
-    var bEndNode = b[bEnd];
-    if (bStartNode.dom) {
-        b[bStart] = bStartNode = infernodistindex__directClone(bStartNode);
-    }
-    if (bEndNode.dom) {
-        b[bEnd] = bEndNode = infernodistindex__directClone(bEndNode);
-    }
-    // Step 1
-    /* eslint no-constant-condition: 0 */
-    outer: while (true) {
-        // Sync nodes with the same key at the beginning.
-        while (aStartNode.key === bStartNode.key) {
-            infernodistindex__patch(aStartNode, bStartNode, dom, lifecycle, context, isSVG, isRecycling);
-            aStart++;
-            bStart++;
-            if (aStart > aEnd || bStart > bEnd) {
-                break outer;
-            }
-            aStartNode = a[aStart];
-            bStartNode = b[bStart];
-            if (bStartNode.dom) {
-                b[bStart] = bStartNode = infernodistindex__directClone(bStartNode);
-            }
-        }
-        // Sync nodes with the same key at the end.
-        while (aEndNode.key === bEndNode.key) {
-            infernodistindex__patch(aEndNode, bEndNode, dom, lifecycle, context, isSVG, isRecycling);
-            aEnd--;
-            bEnd--;
-            if (aStart > aEnd || bStart > bEnd) {
-                break outer;
-            }
-            aEndNode = a[aEnd];
-            bEndNode = b[bEnd];
-            if (bEndNode.dom) {
-                b[bEnd] = bEndNode = infernodistindex__directClone(bEndNode);
-            }
-        }
-        // Move and sync nodes from right to left.
-        if (aEndNode.key === bStartNode.key) {
-            infernodistindex__patch(aEndNode, bStartNode, dom, lifecycle, context, isSVG, isRecycling);
-            infernodistindex__insertOrAppend(dom, bStartNode.dom, aStartNode.dom);
-            aEnd--;
-            bStart++;
-            aEndNode = a[aEnd];
-            bStartNode = b[bStart];
-            if (bStartNode.dom) {
-                b[bStart] = bStartNode = infernodistindex__directClone(bStartNode);
-            }
-            continue;
-        }
-        // Move and sync nodes from left to right.
-        if (aStartNode.key === bEndNode.key) {
-            infernodistindex__patch(aStartNode, bEndNode, dom, lifecycle, context, isSVG, isRecycling);
-            nextPos = bEnd + 1;
-            nextNode = nextPos < b.length ? b[nextPos].dom : null;
-            infernodistindex__insertOrAppend(dom, bEndNode.dom, nextNode);
-            aStart++;
-            bEnd--;
-            aStartNode = a[aStart];
-            bEndNode = b[bEnd];
-            if (bEndNode.dom) {
-                b[bEnd] = bEndNode = infernodistindex__directClone(bEndNode);
-            }
-            continue;
-        }
-        break;
-    }
-    if (aStart > aEnd) {
-        if (bStart <= bEnd) {
-            nextPos = bEnd + 1;
-            nextNode = nextPos < b.length ? b[nextPos].dom : null;
-            while (bStart <= bEnd) {
-                node = b[bStart];
-                if (node.dom) {
-                    b[bStart] = node = infernodistindex__directClone(node);
-                }
-                bStart++;
-                infernodistindex__insertOrAppend(dom, infernodistindex__mount(node, null, lifecycle, context, isSVG), nextNode);
-            }
-        }
-    } else if (bStart > bEnd) {
-        while (aStart <= aEnd) {
-            infernodistindex__unmount(a[aStart++], dom, lifecycle, false, isRecycling);
-        }
-    } else {
-        aLength = aEnd - aStart + 1;
-        bLength = bEnd - bStart + 1;
-        var sources = new Array(bLength);
-        // Mark all nodes as inserted.
-        for (i = 0; i < bLength; i++) {
-            sources[i] = -1;
-        }
-        var moved = false;
-        var pos = 0;
-        var patched = 0;
-        // When sizes are small, just loop them through
-        if (bLength <= 4 || aLength * bLength <= 16) {
-            for (i = aStart; i <= aEnd; i++) {
-                aNode = a[i];
-                if (patched < bLength) {
-                    for (j = bStart; j <= bEnd; j++) {
-                        bNode = b[j];
-                        if (aNode.key === bNode.key) {
-                            sources[j - bStart] = i;
-                            if (pos > j) {
-                                moved = true;
-                            } else {
-                                pos = j;
-                            }
-                            if (bNode.dom) {
-                                b[j] = bNode = infernodistindex__directClone(bNode);
-                            }
-                            infernodistindex__patch(aNode, bNode, dom, lifecycle, context, isSVG, isRecycling);
-                            patched++;
-                            a[i] = null;
-                            break;
-                        }
-                    }
-                }
-            }
-        } else {
-            var keyIndex = new Map();
-            // Map keys by their index in array
-            for (i = bStart; i <= bEnd; i++) {
-                keyIndex.set(b[i].key, i);
-            }
-            // Try to patch same keys
-            for (i = aStart; i <= aEnd; i++) {
-                aNode = a[i];
-                if (patched < bLength) {
-                    j = keyIndex.get(aNode.key);
-                    if (!infernodistindex__isUndefined(j)) {
-                        bNode = b[j];
-                        sources[j - bStart] = i;
-                        if (pos > j) {
-                            moved = true;
-                        } else {
-                            pos = j;
-                        }
-                        if (bNode.dom) {
-                            b[j] = bNode = infernodistindex__directClone(bNode);
-                        }
-                        infernodistindex__patch(aNode, bNode, dom, lifecycle, context, isSVG, isRecycling);
-                        patched++;
-                        a[i] = null;
-                    }
-                }
-            }
-        }
-        // fast-path: if nothing patched remove all old and add all new
-        if (aLength === a.length && patched === 0) {
-            infernodistindex__removeAllChildren(dom, a, lifecycle, isRecycling);
-            while (bStart < bLength) {
-                node = b[bStart];
-                if (node.dom) {
-                    b[bStart] = node = infernodistindex__directClone(node);
-                }
-                bStart++;
-                infernodistindex__insertOrAppend(dom, infernodistindex__mount(node, null, lifecycle, context, isSVG), null);
-            }
-        } else {
-            i = aLength - patched;
-            while (i > 0) {
-                aNode = a[aStart++];
-                if (!infernodistindex__isNull(aNode)) {
-                    infernodistindex__unmount(aNode, dom, lifecycle, true, isRecycling);
-                    i--;
-                }
-            }
-            if (moved) {
-                var seq = infernodistindex__lis_algorithm(sources);
-                j = seq.length - 1;
-                for (i = bLength - 1; i >= 0; i--) {
-                    if (sources[i] === -1) {
-                        pos = i + bStart;
-                        node = b[pos];
-                        if (node.dom) {
-                            b[pos] = node = infernodistindex__directClone(node);
-                        }
-                        nextPos = pos + 1;
-                        nextNode = nextPos < b.length ? b[nextPos].dom : null;
-                        infernodistindex__insertOrAppend(dom, infernodistindex__mount(node, null, lifecycle, context, isSVG), nextNode);
-                    } else {
-                        if (j < 0 || i !== seq[j]) {
-                            pos = i + bStart;
-                            node = b[pos];
-                            nextPos = pos + 1;
-                            nextNode = nextPos < b.length ? b[nextPos].dom : null;
-                            infernodistindex__insertOrAppend(dom, node.dom, nextNode);
-                        } else {
-                            j--;
-                        }
-                    }
-                }
-            } else if (patched !== bLength) {
-                // when patched count doesn't match b length we need to insert those new ones
-                // loop backwards so we can use insertBefore
-                for (i = bLength - 1; i >= 0; i--) {
-                    if (sources[i] === -1) {
-                        pos = i + bStart;
-                        node = b[pos];
-                        if (node.dom) {
-                            b[pos] = node = infernodistindex__directClone(node);
-                        }
-                        nextPos = pos + 1;
-                        nextNode = nextPos < b.length ? b[nextPos].dom : null;
-                        infernodistindex__insertOrAppend(dom, infernodistindex__mount(node, null, lifecycle, context, isSVG), nextNode);
-                    }
-                }
-            }
-        }
-    }
-}
-// // https://en.wikipedia.org/wiki/Longest_increasing_subsequence
-function infernodistindex__lis_algorithm(arr) {
-    var p = arr.slice(0);
-    var result = [0];
-    var i;
-    var j;
-    var u;
-    var v;
-    var c;
-    var len = arr.length;
-    for (i = 0; i < len; i++) {
-        var arrI = arr[i];
-        if (arrI === -1) {
-            continue;
-        }
-        j = result[result.length - 1];
-        if (arr[j] < arrI) {
-            p[i] = j;
-            result.push(i);
-            continue;
-        }
-        u = 0;
-        v = result.length - 1;
-        while (u < v) {
-            c = (u + v) / 2 | 0;
-            if (arr[result[c]] < arrI) {
-                u = c + 1;
-            } else {
-                v = c;
-            }
-        }
-        if (arrI < arr[result[u]]) {
-            if (u > 0) {
-                p[i] = result[u - 1];
-            }
-            result[u] = i;
-        }
-    }
-    u = result.length;
-    v = result[u - 1];
-    while (u-- > 0) {
-        result[u] = v;
-        v = p[v];
-    }
-    return result;
-}
-function infernodistindex__isAttrAnEvent(attr) {
-    return attr[0] === "o" && attr[1] === "n";
-}
-function infernodistindex__patchProp(prop, lastValue, nextValue, dom, isSVG, hasControlledValue) {
-    if (lastValue !== nextValue) {
-        if (infernodistindex__skipProps.has(prop) || hasControlledValue && prop === "value") {
-            return;
-        } else if (infernodistindex__booleanProps.has(prop)) {
-            prop = prop === "autoFocus" ? prop.toLowerCase() : prop;
-            dom[prop] = !!nextValue;
-        } else if (infernodistindex__strictProps.has(prop)) {
-            var value = infernodistindex__isNullOrUndef(nextValue) ? "" : nextValue;
-            if (dom[prop] !== value) {
-                dom[prop] = value;
-            }
-        } else if (infernodistindex__isAttrAnEvent(prop)) {
-            infernodistindex__patchEvent(prop, lastValue, nextValue, dom);
-        } else if (infernodistindex__isNullOrUndef(nextValue)) {
-            dom.removeAttribute(prop);
-        } else if (prop === "style") {
-            infernodistindex__patchStyle(lastValue, nextValue, dom);
-        } else if (prop === "dangerouslySetInnerHTML") {
-            var lastHtml = lastValue && lastValue.__html;
-            var nextHtml = nextValue && nextValue.__html;
-            if (lastHtml !== nextHtml) {
-                if (!infernodistindex__isNullOrUndef(nextHtml)) {
-                    dom.innerHTML = nextHtml;
-                }
-            }
-        } else {
-            // We optimize for NS being boolean. Its 99.9% time false
-            if (isSVG && infernodistindex__namespaces.has(prop)) {
-                // If we end up in this path we can read property again
-                dom.setAttributeNS(infernodistindex__namespaces.get(prop), prop, nextValue);
-            } else {
-                dom.setAttribute(prop, nextValue);
-            }
-        }
-    }
-}
-function infernodistindex__patchEvent(name, lastValue, nextValue, dom) {
-    if (lastValue !== nextValue) {
-        if (infernodistindex__delegatedEvents.has(name)) {
-            infernodistindex__handleEvent(name, lastValue, nextValue, dom);
-        } else {
-            var nameLowerCase = name.toLowerCase();
-            var domEvent = dom[nameLowerCase];
-            // if the function is wrapped, that means it's been controlled by a wrapper
-            if (domEvent && domEvent.wrapped) {
-                return;
-            }
-            if (!infernodistindex__isFunction(nextValue) && !infernodistindex__isNullOrUndef(nextValue)) {
-                var linkEvent = nextValue.event;
-                if (linkEvent && infernodistindex__isFunction(linkEvent)) {
-                    dom[nameLowerCase] = function (e) {
-                        linkEvent(nextValue.data, e);
-                    };
-                } else {
-                    if ('development' !== "production") {
-                        infernodistindex__throwError("an event on a VNode \"" + name + "\". was not a function or a valid linkEvent.");
-                    }
-                    infernodistindex__throwError();
-                }
-            } else {
-                dom[nameLowerCase] = nextValue;
-            }
-        }
-    }
-}
-// We are assuming here that we come from patchProp routine
-// -nextAttrValue cannot be null or undefined
-function infernodistindex__patchStyle(lastAttrValue, nextAttrValue, dom) {
-    var domStyle = dom.style;
-    var style;
-    var value;
-    if (infernodistindex__isString(nextAttrValue)) {
-        domStyle.cssText = nextAttrValue;
-        return;
-    }
-    if (!infernodistindex__isNullOrUndef(lastAttrValue) && !infernodistindex__isString(lastAttrValue)) {
-        for (style in nextAttrValue) {
-            // do not add a hasOwnProperty check here, it affects performance
-            value = nextAttrValue[style];
-            if (value !== lastAttrValue[style]) {
-                domStyle[style] = !infernodistindex__isNumber(value) || infernodistindex__isUnitlessNumber.has(style) ? value : value + "px";
-            }
-        }
-        for (style in lastAttrValue) {
-            if (infernodistindex__isNullOrUndef(nextAttrValue[style])) {
-                domStyle[style] = "";
-            }
-        }
-    } else {
-        for (style in nextAttrValue) {
-            value = nextAttrValue[style];
-            domStyle[style] = !infernodistindex__isNumber(value) || infernodistindex__isUnitlessNumber.has(style) ? value : value + "px";
-        }
-    }
-}
-function infernodistindex__removeProp(prop, lastValue, dom, nextFlags) {
-    if (prop === "value") {
-        // When removing value of select element, it needs to be set to null instead empty string, because empty string is valid value for option which makes that option selected
-        // MS IE/Edge don't follow html spec for textArea and input elements and we need to set empty string to value in those cases to avoid "null" and "undefined" texts
-        dom.value = nextFlags & 2048 /* SelectElement */ ? null : "";
-    } else if (prop === "style") {
-        dom.removeAttribute("style");
-    } else if (infernodistindex__isAttrAnEvent(prop)) {
-        infernodistindex__handleEvent(prop, lastValue, null, dom);
-    } else {
-        dom.removeAttribute(prop);
-    }
-}
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-function infernodistindex__mount(vNode, parentDom, lifecycle, context, isSVG) {
-    var flags = vNode.flags;
-    if (flags & 3970 /* Element */) {
-            return infernodistindex__mountElement(vNode, parentDom, lifecycle, context, isSVG);
-        } else if (flags & 28 /* Component */) {
-            return infernodistindex__mountComponent(vNode, parentDom, lifecycle, context, isSVG, (flags & 4 /* ComponentClass */) > 0);
-        } else if (flags & 4096 /* Void */) {
-            return infernodistindex__mountVoid(vNode, parentDom);
-        } else if (flags & 1 /* Text */) {
-            return infernodistindex__mountText(vNode, parentDom);
-        } else {
-        if ('development' !== "production") {
-            if (typeof vNode === "object") {
-                infernodistindex__throwError("mount() received an object that's not a valid VNode, you should stringify it first. Object: \"" + JSON.stringify(vNode) + "\".");
-            } else {
-                infernodistindex__throwError("mount() expects a valid VNode, instead it received an object with the type \"" + typeof vNode + "\".");
-            }
-        }
-        infernodistindex__throwError();
-    }
-}
-function infernodistindex__mountText(vNode, parentDom) {
-    var dom = document.createTextNode(vNode.children);
-    vNode.dom = dom;
-    if (!infernodistindex__isNull(parentDom)) {
-        infernodistindex__appendChild(parentDom, dom);
-    }
-    return dom;
-}
-function infernodistindex__mountVoid(vNode, parentDom) {
-    var dom = document.createTextNode("");
-    vNode.dom = dom;
-    if (!infernodistindex__isNull(parentDom)) {
-        infernodistindex__appendChild(parentDom, dom);
-    }
-    return dom;
-}
-function infernodistindex__mountElement(vNode, parentDom, lifecycle, context, isSVG) {
-    var dom;
-    if (infernodistindex__options.recyclingEnabled) {
-        dom = infernodistindex__recycleElement(vNode, lifecycle, context, isSVG);
-        if (!infernodistindex__isNull(dom)) {
-            if (!infernodistindex__isNull(parentDom)) {
-                infernodistindex__appendChild(parentDom, dom);
-            }
-            return dom;
-        }
-    }
-    var flags = vNode.flags;
-    isSVG = isSVG || (flags & 128 /* SvgElement */) > 0;
-    dom = infernodistindex__documentCreateElement(vNode.type, isSVG);
-    var children = vNode.children;
-    var props = vNode.props;
-    var className = vNode.className;
-    var ref = vNode.ref;
-    vNode.dom = dom;
-    if (!infernodistindex__isInvalid(children)) {
-        if (infernodistindex__isStringOrNumber(children)) {
-            infernodistindex__setTextContent(dom, children);
-        } else {
-            var childrenIsSVG = isSVG === true && vNode.type !== "foreignObject";
-            if (infernodistindex__isArray(children)) {
-                infernodistindex__mountArrayChildren(children, dom, lifecycle, context, childrenIsSVG);
-            } else if (infernodistindex__isVNode(children)) {
-                infernodistindex__mount(children, dom, lifecycle, context, childrenIsSVG);
-            }
-        }
-    }
-    if (!infernodistindex__isNull(props)) {
-        var hasControlledValue = false;
-        var isFormElement = (flags & 3584 /* FormElement */) > 0;
-        if (isFormElement) {
-            hasControlledValue = infernodistindex__isControlledFormElement(props);
-        }
-        for (var prop in props) {
-            // do not add a hasOwnProperty check here, it affects performance
-            infernodistindex__patchProp(prop, null, props[prop], dom, isSVG, hasControlledValue);
-        }
-        if (isFormElement) {
-            infernodistindex__processElement(flags, vNode, dom, props, true, hasControlledValue);
-        }
-    }
-    if (className !== null) {
-        if (isSVG) {
-            dom.setAttribute("class", className);
-        } else {
-            dom.className = className;
-        }
-    }
-    if (!infernodistindex__isNull(ref)) {
-        infernodistindex__mountRef(dom, ref, lifecycle);
-    }
-    if (!infernodistindex__isNull(parentDom)) {
-        infernodistindex__appendChild(parentDom, dom);
-    }
-    return dom;
-}
-function infernodistindex__mountArrayChildren(children, dom, lifecycle, context, isSVG) {
-    for (var i = 0, len = children.length; i < len; i++) {
-        var child = children[i];
-        // Verify can string/number be here. might cause de-opt. - Normalization takes care of it.
-        if (!infernodistindex__isInvalid(child)) {
-            if (child.dom) {
-                children[i] = child = infernodistindex__directClone(child);
-            }
-            infernodistindex__mount(children[i], dom, lifecycle, context, isSVG);
-        }
-    }
-}
-function infernodistindex__mountComponent(vNode, parentDom, lifecycle, context, isSVG, isClass) {
-    var dom;
-    if (infernodistindex__options.recyclingEnabled) {
-        dom = infernodistindex__recycleComponent(vNode, lifecycle, context, isSVG);
-        if (!infernodistindex__isNull(dom)) {
-            if (!infernodistindex__isNull(parentDom)) {
-                infernodistindex__appendChild(parentDom, dom);
-            }
-            return dom;
-        }
-    }
-    var type = vNode.type;
-    var props = vNode.props || infernodistindex__EMPTY_OBJ;
-    var ref = vNode.ref;
-    if (isClass) {
-        var instance = infernodistindex__createClassComponentInstance(vNode, type, props, context, isSVG, lifecycle);
-        var input = instance._lastInput;
-        instance._vNode = vNode;
-        vNode.dom = dom = infernodistindex__mount(input, null, lifecycle, instance._childContext, isSVG);
-        if (!infernodistindex__isNull(parentDom)) {
-            infernodistindex__appendChild(parentDom, dom);
-        }
-        infernodistindex__mountClassComponentCallbacks(vNode, ref, instance, lifecycle);
-        instance._updating = false;
-        if (infernodistindex__options.findDOMNodeEnabled) {
-            infernodistindex__componentToDOMNodeMap.set(instance, dom);
-        }
-    } else {
-        var input$1 = infernodistindex__createFunctionalComponentInput(vNode, type, props, context);
-        vNode.dom = dom = infernodistindex__mount(input$1, null, lifecycle, context, isSVG);
-        vNode.children = input$1;
-        infernodistindex__mountFunctionalComponentCallbacks(props, ref, dom, lifecycle);
-        if (!infernodistindex__isNull(parentDom)) {
-            infernodistindex__appendChild(parentDom, dom);
-        }
-    }
-    return dom;
-}
-function infernodistindex__mountClassComponentCallbacks(vNode, ref, instance, lifecycle) {
-    if (ref) {
-        if (infernodistindex__isFunction(ref)) {
-            ref(instance);
-        } else {
-            if ('development' !== "production") {
-                if (infernodistindex__isStringOrNumber(ref)) {
-                    infernodistindex__throwError('string "refs" are not supported in Inferno 1.0. Use callback "refs" instead.');
-                } else if (infernodistindex__isObject(ref) && vNode.flags & 4 /* ComponentClass */) {
-                        infernodistindex__throwError("functional component lifecycle events are not supported on ES2015 class components.");
-                    } else {
-                    infernodistindex__throwError("a bad value for \"ref\" was used on component: \"" + JSON.stringify(ref) + "\"");
-                }
-            }
-            infernodistindex__throwError();
-        }
-    }
-    var hasDidMount = !infernodistindex__isUndefined(instance.componentDidMount);
-    var afterMount = infernodistindex__options.afterMount;
-    if (hasDidMount || !infernodistindex__isNull(afterMount)) {
-        lifecycle.addListener(function () {
-            instance._updating = true;
-            if (afterMount) {
-                afterMount(vNode);
-            }
-            if (hasDidMount) {
-                instance.componentDidMount();
-            }
-            instance._updating = false;
-        });
-    }
-}
-function infernodistindex__mountFunctionalComponentCallbacks(props, ref, dom, lifecycle) {
-    if (ref) {
-        if (!infernodistindex__isNullOrUndef(ref.onComponentWillMount)) {
-            ref.onComponentWillMount(props);
-        }
-        if (!infernodistindex__isNullOrUndef(ref.onComponentDidMount)) {
-            lifecycle.addListener(function () {
-                return ref.onComponentDidMount(dom, props);
-            });
-        }
-    }
-}
-function infernodistindex__mountRef(dom, value, lifecycle) {
-    if (infernodistindex__isFunction(value)) {
-        lifecycle.addListener(function () {
-            return value(dom);
-        });
-    } else {
-        if (infernodistindex__isInvalid(value)) {
-            return;
-        }
-        if ('development' !== "production") {
-            infernodistindex__throwError('string "refs" are not supported in Inferno 1.0. Use callback "refs" instead.');
-        }
-        infernodistindex__throwError();
-    }
-}
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-// We need EMPTY_OBJ defined in one place.
-// Its used for comparison so we cant inline it into shared
-var infernodistindex__EMPTY_OBJ = {};
-if ('development' !== "production") {
-    Object.freeze(infernodistindex__EMPTY_OBJ);
-}
-function infernodistindex__createClassComponentInstance(vNode, Component, props, context, isSVG, lifecycle) {
-    if (infernodistindex__isUndefined(context)) {
-        context = infernodistindex__EMPTY_OBJ; // Context should not be mutable
-    }
-    var instance = new Component(props, context);
-    vNode.children = instance;
-    instance._blockSetState = false;
-    instance.context = context;
-    if (instance.props === infernodistindex__EMPTY_OBJ) {
-        instance.props = props;
-    }
-    // setState callbacks must fire after render is done when called from componentWillReceiveProps or componentWillMount
-    instance._lifecycle = lifecycle;
-    instance._unmounted = false;
-    instance._pendingSetState = true;
-    instance._isSVG = isSVG;
-    if (!infernodistindex__isNullOrUndef(instance.componentWillMount)) {
-        instance._blockRender = true;
-        instance.componentWillMount();
-        instance._blockRender = false;
-    }
-    var childContext;
-    if (!infernodistindex__isNullOrUndef(instance.getChildContext)) {
-        childContext = instance.getChildContext();
-    }
-    if (infernodistindex__isNullOrUndef(childContext)) {
-        instance._childContext = context;
-    } else {
-        instance._childContext = infernodistindex__combineFrom(context, childContext);
-    }
-    if (!infernodistindex__isNull(infernodistindex__options.beforeRender)) {
-        infernodistindex__options.beforeRender(instance);
-    }
-    var input = instance.render(props, instance.state, context);
-    if (!infernodistindex__isNull(infernodistindex__options.afterRender)) {
-        infernodistindex__options.afterRender(instance);
-    }
-    if (infernodistindex__isArray(input)) {
-        if ('development' !== "production") {
-            infernodistindex__throwError("a valid Inferno VNode (or null) must be returned from a component render. You may have returned an array or an invalid object.");
-        }
-        infernodistindex__throwError();
-    } else if (infernodistindex__isInvalid(input)) {
-        input = infernodistindex__createVoidVNode();
-    } else if (infernodistindex__isStringOrNumber(input)) {
-        input = infernodistindex__createTextVNode(input, null);
-    } else {
-        if (input.dom) {
-            input = infernodistindex__directClone(input);
-        }
-        if (input.flags & 28 /* Component */) {
-                // if we have an input that is also a component, we run into a tricky situation
-                // where the root vNode needs to always have the correct DOM entry
-                // so we break monomorphism on our input and supply it our vNode as parentVNode
-                // we can optimise this in the future, but this gets us out of a lot of issues
-                input.parentVNode = vNode;
-            }
-    }
-    instance._pendingSetState = false;
-    instance._lastInput = input;
-    return instance;
-}
-function infernodistindex__replaceLastChildAndUnmount(lastInput, nextInput, parentDom, lifecycle, context, isSVG, isRecycling) {
-    infernodistindex__replaceVNode(parentDom, infernodistindex__mount(nextInput, null, lifecycle, context, isSVG), lastInput, lifecycle, isRecycling);
-}
-function infernodistindex__replaceVNode(parentDom, dom, vNode, lifecycle, isRecycling) {
-    infernodistindex__unmount(vNode, null, lifecycle, false, isRecycling);
-    infernodistindex__replaceChild(parentDom, dom, vNode.dom);
-}
-function infernodistindex__createFunctionalComponentInput(vNode, component, props, context) {
-    var input = component(props, context);
-    if (infernodistindex__isArray(input)) {
-        if ('development' !== "production") {
-            infernodistindex__throwError("a valid Inferno VNode (or null) must be returned from a component render. You may have returned an array or an invalid object.");
-        }
-        infernodistindex__throwError();
-    } else if (infernodistindex__isInvalid(input)) {
-        input = infernodistindex__createVoidVNode();
-    } else if (infernodistindex__isStringOrNumber(input)) {
-        input = infernodistindex__createTextVNode(input, null);
-    } else {
-        if (input.dom) {
-            input = infernodistindex__directClone(input);
-        }
-        if (input.flags & 28 /* Component */) {
-                // if we have an input that is also a component, we run into a tricky situation
-                // where the root vNode needs to always have the correct DOM entry
-                // so we break monomorphism on our input and supply it our vNode as parentVNode
-                // we can optimise this in the future, but this gets us out of a lot of issues
-                input.parentVNode = vNode;
-            }
-    }
-    return input;
-}
-function infernodistindex__setTextContent(dom, text) {
-    if (text !== "") {
-        dom.textContent = text;
-    } else {
-        dom.appendChild(document.createTextNode(""));
-    }
-}
-function infernodistindex__updateTextContent(dom, text) {
-    dom.firstChild.nodeValue = text;
-}
-function infernodistindex__appendChild(parentDom, dom) {
-    parentDom.appendChild(dom);
-}
-function infernodistindex__insertOrAppend(parentDom, newNode, nextNode) {
-    if (infernodistindex__isNullOrUndef(nextNode)) {
-        infernodistindex__appendChild(parentDom, newNode);
-    } else {
-        parentDom.insertBefore(newNode, nextNode);
-    }
-}
-function infernodistindex__documentCreateElement(tag, isSVG) {
-    if (isSVG === true) {
-        return document.createElementNS(infernodistindex__svgNS, tag);
-    } else {
-        return document.createElement(tag);
-    }
-}
-function infernodistindex__replaceWithNewNode(lastNode, nextNode, parentDom, lifecycle, context, isSVG, isRecycling) {
-    infernodistindex__unmount(lastNode, null, lifecycle, false, isRecycling);
-    var dom = infernodistindex__mount(nextNode, null, lifecycle, context, isSVG);
-    nextNode.dom = dom;
-    infernodistindex__replaceChild(parentDom, dom, lastNode.dom);
-}
-function infernodistindex__replaceChild(parentDom, nextDom, lastDom) {
-    if (!parentDom) {
-        parentDom = lastDom.parentNode;
-    }
-    parentDom.replaceChild(nextDom, lastDom);
-}
-function infernodistindex__removeChild(parentDom, dom) {
-    parentDom.removeChild(dom);
-}
-function infernodistindex__removeAllChildren(dom, children, lifecycle, isRecycling) {
-    if (!infernodistindex__options.recyclingEnabled || infernodistindex__options.recyclingEnabled && !isRecycling) {
-        infernodistindex__removeChildren(null, children, lifecycle, isRecycling);
-    }
-    dom.textContent = "";
-}
-function infernodistindex__removeChildren(dom, children, lifecycle, isRecycling) {
-    for (var i = 0, len = children.length; i < len; i++) {
-        var child = children[i];
-        if (!infernodistindex__isInvalid(child)) {
-            infernodistindex__unmount(child, dom, lifecycle, true, isRecycling);
-        }
-    }
-}
-function infernodistindex__isKeyed(lastChildren, nextChildren) {
-    return nextChildren.length > 0 && !infernodistindex__isNullOrUndef(nextChildren[0]) && !infernodistindex__isNullOrUndef(nextChildren[0].key) && lastChildren.length > 0 && !infernodistindex__isNullOrUndef(lastChildren[0]) && !infernodistindex__isNullOrUndef(lastChildren[0].key);
-}
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-function infernodistindex__VNode(children, className, flags, key, props, ref, type) {
-    this.children = children;
-    this.className = className;
-    this.dom = null;
-    this.flags = flags;
-    this.key = key;
-    this.props = props;
-    this.ref = ref;
-    this.type = type;
-}
-/**
- * Creates virtual node
- * @param {number} flags
- * @param {string|Function|null} type
- * @param {string|null=} className
- * @param {object=} children
- * @param {object=} props
- * @param {*=} key
- * @param {object|Function=} ref
- * @param {boolean=} noNormalise
- * @returns {VNode} returns new virtual node
- */
-function infernodistindex__createVNode(flags, type, className, children, props, key, ref, noNormalise) {
-    if (flags & 16 /* ComponentUnknown */) {
-            flags = infernodistindex__isStatefulComponent(type) ? 4 /* ComponentClass */
-            : 8 /* ComponentFunction */;
-        }
-    var vNode = new infernodistindex__VNode(children === void 0 ? null : children, className === void 0 ? null : className, flags, key === void 0 ? null : key, props === void 0 ? null : props, ref === void 0 ? null : ref, type);
-    if (noNormalise !== true) {
-        infernodistindex__normalize(vNode);
-    }
-    if (infernodistindex__options.createVNode !== null) {
-        infernodistindex__options.createVNode(vNode);
-    }
-    return vNode;
-}
-function infernodistindex__directClone(vNodeToClone) {
-    var newVNode;
-    var flags = vNodeToClone.flags;
-    if (flags & 28 /* Component */) {
-            var props;
-            var propsToClone = vNodeToClone.props;
-            if (infernodistindex__isNull(propsToClone)) {
-                props = infernodistindex__EMPTY_OBJ;
-            } else {
-                props = {};
-                for (var key in propsToClone) {
-                    props[key] = propsToClone[key];
-                }
-            }
-            newVNode = infernodistindex__createVNode(flags, vNodeToClone.type, null, null, props, vNodeToClone.key, vNodeToClone.ref, true);
-            var newProps = newVNode.props;
-            var newChildren = newProps.children;
-            // we need to also clone component children that are in props
-            // as the children may also have been hoisted
-            if (newChildren) {
-                if (infernodistindex__isArray(newChildren)) {
-                    var len = newChildren.length;
-                    if (len > 0) {
-                        var tmpArray = [];
-                        for (var i = 0; i < len; i++) {
-                            var child = newChildren[i];
-                            if (infernodistindex__isStringOrNumber(child)) {
-                                tmpArray.push(child);
-                            } else if (!infernodistindex__isInvalid(child) && infernodistindex__isVNode(child)) {
-                                tmpArray.push(infernodistindex__directClone(child));
-                            }
-                        }
-                        newProps.children = tmpArray;
-                    }
-                } else if (infernodistindex__isVNode(newChildren)) {
-                    newProps.children = infernodistindex__directClone(newChildren);
-                }
-            }
-            newVNode.children = null;
-        } else if (flags & 3970 /* Element */) {
-            var children = vNodeToClone.children;
-            var props$1;
-            var propsToClone$1 = vNodeToClone.props;
-            if (propsToClone$1 === null) {
-                props$1 = infernodistindex__EMPTY_OBJ;
-            } else {
-                props$1 = {};
-                for (var key$1 in propsToClone$1) {
-                    props$1[key$1] = propsToClone$1[key$1];
-                }
-            }
-            newVNode = infernodistindex__createVNode(flags, vNodeToClone.type, vNodeToClone.className, children, props$1, vNodeToClone.key, vNodeToClone.ref, !children);
-        } else if (flags & 1 /* Text */) {
-            newVNode = infernodistindex__createTextVNode(vNodeToClone.children, vNodeToClone.key);
-        }
-    return newVNode;
-}
-/*
- directClone is preferred over cloneVNode and used internally also.
- This function makes Inferno backwards compatible.
- And can be tree-shaked by modern bundlers
-
- Would be nice to combine this with directClone but could not do it without breaking change
- */
-/**
- * Clones given virtual node by creating new instance of it
- * @param {VNode} vNodeToClone virtual node to be cloned
- * @param {Props=} props additional props for new virtual node
- * @param {...*} _children new children for new virtual node
- * @returns {VNode} new virtual node
- */
-function infernodistindex__cloneVNode(vNodeToClone, props) {
-    var _children = [],
-        len$2 = arguments.length - 2;
-    while (len$2-- > 0) _children[len$2] = arguments[len$2 + 2];
-
-    var children = _children;
-    var childrenLen = _children.length;
-    if (childrenLen > 0 && !infernodistindex__isUndefined(_children[0])) {
-        if (!props) {
-            props = {};
-        }
-        if (childrenLen === 1) {
-            children = _children[0];
-        }
-        if (!infernodistindex__isUndefined(children)) {
-            props.children = children;
-        }
-    }
-    var newVNode;
-    if (infernodistindex__isArray(vNodeToClone)) {
-        var tmpArray = [];
-        for (var i = 0, len = vNodeToClone.length; i < len; i++) {
-            tmpArray.push(infernodistindex__directClone(vNodeToClone[i]));
-        }
-        newVNode = tmpArray;
-    } else {
-        var flags = vNodeToClone.flags;
-        var className = vNodeToClone.className;
-        var key = vNodeToClone.key;
-        var ref = vNodeToClone.ref;
-        if (props) {
-            if (props.hasOwnProperty("className")) {
-                className = props.className;
-            }
-            if (props.hasOwnProperty("ref")) {
-                ref = props.ref;
-            }
-            if (props.hasOwnProperty("key")) {
-                key = props.key;
-            }
-        }
-        if (flags & 28 /* Component */) {
-                newVNode = infernodistindex__createVNode(flags, vNodeToClone.type, className, null, !vNodeToClone.props && !props ? infernodistindex__EMPTY_OBJ : infernodistindex__combineFrom(vNodeToClone.props, props), key, ref, true);
-                var newProps = newVNode.props;
-                if (newProps) {
-                    var newChildren = newProps.children;
-                    // we need to also clone component children that are in props
-                    // as the children may also have been hoisted
-                    if (newChildren) {
-                        if (infernodistindex__isArray(newChildren)) {
-                            var len$1 = newChildren.length;
-                            if (len$1 > 0) {
-                                var tmpArray$1 = [];
-                                for (var i$1 = 0; i$1 < len$1; i$1++) {
-                                    var child = newChildren[i$1];
-                                    if (infernodistindex__isStringOrNumber(child)) {
-                                        tmpArray$1.push(child);
-                                    } else if (!infernodistindex__isInvalid(child) && infernodistindex__isVNode(child)) {
-                                        tmpArray$1.push(infernodistindex__directClone(child));
-                                    }
-                                }
-                                newProps.children = tmpArray$1;
-                            }
-                        } else if (infernodistindex__isVNode(newChildren)) {
-                            newProps.children = infernodistindex__directClone(newChildren);
-                        }
-                    }
-                }
-                newVNode.children = null;
-            } else if (flags & 3970 /* Element */) {
-                children = props && !infernodistindex__isUndefined(props.children) ? props.children : vNodeToClone.children;
-                newVNode = infernodistindex__createVNode(flags, vNodeToClone.type, className, children, !vNodeToClone.props && !props ? infernodistindex__EMPTY_OBJ : infernodistindex__combineFrom(vNodeToClone.props, props), key, ref, false);
-            } else if (flags & 1 /* Text */) {
-                newVNode = infernodistindex__createTextVNode(vNodeToClone.children, key);
-            }
-    }
-    return newVNode;
-}
-function infernodistindex__createVoidVNode() {
-    return infernodistindex__createVNode(4096 /* Void */, null);
-}
-function infernodistindex__createTextVNode(text, key) {
-    return infernodistindex__createVNode(1 /* Text */, null, null, text, null, key);
-}
-function infernodistindex__isVNode(o) {
-    return !!o.flags;
-}
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-function infernodistindex__applyKey(key, vNode) {
-    vNode.key = key;
-    return vNode;
-}
-function infernodistindex__applyKeyIfMissing(key, vNode) {
-    if (infernodistindex__isNumber(key)) {
-        key = "." + key;
-    }
-    if (infernodistindex__isNull(vNode.key) || vNode.key[0] === ".") {
-        return infernodistindex__applyKey(key, vNode);
-    }
-    return vNode;
-}
-function infernodistindex__applyKeyPrefix(key, vNode) {
-    vNode.key = key + vNode.key;
-    return vNode;
-}
-function infernodistindex___normalizeVNodes(nodes, result, index, currentKey) {
-    for (var len = nodes.length; index < len; index++) {
-        var n = nodes[index];
-        var key = currentKey + "." + index;
-        if (!infernodistindex__isInvalid(n)) {
-            if (infernodistindex__isArray(n)) {
-                infernodistindex___normalizeVNodes(n, result, 0, key);
-            } else {
-                if (infernodistindex__isStringOrNumber(n)) {
-                    n = infernodistindex__createTextVNode(n, null);
-                } else if (infernodistindex__isVNode(n) && n.dom || n.key && n.key[0] === ".") {
-                    n = infernodistindex__directClone(n);
-                }
-                if (infernodistindex__isNull(n.key) || n.key[0] === ".") {
-                    n = infernodistindex__applyKey(key, n);
-                } else {
-                    n = infernodistindex__applyKeyPrefix(currentKey, n);
-                }
-                result.push(n);
-            }
-        }
-    }
-}
-function infernodistindex__normalizeVNodes(nodes) {
-    var newNodes;
-    // we assign $ which basically means we've flagged this array for future note
-    // if it comes back again, we need to clone it, as people are using it
-    // in an immutable way
-    // tslint:disable
-    if (nodes["$"] === true) {
-        nodes = nodes.slice();
-    } else {
-        nodes["$"] = true;
-    }
-    // tslint:enable
-    for (var i = 0, len = nodes.length; i < len; i++) {
-        var n = nodes[i];
-        if (infernodistindex__isInvalid(n) || infernodistindex__isArray(n)) {
-            var result = (newNodes || nodes).slice(0, i);
-            infernodistindex___normalizeVNodes(nodes, result, i, "");
-            return result;
-        } else if (infernodistindex__isStringOrNumber(n)) {
-            if (!newNodes) {
-                newNodes = nodes.slice(0, i);
-            }
-            newNodes.push(infernodistindex__applyKeyIfMissing(i, infernodistindex__createTextVNode(n, null)));
-        } else if (infernodistindex__isVNode(n) && n.dom !== null || infernodistindex__isNull(n.key) && (n.flags & 64 /* HasNonKeyedChildren */) === 0) {
-            if (!newNodes) {
-                newNodes = nodes.slice(0, i);
-            }
-            newNodes.push(infernodistindex__applyKeyIfMissing(i, infernodistindex__directClone(n)));
-        } else if (newNodes) {
-            newNodes.push(infernodistindex__applyKeyIfMissing(i, infernodistindex__directClone(n)));
-        }
-    }
-    return newNodes || nodes;
-}
-function infernodistindex__normalizeChildren(children) {
-    if (infernodistindex__isArray(children)) {
-        return infernodistindex__normalizeVNodes(children);
-    } else if (infernodistindex__isVNode(children) && children.dom !== null) {
-        return infernodistindex__directClone(children);
-    }
-    return children;
-}
-function infernodistindex__normalizeProps(vNode, props, children) {
-    if (vNode.flags & 3970 /* Element */) {
-            if (infernodistindex__isNullOrUndef(children) && props.hasOwnProperty("children")) {
-                vNode.children = props.children;
-            }
-            if (props.hasOwnProperty("className")) {
-                vNode.className = props.className || null;
-                delete props.className;
-            }
-        }
-    if (props.hasOwnProperty("ref")) {
-        vNode.ref = props.ref;
-        delete props.ref;
-    }
-    if (props.hasOwnProperty("key")) {
-        vNode.key = props.key;
-        delete props.key;
-    }
-}
-function infernodistindex__getFlagsForElementVnode(type) {
-    if (type === "svg") {
-        return 128 /* SvgElement */;
-    } else if (type === "input") {
-        return 512 /* InputElement */;
-    } else if (type === "select") {
-        return 2048 /* SelectElement */;
-    } else if (type === "textarea") {
-        return 1024 /* TextareaElement */;
-    } else if (type === "media") {
-        return 256 /* MediaElement */;
-    }
-    return 2 /* HtmlElement */;
-}
-function infernodistindex__normalize(vNode) {
-    var props = vNode.props;
-    var children = vNode.children;
-    // convert a wrongly created type back to element
-    // Primitive node doesn't have defaultProps, only Component
-    if (vNode.flags & 28 /* Component */) {
-            // set default props
-            var type = vNode.type;
-            var defaultProps = type.defaultProps;
-            if (!infernodistindex__isNullOrUndef(defaultProps)) {
-                if (!props) {
-                    props = vNode.props = defaultProps; // Create new object if only defaultProps given
-                } else {
-                    for (var prop in defaultProps) {
-                        if (infernodistindex__isUndefined(props[prop])) {
-                            props[prop] = defaultProps[prop];
-                        }
-                    }
-                }
-            }
-            if (infernodistindex__isString(type)) {
-                vNode.flags = infernodistindex__getFlagsForElementVnode(type);
-                if (props && props.children) {
-                    vNode.children = props.children;
-                    children = props.children;
-                }
-            }
-        }
-    if (props) {
-        infernodistindex__normalizeProps(vNode, props, children);
-        if (!infernodistindex__isInvalid(props.children)) {
-            props.children = infernodistindex__normalizeChildren(props.children);
-        }
-    }
-    if (!infernodistindex__isInvalid(children)) {
-        vNode.children = infernodistindex__normalizeChildren(children);
-    }
-    if ('development' !== "production") {
-        // This code will be stripped out from production CODE
-        // It helps users to track errors in their applications.
-        var verifyKeys = function (vNodes) {
-            var keyValues = vNodes.map(function (vnode) {
-                return vnode.key;
-            });
-            keyValues.some(function (item, idx) {
-                var hasDuplicate = keyValues.indexOf(item) !== idx;
-                if (hasDuplicate) {
-                    infernodistindex__warning("Inferno normalisation(...): Encountered two children with same key, all keys must be unique within its siblings. Duplicated key is:" + item);
-                }
-                return hasDuplicate;
-            });
-        };
-        if (vNode.children && Array.isArray(vNode.children)) {
-            verifyKeys(vNode.children);
-        }
-    }
-}
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-/**
- * Links given data to event as first parameter
- * @param {*} data data to be linked, it will be available in function as first parameter
- * @param {Function} event Function to be called when event occurs
- * @returns {{data: *, event: Function}}
- */
-function infernodistindex__linkEvent(data, event) {
-    if (infernodistindex__isFunction(event)) {
-        return { data: data, event: event };
-    }
-    return null; // Return null when event is invalid, to avoid creating unnecessary event handlers
-}
-
-/**
- * @module Inferno
- */ /** TypeDoc Comment */
-/* tslint:disable:object-literal-sort-keys */
-if ('development' !== "production") {
-    /* tslint:disable-next-line:no-empty */
-    var infernodistindex__testFunc = function testFn() {};
-    if ((infernodistindex__testFunc.name || infernodistindex__testFunc.toString()).indexOf("testFn") === -1) {
-        infernodistindex__warning("It looks like you're using a minified copy of the development build " + "of Inferno. When deploying Inferno apps to production, make sure to use " + "the production build which skips development warnings and is faster. " + "See http://infernojs.org for more details.");
-    }
-}
-var infernodistindex__version = "3.7.1";
-// we duplicate it so it plays nicely with different module loading systems
-var infernodistindex__index = {
-    EMPTY_OBJ: infernodistindex__EMPTY_OBJ,
-    NO_OP: infernodistindex__NO_OP,
-    cloneVNode: infernodistindex__cloneVNode,
-    createRenderer: infernodistindex__createRenderer,
-    createVNode: infernodistindex__createVNode,
-    findDOMNode: infernodistindex__findDOMNode,
-    getFlagsForElementVnode: infernodistindex__getFlagsForElementVnode,
-    internal_DOMNodeMap: infernodistindex__componentToDOMNodeMap,
-    internal_isUnitlessNumber: infernodistindex__isUnitlessNumber,
-    internal_normalize: infernodistindex__normalize,
-    internal_patch: infernodistindex__patch,
-    linkEvent: infernodistindex__linkEvent,
-    options: infernodistindex__options,
-    render: infernodistindex__render,
-    version: infernodistindex__version
-};
-
-$m['inferno/dist/index'].exports['default'] = infernodistindex__index;
-$m['inferno/dist/index'].exports.EMPTY_OBJ = infernodistindex__EMPTY_OBJ;
-$m['inferno/dist/index'].exports.NO_OP = infernodistindex__NO_OP;
-$m['inferno/dist/index'].exports.cloneVNode = infernodistindex__cloneVNode;
-$m['inferno/dist/index'].exports.createRenderer = infernodistindex__createRenderer;
-$m['inferno/dist/index'].exports.createVNode = infernodistindex__createVNode;
-$m['inferno/dist/index'].exports.findDOMNode = infernodistindex__findDOMNode;
-$m['inferno/dist/index'].exports.getFlagsForElementVnode = infernodistindex__getFlagsForElementVnode;
-$m['inferno/dist/index'].exports.internal_DOMNodeMap = infernodistindex__componentToDOMNodeMap;
-$m['inferno/dist/index'].exports.internal_isUnitlessNumber = infernodistindex__isUnitlessNumber;
-$m['inferno/dist/index'].exports.internal_normalize = infernodistindex__normalize;
-$m['inferno/dist/index'].exports.internal_patch = infernodistindex__patch;
-$m['inferno/dist/index'].exports.linkEvent = infernodistindex__linkEvent;
-$m['inferno/dist/index'].exports.options = infernodistindex__options;
-$m['inferno/dist/index'].exports.render = infernodistindex__render;
-$m['inferno/dist/index'].exports.version = infernodistindex__version;
-/*≠≠ node_modules/inferno/dist/index.js ≠≠*/
 
 
 /*== node_modules/prop-types/factoryWithThrowingShims.js ==*/
@@ -4415,459 +2207,6 @@ if ('development' !== 'production') {
 /*≠≠ node_modules/prop-types/index.js ≠≠*/
 
 
-/*== node_modules/inferno/index.js ==*/
-$m['inferno'] = { exports: {} };
-$m['inferno'].exports = $m['inferno/dist/index'].exports.default;
-$m['inferno'].exports.default = $m['inferno'].exports;
-/*≠≠ node_modules/inferno/index.js ≠≠*/
-
-
-/*== node_modules/inferno-create-element/dist/index.js ==*/
-$m['inferno-create-element/dist/index'] = { exports: {} };
-
-Object.defineProperty($m['inferno-create-element/dist/index'].exports, '__esModule', { value: true });
-
-var infernocreateelementdistindex__inferno = $m['inferno'].exports;
-
-/**
- * @module Inferno-Shared
- */ /** TypeDoc Comment */
-function infernocreateelementdistindex__isNullOrUndef(o) {
-    return infernocreateelementdistindex__isUndefined(o) || infernocreateelementdistindex__isNull(o);
-}
-function infernocreateelementdistindex__isInvalid(o) {
-    return infernocreateelementdistindex__isNull(o) || o === false || infernocreateelementdistindex__isTrue(o) || infernocreateelementdistindex__isUndefined(o);
-}
-function infernocreateelementdistindex__isString(o) {
-    return typeof o === "string";
-}
-function infernocreateelementdistindex__isNull(o) {
-    return o === null;
-}
-function infernocreateelementdistindex__isTrue(o) {
-    return o === true;
-}
-function infernocreateelementdistindex__isUndefined(o) {
-    return o === void 0;
-}
-function infernocreateelementdistindex__isObject(o) {
-    return typeof o === "object";
-}
-
-/**
- * @module Inferno-Create-Element
- */ /** TypeDoc Comment */
-var infernocreateelementdistindex__componentHooks = new Set();
-infernocreateelementdistindex__componentHooks.add("onComponentWillMount");
-infernocreateelementdistindex__componentHooks.add("onComponentDidMount");
-infernocreateelementdistindex__componentHooks.add("onComponentWillUnmount");
-infernocreateelementdistindex__componentHooks.add("onComponentShouldUpdate");
-infernocreateelementdistindex__componentHooks.add("onComponentWillUpdate");
-infernocreateelementdistindex__componentHooks.add("onComponentDidUpdate");
-/**
- * Creates virtual node
- * @param {string|Function|Component<any, any>} type Type of node
- * @param {object=} props Optional props for virtual node
- * @param {...{object}=} _children Optional children for virtual node
- * @returns {VNode} new virtual ndoe
- */
-function infernocreateelementdistindex__createElement(type, props) {
-    var _children = [],
-        len = arguments.length - 2;
-    while (len-- > 0) _children[len] = arguments[len + 2];
-
-    if (infernocreateelementdistindex__isInvalid(type) || infernocreateelementdistindex__isObject(type)) {
-        throw new Error("Inferno Error: createElement() name parameter cannot be undefined, null, false or true, It must be a string, class or function.");
-    }
-    var children = _children;
-    var ref = null;
-    var key = null;
-    var className = null;
-    var flags = 0;
-    var newProps;
-    if (_children) {
-        if (_children.length === 1) {
-            children = _children[0];
-        } else if (_children.length === 0) {
-            children = void 0;
-        }
-    }
-    if (infernocreateelementdistindex__isString(type)) {
-        flags = infernocreateelementdistindex__inferno.getFlagsForElementVnode(type);
-        if (!infernocreateelementdistindex__isNullOrUndef(props)) {
-            newProps = {};
-            for (var prop in props) {
-                if (prop === "className" || prop === "class") {
-                    className = props[prop];
-                } else if (prop === "key") {
-                    key = props.key;
-                } else if (prop === "children" && infernocreateelementdistindex__isUndefined(children)) {
-                    children = props.children; // always favour children args, default to props
-                } else if (prop === "ref") {
-                    ref = props.ref;
-                } else {
-                    newProps[prop] = props[prop];
-                }
-            }
-        }
-    } else {
-        flags = 16 /* ComponentUnknown */;
-        if (!infernocreateelementdistindex__isUndefined(children)) {
-            if (!props) {
-                props = {};
-            }
-            props.children = children;
-            children = null;
-        }
-        if (!infernocreateelementdistindex__isNullOrUndef(props)) {
-            newProps = {};
-            for (var prop$1 in props) {
-                if (infernocreateelementdistindex__componentHooks.has(prop$1)) {
-                    if (!ref) {
-                        ref = {};
-                    }
-                    ref[prop$1] = props[prop$1];
-                } else if (prop$1 === "key") {
-                    key = props.key;
-                } else {
-                    newProps[prop$1] = props[prop$1];
-                }
-            }
-        }
-    }
-    return infernocreateelementdistindex__inferno.createVNode(flags, type, className, children, newProps, key, ref);
-}
-
-$m['inferno-create-element/dist/index'].exports['default'] = infernocreateelementdistindex__createElement;
-/*≠≠ node_modules/inferno-create-element/dist/index.js ≠≠*/
-
-
-/*== node_modules/inferno-create-element/index.js ==*/
-$m['inferno-create-element'] = { exports: {} };
-$m['inferno-create-element'].exports = $m['inferno-create-element/dist/index'].exports.default;
-$m['inferno-create-element'].exports.default = $m['inferno-create-element'].exports;
-/*≠≠ node_modules/inferno-create-element/index.js ≠≠*/
-
-
-/*== node_modules/inferno-component/dist/index.js ==*/
-$m['inferno-component/dist/index'] = { exports: {} };
-
-Object.defineProperty($m['inferno-component/dist/index'].exports, '__esModule', { value: true });
-
-var infernocomponentdistindex__inferno = $m['inferno'].exports;
-
-/**
- * @module Inferno-Shared
- */ /** TypeDoc Comment */
-var infernocomponentdistindex__NO_OP = "$NO_OP";
-var infernocomponentdistindex__ERROR_MSG = "a runtime error occured! Use Inferno in development environment to find the error.";
-// This should be boolean and not reference to window.document
-var infernocomponentdistindex__isBrowser = !!(typeof window !== "undefined" && window.document);
-// this is MUCH faster than .constructor === Array and instanceof Array
-// in Node 7 and the later versions of V8, slower in older versions though
-var infernocomponentdistindex__isArray = Array.isArray;
-function infernocomponentdistindex__isStringOrNumber(o) {
-    var type = typeof o;
-    return type === "string" || type === "number";
-}
-function infernocomponentdistindex__isNullOrUndef(o) {
-    return infernocomponentdistindex__isUndefined(o) || infernocomponentdistindex__isNull(o);
-}
-function infernocomponentdistindex__isInvalid(o) {
-    return infernocomponentdistindex__isNull(o) || o === false || infernocomponentdistindex__isTrue(o) || infernocomponentdistindex__isUndefined(o);
-}
-function infernocomponentdistindex__isFunction(o) {
-    return typeof o === "function";
-}
-function infernocomponentdistindex__isNull(o) {
-    return o === null;
-}
-function infernocomponentdistindex__isTrue(o) {
-    return o === true;
-}
-function infernocomponentdistindex__isUndefined(o) {
-    return o === void 0;
-}
-function infernocomponentdistindex__throwError(message) {
-    if (!message) {
-        message = infernocomponentdistindex__ERROR_MSG;
-    }
-    throw new Error("Inferno Error: " + message);
-}
-function infernocomponentdistindex__combineFrom(first, second) {
-    var out = {};
-    if (first) {
-        for (var key in first) {
-            out[key] = first[key];
-        }
-    }
-    if (second) {
-        for (var key$1 in second) {
-            out[key$1] = second[key$1];
-        }
-    }
-    return out;
-}
-
-/**
- * @module Inferno-Component
- */ /** TypeDoc Comment */
-// Make sure u use EMPTY_OBJ from 'inferno', otherwise it'll be a different reference
-var infernocomponentdistindex__noOp = infernocomponentdistindex__ERROR_MSG;
-if ('development' !== "production") {
-    infernocomponentdistindex__noOp = "Inferno Error: Can only update a mounted or mounting component. This usually means you called setState() or forceUpdate() on an unmounted component. This is a no-op.";
-}
-var infernocomponentdistindex__componentCallbackQueue = new Map();
-// when a components root VNode is also a component, we can run into issues
-// this will recursively look for vNode.parentNode if the VNode is a component
-function infernocomponentdistindex__updateParentComponentVNodes(vNode, dom) {
-    if (vNode.flags & 28 /* Component */) {
-            var parentVNode = vNode.parentVNode;
-            if (parentVNode) {
-                parentVNode.dom = dom;
-                infernocomponentdistindex__updateParentComponentVNodes(parentVNode, dom);
-            }
-        }
-}
-var infernocomponentdistindex__resolvedPromise = Promise.resolve();
-function infernocomponentdistindex__addToQueue(component, force, callback) {
-    var queue = infernocomponentdistindex__componentCallbackQueue.get(component);
-    if (queue === void 0) {
-        queue = [];
-        infernocomponentdistindex__componentCallbackQueue.set(component, queue);
-        infernocomponentdistindex__resolvedPromise.then(function () {
-            infernocomponentdistindex__componentCallbackQueue.delete(component);
-            component._updating = true;
-            infernocomponentdistindex__applyState(component, force, function () {
-                for (var i = 0, len = queue.length; i < len; i++) {
-                    queue[i].call(component);
-                }
-            });
-            component._updating = false;
-        });
-    }
-    if (!infernocomponentdistindex__isNullOrUndef(callback)) {
-        queue.push(callback);
-    }
-}
-function infernocomponentdistindex__queueStateChanges(component, newState, callback) {
-    if (infernocomponentdistindex__isFunction(newState)) {
-        newState = newState(component.state, component.props, component.context);
-    }
-    var pending = component._pendingState;
-    if (infernocomponentdistindex__isNullOrUndef(pending)) {
-        component._pendingState = pending = newState;
-    } else {
-        for (var stateKey in newState) {
-            pending[stateKey] = newState[stateKey];
-        }
-    }
-    if (infernocomponentdistindex__isBrowser && !component._pendingSetState && !component._blockRender) {
-        if (!component._updating) {
-            component._pendingSetState = true;
-            component._updating = true;
-            infernocomponentdistindex__applyState(component, false, callback);
-            component._updating = false;
-        } else {
-            infernocomponentdistindex__addToQueue(component, false, callback);
-        }
-    } else {
-        var state = component.state;
-        if (state === null) {
-            component.state = pending;
-        } else {
-            for (var key in pending) {
-                state[key] = pending[key];
-            }
-        }
-        component._pendingState = null;
-        if (!infernocomponentdistindex__isNullOrUndef(callback) && component._blockRender) {
-            component._lifecycle.addListener(callback.bind(component));
-        }
-    }
-}
-function infernocomponentdistindex__applyState(component, force, callback) {
-    if (component._unmounted) {
-        return;
-    }
-    if (force || !component._blockRender) {
-        component._pendingSetState = false;
-        var pendingState = component._pendingState;
-        var prevState = component.state;
-        var nextState = infernocomponentdistindex__combineFrom(prevState, pendingState);
-        var props = component.props;
-        var context = component.context;
-        component._pendingState = null;
-        var nextInput = component._updateComponent(prevState, nextState, props, props, context, force, true);
-        var didUpdate = true;
-        if (infernocomponentdistindex__isInvalid(nextInput)) {
-            nextInput = infernocomponentdistindex__inferno.createVNode(4096 /* Void */, null);
-        } else if (nextInput === infernocomponentdistindex__NO_OP) {
-            nextInput = component._lastInput;
-            didUpdate = false;
-        } else if (infernocomponentdistindex__isStringOrNumber(nextInput)) {
-            nextInput = infernocomponentdistindex__inferno.createVNode(1 /* Text */, null, null, nextInput);
-        } else if (infernocomponentdistindex__isArray(nextInput)) {
-            if ('development' !== "production") {
-                infernocomponentdistindex__throwError("a valid Inferno VNode (or null) must be returned from a component render. You may have returned an array or an invalid object.");
-            }
-            infernocomponentdistindex__throwError();
-        }
-        var lastInput = component._lastInput;
-        var vNode = component._vNode;
-        var parentDom = lastInput.dom && lastInput.dom.parentNode || (lastInput.dom = vNode.dom);
-        component._lastInput = nextInput;
-        if (didUpdate) {
-            var childContext;
-            if (!infernocomponentdistindex__isNullOrUndef(component.getChildContext)) {
-                childContext = component.getChildContext();
-            }
-            if (infernocomponentdistindex__isNullOrUndef(childContext)) {
-                childContext = component._childContext;
-            } else {
-                childContext = infernocomponentdistindex__combineFrom(context, childContext);
-            }
-            var lifeCycle = component._lifecycle;
-            infernocomponentdistindex__inferno.internal_patch(lastInput, nextInput, parentDom, lifeCycle, childContext, component._isSVG, false);
-            lifeCycle.trigger();
-            if (!infernocomponentdistindex__isNullOrUndef(component.componentDidUpdate)) {
-                component.componentDidUpdate(props, prevState, context);
-            }
-            if (!infernocomponentdistindex__isNull(infernocomponentdistindex__inferno.options.afterUpdate)) {
-                infernocomponentdistindex__inferno.options.afterUpdate(vNode);
-            }
-        }
-        var dom = vNode.dom = nextInput.dom;
-        if (infernocomponentdistindex__inferno.options.findDOMNodeEnabled) {
-            infernocomponentdistindex__inferno.internal_DOMNodeMap.set(component, nextInput.dom);
-        }
-        infernocomponentdistindex__updateParentComponentVNodes(vNode, dom);
-    } else {
-        component.state = component._pendingState;
-        component._pendingState = null;
-    }
-    if (!infernocomponentdistindex__isNullOrUndef(callback)) {
-        callback.call(component);
-    }
-}
-var infernocomponentdistindex__alreadyWarned = false;
-var infernocomponentdistindex__Component = function Component(props, context) {
-    this.state = null;
-    this._blockRender = false;
-    this._blockSetState = true;
-    this._pendingSetState = false;
-    this._pendingState = null;
-    this._lastInput = null;
-    this._vNode = null;
-    this._unmounted = false;
-    this._lifecycle = null;
-    this._childContext = null;
-    this._isSVG = false;
-    this._updating = true;
-    /** @type {object} */
-    this.props = props || infernocomponentdistindex__inferno.EMPTY_OBJ;
-    /** @type {object} */
-    this.context = context || infernocomponentdistindex__inferno.EMPTY_OBJ; // context should not be mutable
-};
-infernocomponentdistindex__Component.prototype.forceUpdate = function forceUpdate(callback) {
-    if (this._unmounted || !infernocomponentdistindex__isBrowser) {
-        return;
-    }
-    infernocomponentdistindex__applyState(this, true, callback);
-};
-infernocomponentdistindex__Component.prototype.setState = function setState(newState, callback) {
-    if (this._unmounted) {
-        return;
-    }
-    if (!this._blockSetState) {
-        infernocomponentdistindex__queueStateChanges(this, newState, callback);
-    } else {
-        if ('development' !== "production") {
-            infernocomponentdistindex__throwError("cannot update state via setState() in componentWillUpdate() or constructor.");
-        }
-        infernocomponentdistindex__throwError();
-    }
-};
-infernocomponentdistindex__Component.prototype.setStateSync = function setStateSync(newState) {
-    if ('development' !== "production") {
-        if (!infernocomponentdistindex__alreadyWarned) {
-            infernocomponentdistindex__alreadyWarned = true;
-            // tslint:disable-next-line:no-console
-            console.warn("Inferno WARNING: setStateSync has been deprecated and will be removed in next release. Use setState instead.");
-        }
-    }
-    this.setState(newState);
-};
-infernocomponentdistindex__Component.prototype._updateComponent = function _updateComponent(prevState, nextState, prevProps, nextProps, context, force, fromSetState) {
-    if (this._unmounted === true) {
-        if ('development' !== "production") {
-            infernocomponentdistindex__throwError(infernocomponentdistindex__noOp);
-        }
-        infernocomponentdistindex__throwError();
-    }
-    if (prevProps !== nextProps || nextProps === infernocomponentdistindex__inferno.EMPTY_OBJ || prevState !== nextState || force) {
-        if (prevProps !== nextProps || nextProps === infernocomponentdistindex__inferno.EMPTY_OBJ) {
-            if (!infernocomponentdistindex__isNullOrUndef(this.componentWillReceiveProps) && !fromSetState) {
-                // keep a copy of state before componentWillReceiveProps
-                var beforeState = infernocomponentdistindex__combineFrom(this.state);
-                this._blockRender = true;
-                this.componentWillReceiveProps(nextProps, context);
-                this._blockRender = false;
-                var afterState = this.state;
-                if (beforeState !== afterState) {
-                    // if state changed in componentWillReceiveProps, reassign the beforeState
-                    this.state = beforeState;
-                    // set the afterState as pending state so the change gets picked up below
-                    this._pendingSetState = true;
-                    this._pendingState = afterState;
-                }
-            }
-            if (this._pendingSetState) {
-                nextState = infernocomponentdistindex__combineFrom(nextState, this._pendingState);
-                this._pendingSetState = false;
-                this._pendingState = null;
-            }
-        }
-        /* Update if scu is not defined, or it returns truthy value or force */
-        if (force || infernocomponentdistindex__isNullOrUndef(this.shouldComponentUpdate) || this.shouldComponentUpdate && this.shouldComponentUpdate(nextProps, nextState, context)) {
-            if (!infernocomponentdistindex__isNullOrUndef(this.componentWillUpdate)) {
-                this._blockSetState = true;
-                this.componentWillUpdate(nextProps, nextState, context);
-                this._blockSetState = false;
-            }
-            this.props = nextProps;
-            this.state = nextState;
-            this.context = context;
-            if (infernocomponentdistindex__inferno.options.beforeRender) {
-                infernocomponentdistindex__inferno.options.beforeRender(this);
-            }
-            var render = this.render(nextProps, nextState, context);
-            if (infernocomponentdistindex__inferno.options.afterRender) {
-                infernocomponentdistindex__inferno.options.afterRender(this);
-            }
-            return render;
-        } else {
-            this.props = nextProps;
-            this.state = nextState;
-            this.context = context;
-        }
-    }
-    return infernocomponentdistindex__NO_OP;
-};
-// tslint:disable-next-line:no-empty
-infernocomponentdistindex__Component.prototype.render = function render(nextProps, nextState, nextContext) {};
-
-$m['inferno-component/dist/index'].exports['default'] = infernocomponentdistindex__Component;
-/*≠≠ node_modules/inferno-component/dist/index.js ≠≠*/
-
-
-/*== node_modules/inferno-component/index.js ==*/
-$m['inferno-component'] = { exports: {} };
-$m['inferno-component'].exports = $m['inferno-component/dist/index'].exports.default;
-$m['inferno-component'].exports.default = $m['inferno-component'].exports;
-/*≠≠ node_modules/inferno-component/index.js ≠≠*/
-
-
 /*== node_modules/raf/index.js ==*/
 $m['raf'] = { exports: {} };
 var raf__now = $m['performance-now'].exports,
@@ -5575,15 +2914,17 @@ function yrclock__onVisibilityChangeFactory(hidden) {
 /*== node_modules/@yr/component/Component.js ==*/
 $m['@yr/component/Component'] = { exports: {} };
 
+var yrcomponentComponent___require = $m['preact'].exports,
+    yrcomponentComponent__PreactComponent = yrcomponentComponent___require.Component;
+
 var yrcomponentComponent__assign = $m['object-assign'].exports;
 var yrcomponentComponent__clock = $m['@yr/clock'].exports;
-var yrcomponentComponent__InfernoComponent = $m['inferno-component'].exports;
 
 var yrcomponentComponent__DEFAULT_TRANSITION_DURATION = 250;
 var yrcomponentComponent__TIMEOUT = 20;
 
-var yrcomponentComponent__Component = function (_InfernoComponent) {
-  babelHelpers.inherits(Component, _InfernoComponent);
+var yrcomponentComponent__Component = function (_PreactComponent) {
+  babelHelpers.inherits(Component, _PreactComponent);
 
   /**
    * Constructor
@@ -5593,7 +2934,7 @@ var yrcomponentComponent__Component = function (_InfernoComponent) {
   function Component(props, context) {
     babelHelpers.classCallCheck(this, Component);
 
-    var _this = babelHelpers.possibleConstructorReturn(this, _InfernoComponent.call(this, props, context));
+    var _this = babelHelpers.possibleConstructorReturn(this, _PreactComponent.call(this, props, context));
 
     _this.__timerID = 0;
     _this.__transitionDuration = 'getTransitionDuration' in _this ? _this.getTransitionDuration() : yrcomponentComponent__DEFAULT_TRANSITION_DURATION;
@@ -5695,7 +3036,7 @@ var yrcomponentComponent__Component = function (_InfernoComponent) {
   };
 
   return Component;
-}(yrcomponentComponent__InfernoComponent);
+}(yrcomponentComponent__PreactComponent);
 
 yrcomponentComponent__Component.contextTypes = {};
 
@@ -5713,15 +3054,17 @@ $m['@yr/component'] = { exports: {} };
  * @license MIT
  */
 
-var yrcomponent___require = $m['inferno'].exports,
-    yrcomponent__render = yrcomponent___require.render;
+var yrcomponent___require = $m['preact'].exports,
+    yrcomponent__render = yrcomponent___require.render,
+    yrcomponent__createElement = yrcomponent___require.createElement;
+
+var yrcomponent___require2 = {},
+    yrcomponent__serverRender = yrcomponent___require2.render;
 
 var yrcomponent__assign = $m['object-assign'].exports;
 var yrcomponent__Component = $m['@yr/component/Component'].exports;
-var yrcomponent__createElement = $m['inferno-create-element'].exports;
 var yrcomponent__PropTypes = $m['prop-types'].exports;
 var yrcomponent__runtime = $m['@yr/runtime'].exports;
-var yrcomponent__serverRender = {};
 
 var yrcomponent__STATIC_KEYS = ['displayName', 'defaultProps', 'propTypes'];
 var yrcomponent__RESERVED_KEYS = yrcomponent__STATIC_KEYS.concat(['componentWillUnmount', 'render', 'state']);

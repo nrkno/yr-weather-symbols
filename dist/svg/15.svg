@@ -27,6 +27,6 @@
 			<path d="M86.7,19H12.3c-0.7,0-1.3-0.7-1.3-1.5s0.6-1.5,1.3-1.5h74.4c0.7,0,1.3,0.7,1.3,1.5S87.4,19,86.7,19z"></path>
 		</g>
 	</symbol>
-<use xlink:href="#cloud" class="undefined" x="0" y="0" width="100" height="100" transform="translate(5,25) scale(1,1)"></use>
-<use xlink:href="#fog" class="undefined" x="0" y="0" width="100" height="100" transform="translate(0,76) scale(1,1)"></use>
+<use xlink:href="#cloud" class="cloud1-primitive" x="0" y="0" width="100" height="100" transform="translate(5,25) scale(1,1)"></use>
+<use xlink:href="#fog" class="fog-primitive" x="0" y="0" width="100" height="100" transform="translate(0,76) scale(1,1)"></use>
 </svg>

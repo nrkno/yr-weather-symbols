@@ -1,11 +1,11 @@
 {
   "name": "@yr/weather-symbols",
-  "version": "5.0.0-beta.1",
+  "version": "5.0.0-beta.2",
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no",
   "dependencies": {
-    "@yr/component": "6.1.0-beta.1",
-    "@yr/graphics-component": "6.0.0-beta.1"
+    "@yr/component": "6.1.0-beta.2",
+    "@yr/graphics-component": "6.0.0-beta.2"
   },
   "devDependencies": {
     "babel-plugin-syntax-trailing-function-commas": "6.22.0",
