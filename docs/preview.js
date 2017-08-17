@@ -2946,6 +2946,11 @@ var yrcomponentComponent__Component = function (_PreactComponent) {
         _this[method] = _this[method].bind(_this);
       });
     }
+
+    // Call pseudo constructor
+    if (_this.init !== undefined) {
+      _this.init(props, context);
+    }
     return _this;
   }
 
