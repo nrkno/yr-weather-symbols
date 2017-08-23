@@ -2,20 +2,10 @@
 # yarn lockfile v1
 
 
-"@yr/clock@2.0.x":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@yr/clock/-/clock-2.0.3.tgz#51183c9f150449d87d590ba90a0e2f120bef5ec3"
+"@yr/component@6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@yr/component/-/component-6.1.0.tgz#dd2f34555627900554d21d76358d7bf6da01923b"
   dependencies:
-    debug "2.x.x"
-    performance-now "2.1.0"
-    raf "3.3.2"
-
-"@yr/component@6.1.0-beta.x":
-  version "6.1.0-beta.3"
-  resolved "https://registry.yarnpkg.com/@yr/component/-/component-6.1.0-beta.3.tgz#b592f2b1f005e198793976138d97d19668550891"
-  dependencies:
-    "@yr/clock" "2.0.x"
-    "@yr/is-equal" "1.0.x"
     "@yr/runtime" "2.0.x"
     debug "2.x.x"
     object-assign "4.1.x"
@@ -23,17 +13,13 @@
     preact-render-to-string "3.6.3"
     prop-types "15.5.10"
 
-"@yr/graphics-component@6.0.0-beta.x":
-  version "6.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/@yr/graphics-component/-/graphics-component-6.0.0-beta.2.tgz#dda92b16b467da2a654d0de39a28fc6fa7ca3d45"
+"@yr/graphics-component@6.0.0":
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/@yr/graphics-component/-/graphics-component-6.0.0.tgz#750e77af562f27e4fec012b6d2a87d32a76334f6"
   dependencies:
-    "@yr/component" "6.1.0-beta.x"
+    "@yr/component" "6.1.0"
   optionalDependencies:
     buddy-server "*"
-
-"@yr/is-equal@1.0.x":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@yr/is-equal/-/is-equal-1.0.3.tgz#bfda86ca017af17840a5baa72107ebff2e594512"
 
 "@yr/runtime@2.0.x":
   version "2.0.0"
@@ -893,12 +879,12 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000715"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000715.tgz#0b9b5c795950dfbaf301a8806bafe87f126da8ca"
+  version "1.0.30000717"
+  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000717.tgz#27ddf5feccdd338c99a62c9788c2694f99f67ed7"
 
 caniuse-lite@^1.0.30000697, caniuse-lite@^1.0.30000715:
-  version "1.0.30000715"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000715.tgz#c327f5e6d907ebcec62cde598c3bf0dd793fb9a0"
+  version "1.0.30000717"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000717.tgz#4539b126af787c1d4851944de22b2bd8780d3612"
 
 capture-stack-trace@^1.0.0:
   version "1.0.0"
@@ -3112,10 +3098,6 @@ pend@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/pend/-/pend-1.2.0.tgz#7a57eb550a6783f9115331fcf4663d5c8e007a50"
 
-performance-now@2.1.0, performance-now@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
-
 performance-now@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-0.2.0.tgz#33ef30c5c77d4ea21c5a53869d91b56d8f2555e5"
@@ -3460,12 +3442,6 @@ query-string@^4.1.0:
     object-assign "^4.1.0"
     strict-uri-encode "^1.0.0"
 
-raf@3.3.2:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/raf/-/raf-3.3.2.tgz#0c13be0b5b49b46f76d6669248d527cf2b02fe27"
-  dependencies:
-    performance-now "^2.1.0"
-
 randomatic@^1.1.3:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/randomatic/-/randomatic-1.1.7.tgz#c7abe9cc8b87c0baa876b19fde83fd464797e38c"
@@ -3770,9 +3746,13 @@ source-map-support@^0.4.15:
   dependencies:
     source-map "^0.5.6"
 
-source-map@0.5.6, source-map@^0.5.0, source-map@^0.5.3, source-map@^0.5.6, source-map@~0.5.1:
+source-map@0.5.6:
   version "0.5.6"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.6.tgz#75ce38f52bf0733c5a7f0c118d81334a2bb5f412"
+
+source-map@^0.5.0, source-map@^0.5.3, source-map@^0.5.6, source-map@~0.5.1:
+  version "0.5.7"
+  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
 
 sparkles@^1.0.0:
   version "1.0.0"
@@ -4120,9 +4100,16 @@ ua-parser-js@^0.7.9:
   version "0.7.14"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.14.tgz#110d53fa4c3f326c121292bbeac904d2e03387ca"
 
-uglify-js@3.0.27, uglify-js@3.0.x:
+uglify-js@3.0.27:
   version "3.0.27"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.0.27.tgz#a97db8c8ba6b9dba4e2f88d86aa9548fa6320034"
+  dependencies:
+    commander "~2.11.0"
+    source-map "~0.5.1"
+
+uglify-js@3.0.x:
+  version "3.0.28"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.0.28.tgz#96b8495f0272944787b5843a1679aa326640d5f7"
   dependencies:
     commander "~2.11.0"
     source-map "~0.5.1"

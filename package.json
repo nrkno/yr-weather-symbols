@@ -4,8 +4,8 @@
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no",
   "dependencies": {
-    "@yr/component": "6.1.0-beta.x",
-    "@yr/graphics-component": "6.0.0-beta.x"
+    "@yr/component": "6.1.0",
+    "@yr/graphics-component": "6.0.0"
   },
   "devDependencies": {
     "babel-plugin-syntax-trailing-function-commas": "6.22.0",
