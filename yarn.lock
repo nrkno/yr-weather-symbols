@@ -2,22 +2,22 @@
 # yarn lockfile v1
 
 
-"@yr/component@6.1.0":
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/@yr/component/-/component-6.1.0.tgz#dd2f34555627900554d21d76358d7bf6da01923b"
+"@yr/component@6.x.x":
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/@yr/component/-/component-6.1.1.tgz#b01e17300d72933cdf99cf9d086d3f69698cbd64"
   dependencies:
     "@yr/runtime" "2.0.x"
     debug "2.x.x"
     object-assign "4.1.x"
-    preact "8.2.1"
+    preact "8.2.4"
     preact-render-to-string "3.6.3"
     prop-types "15.5.10"
 
-"@yr/graphics-component@6.0.0":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@yr/graphics-component/-/graphics-component-6.0.0.tgz#750e77af562f27e4fec012b6d2a87d32a76334f6"
+"@yr/graphics-component@6.0.x":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@yr/graphics-component/-/graphics-component-6.0.1.tgz#abc0c2bd48980ebcd9ea1642eaebd0de0719d117"
   dependencies:
-    "@yr/component" "6.1.0"
+    "@yr/component" "6.x.x"
   optionalDependencies:
     buddy-server "*"
 
@@ -445,15 +445,15 @@ babel-plugin-transform-es2015-block-scoped-functions@6.22.0:
   dependencies:
     babel-runtime "^6.22.0"
 
-babel-plugin-transform-es2015-block-scoping@6.24.1:
-  version "6.24.1"
-  resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-block-scoping/-/babel-plugin-transform-es2015-block-scoping-6.24.1.tgz#76c295dc3a4741b1665adfd3167215dcff32a576"
+babel-plugin-transform-es2015-block-scoping@6.26.0:
+  version "6.26.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-es2015-block-scoping/-/babel-plugin-transform-es2015-block-scoping-6.26.0.tgz#d70f5299c1308d05c12f463813b0a09e73b1895f"
   dependencies:
-    babel-runtime "^6.22.0"
-    babel-template "^6.24.1"
-    babel-traverse "^6.24.1"
-    babel-types "^6.24.1"
-    lodash "^4.2.0"
+    babel-runtime "^6.26.0"
+    babel-template "^6.26.0"
+    babel-traverse "^6.26.0"
+    babel-types "^6.26.0"
+    lodash "^4.17.4"
 
 babel-plugin-transform-es2015-classes@6.24.1:
   version "6.24.1"
@@ -586,12 +586,12 @@ babel-plugin-transform-exponentiation-operator@6.24.1:
     babel-plugin-syntax-exponentiation-operator "^6.8.0"
     babel-runtime "^6.22.0"
 
-babel-plugin-transform-object-rest-spread@6.23.0:
-  version "6.23.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-transform-object-rest-spread/-/babel-plugin-transform-object-rest-spread-6.23.0.tgz#875d6bc9be761c58a2ae3feee5dc4895d8c7f921"
+babel-plugin-transform-object-rest-spread@6.26.0:
+  version "6.26.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-object-rest-spread/-/babel-plugin-transform-object-rest-spread-6.26.0.tgz#0f36692d50fef6b7e2d4b3ac1478137a963b7b06"
   dependencies:
     babel-plugin-syntax-object-rest-spread "^6.8.0"
-    babel-runtime "^6.22.0"
+    babel-runtime "^6.26.0"
 
 babel-plugin-transform-strict-mode@^6.24.1:
   version "6.24.1"
@@ -879,12 +879,12 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000717"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000717.tgz#27ddf5feccdd338c99a62c9788c2694f99f67ed7"
+  version "1.0.30000718"
+  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000718.tgz#86cdd97987302554934c61e106f4e470f16f993c"
 
 caniuse-lite@^1.0.30000697, caniuse-lite@^1.0.30000715:
-  version "1.0.30000717"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000717.tgz#4539b126af787c1d4851944de22b2bd8780d3612"
+  version "1.0.30000718"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000718.tgz#0dd24290beb11310b2d80f6b70a823c2a65a6fad"
 
 capture-stack-trace@^1.0.0:
   version "1.0.0"
@@ -3374,9 +3374,9 @@ preact-render-to-string@3.6.3:
   dependencies:
     pretty-format "^3.5.1"
 
-preact@8.2.1:
-  version "8.2.1"
-  resolved "https://registry.yarnpkg.com/preact/-/preact-8.2.1.tgz#674243df0c847884d019834044aa2fcd311e72ed"
+preact@8.2.4:
+  version "8.2.4"
+  resolved "https://registry.yarnpkg.com/preact/-/preact-8.2.4.tgz#144ea50cb57b7659ac5f631191b9418bdec7ed0a"
 
 prepend-http@^1.0.0, prepend-http@^1.0.1:
   version "1.0.4"
