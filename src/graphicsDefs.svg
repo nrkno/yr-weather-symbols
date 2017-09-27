@@ -1,14 +1,51 @@
+
 <?xml version="1.0" encoding="utf-8"?>
-<svg id="symbolPrimitiveDefs" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="0" width="0" style="position:absolute;">
-	<defs>
-		<linearGradient id="sun-inner-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-			<stop offset="0%" stop-color="#ffaf22" />
-			<stop offset="100%" stop-color="#f09900" />
-		</linearGradient>
-		<linearGradient id="moon-grad" x1="0%" y1="50%" x2="100%" y2="0%">
-			<stop offset="0%" stop-color="#686e73" />
-			<stop offset="100%" stop-color="#6a7075" />
-		</linearGradient>
+<svg id="symbolDefs" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="0" width="0" style="position:absolute;">
+
+  <symbol id="cloud">
+    <path class="cloud-fill" d="M55.7,5A23.94,23.94,0,0,0,34.37,18.05a9.9,9.9,0,0,0-12.78,5.56,15,15,0,0,0-1.71-.1A14.81,14.81,0,0,0,9.2,28,14.63,14.63,0,0,0,5,38.17v.21A14.83,14.83,0,0,0,19.88,53.06H75.59a14.3,14.3,0,0,0,3.67-28.14A23.93,23.93,0,0,0,55.7,5Z"></path>
+    <image x="5" y="14" width="85" height="43" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFYAAAAkCAMAAAAkYj0PAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAVUExURSgoKExpcaCgoFBQUG5ublBQUISEhI1fsT0AAAAHdFJOUxsACBsPFRpGXuFgAAABWElEQVRIx7XV25bDIAgF0BMu/v8nF/E+iWlqHNKVN3cpIMXxL4GFM3SQfTazkUyxk63oLYwlVSy2silXkS/wUrZS2a3ZCn1zsdSw7UUYijuHsTa1IvfwWrbSXLkc4N9r27JViwmM1UtWXA3hohQ41m6vl8FQZi7wu2z7KXPW4uRiZS+2AmdXN7DdQEQWQHYHlt6z0dXBBa2xeeVktiZc1jDoF5eGkI4d4MjKc7cNbZ3bqjocLLx5oPDYTaIftcfvAvcs2GFxVsJTOP1wO1jGdUSLaz/DWA1Tl45+Tkqul2ArcPzayGq8JafOUffP3TUp6JQs+Rptc6vtmtBkUw+dv0NzWG0PYf8O7Ym09+ITXyXOPZqEX95aFe3PKxRsL2XV3HR+ZALirPSF0ceHp6F51WBv1A22VaW2GHWzWvat8LOAPf4CrjrA+neNK7+PQBf/DmmLrId09/QDWyESBsibwBUAAAAASUVORK5CYII="></image>
+  </symbol>
+
+  <symbol id="fog">
+    <g fill="currentColor">
+      <path d="M88.7,3H14.3C13.6,3,13,2.3,13,1.5S13.6,0,14.3,0h74.4C89.4,0,90,0.7,90,1.5S89.4,3,88.7,3z"></path>
+      <path d="M75.7,11H1.3C0.6,11,0,10.3,0,9.5S0.6,8,1.3,8h74.4C76.4,8,77,8.7,77,9.5S76.4,11,75.7,11z"></path>
+      <path d="M86.7,19H12.3c-0.7,0-1.3-0.7-1.3-1.5s0.6-1.5,1.3-1.5h74.4c0.7,0,1.3,0.7,1.3,1.5S87.4,19,86.7,19z"></path>
+    </g>
+  </symbol>
+
+  <symbol id="horizon">
+    <path fill="#333333" d="M88.29,2.7H1.71A1.56,1.56,0,0,1,0,1.35,1.56,1.56,0,0,1,1.71,0H88.29A1.56,1.56,0,0,1,90,1.35,1.56,1.56,0,0,1,88.29,2.7Z"></path>
+  </symbol>
+
+  <symbol id="lightning">
+    <polygon points="14.6,18.4 7.7,15.4 10.6,0 0,19.5 7.1,22.5 2.5,40 "></polygon>
+  </symbol>
+
+  <defs>
+    <linearGradient id="moon-grad" x1="0%" y1="50%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#686e73" />
+      <stop offset="100%" stop-color="#6a7075" />
+    </linearGradient>
+  </defs>
+  <symbol id="moon">
+    <path d="M28.43,0A28.44,28.44,0,0,1,32.3,14.32,28.61,28.61,0,0,1,3.69,42.93,28.71,28.71,0,0,1,0,42.66,28.59,28.59,0,1,0,28.43,0Z" fill="url(#moon-grad)"></path>
+  </symbol>
+
+  <symbol id="raindrop">
+    <path d="M2.5,13A2.5,2.5,0,0,1,.21,9.51l3.55-8a2.5,2.5,0,0,1,4.57,2l-3.55,8A2.5,2.5,0,0,1,2.5,13Z"></path>
+  </symbol>
+
+  <symbol id="snowflake">
+    <path d="M11.68,4.47H8.85L10.27,2A1.35,1.35,0,1,0,7.93.67L6.51,3.12,5.1.67A1.35,1.35,0,0,0,3.26.18,1.35,1.35,0,0,0,2.76,2L4.18,4.47H1.35a1.35,1.35,0,1,0,0,2.7H4.18L2.76,9.62a1.35,1.35,0,0,0,.49,1.84A1.39,1.39,0,0,0,5.1,11L6.51,8.52,7.93,11a1.35,1.35,0,1,0,2.34-1.35L8.85,7.17h2.83a1.35,1.35,0,1,0,0-2.7Z"></path>
+  </symbol>
+
+  <defs>
+    <linearGradient id="sun-inner-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffaf22" />
+      <stop offset="100%" stop-color="#f09900" />
+    </linearGradient>
     <radialGradient id="sun-glow-grad" cx="41" cy="41" r="41" gradientUnits="userSpaceOnUse">
       <stop offset="54%" stop-color="#d6b849"/>
       <stop offset="67%" stop-color="#ffce47"/>
@@ -19,40 +56,38 @@
       <stop offset="67%" stop-color="#ffce47"/>
       <stop offset="100%" stop-color="#ffdb73"/>
     </radialGradient>
-	</defs>
-	<symbol id="cloud">
-		<path class="cloud-stroke" d="M55.7,0A29.2,29.2,0,0,0,31.92,12.42q-.57,0-1.14,0a14.78,14.78,0,0,0-12.1,6.17A19.82,19.82,0,0,0,0,38.14v.32a19.83,19.83,0,0,0,19.88,19.6H75.59a19.29,19.29,0,0,0,8-36.92A29.12,29.12,0,0,0,55.7,0Z"></path>
-		<path class="cloud-fill" d="M55.7,5A23.94,23.94,0,0,0,34.37,18.05a9.9,9.9,0,0,0-12.78,5.56,15,15,0,0,0-1.71-.1A14.81,14.81,0,0,0,9.2,28,14.63,14.63,0,0,0,5,38.17v.21A14.83,14.83,0,0,0,19.88,53.06H75.59a14.3,14.3,0,0,0,3.67-28.14A23.93,23.93,0,0,0,55.7,5Z"></path>
-		<image x="5" y="14" width="85" height="43" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFYAAAAkCAMAAAAkYj0PAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAVUExURSgoKExpcaCgoFBQUG5ublBQUISEhI1fsT0AAAAHdFJOUxsACBsPFRpGXuFgAAABWElEQVRIx7XV25bDIAgF0BMu/v8nF/E+iWlqHNKVN3cpIMXxL4GFM3SQfTazkUyxk63oLYwlVSy2silXkS/wUrZS2a3ZCn1zsdSw7UUYijuHsTa1IvfwWrbSXLkc4N9r27JViwmM1UtWXA3hohQ41m6vl8FQZi7wu2z7KXPW4uRiZS+2AmdXN7DdQEQWQHYHlt6z0dXBBa2xeeVktiZc1jDoF5eGkI4d4MjKc7cNbZ3bqjocLLx5oPDYTaIftcfvAvcs2GFxVsJTOP1wO1jGdUSLaz/DWA1Tl45+Tkqul2ArcPzayGq8JafOUffP3TUp6JQs+Rptc6vtmtBkUw+dv0NzWG0PYf8O7Ym09+ITXyXOPZqEX95aFe3PKxRsL2XV3HR+ZALirPSF0ceHp6F51WBv1A22VaW2GHWzWvat8LOAPf4CrjrA+neNK7+PQBf/DmmLrId09/QDWyESBsibwBUAAAAASUVORK5CYII="></image>
-	</symbol>
-	<symbol id="sun">
-		<path class="sun-glow" fill="url(#sun-glow-grad)" d="M66.64,47.86,82,41,66.64,34.12l9.84-13.66L59.76,22.22,61.46,5.47l-13.6,9.89L41,0,34.12,15.36,20.46,5.52l1.76,16.72L5.47,20.54l9.89,13.6L0,41l15.36,6.83L5.52,61.54l16.72-1.76L20.54,76.53l13.6-9.89L41,82l6.83-15.36,13.66,9.84L59.78,59.76l16.75,1.69Z"></path>
-		<path class="sun-outer" fill="#ffd348" d="M19.28,53.5a25,25,0,1,0,9.15-34.16A25,25,0,0,0,19.28,53.5Z"></path>
-		<path class="sun-inner" fill="url(#sun-inner-grad)" d="M22.74,51.5a21,21,0,1,0,7.69-28.69A21,21,0,0,0,22.74,51.5Z"></path>
-	</symbol>
-	<symbol id="sunWinter">
-		<polygon class="sun-glow" fill="url(#sun-winter-glow-grad)" points="70.71 8.86 85.96 2 4.18 2 4.07 2.05 19.43 8.88 9.58 22.54 26.3 20.78 24.61 37.53 38.21 27.64 45.12 43 51.95 27.64 65.61 37.48 63.84 20.76 80.6 22.46 70.71 8.86"></polygon>
-		<path class="sun-outer" fill="#ffe266" d="M20,2a24.84,24.84,0,0,0,3.34,12.5A25,25,0,0,0,57.5,23.65,25,25,0,0,0,70,2Z"></path>
-		<path class="sun-inner" d="M24,2a20.85,20.85,0,0,0,2.79,10.5A21,21,0,0,0,55.5,20.19,21,21,0,0,0,66,2Z" fill="url(#sun-inner-grad)"></path>
-		<path fill="#333333" d="M88.29,2.7H1.71A1.56,1.56,0,0,1,0,1.35,1.56,1.56,0,0,1,1.71,0H88.29A1.56,1.56,0,0,1,90,1.35,1.56,1.56,0,0,1,88.29,2.7Z"></path>
-	</symbol>
-	<symbol id="moon">
-		<path d="M28.43,0A28.44,28.44,0,0,1,32.3,14.32,28.61,28.61,0,0,1,3.69,42.93,28.71,28.71,0,0,1,0,42.66,28.59,28.59,0,1,0,28.43,0Z" fill="url(#moon-grad)"></path>
-	</symbol>
-	<symbol id="fog">
-		<g fill="currentColor">
-			<path d="M88.7,3H14.3C13.6,3,13,2.3,13,1.5S13.6,0,14.3,0h74.4C89.4,0,90,0.7,90,1.5S89.4,3,88.7,3z"></path>
-			<path d="M75.7,11H1.3C0.6,11,0,10.3,0,9.5S0.6,8,1.3,8h74.4C76.4,8,77,8.7,77,9.5S76.4,11,75.7,11z"></path>
-			<path d="M86.7,19H12.3c-0.7,0-1.3-0.7-1.3-1.5s0.6-1.5,1.3-1.5h74.4c0.7,0,1.3,0.7,1.3,1.5S87.4,19,86.7,19z"></path>
-		</g>
-	</symbol>
-	<symbol id="raindrop">
-		<path d="M2.5,13A2.5,2.5,0,0,1,.21,9.51l3.55-8a2.5,2.5,0,0,1,4.57,2l-3.55,8A2.5,2.5,0,0,1,2.5,13Z"></path>
-	</symbol>
-	<symbol id="snowflake">
-		<path d="M11.68,4.47H8.85L10.27,2A1.35,1.35,0,1,0,7.93.67L6.51,3.12,5.1.67A1.35,1.35,0,0,0,3.26.18,1.35,1.35,0,0,0,2.76,2L4.18,4.47H1.35a1.35,1.35,0,1,0,0,2.7H4.18L2.76,9.62a1.35,1.35,0,0,0,.49,1.84A1.39,1.39,0,0,0,5.1,11L6.51,8.52,7.93,11a1.35,1.35,0,1,0,2.34-1.35L8.85,7.17h2.83a1.35,1.35,0,1,0,0-2.7Z"></path>
-	</symbol>
-	<symbol id="lightning">
-		<polygon points="14.6,18.4 7.7,15.4 10.6,0 0,19.5 7.1,22.5 2.5,40 "></polygon>
-	</symbol>
+  </defs>
+  <symbol id="sun">
+    <path class="sun-glow" fill="url(#sun-glow-grad)" d="M66.64,47.86,82,41,66.64,34.12l9.84-13.66L59.76,22.22,61.46,5.47l-13.6,9.89L41,0,34.12,15.36,20.46,5.52l1.76,16.72L5.47,20.54l9.89,13.6L0,41l15.36,6.83L5.52,61.54l16.72-1.76L20.54,76.53l13.6-9.89L41,82l6.83-15.36,13.66,9.84L59.78,59.76l16.75,1.69Z"></path>
+    <path class="sun-outer" fill="#ffd348" d="M19.28,53.5a25,25,0,1,0,9.15-34.16A25,25,0,0,0,19.28,53.5Z"></path>
+    <path class="sun-inner" fill="url(#sun-inner-grad)" d="M22.74,51.5a21,21,0,1,0,7.69-28.69A21,21,0,0,0,22.74,51.5Z"></path>
+  </symbol>
+
+  <defs>
+    <clipPath id="cloud_43_37_063_063_4">
+      <use xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(43,37) scale(0.63,0.63)"></use>
+    </clipPath>
+    <clipPath id="cloud_3_18_1_1_5">
+      <use xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </clipPath>
+  </defs>
+
+  <symbol id="01d">
+    <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(9,9) scale(1,1)"></use>
+  </symbol>
+  <symbol id="02d">
+<g clip-path="url(#cloud_43_37_063_063_4)"><use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(4,9) scale(1,1)"></use></g>
+    <use class="cloud1-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(43,37) scale(0.63,0.63)"></use>
+  </symbol>
+  <symbol id="03d">
+<g clip-path="url(#cloud_3_18_1_1_5)"><use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use></g>
+    <use class="cloud1-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+  </symbol>
+  <symbol id="40d">
+<g clip-path="url(#cloud_3_18_1_1_5)"><use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use></g>
+    <use class="cloud2-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(32,87) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(56,78) scale(1,1)"></use>
+  </symbol>
+
 </svg>

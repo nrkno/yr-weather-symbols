@@ -1,17 +1,16 @@
 'use strict';
 
-const { ReactDOM } = require('@yr/component');
+const { render } = require('@yr/component');
 const grid = require('@yr/graphics-component/previewGrid');
-const recipes = require('../lib/recipes');
-const symbolComponent = require('../lib/index');
+const graphicsDefs = require('../graphicsDefs');
+const symbolComponent = require('../index');
 
-const el = document.getElementById('viewport');
 const symbol = symbolComponent.create({ rootImagePath: 'png' });
 
-ReactDOM.render(
+render(
   grid({
-    ids: Object.keys(recipes),
+    ids: Object.keys(graphicsDefs),
     graphic: symbol
   }),
-  el
+  document.getElementById('viewport')
 );

@@ -4,8 +4,8 @@
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no",
   "dependencies": {
-    "@yr/component": "3.1.x",
-    "@yr/graphics-component": "3.2.1"
+    "@yr/component": "6.x.x",
+    "@yr/graphics-component": "6.0.x"
   },
   "devDependencies": {
     "babel-plugin-syntax-trailing-function-commas": "6.22.0",
@@ -13,7 +13,7 @@
     "babel-plugin-transform-async-to-generator": "6.24.1",
     "babel-plugin-transform-es2015-arrow-functions": "6.22.0",
     "babel-plugin-transform-es2015-block-scoped-functions": "6.22.0",
-    "babel-plugin-transform-es2015-block-scoping": "6.24.1",
+    "babel-plugin-transform-es2015-block-scoping": "6.26.0",
     "babel-plugin-transform-es2015-classes": "6.24.1",
     "babel-plugin-transform-es2015-computed-properties": "6.24.1",
     "babel-plugin-transform-es2015-destructuring": "6.23.0",
@@ -30,35 +30,30 @@
     "babel-plugin-transform-es2015-unicode-regex": "6.24.1",
     "babel-plugin-transform-es5-property-mutators": "6.24.1",
     "babel-plugin-transform-exponentiation-operator": "6.24.1",
-    "babel-plugin-transform-object-rest-spread": "6.23.0",
-    "buddy": "6.13.7",
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
+    "buddy": "6.x.x",
     "buddy-plugin-imagemin": "5.3.1",
     "buddy-plugin-nunjucks": "3.0.1",
-    "buddy-server": "3.1.0",
-    "react-dom": "15.4.x",
-    "svg-to-png": "3.1.*"
+    "svg-to-png": "3.1.x"
   },
   "main": "src/lib/index.js",
   "browser": "lib/index.js",
   "scripts": {
     "build": "buddy build",
     "convert": "node bin/convert dist && zip -r -X ./yr-weather-symbols.zip ./dist",
+    "generate": "node bin/generate src",
     "prepublish": "npm run build && npm run convert && mkdir -p ./docs/png && cp -r ./dist/png/100/ ./docs/png",
-    "watch": "buddy watch --serve --reload --invert --grep images"
+    "watch": "buddy watch --serve --reload"
   },
   "repository": "https://github.com/YR/weather-symbols.git",
   "license": "MIT",
   "buddy": {
     "build": [
       {
-        "input": "src/lib",
+        "input": "src/index.{css,js}",
         "output": ".",
         "bundle": false,
         "version": "es5"
-      },
-      {
-        "input": "src/index.css",
-        "output": "."
       },
       {
         "input": "src/preview/",
