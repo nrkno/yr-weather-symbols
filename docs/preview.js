@@ -60,6 +60,11 @@ if ('browser' != 'browser') {
 })(typeof global === "undefined" ? self : global);
 
 (function () {
+/*== src/index.js ==*/
+$m['src/index'] = { exports: {} };
+/*≠≠ src/index.js ≠≠*/
+
+
 /*== node_modules/@yr/runtime/index.js ==*/
 $m['@yr/runtime'] = { exports: {} };
 
@@ -77,6 +82,23 @@ $m['@yr/runtime'].exports.isServer = yrruntime__isServer;
 $m['@yr/runtime'].exports.isBrowser = !yrruntime__isServer && yrruntime__isBrowser;
 $m['@yr/runtime'].exports.isWorker = !yrruntime__isServer && !yrruntime__isBrowser;
 /*≠≠ node_modules/@yr/runtime/index.js ≠≠*/
+
+
+/*== node_modules/prop-types/lib/ReactPropTypesSecret.js ==*/
+$m['prop-types/lib/ReactPropTypesSecret'] = { exports: {} };
+/**
+ * Copyright 2013-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
+
+var proptypeslibReactPropTypesSecret__ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
+
+$m['prop-types/lib/ReactPropTypesSecret'].exports = proptypeslibReactPropTypesSecret__ReactPropTypesSecret;
+/*≠≠ node_modules/prop-types/lib/ReactPropTypesSecret.js ≠≠*/
 
 
 /*== node_modules/fbjs/lib/invariant.js ==*/
@@ -180,21 +202,464 @@ $m['fbjs/lib/emptyFunction'].exports = fbjslibemptyFunction__emptyFunction;
 /*≠≠ node_modules/fbjs/lib/emptyFunction.js ≠≠*/
 
 
-/*== node_modules/prop-types/lib/ReactPropTypesSecret.js ==*/
-$m['prop-types/lib/ReactPropTypesSecret'] = { exports: {} };
-/**
- * Copyright 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
+/*== src/graphicsDefs.js ==*/
+$m['src/graphicsDefs'] = { exports: {} };
 
-var proptypeslibReactPropTypesSecret__ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
+var srcgraphicsDefs__BASE = {
+  sun1: {
+    primitive: 'sun',
+    x: 9,
+    y: 9
+  },
+  sun2: {
+    primitive: 'sun',
+    x: 4,
+    y: 9
+  },
+  sun3: {
+    primitive: 'sun',
+    x: 0,
+    y: 2,
+    scaleX: 0.7,
+    scaleY: 0.7
+  },
+  sunWinter1: {
+    primitive: 'sunWinter',
+    x: 5,
+    y: 37,
+    winter: true
+  },
+  sunWinter2: {
+    primitive: 'sunWinter',
+    x: 0,
+    y: 37,
+    winter: true
+  },
+  sunWinter3: {
+    primitive: 'sunWinter',
+    x: 0,
+    y: 19,
+    scaleX: 0.7,
+    scaleY: 0.7,
+    winter: true
+  },
+  moon1: {
+    primitive: 'moon',
+    x: 20,
+    y: 20
+  },
+  moon2: {
+    primitive: 'moon',
+    x: 15,
+    y: 20
+  },
+  moon3: {
+    primitive: 'moon',
+    x: 2,
+    y: 5,
+    scaleX: 0.714285714,
+    scaleY: 0.714285714
+  },
+  cloud1: {
+    primitive: 'cloud',
+    fill: '#dddddd',
+    x: 43,
+    y: 37,
+    scaleX: 0.63,
+    scaleY: 0.63,
+    variation: 1
+  },
+  cloud2: {
+    primitive: 'cloud',
+    fill: '#dddddd',
+    x: 3,
+    y: 18,
+    variation: 1
+  },
+  cloud3: {
+    primitive: 'cloud',
+    fill: '#cccccc',
+    x: 3,
+    y: 18,
+    variation: 2
+  },
+  cloud4: {
+    primitive: 'cloud',
+    fill: '#b2b2b2',
+    x: 3,
+    y: 18,
+    variation: 3
+  },
+  cloud5: {
+    primitive: 'cloud',
+    fill: '#999999',
+    x: 3,
+    y: 18,
+    variation: 4
+  },
+  rain1: [{
+    primitive: 'raindrop',
+    x: 32,
+    y: 87
+  }, {
+    primitive: 'raindrop',
+    x: 56,
+    y: 78
+  }],
+  rain2: [{
+    primitive: 'raindrop',
+    x: 32,
+    y: 78
+  }, {
+    primitive: 'raindrop',
+    x: 45,
+    y: 87
+  }, {
+    primitive: 'raindrop',
+    x: 60,
+    y: 78
+  }],
+  rain3: [{
+    primitive: 'raindrop',
+    x: 18,
+    y: 78
+  }, {
+    primitive: 'raindrop',
+    x: 32,
+    y: 87
+  }, {
+    primitive: 'raindrop',
+    x: 47,
+    y: 79
+  }, {
+    primitive: 'raindrop',
+    x: 60,
+    y: 78
+  }, {
+    primitive: 'raindrop',
+    x: 74,
+    y: 87
+  }],
+  rainLightning1: [{
+    primitive: 'raindrop',
+    x: 28,
+    y: 87
+  }, {
+    primitive: 'raindrop',
+    x: 58,
+    y: 78
+  }],
+  rainLightning2: [{
+    primitive: 'raindrop',
+    x: 29,
+    y: 78
+  }, {
+    primitive: 'raindrop',
+    x: 50,
+    y: 87
+  }, {
+    primitive: 'raindrop',
+    x: 65,
+    y: 78
+  }],
+  rainLightning3: [{
+    primitive: 'raindrop',
+    x: 18,
+    y: 78
+  }, {
+    primitive: 'raindrop',
+    x: 29,
+    y: 87
+  }, {
+    primitive: 'raindrop',
+    x: 55,
+    y: 79
+  }, {
+    primitive: 'raindrop',
+    x: 68,
+    y: 78
+  }, {
+    primitive: 'raindrop',
+    x: 82,
+    y: 87
+  }],
+  sleet1: [{
+    primitive: 'snowflake',
+    x: 29,
+    y: 88
+  }, {
+    primitive: 'raindrop',
+    x: 60,
+    y: 79
+  }],
+  sleet2: [{
+    primitive: 'snowflake',
+    x: 30,
+    y: 79
+  }, {
+    primitive: 'raindrop',
+    x: 46,
+    y: 86
+  }, {
+    primitive: 'raindrop',
+    x: 60,
+    y: 80
+  }],
+  sleet3: [{
+    primitive: 'snowflake',
+    x: 15,
+    y: 79
+  }, {
+    primitive: 'raindrop',
+    x: 32,
+    y: 86
+  }, {
+    primitive: 'raindrop',
+    x: 47,
+    y: 80
+  }, {
+    primitive: 'snowflake',
+    x: 58,
+    y: 88
+  }, {
+    primitive: 'raindrop',
+    x: 74,
+    y: 80
+  }],
+  sleetLightning1: [{
+    primitive: 'snowflake',
+    x: 26,
+    y: 88
+  }, {
+    primitive: 'raindrop',
+    x: 58,
+    y: 79
+  }],
+  sleetLightning2: [{
+    primitive: 'snowflake',
+    x: 27,
+    y: 79
+  }, {
+    primitive: 'raindrop',
+    x: 50,
+    y: 86
+  }, {
+    primitive: 'raindrop',
+    x: 64,
+    y: 80
+  }],
+  sleetLightning3: [{
+    primitive: 'snowflake',
+    x: 15,
+    y: 79
+  }, {
+    primitive: 'raindrop',
+    x: 30,
+    y: 86
+  }, {
+    primitive: 'raindrop',
+    x: 55,
+    y: 80
+  }, {
+    primitive: 'snowflake',
+    x: 66,
+    y: 88
+  }, {
+    primitive: 'raindrop',
+    x: 82,
+    y: 80
+  }],
+  snow1: [{
+    primitive: 'snowflake',
+    x: 29,
+    y: 88
+  }, {
+    primitive: 'snowflake',
+    x: 58,
+    y: 79
+  }],
+  snow2: [{
+    primitive: 'snowflake',
+    x: 30,
+    y: 79
+  }, {
+    primitive: 'snowflake',
+    x: 44,
+    y: 88
+  }, {
+    primitive: 'snowflake',
+    x: 58,
+    y: 79
+  }],
+  snow3: [{
+    primitive: 'snowflake',
+    x: 15,
+    y: 79
+  }, {
+    primitive: 'snowflake',
+    x: 29,
+    y: 88
+  }, {
+    primitive: 'snowflake',
+    x: 44,
+    y: 79
+  }, {
+    primitive: 'snowflake',
+    x: 58,
+    y: 88
+  }, {
+    primitive: 'snowflake',
+    x: 72,
+    y: 79
+  }],
+  snowLightning1: [{
+    primitive: 'snowflake',
+    x: 26,
+    y: 88
+  }, {
+    primitive: 'snowflake',
+    x: 58,
+    y: 79
+  }],
+  snowLightning2: [{
+    primitive: 'snowflake',
+    x: 26,
+    y: 79
+  }, {
+    primitive: 'snowflake',
+    x: 52,
+    y: 88
+  }, {
+    primitive: 'snowflake',
+    x: 66,
+    y: 79
+  }],
+  snowLightning3: [{
+    primitive: 'snowflake',
+    x: 13,
+    y: 79
+  }, {
+    primitive: 'snowflake',
+    x: 27,
+    y: 88
+  }, {
+    primitive: 'snowflake',
+    x: 55,
+    y: 79
+  }, {
+    primitive: 'snowflake',
+    x: 69,
+    y: 88
+  }, {
+    primitive: 'snowflake',
+    x: 83,
+    y: 79
+  }],
+  lightning: {
+    primitive: 'lightning',
+    x: 37,
+    y: 51
+  },
+  fog: {
+    primitive: 'fog',
+    x: 0,
+    y: 76
+  }
+};
 
-$m['prop-types/lib/ReactPropTypesSecret'].exports = proptypeslibReactPropTypesSecret__ReactPropTypesSecret;
-/*≠≠ node_modules/prop-types/lib/ReactPropTypesSecret.js ≠≠*/
+$m['src/graphicsDefs'].exports = {
+  '15': [srcgraphicsDefs__BASE.cloud2, srcgraphicsDefs__BASE.fog],
+  '04': [srcgraphicsDefs__BASE.cloud2],
+  '46': [srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.rain1],
+  '09': [srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.rain2],
+  '10': [srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.rain3],
+  '47': [srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.sleet1],
+  '12': [srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.sleet2],
+  '48': [srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.sleet3],
+  '49': [srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.snow1],
+  '13': [srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.snow2],
+  '50': [srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.snow3],
+  '30': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.rainLightning1],
+  '22': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.rainLightning2],
+  '11': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.rainLightning3],
+  '31': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.sleetLightning1],
+  '23': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.sleetLightning2],
+  '32': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.sleetLightning3],
+  '33': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.snowLightning1],
+  '14': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.snowLightning2],
+  '34': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.snowLightning3],
+
+  '01d': [srcgraphicsDefs__BASE.sun1],
+  '02d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun2, srcgraphicsDefs__BASE.cloud1, 5), srcgraphicsDefs__BASE.cloud1],
+  '03d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '04'],
+  '40d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '46'],
+  '05d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '09'],
+  '41d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '10'],
+  '42d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '47'],
+  '07d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '12'],
+  '43d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '48'],
+  '44d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '49'],
+  '08d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '13'],
+  '45d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '50'],
+  '24d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '30'],
+  '06d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '22'],
+  '25d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '11'],
+  '26d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '31'],
+  '20d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '23'],
+  '27d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '32'],
+  '28d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '33'],
+  '21d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '14'],
+  '29d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '34'],
+
+  '01n': [srcgraphicsDefs__BASE.moon1],
+  '02n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon2, srcgraphicsDefs__BASE.cloud1, 5), srcgraphicsDefs__BASE.cloud1],
+  '03n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '04'],
+  '40n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '46'],
+  '05n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '09'],
+  '41n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '10'],
+  '42n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '47'],
+  '07n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '12'],
+  '43n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '48'],
+  '44n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '49'],
+  '08n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '13'],
+  '45n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '50'],
+  '24n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '30'],
+  '06n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '22'],
+  '25n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '11'],
+  '26n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '31'],
+  '20n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '23'],
+  '27n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '32'],
+  '28n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '33'],
+  '21n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '14'],
+  '29n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '34'],
+
+  '01m': [srcgraphicsDefs__BASE.sunWinter1],
+  '02m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter2, srcgraphicsDefs__BASE.cloud1, 5), srcgraphicsDefs__BASE.cloud1],
+  '03m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '04'],
+  '40m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '46'],
+  '05m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '09'],
+  '41m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '10'],
+  '42m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '47'],
+  '07m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '12'],
+  '43m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '48'],
+  '44m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '49'],
+  '08m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '13'],
+  '45m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '50'],
+  '24m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '30'],
+  '06m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '22'],
+  '25m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '11'],
+  '26m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '31'],
+  '20m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '23'],
+  '27m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '32'],
+  '28m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '33'],
+  '21m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '14'],
+  '29m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '34']
+};
+
+function srcgraphicsDefs__masked(back, front, offset) {
+  return Object.assign({ mask: Object.assign({ offset: offset }, front) }, back);
+}
+/*≠≠ src/graphicsDefs.js ≠≠*/
 
 
 /*== node_modules/preact/dist/preact.js ==*/
@@ -652,461 +1117,6 @@ $m['preact'] = { exports: {} };
     if ('undefined' != typeof $m['preact']) $m['preact'].exports = preact;else self.preact = preact;
 }();
 /*≠≠ node_modules/preact/dist/preact.js ≠≠*/
-
-
-/*== src/graphicsDefs.js ==*/
-$m['src/graphicsDefs'] = { exports: {} };
-
-var srcgraphicsDefs__BASE = {
-  sun1: {
-    primitive: 'sun',
-    x: 9,
-    y: 9
-  },
-  sun2: {
-    primitive: 'sun',
-    x: 4,
-    y: 9
-  },
-  sun3: {
-    primitive: 'sun',
-    x: 0,
-    y: 2,
-    scaleX: 0.7,
-    scaleY: 0.7
-  },
-  sunWinter1: {
-    primitive: 'sunWinter',
-    x: 5,
-    y: 37,
-    winter: true
-  },
-  sunWinter2: {
-    primitive: 'sunWinter',
-    x: 0,
-    y: 37,
-    winter: true
-  },
-  sunWinter3: {
-    primitive: 'sunWinter',
-    x: 0,
-    y: 19,
-    scaleX: 0.7,
-    scaleY: 0.7,
-    winter: true
-  },
-  moon1: {
-    primitive: 'moon',
-    x: 20,
-    y: 20
-  },
-  moon2: {
-    primitive: 'moon',
-    x: 15,
-    y: 20
-  },
-  moon3: {
-    primitive: 'moon',
-    x: 2,
-    y: 5,
-    scaleX: 0.714285714,
-    scaleY: 0.714285714
-  },
-  cloud1: {
-    primitive: 'cloud',
-    x: 43,
-    y: 37,
-    scaleX: 0.63,
-    scaleY: 0.63,
-    variation: 1
-  },
-  cloud2: {
-    primitive: 'cloud',
-    x: 3,
-    y: 18,
-    variation: 1
-  },
-  cloud3: {
-    primitive: 'cloud',
-    x: 3,
-    y: 18,
-    variation: 2
-  },
-  cloud4: {
-    primitive: 'cloud',
-    x: 3,
-    y: 18,
-    variation: 3
-  },
-  cloud5: {
-    primitive: 'cloud',
-    x: 3,
-    y: 18,
-    variation: 4
-  },
-  rain1: [{
-    primitive: 'raindrop',
-    x: 32,
-    y: 87
-  }, {
-    primitive: 'raindrop',
-    x: 56,
-    y: 78
-  }],
-  rain2: [{
-    primitive: 'raindrop',
-    x: 32,
-    y: 78
-  }, {
-    primitive: 'raindrop',
-    x: 45,
-    y: 87
-  }, {
-    primitive: 'raindrop',
-    x: 60,
-    y: 78
-  }],
-  rain3: [{
-    primitive: 'raindrop',
-    x: 18,
-    y: 78
-  }, {
-    primitive: 'raindrop',
-    x: 32,
-    y: 87
-  }, {
-    primitive: 'raindrop',
-    x: 47,
-    y: 79
-  }, {
-    primitive: 'raindrop',
-    x: 60,
-    y: 78
-  }, {
-    primitive: 'raindrop',
-    x: 74,
-    y: 87
-  }],
-  rainLightning1: [{
-    primitive: 'raindrop',
-    x: 28,
-    y: 87
-  }, {
-    primitive: 'raindrop',
-    x: 58,
-    y: 78
-  }],
-  rainLightning2: [{
-    primitive: 'raindrop',
-    x: 29,
-    y: 78
-  }, {
-    primitive: 'raindrop',
-    x: 50,
-    y: 87
-  }, {
-    primitive: 'raindrop',
-    x: 65,
-    y: 78
-  }],
-  rainLightning3: [{
-    primitive: 'raindrop',
-    x: 18,
-    y: 78
-  }, {
-    primitive: 'raindrop',
-    x: 29,
-    y: 87
-  }, {
-    primitive: 'raindrop',
-    x: 55,
-    y: 79
-  }, {
-    primitive: 'raindrop',
-    x: 68,
-    y: 78
-  }, {
-    primitive: 'raindrop',
-    x: 82,
-    y: 87
-  }],
-  sleet1: [{
-    primitive: 'snowflake',
-    x: 29,
-    y: 88
-  }, {
-    primitive: 'raindrop',
-    x: 60,
-    y: 79
-  }],
-  sleet2: [{
-    primitive: 'snowflake',
-    x: 30,
-    y: 79
-  }, {
-    primitive: 'raindrop',
-    x: 46,
-    y: 86
-  }, {
-    primitive: 'raindrop',
-    x: 60,
-    y: 80
-  }],
-  sleet3: [{
-    primitive: 'snowflake',
-    x: 15,
-    y: 79
-  }, {
-    primitive: 'raindrop',
-    x: 32,
-    y: 86
-  }, {
-    primitive: 'raindrop',
-    x: 47,
-    y: 80
-  }, {
-    primitive: 'snowflake',
-    x: 58,
-    y: 88
-  }, {
-    primitive: 'raindrop',
-    x: 74,
-    y: 80
-  }],
-  sleetLightning1: [{
-    primitive: 'snowflake',
-    x: 26,
-    y: 88
-  }, {
-    primitive: 'raindrop',
-    x: 58,
-    y: 79
-  }],
-  sleetLightning2: [{
-    primitive: 'snowflake',
-    x: 27,
-    y: 79
-  }, {
-    primitive: 'raindrop',
-    x: 50,
-    y: 86
-  }, {
-    primitive: 'raindrop',
-    x: 64,
-    y: 80
-  }],
-  sleetLightning3: [{
-    primitive: 'snowflake',
-    x: 15,
-    y: 79
-  }, {
-    primitive: 'raindrop',
-    x: 30,
-    y: 86
-  }, {
-    primitive: 'raindrop',
-    x: 55,
-    y: 80
-  }, {
-    primitive: 'snowflake',
-    x: 66,
-    y: 88
-  }, {
-    primitive: 'raindrop',
-    x: 82,
-    y: 80
-  }],
-  snow1: [{
-    primitive: 'snowflake',
-    x: 29,
-    y: 88
-  }, {
-    primitive: 'snowflake',
-    x: 58,
-    y: 79
-  }],
-  snow2: [{
-    primitive: 'snowflake',
-    x: 30,
-    y: 79
-  }, {
-    primitive: 'snowflake',
-    x: 44,
-    y: 88
-  }, {
-    primitive: 'snowflake',
-    x: 58,
-    y: 79
-  }],
-  snow3: [{
-    primitive: 'snowflake',
-    x: 15,
-    y: 79
-  }, {
-    primitive: 'snowflake',
-    x: 29,
-    y: 88
-  }, {
-    primitive: 'snowflake',
-    x: 44,
-    y: 79
-  }, {
-    primitive: 'snowflake',
-    x: 58,
-    y: 88
-  }, {
-    primitive: 'snowflake',
-    x: 72,
-    y: 79
-  }],
-  snowLightning1: [{
-    primitive: 'snowflake',
-    x: 26,
-    y: 88
-  }, {
-    primitive: 'snowflake',
-    x: 58,
-    y: 79
-  }],
-  snowLightning2: [{
-    primitive: 'snowflake',
-    x: 26,
-    y: 79
-  }, {
-    primitive: 'snowflake',
-    x: 52,
-    y: 88
-  }, {
-    primitive: 'snowflake',
-    x: 66,
-    y: 79
-  }],
-  snowLightning3: [{
-    primitive: 'snowflake',
-    x: 13,
-    y: 79
-  }, {
-    primitive: 'snowflake',
-    x: 27,
-    y: 88
-  }, {
-    primitive: 'snowflake',
-    x: 55,
-    y: 79
-  }, {
-    primitive: 'snowflake',
-    x: 69,
-    y: 88
-  }, {
-    primitive: 'snowflake',
-    x: 83,
-    y: 79
-  }],
-  lightning: {
-    primitive: 'lightning',
-    x: 37,
-    y: 51
-  },
-  fog: {
-    primitive: 'fog',
-    x: 0,
-    y: 76
-  }
-};
-
-$m['src/graphicsDefs'].exports = {
-  '15': [srcgraphicsDefs__BASE.cloud2, srcgraphicsDefs__BASE.fog],
-  '04': [srcgraphicsDefs__BASE.cloud2],
-  '46': [srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.rain1],
-  '09': [srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.rain2],
-  '10': [srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.rain3],
-  '47': [srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.sleet1],
-  '12': [srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.sleet2],
-  '48': [srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.sleet3],
-  '49': [srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.snow1],
-  '13': [srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.snow2],
-  '50': [srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.snow3],
-  '30': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.rainLightning1],
-  '22': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.rainLightning2],
-  '11': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.rainLightning3],
-  '31': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.sleetLightning1],
-  '23': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.sleetLightning2],
-  '32': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.sleetLightning3],
-  '33': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.snowLightning1],
-  '14': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.snowLightning2],
-  '34': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.snowLightning3],
-
-  '01d': [srcgraphicsDefs__BASE.sun1],
-  '02d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun2, srcgraphicsDefs__BASE.cloud1, 5), srcgraphicsDefs__BASE.cloud1],
-  '03d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '04'],
-  '40d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '46'],
-  '05d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '09'],
-  '41d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '10'],
-  '42d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '47'],
-  '07d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '12'],
-  '43d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '48'],
-  '44d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '49'],
-  '08d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '13'],
-  '45d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '50'],
-  '24d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '30'],
-  '06d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '22'],
-  '25d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '11'],
-  '26d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '31'],
-  '20d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '23'],
-  '27d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '32'],
-  '28d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '33'],
-  '21d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '14'],
-  '29d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '34'],
-
-  '01n': [srcgraphicsDefs__BASE.moon1],
-  '02n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon2, srcgraphicsDefs__BASE.cloud1, 5), srcgraphicsDefs__BASE.cloud1],
-  '03n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '04'],
-  '40n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '46'],
-  '05n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '09'],
-  '41n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '10'],
-  '42n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '47'],
-  '07n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '12'],
-  '43n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '48'],
-  '44n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '49'],
-  '08n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '13'],
-  '45n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '50'],
-  '24n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '30'],
-  '06n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '22'],
-  '25n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '11'],
-  '26n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '31'],
-  '20n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '23'],
-  '27n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '32'],
-  '28n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '33'],
-  '21n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '14'],
-  '29n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '34'],
-
-  '01m': [srcgraphicsDefs__BASE.sunWinter1],
-  '02m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter2, srcgraphicsDefs__BASE.cloud1, 5), srcgraphicsDefs__BASE.cloud1],
-  '03m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '04'],
-  '40m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '46'],
-  '05m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '09'],
-  '41m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '10'],
-  '42m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '47'],
-  '07m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '12'],
-  '43m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '48'],
-  '44m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '49'],
-  '08m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '13'],
-  '45m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '50'],
-  '24m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '30'],
-  '06m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '22'],
-  '25m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '11'],
-  '26m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '31'],
-  '20m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '23'],
-  '27m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '32'],
-  '28m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '33'],
-  '21m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '14'],
-  '29m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '34']
-};
-
-function srcgraphicsDefs__masked(back, front, offset) {
-  return Object.assign({ mask: Object.assign({ offset: offset }, front) }, back);
-}
-/*≠≠ src/graphicsDefs.js ≠≠*/
 
 
 /*== node_modules/prop-types/factoryWithThrowingShims.js ==*/
@@ -2008,120 +2018,6 @@ function yrcomponent__shouldBeStateless(definition, preferStateless) {
   return true;
 }
 /*≠≠ node_modules/@yr/component/index.js ≠≠*/
-
-
-/*== node_modules/@yr/graphics-component/index.js ==*/
-$m['@yr/graphics-component'] = { exports: {} };
-
-/**
- * A base component for svg/img graphics
- * https://github.com/yr/graphics-component
- * @copyright Yr
- * @license MIT
- */
-
-var yrgraphicscomponent___require = $m['@yr/component'].exports,
-    yrgraphicscomponent__define = yrgraphicscomponent___require.define,
-    yrgraphicscomponent__el = yrgraphicscomponent___require.el,
-    yrgraphicscomponent__PropTypes = yrgraphicscomponent___require.PropTypes;
-
-var yrgraphicscomponent__TYPE_IMG = 'img';
-var yrgraphicscomponent__TYPE_SVG = 'svg';
-
-$m['@yr/graphics-component'].exports = {
-  TYPE_IMG: yrgraphicscomponent__TYPE_IMG,
-  TYPE_SVG: yrgraphicscomponent__TYPE_SVG,
-
-  /**
-   * Instance factory
-   * @param {Object} options
-   * @returns {Function}
-   */
-  create: function create() {
-    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    if (!('fallback' in options)) {
-      options.fallback = true;
-    }
-
-    return yrgraphicscomponent__define({
-      displayName: 'graphicsComponent',
-
-      propTypes: {
-        id: yrgraphicscomponent__PropTypes.string,
-        renderInnerSvg: yrgraphicscomponent__PropTypes.func,
-        rootImagePath: yrgraphicscomponent__PropTypes.string,
-        type: yrgraphicscomponent__PropTypes.string
-      },
-
-      /**
-       * React render
-       * @param {Object} props
-       * @param {Object} state
-       * @returns {React}
-       */
-      render: function render() {
-        var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-        var state = arguments[1];
-        var _props$id = props.id,
-            id = _props$id === undefined ? options.id : _props$id,
-            _props$type = props.type,
-            type = _props$type === undefined ? options.type || yrgraphicscomponent__TYPE_SVG : _props$type;
-
-        if (!id) {
-          return null;
-        }
-
-        var rootImagePath = props.rootImagePath || options.rootImagePath || '';
-
-        if (rootImagePath && rootImagePath.charAt(rootImagePath.length - 1) !== '/') {
-          rootImagePath += '/';
-        }
-
-        if (type === yrgraphicscomponent__TYPE_SVG) {
-          var children = options.renderInnerSvg ? options.renderInnerSvg(id) : [yrgraphicscomponent__el('use', { 'xlink:href': '#' + id, x: 0, y: 0, width: 100, height: 100 })];
-
-          if (!Array.isArray(children)) {
-            children = [children];
-          }
-          if (options.fallback) {
-            children.push(yrgraphicscomponent__el('image', { src: '' + rootImagePath + id + '.png', 'xlink:href': '' }));
-          }
-
-          return yrgraphicscomponent__el('svg', {
-            // Force redraw on change (fixes Safari svg <use> bug)
-            key: id,
-            children: children,
-            x: '0',
-            y: '0',
-            height: options.height || '25px',
-            // Fix for IE tabbing
-            focusable: false,
-            width: options.width || '25px',
-            viewBox: '0 0 100 100'
-          });
-        } else if (type === yrgraphicscomponent__TYPE_IMG) {
-          return yrgraphicscomponent__el('img', { src: '' + rootImagePath + id + '.png' });
-        }
-      }
-    });
-  }
-};
-/*≠≠ node_modules/@yr/graphics-component/index.js ≠≠*/
-
-
-/*== src/index.js ==*/
-$m['src/index'] = { exports: {} };
-
-/**
- * Weather-symbol components
- * https://github.com/yr/weather-symbols
- * @copyright Yr
- * @license MIT
- */
-
-$m['src/index'].exports = $m['@yr/graphics-component'].exports;
-/*≠≠ src/index.js ≠≠*/
 
 
 /*== node_modules/@yr/graphics-component/previewGrid.js ==*/

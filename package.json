@@ -36,8 +36,7 @@
     "buddy-plugin-nunjucks": "3.0.1",
     "svg-to-png": "3.1.x"
   },
-  "main": "src/lib/index.js",
-  "browser": "lib/index.js",
+  "main": "index.js",
   "scripts": {
     "build": "buddy build",
     "convert": "node bin/convert dist && zip -r -X ./yr-weather-symbols.zip ./dist",
@@ -49,12 +48,6 @@
   "license": "MIT",
   "buddy": {
     "build": [
-      {
-        "input": "src/index.{css,js}",
-        "output": ".",
-        "bundle": false,
-        "version": "es5"
-      },
       {
         "input": "src/preview/",
         "output": "docs",

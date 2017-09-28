@@ -57,7 +57,7 @@ function generate(graphicsDefs) {
           return `    ${use}`;
         }
         const options = parseOptions(part);
-        const use = `<use class="${options.class}" xlink:href="#${options.primitive}" x="0" y="0" width="100" height="100" transform="translate(${options.x},${options.y}) scale(${options.scaleX},${options.scaleY})"></use>`;
+        const use = `<use xlink:href="#${options.primitive}" ${options.fill ? 'fill="' + options.fill + '"' : ''} x="0" y="0" width="100" height="100" transform="translate(${options.x},${options.y}) scale(${options.scaleX},${options.scaleY})"></use>`;
 
         if (!options.mask) {
           return `    ${use}`;

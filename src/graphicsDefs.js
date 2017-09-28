@@ -57,6 +57,7 @@ const BASE = {
   },
   cloud1: {
     primitive: 'cloud',
+    fill: '#dddddd',
     x: 43,
     y: 37,
     scaleX: 0.63,
@@ -65,24 +66,28 @@ const BASE = {
   },
   cloud2: {
     primitive: 'cloud',
+    fill: '#dddddd',
     x: 3,
     y: 18,
     variation: 1
   },
   cloud3: {
     primitive: 'cloud',
+    fill: '#cccccc',
     x: 3,
     y: 18,
     variation: 2
   },
   cloud4: {
     primitive: 'cloud',
+    fill: '#b2b2b2',
     x: 3,
     y: 18,
     variation: 3
   },
   cloud5: {
     primitive: 'cloud',
+    fill: '#999999',
     x: 3,
     y: 18,
     variation: 4
