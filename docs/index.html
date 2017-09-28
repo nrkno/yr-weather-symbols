@@ -59,9 +59,6 @@ h3 {
   color: #424242;
   fill: #999999;
 }
-.cloud-stroke {
-  fill: white;
-}
 .fog-primitive {
   color: #999999;
   fill: #e5e5e5;
@@ -93,12 +90,8 @@ h3 {
     </g>
   </symbol>
 
-  <symbol id="horizon">
-    <path fill="#333333" d="M88.29,2.7H1.71A1.56,1.56,0,0,1,0,1.35,1.56,1.56,0,0,1,1.71,0H88.29A1.56,1.56,0,0,1,90,1.35,1.56,1.56,0,0,1,88.29,2.7Z"></path>
-  </symbol>
-
   <symbol id="lightning">
-    <polygon points="14.6,18.4 7.7,15.4 10.6,0 0,19.5 7.1,22.5 2.5,40 "></polygon>
+    <polygon points="19.6 23.42 12.74 20.39 15.55 5 5 24.49 12.08 27.51 7.49 45 19.6 23.42"></polygon>
   </symbol>
 
   <defs>
@@ -142,30 +135,551 @@ h3 {
   </symbol>
 
   <defs>
-    <clipPath id="cloud_43_37_063_063_4">
-      <use xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(43,37) scale(0.63,0.63)"></use>
-    </clipPath>
-    <clipPath id="cloud_3_18_1_1_5">
-      <use xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
-    </clipPath>
+    <mask id="sunWinterMask">
+      <rect x="0" y="0" width="100" height="100" fill="white"></rect>
+    </mask>
+  </defs>
+  <symbol id="sunWinter">
+    <g mask="url(#sunWinterMask)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(4,-40) scale(1,1)"></use>
+    </g>
+    <path fill="#333333" d="M88.29,2.7H1.71A1.56,1.56,0,0,1,0,1.35,1.56,1.56,0,0,1,1.71,0H88.29A1.56,1.56,0,0,1,90,1.35,1.56,1.56,0,0,1,88.29,2.7Z"></path>
+  </symbol>
+
+  <defs>
+
+  <mask id="lightning_37_51_1_1_4">
+    <rect x="0" y="0" width="100" height="100" fill="white"></rect>
+    <use xlink:href="#lightning" fill="black" stroke="black" stroke-linejoin="round" stroke-width="8" x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+  </mask>
+
+  <mask id="cloud_43_37_063_063_5">
+    <rect x="0" y="0" width="100" height="100" fill="white"></rect>
+    <use xlink:href="#cloud" fill="black" stroke="black" stroke-linejoin="round" stroke-width="10" x="0" y="0" width="100" height="100" transform="translate(43,37) scale(0.63,0.63)"></use>
+  </mask>
+
+  <mask id="cloud_3_18_1_1_5">
+    <rect x="0" y="0" width="100" height="100" fill="white"></rect>
+    <use xlink:href="#cloud" fill="black" stroke="black" stroke-linejoin="round" stroke-width="10" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+  </mask>
   </defs>
 
+  <symbol id="10">
+    <use class="cloud4-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(18,78) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(32,87) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(47,79) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(60,78) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(74,87) scale(1,1)"></use>
+  </symbol>
+  <symbol id="11">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use class="cloud4-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use class="lightning-primitive" xlink:href="#lightning" x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(18,78) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(29,87) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(55,79) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(68,78) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(82,87) scale(1,1)"></use>
+  </symbol>
+  <symbol id="12">
+    <use class="cloud3-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(30,79) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(46,86) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(60,80) scale(1,1)"></use>
+  </symbol>
+  <symbol id="13">
+    <use class="cloud3-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(30,79) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(44,88) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(58,79) scale(1,1)"></use>
+  </symbol>
+  <symbol id="14">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use class="cloud3-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use class="lightning-primitive" xlink:href="#lightning" x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(26,79) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(52,88) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(66,79) scale(1,1)"></use>
+  </symbol>
+  <symbol id="15">
+    <use class="cloud1-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use class="fog-primitive" xlink:href="#fog" x="0" y="0" width="100" height="100" transform="translate(0,76) scale(1,1)"></use>
+  </symbol>
+  <symbol id="22">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use class="cloud3-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use class="lightning-primitive" xlink:href="#lightning" x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(29,78) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(50,87) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(65,78) scale(1,1)"></use>
+  </symbol>
+  <symbol id="23">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use class="cloud3-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use class="lightning-primitive" xlink:href="#lightning" x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(27,79) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(50,86) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(64,80) scale(1,1)"></use>
+  </symbol>
+  <symbol id="30">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use class="cloud2-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use class="lightning-primitive" xlink:href="#lightning" x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(28,87) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(58,78) scale(1,1)"></use>
+  </symbol>
+  <symbol id="31">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use class="cloud2-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use class="lightning-primitive" xlink:href="#lightning" x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(26,88) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(58,79) scale(1,1)"></use>
+  </symbol>
+  <symbol id="32">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use class="cloud4-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use class="lightning-primitive" xlink:href="#lightning" x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(15,79) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(30,86) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(55,80) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(66,88) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(82,80) scale(1,1)"></use>
+  </symbol>
+  <symbol id="33">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use class="cloud2-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use class="lightning-primitive" xlink:href="#lightning" x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(26,88) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(58,79) scale(1,1)"></use>
+  </symbol>
+  <symbol id="34">
+    <g mask="url(#lightning_37_51_1_1_4)">
+      <use class="cloud4-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    </g>
+    <use class="lightning-primitive" xlink:href="#lightning" x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(13,79) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(27,88) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(55,79) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(69,88) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(83,79) scale(1,1)"></use>
+  </symbol>
+  <symbol id="46">
+    <use class="cloud2-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(32,87) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(56,78) scale(1,1)"></use>
+  </symbol>
+  <symbol id="47">
+    <use class="cloud2-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(29,88) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(60,79) scale(1,1)"></use>
+  </symbol>
+  <symbol id="48">
+    <use class="cloud4-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(15,79) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(32,86) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(47,80) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(58,88) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(74,80) scale(1,1)"></use>
+  </symbol>
+  <symbol id="49">
+    <use class="cloud2-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(29,88) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(58,79) scale(1,1)"></use>
+  </symbol>
+  <symbol id="50">
+    <use class="cloud4-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(15,79) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(29,88) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(44,79) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(58,88) scale(1,1)"></use>
+    <use class="snowflake-primitive" xlink:href="#snowflake" x="0" y="0" width="100" height="100" transform="translate(72,79) scale(1,1)"></use>
+  </symbol>
+  <symbol id="04">
+    <use class="cloud1-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+  </symbol>
+  <symbol id="09">
+    <use class="cloud3-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(32,78) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(45,87) scale(1,1)"></use>
+    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(60,78) scale(1,1)"></use>
+  </symbol>
   <symbol id="01d">
     <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(9,9) scale(1,1)"></use>
   </symbol>
   <symbol id="02d">
-<g clip-path="url(#cloud_43_37_063_063_4)"><use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(4,9) scale(1,1)"></use></g>
+    <g mask="url(#cloud_43_37_063_063_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(4,9) scale(1,1)"></use>
+    </g>
     <use class="cloud1-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(43,37) scale(0.63,0.63)"></use>
   </symbol>
   <symbol id="03d">
-<g clip-path="url(#cloud_3_18_1_1_5)"><use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use></g>
-    <use class="cloud1-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#04" x="0" y="0" width="100" height="100"></use>
   </symbol>
   <symbol id="40d">
-<g clip-path="url(#cloud_3_18_1_1_5)"><use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use></g>
-    <use class="cloud2-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
-    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(32,87) scale(1,1)"></use>
-    <use class="raindrop-primitive" xlink:href="#raindrop" x="0" y="0" width="100" height="100" transform="translate(56,78) scale(1,1)"></use>
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#46" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="05d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#09" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="41d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#10" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="42d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#47" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="07d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#12" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="43d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#48" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="44d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#49" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="08d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#13" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="45d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#50" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="24d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#30" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="06d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#22" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="25d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#11" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="26d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#31" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="20d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#23" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="27d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#32" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="28d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#33" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="21d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#14" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="29d">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sun-primitive" xlink:href="#sun" x="0" y="0" width="100" height="100" transform="translate(0,2) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#34" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="01n">
+    <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(20,20) scale(1,1)"></use>
+  </symbol>
+  <symbol id="02n">
+    <g mask="url(#cloud_43_37_063_063_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(15,20) scale(1,1)"></use>
+    </g>
+    <use class="cloud1-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(43,37) scale(0.63,0.63)"></use>
+  </symbol>
+  <symbol id="03n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#04" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="40n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#46" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="05n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#09" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="41n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#10" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="42n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#47" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="07n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#12" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="43n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#48" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="44n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#49" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="08n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#13" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="45n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#50" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="24n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#30" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="06n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#22" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="25n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#11" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="26n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#31" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="20n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#23" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="27n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#32" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="28n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#33" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="21n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#14" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="29n">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="moon-primitive" xlink:href="#moon" x="0" y="0" width="100" height="100" transform="translate(2,5) scale(0.714285714,0.714285714)"></use>
+    </g>
+    <use xlink:href="#34" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="01m">
+    <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(5,37) scale(1,1)"></use>
+  </symbol>
+  <symbol id="02m">
+    <g mask="url(#cloud_43_37_063_063_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,37) scale(1,1)"></use>
+    </g>
+    <use class="cloud1-primitive" xlink:href="#cloud" x="0" y="0" width="100" height="100" transform="translate(43,37) scale(0.63,0.63)"></use>
+  </symbol>
+  <symbol id="03m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#04" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="40m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#46" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="05m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#09" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="41m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#10" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="42m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#47" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="07m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#12" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="43m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#48" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="44m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#49" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="08m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#13" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="45m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#50" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="24m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#30" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="06m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#22" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="25m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#11" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="26m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#31" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="20m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#23" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="27m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#32" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="28m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#33" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="21m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#14" x="0" y="0" width="100" height="100"></use>
+  </symbol>
+  <symbol id="29m">
+    <g mask="url(#cloud_3_18_1_1_5)">
+      <use class="sunWinter-primitive" xlink:href="#sunWinter" x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
+    </g>
+    <use xlink:href="#34" x="0" y="0" width="100" height="100"></use>
   </symbol>
 
 </svg>
