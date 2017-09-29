@@ -3,47 +3,18 @@
 'use strict';
 
 const convert = require('@yr/graphics-component/bin/convert');
-const fs = require('fs');
-const path = require('path');
-const primitives = require('../src/lib/primitives');
-const recipes = require('../src/lib/recipes');
-const utils = require('../src/lib/utils');
+const graphicsDefs = require('../src/graphicsDefs');
 
 const dir = process.argv[2];
 const graphics = [];
-let defs = '<?xml version="1.0" encoding="utf-8"?>\n<svg id="symbolDefs" style="position:absolute; height:0; width:0;">\n'
 
-for (const id in recipes) {
-  const recipe = recipes[id];
-  const styles = [];
-  const symbols = [];
-  const uses = [];
-
-  defs += `  <symbol id="s${id}">\n`;
-
-  recipe.forEach(recipe => {
-    const opts = utils.parse(recipe);
-    const elProps = primitives[opts.primitive](opts).props;
-    const use = `<use xlink:href="${elProps['xlink:href']}" class="${elProps.className}" x="0" y="0" width="100" height="100" transform="${elProps.transform}"></use>`;
-    let symbol = opts.primitive;
-
-    if (opts.winter) {
-      symbol += 'Winter';
-    }
-    if (symbol === 'cloud') {
-      styles.push('cloud-stroke');
-    }
-
-    styles.push(opts.class);
-    symbols.push(symbol);
-    uses.push(use);
-    defs += `    ${use}\n`;
-  });
-
-  graphics.push({ id, styles, symbols, uses });
-  defs += '  </symbol>\n';
+for (const id in graphicsDefs) {
+  graphics.push({
+    id,
+    styles: [],
+    symbols: [id],
+    uses: [`<use xlink:href="#${id}" x="0" y="0" width="100" height="100"></use>`]
+  })
 }
 
-convert.run(dir, graphics, [30, 38, 48, 100, 200]);
-
-fs.writeFileSync(path.resolve(dir, 'symbolsDefs.svg'), defs);
+convert.run(dir, Object.keys(graphicsDefs), [30, 38, 48, 100, 200]);

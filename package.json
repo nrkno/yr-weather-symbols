@@ -1,11 +1,11 @@
 {
   "name": "@yr/weather-symbols",
-  "version": "4.0.0-beta-6",
+  "version": "6.0.0-beta-1",
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no",
   "dependencies": {
     "@yr/component": "6.x.x",
-    "@yr/graphics-component": "6.0.x"
+    "@yr/graphics-component": "7.0.x"
   },
   "devDependencies": {
     "babel-plugin-syntax-trailing-function-commas": "6.22.0",
@@ -39,7 +39,7 @@
   "main": "index.js",
   "scripts": {
     "build": "buddy build",
-    "convert": "node bin/convert dist && zip -r -X ./yr-weather-symbols.zip ./dist",
+    "convert": "node bin/generate src && node bin/convert dist && zip -r -X ./yr-weather-symbols.zip ./dist",
     "generate": "node bin/generate src",
     "prepublish": "npm run build && npm run convert && mkdir -p ./docs/png && cp -r ./dist/png/100/ ./docs/png",
     "watch": "buddy watch --serve --reload"

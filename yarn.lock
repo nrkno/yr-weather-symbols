@@ -12,9 +12,9 @@
     preact-render-to-string "3.6.3"
     prop-types "15.5.10"
 
-"@yr/graphics-component@6.0.x":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@yr/graphics-component/-/graphics-component-6.0.1.tgz#abc0c2bd48980ebcd9ea1642eaebd0de0719d117"
+"@yr/graphics-component@7.0.x":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@yr/graphics-component/-/graphics-component-7.0.0.tgz#94451a34c067a3ba1786b461674b63c0aca7f87a"
   dependencies:
     "@yr/component" "6.x.x"
   optionalDependencies:
