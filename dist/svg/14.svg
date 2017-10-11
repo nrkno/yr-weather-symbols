@@ -16,7 +16,7 @@
     <use xlink:href="#lightning" fill="black" stroke="black" stroke-linejoin="round" stroke-width="8" x="0" y="0" width="100" height="100" transform="translate(37,51) scale(1,1)"></use>
   </mask>
   </defs>
-  <symbol id="14">
+  <symbol id="s14">
     <g mask="url(#lightning_37_51_1_1_4)">
       <use xlink:href="#cloud" fill="#b2b2b2" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
     </g>
@@ -25,5 +25,5 @@
     <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(52,88) scale(1,1)"></use>
     <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(66,79) scale(1,1)"></use>
   </symbol>
-  <use xlink:href="#14" x="0" y="0" width="100" height="100"></use>
+  <use xlink:href="#s14" x="0" y="0" width="100" height="100"></use>
 </svg>

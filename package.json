@@ -5,7 +5,7 @@
   "author": "alexander.pope@nrk.no",
   "dependencies": {
     "@yr/component": "6.x.x",
-    "@yr/graphics-component": "7.0.x"
+    "@yr/graphics-component": "7.1.x"
   },
   "devDependencies": {
     "babel-plugin-syntax-trailing-function-commas": "6.22.0",

@@ -83,11 +83,9 @@ $m['@yr/runtime'].exports.isWorker = !yrruntime__isServer && !yrruntime__isBrows
 $m['fbjs/lib/invariant'] = { exports: {} };
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  */
 
@@ -143,11 +141,9 @@ $m['fbjs/lib/emptyFunction'] = { exports: {} };
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * 
  */
@@ -1174,12 +1170,10 @@ $m['prop-types/factoryWithThrowingShims'].exports = function () {
 /*== node_modules/fbjs/lib/warning.js ==*/
 $m['fbjs/lib/warning'] = { exports: {} };
 /**
- * Copyright 2014-2015, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2014-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  */
 
@@ -1195,45 +1189,43 @@ var fbjslibwarning__emptyFunction = $m['fbjs/lib/emptyFunction'].exports;
 var fbjslibwarning__warning = fbjslibwarning__emptyFunction;
 
 if ('development' !== 'production') {
-  (function () {
-    var printWarning = function printWarning(format) {
-      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
+  var fbjslibwarning__printWarning = function printWarning(format) {
+    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      args[_key - 1] = arguments[_key];
+    }
+
+    var argIndex = 0;
+    var message = 'Warning: ' + format.replace(/%s/g, function () {
+      return args[argIndex++];
+    });
+    if (typeof console !== 'undefined') {
+      console.error(message);
+    }
+    try {
+      // --- Welcome to debugging React ---
+      // This error was thrown as a convenience so that you can use this stack
+      // to find the callsite that caused this warning to fire.
+      throw new Error(message);
+    } catch (x) {}
+  };
+
+  fbjslibwarning__warning = function warning(condition, format) {
+    if (format === undefined) {
+      throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
+    }
+
+    if (format.indexOf('Failed Composite propType: ') === 0) {
+      return; // Ignore CompositeComponent proptype check.
+    }
+
+    if (!condition) {
+      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+        args[_key2 - 2] = arguments[_key2];
       }
 
-      var argIndex = 0;
-      var message = 'Warning: ' + format.replace(/%s/g, function () {
-        return args[argIndex++];
-      });
-      if (typeof console !== 'undefined') {
-        console.error(message);
-      }
-      try {
-        // --- Welcome to debugging React ---
-        // This error was thrown as a convenience so that you can use this stack
-        // to find the callsite that caused this warning to fire.
-        throw new Error(message);
-      } catch (x) {}
-    };
-
-    fbjslibwarning__warning = function warning(condition, format) {
-      if (format === undefined) {
-        throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
-      }
-
-      if (format.indexOf('Failed Composite propType: ') === 0) {
-        return; // Ignore CompositeComponent proptype check.
-      }
-
-      if (!condition) {
-        for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
-          args[_key2 - 2] = arguments[_key2];
-        }
-
-        printWarning.apply(undefined, [format].concat(args));
-      }
-    };
-  })();
+      fbjslibwarning__printWarning.apply(undefined, [format].concat(args));
+    }
+  };
 }
 
 $m['fbjs/lib/warning'].exports = fbjslibwarning__warning;
@@ -2048,6 +2040,10 @@ $m['@yr/graphics-component'].exports = {
     if (!('fallback' in options)) {
       options.fallback = true;
     }
+    // Allow prefix in cases where id could be number (illegal DOM id)
+    if (!('idPrefix' in options)) {
+      options.idPrefix = '';
+    }
 
     return yrgraphicscomponent__define({
       displayName: 'graphicsComponent',
@@ -2084,12 +2080,24 @@ $m['@yr/graphics-component'].exports = {
         }
 
         if (type === yrgraphicscomponent__TYPE_SVG) {
-          var children = options.renderInnerSvg ? options.renderInnerSvg(id) : [yrgraphicscomponent__el('use', { 'xlink:href': '#' + id, x: 0, y: 0, width: 100, height: 100 })];
+          var children = options.renderInnerSvg ? options.renderInnerSvg(id) : [yrgraphicscomponent__el('use', { 'xlink:href': '#' + options.idPrefix + id, x: 0, y: 0, width: 100, height: 100 })];
 
           if (!Array.isArray(children)) {
             children = [children];
           }
           if (options.fallback) {
+            // https://css-tricks.com/a-complete-guide-to-svg-fallbacks/
+
+            // The SVG <image> element is used to embed other image files within SVG. However, within HTML,
+            // every browser tested recognizes <image> as a non-standard synonym for <img>.
+            // In SVG, you specify the URL of the image file with the xlink:href attribute.
+            // In HTML, you specify it with the src attribute.
+
+            // In most browsers, therefore, it is sufficient to include an <image> tag with a
+            // src attribute (pointing to your fallback image) inside your inline SVG: the old browsers
+            // will download the fallback, the new browsers won't. Except for Internet Explorer, which
+            // downloads the fallback image even when it doesn't display it.
+            // The solution is to put a null xlink:href attribute on the element.
             children.push(yrgraphicscomponent__el('image', { src: '' + rootImagePath + id + '.png', 'xlink:href': '' }));
           }
 
@@ -2101,7 +2109,7 @@ $m['@yr/graphics-component'].exports = {
             y: '0',
             height: options.height || '25px',
             // Fix for IE tabbing
-            focusable: false,
+            focusable: 'false',
             width: options.width || '25px',
             viewBox: '0 0 100 100'
           });
@@ -2119,7 +2127,7 @@ $m['@yr/graphics-component'].exports = {
 $m['@yr/weather-symbols'] = { exports: {} };
 
 /**
- * Weather-symbol components
+ * Weather symbols
  * https://github.com/yr/weather-symbols
  * @copyright Yr
  * @license MIT
@@ -2157,7 +2165,7 @@ var srcpreviewpreview__grid = $m['@yr/graphics-component/previewGrid'].exports;
 var srcpreviewpreview__graphicsDefs = $m['src/graphicsDefs'].exports;
 var srcpreviewpreview__symbolComponent = $m['@yr/weather-symbols'].exports;
 
-var srcpreviewpreview__symbol = srcpreviewpreview__symbolComponent.create({ rootImagePath: 'png' });
+var srcpreviewpreview__symbol = srcpreviewpreview__symbolComponent.create({ rootImagePath: 'png', idPrefix: 's' });
 
 srcpreviewpreview__render(srcpreviewpreview__grid({
   ids: Object.keys(srcpreviewpreview__graphicsDefs),

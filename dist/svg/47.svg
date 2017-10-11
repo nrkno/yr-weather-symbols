@@ -11,10 +11,10 @@
   </symbol>
 
 
-  <symbol id="47">
+  <symbol id="s47">
     <use xlink:href="#cloud" fill="#cccccc" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
     <use xlink:href="#snowflake"  x="0" y="0" width="100" height="100" transform="translate(29,88) scale(1,1)"></use>
     <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(60,79) scale(1,1)"></use>
   </symbol>
-  <use xlink:href="#47" x="0" y="0" width="100" height="100"></use>
+  <use xlink:href="#s47" x="0" y="0" width="100" height="100"></use>
 </svg>

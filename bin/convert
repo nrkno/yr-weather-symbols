@@ -6,15 +6,8 @@ const convert = require('@yr/graphics-component/bin/convert');
 const graphicsDefs = require('../src/graphicsDefs');
 
 const dir = process.argv[2];
-const graphics = [];
+const graphics = Object.keys(graphicsDefs).map(id => {
+  return { id: `s${id}`, output: id };
+});
 
-for (const id in graphicsDefs) {
-  graphics.push({
-    id,
-    styles: [],
-    symbols: [id],
-    uses: [`<use xlink:href="#${id}" x="0" y="0" width="100" height="100"></use>`]
-  })
-}
-
-convert.run(dir, Object.keys(graphicsDefs), [30, 38, 48, 100, 200]);
+convert.run(dir, graphics, [30, 38, 48, 100, 200]);

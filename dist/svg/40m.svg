@@ -11,7 +11,7 @@
     <path class="sun-outer" fill="#ffd348" d="M19.28,53.5a25,25,0,1,0,9.15-34.16A25,25,0,0,0,19.28,53.5Z"></path>
     <path class="sun-inner" fill="url(#sun-inner-grad)" d="M22.74,51.5a21,21,0,1,0,7.69-28.69A21,21,0,0,0,22.74,51.5Z"></path>
   </symbol>
-  <symbol id="46">
+  <symbol id="s46">
     <use xlink:href="#cloud" fill="#cccccc" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
     <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(32,87) scale(1,1)"></use>
     <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(56,78) scale(1,1)"></use>
@@ -41,11 +41,11 @@
       <stop offset="100%" stop-color="#f09900" />
     </linearGradient>
   </defs>
-  <symbol id="40m">
+  <symbol id="s40m">
     <g mask="url(#cloud_3_18_1_1_5)">
       <use xlink:href="#sunWinter"  x="0" y="0" width="100" height="100" transform="translate(0,19) scale(0.7,0.7)"></use>
     </g>
-    <use xlink:href="#46" x="0" y="0" width="100" height="100"></use>
+    <use xlink:href="#s46" x="0" y="0" width="100" height="100"></use>
   </symbol>
-  <use xlink:href="#40m" x="0" y="0" width="100" height="100"></use>
+  <use xlink:href="#s40m" x="0" y="0" width="100" height="100"></use>
 </svg>

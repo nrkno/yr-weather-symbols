@@ -5,7 +5,7 @@ const grid = require('@yr/graphics-component/previewGrid');
 const graphicsDefs = require('../graphicsDefs');
 const symbolComponent = require('../../index');
 
-const symbol = symbolComponent.create({ rootImagePath: 'png' });
+const symbol = symbolComponent.create({ rootImagePath: 'png', idPrefix: 's' });
 
 render(
   grid({

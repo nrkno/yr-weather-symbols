@@ -9,8 +9,8 @@
       <stop offset="100%" stop-color="#6a7075" />
     </linearGradient>
   </defs>
-  <symbol id="01n">
+  <symbol id="s01n">
     <use xlink:href="#moon"  x="0" y="0" width="100" height="100" transform="translate(20,20) scale(1,1)"></use>
   </symbol>
-  <use xlink:href="#01n" x="0" y="0" width="100" height="100"></use>
+  <use xlink:href="#s01n" x="0" y="0" width="100" height="100"></use>
 </svg>

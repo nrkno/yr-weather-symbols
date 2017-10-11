@@ -8,7 +8,7 @@
   </symbol>
 
 
-  <symbol id="10">
+  <symbol id="s10">
     <use xlink:href="#cloud" fill="#999999" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
     <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(18,78) scale(1,1)"></use>
     <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(32,87) scale(1,1)"></use>
@@ -16,5 +16,5 @@
     <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(60,78) scale(1,1)"></use>
     <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(74,87) scale(1,1)"></use>
   </symbol>
-  <use xlink:href="#10" x="0" y="0" width="100" height="100"></use>
+  <use xlink:href="#s10" x="0" y="0" width="100" height="100"></use>
 </svg>

@@ -5,8 +5,8 @@
   </symbol>
 
 
-  <symbol id="04">
+  <symbol id="s04">
     <use xlink:href="#cloud" fill="#dddddd" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
   </symbol>
-  <use xlink:href="#04" x="0" y="0" width="100" height="100"></use>
+  <use xlink:href="#s04" x="0" y="0" width="100" height="100"></use>
 </svg>

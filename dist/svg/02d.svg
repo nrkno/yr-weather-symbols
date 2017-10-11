@@ -24,11 +24,11 @@
       <stop offset="100%" stop-color="#f09900" />
     </linearGradient>
   </defs>
-  <symbol id="02d">
+  <symbol id="s02d">
     <g mask="url(#cloud_43_37_063_063_5)">
       <use xlink:href="#sun"  x="0" y="0" width="100" height="100" transform="translate(4,9) scale(1,1)"></use>
     </g>
     <use xlink:href="#cloud" fill="#dddddd" x="0" y="0" width="100" height="100" transform="translate(43,37) scale(0.63,0.63)"></use>
   </symbol>
-  <use xlink:href="#02d" x="0" y="0" width="100" height="100"></use>
+  <use xlink:href="#s02d" x="0" y="0" width="100" height="100"></use>
 </svg>

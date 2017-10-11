@@ -8,11 +8,11 @@
   </symbol>
 
 
-  <symbol id="09">
+  <symbol id="s09">
     <use xlink:href="#cloud" fill="#b2b2b2" x="0" y="0" width="100" height="100" transform="translate(3,18) scale(1,1)"></use>
     <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(32,78) scale(1,1)"></use>
     <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(45,87) scale(1,1)"></use>
     <use xlink:href="#raindrop"  x="0" y="0" width="100" height="100" transform="translate(60,78) scale(1,1)"></use>
   </symbol>
-  <use xlink:href="#09" x="0" y="0" width="100" height="100"></use>
+  <use xlink:href="#s09" x="0" y="0" width="100" height="100"></use>
 </svg>
