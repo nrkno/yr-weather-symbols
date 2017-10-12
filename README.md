@@ -2,7 +2,7 @@ Weather symbols for the new [yr.no](https://www.yr.no/en)
 
 [Download zip archive](https://github.com/YR/weather-symbols/raw/master/yr-weather-symbols.zip)
 
-|                                  |"D        | Day          | Night       | Winter sun  |
+|                                  | ID        | Day          | Night       | Winter sun  |
 |----------------------------------|:---------:|:------------:|:-----------:|:-----------:|
 | Clear sky                        | 01(d/n/m) | <img src="https://github.com/YR/weather-symbols/blob/master/dist/svg/01d.svg" width="60"> | <img src="https://github.com/YR/weather-symbols/blob/master/dist/svg/01n.svg" width="60"> | <img src="https://github.com/YR/weather-symbols/blob/master/dist/svg/01m.svg" width="60"> |
 | Fair                             | 02(d/n/m) | <img src="https://github.com/YR/weather-symbols/blob/master/dist/svg/02d.svg" width="60"> | <img src="https://github.com/YR/weather-symbols/blob/master/dist/svg/02n.svg" width="60"> | <img src="https://github.com/YR/weather-symbols/blob/master/dist/svg/02m.svg" width="60"> |
