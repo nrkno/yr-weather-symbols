@@ -13,8 +13,8 @@
     prop-types "15.5.10"
 
 "@yr/graphics-component@7.1.x":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@yr/graphics-component/-/graphics-component-7.1.0.tgz#4bea38ab40826cb2307c664aa080efea820a53b6"
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/@yr/graphics-component/-/graphics-component-7.1.1.tgz#bacc3a9bf1b7cd88d92095543c6dc63b32aa7135"
   dependencies:
     "@yr/component" "6.x.x"
   optionalDependencies:
