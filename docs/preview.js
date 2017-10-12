@@ -79,567 +79,60 @@ $m['@yr/runtime'].exports.isWorker = !yrruntime__isServer && !yrruntime__isBrows
 /*≠≠ node_modules/@yr/runtime/index.js ≠≠*/
 
 
-/*== src/lib/recipes.js ==*/
-$m['src/lib/recipes'] = { exports: {} };
+/*== node_modules/fbjs/lib/invariant.js ==*/
+$m['fbjs/lib/invariant'] = { exports: {} };
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
 
-var srclibrecipes__base = {
-  sun1: [{
-    primitive: 'sun',
-    x: 5,
-    y: 5
-  }],
-  sun2: [{
-    primitive: 'sun',
-    x: 0,
-    y: 0
-  }],
-  sun3: [{
-    primitive: 'sun',
-    x: 0,
-    y: 0,
-    scaleX: 0.666666667,
-    scaleY: 0.666666667
-  }],
-  sunWinter1: [{
-    primitive: 'sun',
-    x: 5,
-    y: 37,
-    winter: true
-  }],
-  sunWinter2: [{
-    primitive: 'sun',
-    x: 0,
-    y: 37,
-    winter: true
-  }],
-  sunWinter3: [{
-    primitive: 'sun',
-    x: 0,
-    y: 23,
-    scaleX: 0.666666667,
-    scaleY: 0.666666667,
-    winter: true
-  }],
-  moon1: [{
-    primitive: 'moon',
-    x: 15,
-    y: 15
-  }],
-  moon2: [{
-    primitive: 'moon',
-    x: 5,
-    y: 15
-  }],
-  moon3: [{
-    primitive: 'moon',
-    x: 0,
-    y: 3,
-    scaleX: 0.714285714,
-    scaleY: 0.714285714
-  }],
-  '02': [{
-    primitive: 'cloud',
-    x: 35,
-    y: 37.5,
-    scaleX: 0.714285714,
-    scaleY: 0.714285714,
-    variation: 1
-  }],
-  '03': [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 1
-  }],
-  40: [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 2
-  }, {
-    primitive: 'raindrop',
-    x: 32,
-    y: 87
-  }, {
-    primitive: 'raindrop',
-    x: 56,
-    y: 78
-  }],
-  '05': [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 3
-  }, {
-    primitive: 'raindrop',
-    x: 32,
-    y: 78
-  }, {
-    primitive: 'raindrop',
-    x: 45,
-    y: 87
-  }, {
-    primitive: 'raindrop',
-    x: 60,
-    y: 78
-  }],
-  41: [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 4
-  }, {
-    primitive: 'raindrop',
-    x: 18,
-    y: 78
-  }, {
-    primitive: 'raindrop',
-    x: 32,
-    y: 87
-  }, {
-    primitive: 'raindrop',
-    x: 47,
-    y: 79
-  }, {
-    primitive: 'raindrop',
-    x: 60,
-    y: 78
-  }, {
-    primitive: 'raindrop',
-    x: 74,
-    y: 87
-  }],
-  42: [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 2
-  }, {
-    primitive: 'snowflake',
-    x: 29,
-    y: 88
-  }, {
-    primitive: 'raindrop',
-    x: 60,
-    y: 79
-  }],
-  '07': [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 3
-  }, {
-    primitive: 'snowflake',
-    x: 30,
-    y: 79
-  }, {
-    primitive: 'raindrop',
-    x: 46,
-    y: 86
-  }, {
-    primitive: 'raindrop',
-    x: 60,
-    y: 80
-  }],
-  43: [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 4
-  }, {
-    primitive: 'snowflake',
-    x: 15,
-    y: 79
-  }, {
-    primitive: 'raindrop',
-    x: 32,
-    y: 86
-  }, {
-    primitive: 'raindrop',
-    x: 47,
-    y: 80
-  }, {
-    primitive: 'snowflake',
-    x: 58,
-    y: 88
-  }, {
-    primitive: 'raindrop',
-    x: 74,
-    y: 80
-  }],
-  44: [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 2
-  }, {
-    primitive: 'snowflake',
-    x: 29,
-    y: 88
-  }, {
-    primitive: 'snowflake',
-    x: 58,
-    y: 79
-  }],
-  '08': [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 3
-  }, {
-    primitive: 'snowflake',
-    x: 30,
-    y: 79
-  }, {
-    primitive: 'snowflake',
-    x: 44,
-    y: 88
-  }, {
-    primitive: 'snowflake',
-    x: 58,
-    y: 79
-  }],
-  45: [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 4
-  }, {
-    primitive: 'snowflake',
-    x: 15,
-    y: 79
-  }, {
-    primitive: 'snowflake',
-    x: 29,
-    y: 88
-  }, {
-    primitive: 'snowflake',
-    x: 44,
-    y: 79
-  }, {
-    primitive: 'snowflake',
-    x: 58,
-    y: 88
-  }, {
-    primitive: 'snowflake',
-    x: 72,
-    y: 79
-  }],
-  24: [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 2
-  }, {
-    primitive: 'raindrop',
-    x: 28,
-    y: 87
-  }, {
-    primitive: 'lightning',
-    x: 42,
-    y: 51
-  }, {
-    primitive: 'raindrop',
-    x: 58,
-    y: 78
-  }],
-  '06': [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 3
-  }, {
-    primitive: 'raindrop',
-    x: 29,
-    y: 78
-  }, {
-    primitive: 'lightning',
-    x: 42,
-    y: 51
-  }, {
-    primitive: 'raindrop',
-    x: 50,
-    y: 87
-  }, {
-    primitive: 'raindrop',
-    x: 65,
-    y: 78
-  }],
-  25: [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 4
-  }, {
-    primitive: 'raindrop',
-    x: 18,
-    y: 78
-  }, {
-    primitive: 'raindrop',
-    x: 29,
-    y: 87
-  }, {
-    primitive: 'lightning',
-    x: 42,
-    y: 51
-  }, {
-    primitive: 'raindrop',
-    x: 55,
-    y: 79
-  }, {
-    primitive: 'raindrop',
-    x: 68,
-    y: 78
-  }, {
-    primitive: 'raindrop',
-    x: 82,
-    y: 87
-  }],
-  26: [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 2
-  }, {
-    primitive: 'snowflake',
-    x: 26,
-    y: 88
-  }, {
-    primitive: 'lightning',
-    x: 42,
-    y: 51
-  }, {
-    primitive: 'raindrop',
-    x: 58,
-    y: 79
-  }],
-  20: [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 3
-  }, {
-    primitive: 'snowflake',
-    x: 27,
-    y: 79
-  }, {
-    primitive: 'lightning',
-    x: 42,
-    y: 51
-  }, {
-    primitive: 'raindrop',
-    x: 50,
-    y: 86
-  }, {
-    primitive: 'raindrop',
-    x: 64,
-    y: 80
-  }],
-  27: [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 4
-  }, {
-    primitive: 'snowflake',
-    x: 15,
-    y: 79
-  }, {
-    primitive: 'raindrop',
-    x: 30,
-    y: 86
-  }, {
-    primitive: 'lightning',
-    x: 42,
-    y: 51
-  }, {
-    primitive: 'raindrop',
-    x: 55,
-    y: 80
-  }, {
-    primitive: 'snowflake',
-    x: 66,
-    y: 88
-  }, {
-    primitive: 'raindrop',
-    x: 82,
-    y: 80
-  }],
-  28: [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 2
-  }, {
-    primitive: 'snowflake',
-    x: 26,
-    y: 88
-  }, {
-    primitive: 'lightning',
-    x: 42,
-    y: 51
-  }, {
-    primitive: 'snowflake',
-    x: 58,
-    y: 79
-  }],
-  21: [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 3
-  }, {
-    primitive: 'snowflake',
-    x: 26,
-    y: 79
-  }, {
-    primitive: 'lightning',
-    x: 42,
-    y: 51
-  }, {
-    primitive: 'snowflake',
-    x: 52,
-    y: 88
-  }, {
-    primitive: 'snowflake',
-    x: 66,
-    y: 79
-  }],
-  29: [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 4
-  }, {
-    primitive: 'snowflake',
-    x: 13,
-    y: 79
-  }, {
-    primitive: 'snowflake',
-    x: 27,
-    y: 88
-  }, {
-    primitive: 'lightning',
-    x: 42,
-    y: 51
-  }, {
-    primitive: 'snowflake',
-    x: 55,
-    y: 79
-  }, {
-    primitive: 'snowflake',
-    x: 69,
-    y: 88
-  }, {
-    primitive: 'snowflake',
-    x: 83,
-    y: 79
-  }]
-};
+/**
+ * Use invariant() to assert state which your program assumes to be true.
+ *
+ * Provide sprintf-style format (only %s is supported) and arguments
+ * to provide information about what broke and what you were
+ * expecting.
+ *
+ * The invariant message will be stripped in production, but the invariant
+ * will remain to ensure logic does not differ in production.
+ */
 
-$m['src/lib/recipes'].exports = {
-  '01d': srclibrecipes__base.sun1,
-  '02d': srclibrecipes__base.sun2.concat(srclibrecipes__base['02']),
-  '03d': srclibrecipes__base.sun3.concat(srclibrecipes__base['03']),
-  '40d': srclibrecipes__base.sun3.concat(srclibrecipes__base['40']),
-  '05d': srclibrecipes__base.sun3.concat(srclibrecipes__base['05']),
-  '41d': srclibrecipes__base.sun3.concat(srclibrecipes__base['41']),
-  '42d': srclibrecipes__base.sun3.concat(srclibrecipes__base['42']),
-  '07d': srclibrecipes__base.sun3.concat(srclibrecipes__base['07']),
-  '43d': srclibrecipes__base.sun3.concat(srclibrecipes__base['43']),
-  '44d': srclibrecipes__base.sun3.concat(srclibrecipes__base['44']),
-  '08d': srclibrecipes__base.sun3.concat(srclibrecipes__base['08']),
-  '45d': srclibrecipes__base.sun3.concat(srclibrecipes__base['45']),
-  '24d': srclibrecipes__base.sun3.concat(srclibrecipes__base['24']),
-  '06d': srclibrecipes__base.sun3.concat(srclibrecipes__base['06']),
-  '25d': srclibrecipes__base.sun3.concat(srclibrecipes__base['25']),
-  '26d': srclibrecipes__base.sun3.concat(srclibrecipes__base['26']),
-  '20d': srclibrecipes__base.sun3.concat(srclibrecipes__base['20']),
-  '27d': srclibrecipes__base.sun3.concat(srclibrecipes__base['27']),
-  '28d': srclibrecipes__base.sun3.concat(srclibrecipes__base['28']),
-  '21d': srclibrecipes__base.sun3.concat(srclibrecipes__base['21']),
-  '29d': srclibrecipes__base.sun3.concat(srclibrecipes__base['29']),
+var fbjslibinvariant__validateFormat = function validateFormat(format) {};
 
-  '01m': srclibrecipes__base.sunWinter1,
-  '02m': srclibrecipes__base.sunWinter2.concat(srclibrecipes__base['02']),
-  '03m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['03']),
-  '40m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['40']),
-  '05m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['05']),
-  '41m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['41']),
-  '42m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['42']),
-  '07m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['07']),
-  '43m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['43']),
-  '44m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['44']),
-  '08m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['08']),
-  '45m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['45']),
-  '24m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['24']),
-  '06m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['06']),
-  '25m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['25']),
-  '26m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['26']),
-  '20m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['20']),
-  '27m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['27']),
-  '28m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['28']),
-  '21m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['21']),
-  '29m': srclibrecipes__base.sunWinter3.concat(srclibrecipes__base['29']),
+if ('development' !== 'production') {
+  fbjslibinvariant__validateFormat = function validateFormat(format) {
+    if (format === undefined) {
+      throw new Error('invariant requires an error message argument');
+    }
+  };
+}
 
-  '01n': srclibrecipes__base.moon1,
-  '02n': srclibrecipes__base.moon2.concat(srclibrecipes__base['02']),
-  '03n': srclibrecipes__base.moon3.concat(srclibrecipes__base['03']),
-  '40n': srclibrecipes__base.moon3.concat(srclibrecipes__base['40']),
-  '05n': srclibrecipes__base.moon3.concat(srclibrecipes__base['05']),
-  '41n': srclibrecipes__base.moon3.concat(srclibrecipes__base['41']),
-  '42n': srclibrecipes__base.moon3.concat(srclibrecipes__base['42']),
-  '07n': srclibrecipes__base.moon3.concat(srclibrecipes__base['07']),
-  '43n': srclibrecipes__base.moon3.concat(srclibrecipes__base['43']),
-  '44n': srclibrecipes__base.moon3.concat(srclibrecipes__base['44']),
-  '08n': srclibrecipes__base.moon3.concat(srclibrecipes__base['08']),
-  '45n': srclibrecipes__base.moon3.concat(srclibrecipes__base['45']),
-  '24n': srclibrecipes__base.moon3.concat(srclibrecipes__base['24']),
-  '06n': srclibrecipes__base.moon3.concat(srclibrecipes__base['06']),
-  '25n': srclibrecipes__base.moon3.concat(srclibrecipes__base['25']),
-  '26n': srclibrecipes__base.moon3.concat(srclibrecipes__base['26']),
-  '20n': srclibrecipes__base.moon3.concat(srclibrecipes__base['20']),
-  '27n': srclibrecipes__base.moon3.concat(srclibrecipes__base['27']),
-  '28n': srclibrecipes__base.moon3.concat(srclibrecipes__base['28']),
-  '21n': srclibrecipes__base.moon3.concat(srclibrecipes__base['21']),
-  '29n': srclibrecipes__base.moon3.concat(srclibrecipes__base['29']),
+function fbjslibinvariant__invariant(condition, format, a, b, c, d, e, f) {
+  fbjslibinvariant__validateFormat(format);
 
-  15: [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 1
-  }, {
-    primitive: 'fog',
-    x: 0,
-    y: 76
-  }],
-  '04': [{
-    primitive: 'cloud',
-    x: 5,
-    y: 25,
-    variation: 1
-  }],
-  46: srclibrecipes__base['40'],
-  '09': srclibrecipes__base['05'],
-  10: srclibrecipes__base['41'],
-  47: srclibrecipes__base['42'],
-  12: srclibrecipes__base['07'],
-  48: srclibrecipes__base['43'],
-  49: srclibrecipes__base['44'],
-  13: srclibrecipes__base['08'],
-  50: srclibrecipes__base['45'],
-  30: srclibrecipes__base['24'],
-  22: srclibrecipes__base['06'],
-  11: srclibrecipes__base['25'],
-  31: srclibrecipes__base['26'],
-  23: srclibrecipes__base['20'],
-  32: srclibrecipes__base['27'],
-  33: srclibrecipes__base['28'],
-  14: srclibrecipes__base['21'],
-  34: srclibrecipes__base['29']
-};
-/*≠≠ src/lib/recipes.js ≠≠*/
+  if (!condition) {
+    var error;
+    if (format === undefined) {
+      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+    } else {
+      var args = [a, b, c, d, e, f];
+      var argIndex = 0;
+      error = new Error(format.replace(/%s/g, function () {
+        return args[argIndex++];
+      }));
+      error.name = 'Invariant Violation';
+    }
+
+    error.framesToPop = 1; // we don't care about invariant's own frame
+    throw error;
+  }
+}
+
+$m['fbjs/lib/invariant'].exports = fbjslibinvariant__invariant;
+/*≠≠ node_modules/fbjs/lib/invariant.js ≠≠*/
 
 
 /*== node_modules/fbjs/lib/emptyFunction.js ==*/
@@ -648,11 +141,9 @@ $m['fbjs/lib/emptyFunction'] = { exports: {} };
 
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  * 
  */
@@ -1159,155 +650,464 @@ $m['preact'] = { exports: {} };
 /*≠≠ node_modules/preact/dist/preact.js ≠≠*/
 
 
-/*== node_modules/object-assign/index.js ==*/
-$m['object-assign'] = { exports: {} };
-/*
-object-assign
-(c) Sindre Sorhus
-@license MIT
-*/
+/*== src/graphicsDefs.js ==*/
+$m['src/graphicsDefs'] = { exports: {} };
 
-/* eslint-disable no-unused-vars */
-var objectassign__getOwnPropertySymbols = Object.getOwnPropertySymbols;
-var objectassign__hasOwnProperty = Object.prototype.hasOwnProperty;
-var objectassign__propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-function objectassign__toObject(val) {
-	if (val === null || val === undefined) {
-		throw new TypeError('Object.assign cannot be called with null or undefined');
-	}
-
-	return Object(val);
-}
-
-function objectassign__shouldUseNative() {
-	try {
-		if (!Object.assign) {
-			return false;
-		}
-
-		// Detect buggy property enumeration order in older V8 versions.
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-		var test1 = new String('abc'); // eslint-disable-line no-new-wrappers
-		test1[5] = 'de';
-		if (Object.getOwnPropertyNames(test1)[0] === '5') {
-			return false;
-		}
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-		var test2 = {};
-		for (var i = 0; i < 10; i++) {
-			test2['_' + String.fromCharCode(i)] = i;
-		}
-		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
-			return test2[n];
-		});
-		if (order2.join('') !== '0123456789') {
-			return false;
-		}
-
-		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-		var test3 = {};
-		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
-			test3[letter] = letter;
-		});
-		if (Object.keys(Object.assign({}, test3)).join('') !== 'abcdefghijklmnopqrst') {
-			return false;
-		}
-
-		return true;
-	} catch (err) {
-		// We don't expect any of the above to throw, but better to be safe.
-		return false;
-	}
-}
-
-$m['object-assign'].exports = objectassign__shouldUseNative() ? Object.assign : function (target, source) {
-	var from;
-	var to = objectassign__toObject(target);
-	var symbols;
-
-	for (var s = 1; s < arguments.length; s++) {
-		from = Object(arguments[s]);
-
-		for (var key in from) {
-			if (objectassign__hasOwnProperty.call(from, key)) {
-				to[key] = from[key];
-			}
-		}
-
-		if (objectassign__getOwnPropertySymbols) {
-			symbols = objectassign__getOwnPropertySymbols(from);
-			for (var i = 0; i < symbols.length; i++) {
-				if (objectassign__propIsEnumerable.call(from, symbols[i])) {
-					to[symbols[i]] = from[symbols[i]];
-				}
-			}
-		}
-	}
-
-	return to;
-};
-/*≠≠ node_modules/object-assign/index.js ≠≠*/
-
-
-/*== node_modules/fbjs/lib/invariant.js ==*/
-$m['fbjs/lib/invariant'] = { exports: {} };
-/**
- * Copyright (c) 2013-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- */
-
-/**
- * Use invariant() to assert state which your program assumes to be true.
- *
- * Provide sprintf-style format (only %s is supported) and arguments
- * to provide information about what broke and what you were
- * expecting.
- *
- * The invariant message will be stripped in production, but the invariant
- * will remain to ensure logic does not differ in production.
- */
-
-var fbjslibinvariant__validateFormat = function validateFormat(format) {};
-
-if ('development' !== 'production') {
-  fbjslibinvariant__validateFormat = function validateFormat(format) {
-    if (format === undefined) {
-      throw new Error('invariant requires an error message argument');
-    }
-  };
-}
-
-function fbjslibinvariant__invariant(condition, format, a, b, c, d, e, f) {
-  fbjslibinvariant__validateFormat(format);
-
-  if (!condition) {
-    var error;
-    if (format === undefined) {
-      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
-    } else {
-      var args = [a, b, c, d, e, f];
-      var argIndex = 0;
-      error = new Error(format.replace(/%s/g, function () {
-        return args[argIndex++];
-      }));
-      error.name = 'Invariant Violation';
-    }
-
-    error.framesToPop = 1; // we don't care about invariant's own frame
-    throw error;
+var srcgraphicsDefs__BASE = {
+  sun1: {
+    primitive: 'sun',
+    x: 9,
+    y: 9
+  },
+  sun2: {
+    primitive: 'sun',
+    x: 4,
+    y: 9
+  },
+  sun3: {
+    primitive: 'sun',
+    x: 0,
+    y: 2,
+    scaleX: 0.7,
+    scaleY: 0.7
+  },
+  sunWinter1: {
+    primitive: 'sunWinter',
+    x: 5,
+    y: 37,
+    winter: true
+  },
+  sunWinter2: {
+    primitive: 'sunWinter',
+    x: 0,
+    y: 37,
+    winter: true
+  },
+  sunWinter3: {
+    primitive: 'sunWinter',
+    x: 0,
+    y: 19,
+    scaleX: 0.7,
+    scaleY: 0.7,
+    winter: true
+  },
+  moon1: {
+    primitive: 'moon',
+    x: 20,
+    y: 20
+  },
+  moon2: {
+    primitive: 'moon',
+    x: 15,
+    y: 20
+  },
+  moon3: {
+    primitive: 'moon',
+    x: 2,
+    y: 5,
+    scaleX: 0.714285714,
+    scaleY: 0.714285714
+  },
+  cloud1: {
+    primitive: 'cloud',
+    fill: '#dddddd',
+    x: 43,
+    y: 37,
+    scaleX: 0.63,
+    scaleY: 0.63,
+    variation: 1
+  },
+  cloud2: {
+    primitive: 'cloud',
+    fill: '#dddddd',
+    x: 3,
+    y: 18,
+    variation: 1
+  },
+  cloud3: {
+    primitive: 'cloud',
+    fill: '#cccccc',
+    x: 3,
+    y: 18,
+    variation: 2
+  },
+  cloud4: {
+    primitive: 'cloud',
+    fill: '#b2b2b2',
+    x: 3,
+    y: 18,
+    variation: 3
+  },
+  cloud5: {
+    primitive: 'cloud',
+    fill: '#999999',
+    x: 3,
+    y: 18,
+    variation: 4
+  },
+  rain1: [{
+    primitive: 'raindrop',
+    x: 32,
+    y: 87
+  }, {
+    primitive: 'raindrop',
+    x: 56,
+    y: 78
+  }],
+  rain2: [{
+    primitive: 'raindrop',
+    x: 32,
+    y: 78
+  }, {
+    primitive: 'raindrop',
+    x: 45,
+    y: 87
+  }, {
+    primitive: 'raindrop',
+    x: 60,
+    y: 78
+  }],
+  rain3: [{
+    primitive: 'raindrop',
+    x: 18,
+    y: 78
+  }, {
+    primitive: 'raindrop',
+    x: 32,
+    y: 87
+  }, {
+    primitive: 'raindrop',
+    x: 47,
+    y: 79
+  }, {
+    primitive: 'raindrop',
+    x: 60,
+    y: 78
+  }, {
+    primitive: 'raindrop',
+    x: 74,
+    y: 87
+  }],
+  rainLightning1: [{
+    primitive: 'raindrop',
+    x: 28,
+    y: 87
+  }, {
+    primitive: 'raindrop',
+    x: 58,
+    y: 78
+  }],
+  rainLightning2: [{
+    primitive: 'raindrop',
+    x: 29,
+    y: 78
+  }, {
+    primitive: 'raindrop',
+    x: 50,
+    y: 87
+  }, {
+    primitive: 'raindrop',
+    x: 65,
+    y: 78
+  }],
+  rainLightning3: [{
+    primitive: 'raindrop',
+    x: 18,
+    y: 78
+  }, {
+    primitive: 'raindrop',
+    x: 29,
+    y: 87
+  }, {
+    primitive: 'raindrop',
+    x: 55,
+    y: 79
+  }, {
+    primitive: 'raindrop',
+    x: 68,
+    y: 78
+  }, {
+    primitive: 'raindrop',
+    x: 82,
+    y: 87
+  }],
+  sleet1: [{
+    primitive: 'snowflake',
+    x: 29,
+    y: 88
+  }, {
+    primitive: 'raindrop',
+    x: 60,
+    y: 79
+  }],
+  sleet2: [{
+    primitive: 'snowflake',
+    x: 30,
+    y: 79
+  }, {
+    primitive: 'raindrop',
+    x: 46,
+    y: 86
+  }, {
+    primitive: 'raindrop',
+    x: 60,
+    y: 80
+  }],
+  sleet3: [{
+    primitive: 'snowflake',
+    x: 15,
+    y: 79
+  }, {
+    primitive: 'raindrop',
+    x: 32,
+    y: 86
+  }, {
+    primitive: 'raindrop',
+    x: 47,
+    y: 80
+  }, {
+    primitive: 'snowflake',
+    x: 58,
+    y: 88
+  }, {
+    primitive: 'raindrop',
+    x: 74,
+    y: 80
+  }],
+  sleetLightning1: [{
+    primitive: 'snowflake',
+    x: 26,
+    y: 88
+  }, {
+    primitive: 'raindrop',
+    x: 58,
+    y: 79
+  }],
+  sleetLightning2: [{
+    primitive: 'snowflake',
+    x: 27,
+    y: 79
+  }, {
+    primitive: 'raindrop',
+    x: 50,
+    y: 86
+  }, {
+    primitive: 'raindrop',
+    x: 64,
+    y: 80
+  }],
+  sleetLightning3: [{
+    primitive: 'snowflake',
+    x: 15,
+    y: 79
+  }, {
+    primitive: 'raindrop',
+    x: 30,
+    y: 86
+  }, {
+    primitive: 'raindrop',
+    x: 55,
+    y: 80
+  }, {
+    primitive: 'snowflake',
+    x: 66,
+    y: 88
+  }, {
+    primitive: 'raindrop',
+    x: 82,
+    y: 80
+  }],
+  snow1: [{
+    primitive: 'snowflake',
+    x: 29,
+    y: 88
+  }, {
+    primitive: 'snowflake',
+    x: 58,
+    y: 79
+  }],
+  snow2: [{
+    primitive: 'snowflake',
+    x: 30,
+    y: 79
+  }, {
+    primitive: 'snowflake',
+    x: 44,
+    y: 88
+  }, {
+    primitive: 'snowflake',
+    x: 58,
+    y: 79
+  }],
+  snow3: [{
+    primitive: 'snowflake',
+    x: 15,
+    y: 79
+  }, {
+    primitive: 'snowflake',
+    x: 29,
+    y: 88
+  }, {
+    primitive: 'snowflake',
+    x: 44,
+    y: 79
+  }, {
+    primitive: 'snowflake',
+    x: 58,
+    y: 88
+  }, {
+    primitive: 'snowflake',
+    x: 72,
+    y: 79
+  }],
+  snowLightning1: [{
+    primitive: 'snowflake',
+    x: 26,
+    y: 88
+  }, {
+    primitive: 'snowflake',
+    x: 58,
+    y: 79
+  }],
+  snowLightning2: [{
+    primitive: 'snowflake',
+    x: 26,
+    y: 79
+  }, {
+    primitive: 'snowflake',
+    x: 52,
+    y: 88
+  }, {
+    primitive: 'snowflake',
+    x: 66,
+    y: 79
+  }],
+  snowLightning3: [{
+    primitive: 'snowflake',
+    x: 13,
+    y: 79
+  }, {
+    primitive: 'snowflake',
+    x: 27,
+    y: 88
+  }, {
+    primitive: 'snowflake',
+    x: 55,
+    y: 79
+  }, {
+    primitive: 'snowflake',
+    x: 69,
+    y: 88
+  }, {
+    primitive: 'snowflake',
+    x: 83,
+    y: 79
+  }],
+  lightning: {
+    primitive: 'lightning',
+    x: 37,
+    y: 51
+  },
+  fog: {
+    primitive: 'fog',
+    x: 0,
+    y: 76
   }
-}
+};
 
-$m['fbjs/lib/invariant'].exports = fbjslibinvariant__invariant;
-/*≠≠ node_modules/fbjs/lib/invariant.js ≠≠*/
+$m['src/graphicsDefs'].exports = {
+  '15': [srcgraphicsDefs__BASE.cloud2, srcgraphicsDefs__BASE.fog],
+  '04': [srcgraphicsDefs__BASE.cloud2],
+  '46': [srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.rain1],
+  '09': [srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.rain2],
+  '10': [srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.rain3],
+  '47': [srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.sleet1],
+  '12': [srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.sleet2],
+  '48': [srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.sleet3],
+  '49': [srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.snow1],
+  '13': [srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.snow2],
+  '50': [srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.snow3],
+  '30': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.rainLightning1],
+  '22': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.rainLightning2],
+  '11': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.rainLightning3],
+  '31': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.sleetLightning1],
+  '23': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.sleetLightning2],
+  '32': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.sleetLightning3],
+  '33': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud3, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.snowLightning1],
+  '14': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud4, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.snowLightning2],
+  '34': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.cloud5, srcgraphicsDefs__BASE.lightning, 4), srcgraphicsDefs__BASE.lightning, srcgraphicsDefs__BASE.snowLightning3],
+
+  '01d': [srcgraphicsDefs__BASE.sun1],
+  '02d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun2, srcgraphicsDefs__BASE.cloud1, 5), srcgraphicsDefs__BASE.cloud1],
+  '03d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '04'],
+  '40d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '46'],
+  '05d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '09'],
+  '41d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '10'],
+  '42d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '47'],
+  '07d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '12'],
+  '43d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '48'],
+  '44d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '49'],
+  '08d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '13'],
+  '45d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '50'],
+  '24d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '30'],
+  '06d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '22'],
+  '25d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '11'],
+  '26d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '31'],
+  '20d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '23'],
+  '27d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '32'],
+  '28d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '33'],
+  '21d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '14'],
+  '29d': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sun3, srcgraphicsDefs__BASE.cloud2, 5), '34'],
+
+  '01n': [srcgraphicsDefs__BASE.moon1],
+  '02n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon2, srcgraphicsDefs__BASE.cloud1, 5), srcgraphicsDefs__BASE.cloud1],
+  '03n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '04'],
+  '40n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '46'],
+  '05n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '09'],
+  '41n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '10'],
+  '42n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '47'],
+  '07n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '12'],
+  '43n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '48'],
+  '44n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '49'],
+  '08n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '13'],
+  '45n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '50'],
+  '24n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '30'],
+  '06n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '22'],
+  '25n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '11'],
+  '26n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '31'],
+  '20n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '23'],
+  '27n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '32'],
+  '28n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '33'],
+  '21n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '14'],
+  '29n': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.moon3, srcgraphicsDefs__BASE.cloud2, 5), '34'],
+
+  '01m': [srcgraphicsDefs__BASE.sunWinter1],
+  '02m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter2, srcgraphicsDefs__BASE.cloud1, 5), srcgraphicsDefs__BASE.cloud1],
+  '03m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '04'],
+  '40m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '46'],
+  '05m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '09'],
+  '41m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '10'],
+  '42m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '47'],
+  '07m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '12'],
+  '43m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '48'],
+  '44m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '49'],
+  '08m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '13'],
+  '45m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '50'],
+  '24m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '30'],
+  '06m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '22'],
+  '25m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '11'],
+  '26m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '31'],
+  '20m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '23'],
+  '27m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '32'],
+  '28m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '33'],
+  '21m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '14'],
+  '29m': [srcgraphicsDefs__masked(srcgraphicsDefs__BASE.sunWinter3, srcgraphicsDefs__BASE.cloud2, 5), '34']
+};
+
+function srcgraphicsDefs__masked(back, front, offset) {
+  return Object.assign({ mask: Object.assign({ offset: offset }, front) }, back);
+}
+/*≠≠ src/graphicsDefs.js ≠≠*/
 
 
 /*== node_modules/prop-types/factoryWithThrowingShims.js ==*/
@@ -1370,12 +1170,10 @@ $m['prop-types/factoryWithThrowingShims'].exports = function () {
 /*== node_modules/fbjs/lib/warning.js ==*/
 $m['fbjs/lib/warning'] = { exports: {} };
 /**
- * Copyright 2014-2015, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) 2014-present, Facebook, Inc.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
  */
 
@@ -2027,8 +1825,6 @@ $m['@yr/component/Component'] = { exports: {} };
 var yrcomponentComponent___require = $m['preact'].exports,
     yrcomponentComponent__PreactComponent = yrcomponentComponent___require.Component;
 
-var yrcomponentComponent__assign = $m['object-assign'].exports;
-
 var yrcomponentComponent__Component = function (_PreactComponent) {
   babelHelpers.inherits(Component, _PreactComponent);
 
@@ -2043,7 +1839,7 @@ var yrcomponentComponent__Component = function (_PreactComponent) {
     // Set up initial state
     var _this = babelHelpers.possibleConstructorReturn(this, _PreactComponent.call(this, props, context));
 
-    _this.state = yrcomponentComponent__assign({}, _this.__state);
+    _this.state = Object.assign({}, _this.__state);
     // Autobind mixin methods
     if (_this.__bindableMethods) {
       _this.__bindableMethods.forEach(function (method) {
@@ -2059,8 +1855,8 @@ var yrcomponentComponent__Component = function (_PreactComponent) {
   }
 
   /**
-   * React: render
-   * @returns {React}
+   * Render
+   * @returns {Object}
    */
 
   Component.prototype.render = function render() {
@@ -2093,13 +1889,12 @@ var yrcomponent___require = $m['preact'].exports,
 var yrcomponent___require2 = {},
     yrcomponent__serverRender = yrcomponent___require2.render;
 
-var yrcomponent__assign = $m['object-assign'].exports;
 var yrcomponent__Component = $m['@yr/component/Component'].exports;
 var yrcomponent__PropTypes = $m['prop-types'].exports;
 var yrcomponent__runtime = $m['@yr/runtime'].exports;
 
 var yrcomponent__STATIC_KEYS = ['displayName', 'defaultProps', 'propTypes'];
-var yrcomponent__RESERVED_KEYS = yrcomponent__STATIC_KEYS.concat(['componentWillUnmount', 'render', 'state']);
+var yrcomponent__RESERVED_KEYS = yrcomponent__STATIC_KEYS.concat(['render', 'state']);
 
 $m['@yr/component'].exports = {
   Component: yrcomponent__Component,
@@ -2180,7 +1975,7 @@ function yrcomponent__define(definition) {
   }
 
   // Copy to comp prototype
-  yrcomponent__assign(comp.prototype, spec);
+  Object.assign(comp.prototype, spec);
 
   return comp;
 }
@@ -2210,165 +2005,6 @@ function yrcomponent__shouldBeStateless(definition, preferStateless) {
   return true;
 }
 /*≠≠ node_modules/@yr/component/index.js ≠≠*/
-
-
-/*== src/lib/utils.js ==*/
-$m['src/lib/utils'] = { exports: {} };
-var srclibutils___require = $m['@yr/component'].exports,
-    srclibutils__el = srclibutils___require.el;
-
-var srclibutils__MAX_WIDTH = 100;
-
-$m['src/lib/utils'].exports = {
-  /**
-   * Parse 'options'
-   * @param {Object} options
-   * @returns {Object}
-   */
-  parse: function parse(options) {
-    var opts = {};
-
-    opts.visible = true;
-    // opts.scale = (type == 'canvas') ? capabilities.backingRatio : 1;
-    opts.scaleX = 1;
-    opts.scaleY = 1;
-    opts.primitive = options.primitive;
-    opts.x = Math.round(options.x * opts.scaleX);
-    opts.y = Math.round(options.y * opts.scaleY);
-    opts.scaleX = (options.scaleX || 1) * opts.scaleX;
-    opts.scaleY = (options.scaleY || 1) * opts.scaleY;
-    opts.flip = options.flip;
-    opts.tint = options.tint || 1;
-    opts.winter = options.winter;
-    opts.variation = options.variation != null ? '' + options.variation : '';
-    opts.class = '' + opts.primitive + opts.variation + '-primitive';
-
-    return opts;
-  },
-
-
-  /**
-   * Retrieve React 'use' element for 'link'
-   * @param {String} link
-   * @param {Object} options
-   * @returns {React}
-   */
-  getElement: function getElement(link, options) {
-    return srclibutils__el('use', {
-      className: options.class,
-      'xlink:href': link,
-      x: 0,
-      y: 0,
-      width: 100,
-      height: 100,
-      transform: options.flip ? 'translate(' + (srclibutils__MAX_WIDTH * options.scaleX + options.x) + ',' + options.scaleY * options.y + ') scale(' + -1 * options.scaleX + ', ' + options.scaleY + ')' : 'translate(' + options.x + ',' + options.y + ') scale(' + options.scaleX + ',' + options.scaleY + ')'
-    });
-  }
-};
-/*≠≠ src/lib/utils.js ≠≠*/
-
-
-/*== src/lib/primitives/precipitation.js ==*/
-$m['src/lib/primitives/precipitation'] = { exports: {} };
-
-var srclibprimitivesprecipitation__utils = $m['src/lib/utils'].exports;
-
-/**
- * Render precipitation svg primitive
- * @param {Object} options
- * @returns {String}
- */
-$m['src/lib/primitives/precipitation'].exports = function render(options) {
-  return srclibprimitivesprecipitation__utils.getElement('#' + options.primitive, options);
-};
-/*≠≠ src/lib/primitives/precipitation.js ≠≠*/
-
-
-/*== src/lib/primitives/lightning.js ==*/
-$m['src/lib/primitives/lightning'] = { exports: {} };
-
-var srclibprimitiveslightning__utils = $m['src/lib/utils'].exports;
-
-/**
- * Render lightning svg primitive
- * @param {Object} options
- * @returns {String}
- */
-$m['src/lib/primitives/lightning'].exports = function render(options) {
-  return srclibprimitiveslightning__utils.getElement('#lightning', options);
-};
-/*≠≠ src/lib/primitives/lightning.js ≠≠*/
-
-
-/*== src/lib/primitives/fog.js ==*/
-$m['src/lib/primitives/fog'] = { exports: {} };
-
-var srclibprimitivesfog__utils = $m['src/lib/utils'].exports;
-
-/**
- * Render fog svg primitive
- * @param {Object} options
- * @returns {String}
- */
-$m['src/lib/primitives/fog'].exports = function render(options) {
-  return srclibprimitivesfog__utils.getElement('#fog', options);
-};
-/*≠≠ src/lib/primitives/fog.js ≠≠*/
-
-
-/*== src/lib/primitives/cloud.js ==*/
-$m['src/lib/primitives/cloud'] = { exports: {} };
-
-var srclibprimitivescloud__utils = $m['src/lib/utils'].exports;
-
-/**
- * Render cloud svg primitive
- * @param {Object} options
- * @returns {String}
- */
-$m['src/lib/primitives/cloud'].exports = function render(options) {
-  return srclibprimitivescloud__utils.getElement('#cloud', options);
-};
-/*≠≠ src/lib/primitives/cloud.js ≠≠*/
-
-
-/*== src/lib/primitives/celestial.js ==*/
-$m['src/lib/primitives/celestial'] = { exports: {} };
-
-var srclibprimitivescelestial__utils = $m['src/lib/utils'].exports;
-
-/**
- * Render sun, winter sun, or moon svg primitive
- * @param {Object} options
- * @returns {String}
- */
-$m['src/lib/primitives/celestial'].exports = function render() {
-  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-  return srclibprimitivescelestial__utils.getElement(options.primitive == 'moon' ? '#moon' : options.winter ? '#sunWinter' : '#sun', options);
-};
-/*≠≠ src/lib/primitives/celestial.js ≠≠*/
-
-
-/*== src/lib/primitives/index.js ==*/
-$m['src/lib/primitives/index'] = { exports: {} };
-
-var srclibprimitivesindex__celestial = $m['src/lib/primitives/celestial'].exports;
-var srclibprimitivesindex__cloud = $m['src/lib/primitives/cloud'].exports;
-var srclibprimitivesindex__fog = $m['src/lib/primitives/fog'].exports;
-var srclibprimitivesindex__lightning = $m['src/lib/primitives/lightning'].exports;
-var srclibprimitivesindex__precipitation = $m['src/lib/primitives/precipitation'].exports;
-
-$m['src/lib/primitives/index'].exports = {
-  cloud: srclibprimitivesindex__cloud,
-  fog: srclibprimitivesindex__fog,
-  lightning: srclibprimitivesindex__lightning,
-  moon: srclibprimitivesindex__celestial,
-  raindrop: srclibprimitivesindex__precipitation,
-  snowflake: srclibprimitivesindex__precipitation,
-  sun: srclibprimitivesindex__celestial
-};
-/*≠≠ src/lib/primitives/index.js ≠≠*/
 
 
 /*== node_modules/@yr/graphics-component/index.js ==*/
@@ -2403,6 +2039,10 @@ $m['@yr/graphics-component'].exports = {
 
     if (!('fallback' in options)) {
       options.fallback = true;
+    }
+    // Allow prefix in cases where id could be number (illegal DOM id)
+    if (!('idPrefix' in options)) {
+      options.idPrefix = '';
     }
 
     return yrgraphicscomponent__define({
@@ -2440,12 +2080,24 @@ $m['@yr/graphics-component'].exports = {
         }
 
         if (type === yrgraphicscomponent__TYPE_SVG) {
-          var children = options.renderInnerSvg ? options.renderInnerSvg(id) : [yrgraphicscomponent__el('use', { 'xlink:href': '#' + id, x: 0, y: 0, width: 100, height: 100 })];
+          var children = options.renderInnerSvg ? options.renderInnerSvg(id) : [yrgraphicscomponent__el('use', { 'xlink:href': '#' + options.idPrefix + id, x: 0, y: 0, width: 100, height: 100 })];
 
           if (!Array.isArray(children)) {
             children = [children];
           }
           if (options.fallback) {
+            // https://css-tricks.com/a-complete-guide-to-svg-fallbacks/
+
+            // The SVG <image> element is used to embed other image files within SVG. However, within HTML,
+            // every browser tested recognizes <image> as a non-standard synonym for <img>.
+            // In SVG, you specify the URL of the image file with the xlink:href attribute.
+            // In HTML, you specify it with the src attribute.
+
+            // In most browsers, therefore, it is sufficient to include an <image> tag with a
+            // src attribute (pointing to your fallback image) inside your inline SVG: the old browsers
+            // will download the fallback, the new browsers won't. Except for Internet Explorer, which
+            // downloads the fallback image even when it doesn't display it.
+            // The solution is to put a null xlink:href attribute on the element.
             children.push(yrgraphicscomponent__el('image', { src: '' + rootImagePath + id + '.png', 'xlink:href': '' }));
           }
 
@@ -2457,7 +2109,7 @@ $m['@yr/graphics-component'].exports = {
             y: '0',
             height: options.height || '25px',
             // Fix for IE tabbing
-            focusable: false,
+            focusable: 'false',
             width: options.width || '25px',
             viewBox: '0 0 100 100'
           });
@@ -2471,53 +2123,18 @@ $m['@yr/graphics-component'].exports = {
 /*≠≠ node_modules/@yr/graphics-component/index.js ≠≠*/
 
 
-/*== src/lib/index.js ==*/
-$m['src/lib/index'] = { exports: {} };
+/*== index.js ==*/
+$m['@yr/weather-symbols'] = { exports: {} };
 
 /**
- * Yr weather symbols
+ * Weather symbols
  * https://github.com/yr/weather-symbols
  * @copyright Yr
  * @license MIT
  */
 
-var srclibindex__graphicsComponent = $m['@yr/graphics-component'].exports;
-var srclibindex__primitives = $m['src/lib/primitives/index'].exports;
-var srclibindex__recipes = $m['src/lib/recipes'].exports;
-var srclibindex__utils = $m['src/lib/utils'].exports;
-
-$m['src/lib/index'].exports = {
-  /**
-   * Instance factory
-   * @param {Object} options
-   * @returns {Function}
-   */
-  create: function create() {
-    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    options.renderInnerSvg = srclibindex__renderInnerSvg;
-
-    return srclibindex__graphicsComponent.create(options);
-  }
-};
-
-/**
- * Render inner svg string for 'id'
- * @param {String} id
- * @returns {String}
- */
-function srclibindex__renderInnerSvg(id) {
-  var recipe = srclibindex__recipes[id];
-
-  if (!recipe) return null;
-
-  return recipe.map(function (item) {
-    var options = srclibindex__utils.parse(item);
-
-    return srclibindex__primitives[options.primitive](options);
-  });
-}
-/*≠≠ src/lib/index.js ≠≠*/
+$m['@yr/weather-symbols'].exports = $m['@yr/graphics-component'].exports;
+/*≠≠ index.js ≠≠*/
 
 
 /*== node_modules/@yr/graphics-component/previewGrid.js ==*/
@@ -2545,13 +2162,13 @@ var srcpreviewpreview___require = $m['@yr/component'].exports,
     srcpreviewpreview__render = srcpreviewpreview___require.render;
 
 var srcpreviewpreview__grid = $m['@yr/graphics-component/previewGrid'].exports;
-var srcpreviewpreview__recipes = $m['src/lib/recipes'].exports;
-var srcpreviewpreview__symbolComponent = $m['src/lib/index'].exports;
+var srcpreviewpreview__graphicsDefs = $m['src/graphicsDefs'].exports;
+var srcpreviewpreview__symbolComponent = $m['@yr/weather-symbols'].exports;
 
-var srcpreviewpreview__symbol = srcpreviewpreview__symbolComponent.create({ rootImagePath: 'png' });
+var srcpreviewpreview__symbol = srcpreviewpreview__symbolComponent.create({ rootImagePath: 'png', idPrefix: 's' });
 
 srcpreviewpreview__render(srcpreviewpreview__grid({
-  ids: Object.keys(srcpreviewpreview__recipes),
+  ids: Object.keys(srcpreviewpreview__graphicsDefs),
   graphic: srcpreviewpreview__symbol
 }), document.getElementById('viewport'));
 /*≠≠ src/preview/preview.js ≠≠*/

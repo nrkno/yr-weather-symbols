@@ -2,14 +2,14 @@
 
 const { render } = require('@yr/component');
 const grid = require('@yr/graphics-component/previewGrid');
-const recipes = require('../lib/recipes');
-const symbolComponent = require('../lib/index');
+const graphicsDefs = require('../graphicsDefs');
+const symbolComponent = require('../../index');
 
-const symbol = symbolComponent.create({ rootImagePath: 'png' });
+const symbol = symbolComponent.create({ rootImagePath: 'png', idPrefix: 's' });
 
 render(
   grid({
-    ids: Object.keys(recipes),
+    ids: Object.keys(graphicsDefs),
     graphic: symbol
   }),
   document.getElementById('viewport')
