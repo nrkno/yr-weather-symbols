@@ -5,7 +5,7 @@
   "author": "alexander.pope@nrk.no",
   "dependencies": {
     "@yr/component": "6.x.x",
-    "@yr/graphics-component": "6.0.x"
+    "@yr/graphics-component": "7.1.x"
   },
   "devDependencies": {
     "babel-plugin-syntax-trailing-function-commas": "6.22.0",
@@ -41,7 +41,7 @@
   "scripts": {
     "build": "buddy build",
     "convert": "node bin/convert dist && zip -r -X ./yr-weather-symbols.zip ./dist",
-    "prepublish": "npm run build && npm run convert && mkdir -p ./docs/png && cp -r ./dist/png/100/ ./docs/png",
+    "prepublish": "npm run build",
     "watch": "buddy watch --serve --reload --invert --grep images"
   },
   "repository": "https://github.com/YR/weather-symbols.git",

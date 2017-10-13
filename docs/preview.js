@@ -2404,6 +2404,10 @@ $m['@yr/graphics-component'].exports = {
     if (!('fallback' in options)) {
       options.fallback = true;
     }
+    // Allow prefix in cases where id could be number (illegal DOM id)
+    if (!('idPrefix' in options)) {
+      options.idPrefix = '';
+    }
 
     return yrgraphicscomponent__define({
       displayName: 'graphicsComponent',
@@ -2440,12 +2444,24 @@ $m['@yr/graphics-component'].exports = {
         }
 
         if (type === yrgraphicscomponent__TYPE_SVG) {
-          var children = options.renderInnerSvg ? options.renderInnerSvg(id) : [yrgraphicscomponent__el('use', { 'xlink:href': '#' + id, x: 0, y: 0, width: 100, height: 100 })];
+          var children = options.renderInnerSvg ? options.renderInnerSvg(id) : [yrgraphicscomponent__el('use', { 'xlink:href': '#' + options.idPrefix + id, x: 0, y: 0, width: 100, height: 100 })];
 
           if (!Array.isArray(children)) {
             children = [children];
           }
           if (options.fallback) {
+            // https://css-tricks.com/a-complete-guide-to-svg-fallbacks/
+
+            // The SVG <image> element is used to embed other image files within SVG. However, within HTML,
+            // every browser tested recognizes <image> as a non-standard synonym for <img>.
+            // In SVG, you specify the URL of the image file with the xlink:href attribute.
+            // In HTML, you specify it with the src attribute.
+
+            // In most browsers, therefore, it is sufficient to include an <image> tag with a
+            // src attribute (pointing to your fallback image) inside your inline SVG: the old browsers
+            // will download the fallback, the new browsers won't. Except for Internet Explorer, which
+            // downloads the fallback image even when it doesn't display it.
+            // The solution is to put a null xlink:href attribute on the element.
             children.push(yrgraphicscomponent__el('image', { src: '' + rootImagePath + id + '.png', 'xlink:href': '' }));
           }
 
@@ -2457,7 +2473,7 @@ $m['@yr/graphics-component'].exports = {
             y: '0',
             height: options.height || '25px',
             // Fix for IE tabbing
-            focusable: false,
+            focusable: 'false',
             width: options.width || '25px',
             viewBox: '0 0 100 100'
           });
