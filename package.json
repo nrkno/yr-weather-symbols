@@ -33,8 +33,7 @@
     "babel-plugin-transform-object-rest-spread": "6.26.0",
     "buddy": "6.x.x",
     "buddy-plugin-imagemin": "5.3.1",
-    "buddy-plugin-nunjucks": "3.0.1",
-    "svg-to-png": "3.1.x"
+    "buddy-plugin-nunjucks": "3.0.1"
   },
   "main": "index.js",
   "scripts": {

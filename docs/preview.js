@@ -26,7 +26,8 @@ if ('browser' != 'browser') {
   };
 }
 (function (global) {
-  var babelHelpers = global.babelHelpers = {};
+  var babelHelpers = global.babelHelpers;
+  if (!babelHelpers) babelHelpers = global.babelHelpers = {};
 
   babelHelpers.classCallCheck = function (instance, Constructor) {
     if (!(instance instanceof Constructor)) {
