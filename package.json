@@ -2,60 +2,49 @@
   "name": "@yr/weather-symbols",
   "version": "6.0.2",
   "description": "Yr weather symbols",
-  "author": "alexander.pope@nrk.no",
+  "author": "alexander.pope@nrk.no, Simen Sægrov <simen.sagrov@nrk.no>",
   "dependencies": {
-    "@yr/component": "6.x.x",
-    "@yr/graphics-component": "7.1.x"
+    "@yr/graphics-component": "^8.0.0"
   },
   "devDependencies": {
-    "babel-plugin-syntax-trailing-function-commas": "6.22.0",
-    "babel-plugin-transform-async-generator-functions": "6.24.1",
-    "babel-plugin-transform-async-to-generator": "6.24.1",
-    "babel-plugin-transform-es2015-arrow-functions": "6.22.0",
-    "babel-plugin-transform-es2015-block-scoped-functions": "6.22.0",
-    "babel-plugin-transform-es2015-block-scoping": "6.26.0",
-    "babel-plugin-transform-es2015-classes": "6.24.1",
-    "babel-plugin-transform-es2015-computed-properties": "6.24.1",
-    "babel-plugin-transform-es2015-destructuring": "6.23.0",
-    "babel-plugin-transform-es2015-duplicate-keys": "6.24.1",
-    "babel-plugin-transform-es2015-for-of": "6.23.0",
-    "babel-plugin-transform-es2015-function-name": "6.24.1",
-    "babel-plugin-transform-es2015-literals": "6.22.0",
-    "babel-plugin-transform-es2015-object-super": "6.24.1",
-    "babel-plugin-transform-es2015-parameters": "6.24.1",
-    "babel-plugin-transform-es2015-shorthand-properties": "6.24.1",
-    "babel-plugin-transform-es2015-spread": "6.22.0",
-    "babel-plugin-transform-es2015-sticky-regex": "6.24.1",
-    "babel-plugin-transform-es2015-template-literals": "6.22.0",
-    "babel-plugin-transform-es2015-unicode-regex": "6.24.1",
-    "babel-plugin-transform-es5-property-mutators": "6.24.1",
-    "babel-plugin-transform-exponentiation-operator": "6.24.1",
-    "babel-plugin-transform-object-rest-spread": "6.26.0",
-    "buddy": "6.x.x",
-    "buddy-plugin-imagemin": "5.3.1",
-    "buddy-plugin-nunjucks": "3.0.1"
+    "@types/node": "^10.0.3",
+    "@types/react": "^16.3.13",
+    "@types/react-dom": "^16.0.5",
+    "copy-webpack-plugin": "^4.5.1",
+    "cpy-cli": "^1.0.1",
+    "css-loader": "^0.28.11",
+    "html-webpack-inline-source-plugin": "^0.0.10",
+    "html-webpack-inline-svg-plugin": "^1.2.4",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.4.0",
+    "prettier": "^1.12.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "renamer": "^0.6.1",
+    "rimraf": "^2.6.2",
+    "ts-loader": "^4.2.0",
+    "typescript": "^2.8.3",
+    "webpack": "^4.6.0",
+    "webpack-cli": "^2.1.2",
+    "webpack-dev-server": "^3.1.4"
   },
-  "main": "index.js",
+  "main": "dist/index",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
   "scripts": {
-    "build": "buddy build",
-    "convert": "node bin/generate src && node bin/convert dist && zip -r -X ./yr-weather-symbols.zip ./dist",
+    "build": "npm run clean && npm run convert && npm run build-mjs && npm run build-cjs && npm run build-locales && NODE_ENV=production npm run build-docs",
+    "build-docs": "webpack && rimraf docs/*.css",
+    "build-cjs": "tsc --module commonjs --target ES5",
+    "build-locales": "cpy locales/* dist/locales",
+    "build-mjs": "tsc --module es2015 --target ES2017 && renamer --regex --find '\\.js$' --replace '.mjs' 'dist/*.js'",
+    "clean": "rimraf dist/* docs/*",
+    "convert": "npm run generate && node bin/convert dist",
     "generate": "node bin/generate src",
-    "prepublish": "npm run build && npm run convert && mkdir -p ./docs/png && cp -r ./dist/png/100/ ./docs/png",
-    "watch": "buddy watch --serve --reload"
+    "lint": "prettier --list-different \"src/**/*.{js,css,ts,tsx}\"",
+    "prepublish": "npm run lint && npm run build",
+    "watch": "NODE_ENV=development webpack-dev-server"
   },
   "repository": "https://github.com/YR/weather-symbols.git",
-  "license": "MIT",
-  "buddy": {
-    "build": [
-      {
-        "input": "src/preview/",
-        "output": "docs",
-        "version": "es5"
-      }
-    ],
-    "server": {
-      "directory": "docs",
-      "port": 3000
-    }
-  }
+  "license": "MIT"
 }

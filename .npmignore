@@ -6,3 +6,8 @@ graphics
 bin
 yr-weather-symbols.zip
 yarn.lock
+src/
+locales/
+prettier.config.js
+tsconfig.json
+webpack.config.js

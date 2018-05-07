@@ -1,0 +1,43 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: #eee;
+  color: #333;
+}
+
+body {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+h2 {
+  font-weight: 400;
+  margin: 0 0 0.5em;
+}
+
+h3 {
+  font-weight: 400;
+  margin: 0;
+}
+
+.graphic {
+  background-color: white;
+  display: inline-block;
+  margin: 1em 0.5em 0;
+  padding: 1em;
+}
+
+.graphics-group {
+  display: inline-block;
+}
+
+.graphic svg,
+.graphic img {
+  display: inline-block;
+  height: 100px;
+  width: 100px;
+}
