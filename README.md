@@ -1,6 +1,5 @@
 Weather symbols for the new [yr.no](https://www.yr.no/en)
 
-[Download zip archive](https://github.com/YR/weather-symbols/raw/master/yr-weather-symbols.zip)
 
 |                                  | ID        | Day          | Night       | Winter sun  |
 |----------------------------------|:---------:|:------------:|:-----------:|:-----------:|
