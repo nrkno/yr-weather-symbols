@@ -42,7 +42,7 @@
     "convert": "npm run generate && node bin/convert dist",
     "generate": "node bin/generate src",
     "lint": "prettier --list-different \"src/**/*.{js,css,ts,tsx}\"",
-    "prepublish": "npm run lint && npm run build",
+    "prepublishOnly": "npm run lint && npm run build",
     "watch": "NODE_ENV=development webpack-dev-server"
   },
   "repository": "https://github.com/YR/weather-symbols.git",
