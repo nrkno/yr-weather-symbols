@@ -9,6 +9,11 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
+"@nrk/yr-graphics-component@10.1.0":
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/@nrk/yr-graphics-component/-/yr-graphics-component-10.1.0.tgz#bbf4ed55710e27329e31d254934d60183004e8c5"
+  integrity sha512-2xjoam7VdZoXAEflqkUV8dxryJjeTjkHR4PEUVjmGVstS0Kp/BkHkmAvIwqfKXWzYe87EtyOIXwryrAZQxbbVg==
+
 "@sindresorhus/is@^0.7.0":
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.7.0.tgz#9a06f4f137ee84d7df0460c1fdb1135ffa6c50fd"
@@ -29,12 +34,6 @@
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.3.13.tgz#47d466462b774556c1174ea0eda22c0578643362"
   dependencies:
     csstype "^2.2.0"
-
-"@yr/graphics-component@^8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@yr/graphics-component/-/graphics-component-8.0.0.tgz#19cb238f743daaa715524f29b3aa03ffdd12bd8c"
-  dependencies:
-    react "^16.3.2"
 
 abbrev@1:
   version "1.1.1"
