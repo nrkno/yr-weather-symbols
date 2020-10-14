@@ -2,11 +2,11 @@
 
 'use strict';
 
-const convert = require('@yr/graphics-component/bin/convert');
+const convert = require('@nrk/yr-graphics-component/bin/convert');
 const graphicsDefs = require('../src/graphicsDefs');
 
 const dir = process.argv[2];
-const graphics = Object.keys(graphicsDefs).map(id => {
+const graphics = Object.keys(graphicsDefs).map((id) => {
   return { id: `s${id}`, output: id };
 });
 

@@ -7,6 +7,6 @@
  * @license MIT
  */
 
-import { Graphic } from '@yr/graphics-component';
+import { Graphic } from '@nrk/yr-graphics-component';
 
 export { Graphic as WeatherSymbol };
