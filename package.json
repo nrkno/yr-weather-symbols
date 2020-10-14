@@ -45,6 +45,6 @@
     "prepublishOnly": "npm run lint && npm run build",
     "watch": "NODE_ENV=development webpack-dev-server"
   },
-  "repository": "https://github.com/YR/weather-symbols.git",
+  "repository": "https://github.com/nrkno/yr-weather-symbols/",
   "license": "MIT"
 }
