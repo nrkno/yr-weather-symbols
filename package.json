@@ -4,18 +4,25 @@
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no, Simen Sægrov <simen.sagrov@nrk.no>",
   "dependencies": {
-    "@nrk/yr-convert-graphics": "0.0.3"
+    "@nrk/yr-convert-graphics": "0.0.4"
   },
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "scripts": {
-    "clean": "rimraf dist/* docs/*",
-    "build": "npm run clean && npm run convert && npm run build-locales && NODE_ENV=production npm run build-docs",
-    "_build-docs": "rimraf docs/*.css",
+    "build": "npm run clean && npm run convert",
+    "build-docs": "webpack && rimraf docs/*.css",
     "build-locales": "cpy locales/* dist/locales",
+    "clean": "rimraf dist/*",
+    "preconvert": "docker build --build-arg SRC_FOLDER=symbols --build-arg SCRIPT_FOLDER=bin --build-arg NPM_TOKEN=${NPM_TOKEN} --tag yr-weather-symbols .",
+    "convert": "docker run -v $PWD/dist:/dist --cap-add=SYS_ADMIN --rm yr-weather-symbols",
+    "generate": "node bin/generate src",
+    "lint": "prettier --list-different \"src/**/*.{js,css,ts,tsx}\"",
     "prepublishOnly": "npm run lint && npm run build",
     "watch": "NODE_ENV=development webpack-dev-server"
   },
   "repository": "https://github.com/nrkno/yr-weather-symbols/",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "rimraf": "^3.0.2"
+  }
 }
