@@ -4,7 +4,7 @@
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no, Simen Sægrov <simen.sagrov@nrk.no>",
   "dependencies": {
-    "@nrk/yr-convert-graphics": "0.0.4"
+    "@nrk/yr-convert-graphics": "0.0.5"
   },
   "types": "dist/index.d.ts",
   "sideEffects": false,
