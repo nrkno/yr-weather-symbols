@@ -15,10 +15,12 @@ convertSvgFiles({
   src: 'symbols/light-mode/default',
   pngSizes,
   expectedSvgDimensions,
+  output: 'light-mode/default',
 });
 
 convertSvgFiles({
   src: 'symbols/light-mode/shadows',
   pngSizes,
   expectedSvgDimensions,
+  output: 'light-mode/shadows',
 });
