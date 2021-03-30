@@ -24,5 +24,8 @@
   "devDependencies": {
     "@types/node": "^14.14.37",
     "rimraf": "^3.0.2"
-  }
+  },
+  "files": [
+    "dist"
+  ]
 }
