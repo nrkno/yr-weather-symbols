@@ -24,10 +24,3 @@ convertSvgFiles({
   expectedSvgDimensions,
   output: 'light-mode/shadows',
 });
-
-convertSvgFiles({
-  src: 'symbols/dark-mode/default',
-  pngSizes,
-  expectedSvgDimensions,
-  output: 'dark-mode/default',
-});
