@@ -4,25 +4,25 @@
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no, Simen Sægrov <simen.sagrov@nrk.no>",
   "dependencies": {
-    "@nrk/yr-convert-graphics": "0.0.12"
+    "@nrk/yr-convert-graphics": "0.0.12",
+    "typescript": "^4.2.3"
   },
   "types": "dist/index.d.ts",
-  "sideEffects": false,
   "scripts": {
-    "build": "npm run clean && npm run convert",
-    "build-docs": "webpack && rimraf docs/*.css",
-    "build-locales": "cpy locales/* dist/locales",
-    "clean": "rimraf dist/* temp/*",
-    "preconvert": "docker build --build-arg SRC_FOLDER=symbols --build-arg SCRIPT_FOLDER=bin --build-arg NPM_TOKEN=${NPM_TOKEN} --tag yr-weather-symbols-1 .",
-    "convert": "docker run -v $PWD/dist:/dist -v $PWD/temp:/temp  --cap-add=SYS_ADMIN --rm yr-weather-symbols-1",
-    "generate": "node bin/generate src",
+    "clean": "rimraf dist/*",
+    "build": "npm run clean && npm run build:symbols && npm run build:docs && npm run build:locales && npm run build:typescript",
+    "prebuild:symbols": "docker build --build-arg SRC_FOLDER=symbols --build-arg SCRIPT_FOLDER=bin --build-arg NPM_TOKEN=${NPM_TOKEN} --tag yr-weather-symbols-1 .",
+    "build:symbols": "docker run -v $PWD/dist:/dist --cap-add=SYS_ADMIN --rm yr-weather-symbols-1",
+    "build:docs": "rimraf docs/*.css && tsc --resolveJsonModule bin/buildDocs.ts && node bin/buildDocs.js",
+    "build:locales": "cpy locales/* dist/locales",
+    "build:typescript": "tsc",
     "lint": "prettier --list-different \"src/**/*.{js,css,ts,tsx}\"",
-    "prepublishOnly": "npm run lint && npm run build",
-    "watch": "NODE_ENV=development webpack-dev-server"
+    "prepublishOnly": "npm run lint && npm run build"
   },
   "repository": "https://github.com/nrkno/yr-weather-symbols/",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^14.14.37",
     "rimraf": "^3.0.2"
   }
 }
