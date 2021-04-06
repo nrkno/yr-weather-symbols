@@ -95,7 +95,7 @@ function createSymbolCell({ period, path }: {period?: IWeatherSymbolPeriod; path
   }
 
   return `<td class="symbol-table__symbol">
-    <img src="${path}/${period.id}.svg" width="50" height="50" />
+    <img src="/${path}/${period.id}.svg" width="50" height="50" />
 
     <dl class="symbol-table__definition-list">
       <dt>Old id</dt>
@@ -113,7 +113,7 @@ async function createHtml() {
   const table = `<!doctype html>
 <html>
   <head>
-    <title>@nrk/yr-weather-symbols</title>
+    <title>Yr weather symbols</title>
     <script src="https://static.nrk.no/core-components/major/7/core-tabs/core-tabs.min.js"></script>
     <style>
       body {
@@ -126,15 +126,42 @@ async function createHtml() {
         margin: 0 auto;
       }
 
+      .lead {
+        margin-bottom: 2rem;
+      }
+
+      .tabs {
+        display: flex;
+        margin-left: 0.5rem;
+      }
+
+      .tabs__tab {
+        border: 0;
+        border-top: 1px solid #ccc;
+        background-color: #efefef;
+        padding: 1rem;
+        border-top: 1px solid #ccc;
+        cursor: pointer;
+      }
+
+      .tabs__tab:nth-child(1) {
+        border-left: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+      }
+
+      .tabs__tab:nth-child(2) {
+        border-right: 1px solid #ccc;
+      }
+
+      .tabs__tab[aria-selected="true"] {
+        background-color: transparent;
+        text-decoration: underline;
+      }
+
       .symbol-table {
         border-collapse: collapse;
         table-layout: fixed;
         width: 100%;
-      }
-      
-      .symbol-table__description-heading {
-        text-align: left;
-        padding-left: 1rem;
       }
       
       .symbol-table th,
@@ -142,9 +169,19 @@ async function createHtml() {
         border: 1px solid #ccc;
       }
 
+      .symbol-table th {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+      }
+
       .symbol-table td {
         vertical-align: middle;
         padding: 1rem;
+      }
+
+      .symbol-table__description-heading {
+        text-align: left;
+        padding-left: 1rem;
       }
 
       .symbol-table tbody tr:nth-child(even) {
@@ -183,9 +220,21 @@ async function createHtml() {
   
   <body>
     <main class="main">
-      <core-tabs>
-        <button>Default</button>                  
-        <button>Shadows</button>
+      <h1>Yr weather symbols</h1>
+
+      <div class="lead">
+        <p>These are the weather symbols used on <a href="https://www.yr.no">Yr</a>.</p>
+        <p>
+          The weather symbols are meant to be used together with the APIs from The Norwegian Meteorological Institute.
+          Information about the API can be found on the <a href="https://developer.yr.no/">developer portal</a>.
+        </p>
+        <p>The weather API documention from The Norwegian Meteorological Institute has <a href="https://api.met.no/weatherapi/weathericon/2.0">more detailed information about the weather symbol code and ids</a>.</p>
+        <p>You can <a href="/light-mode.zip">download a zip file</a> containing all the weather symbols.</p>
+      </div>
+
+      <core-tabs class="tabs">
+        <button class="tabs__tab">Default</button>
+        <button class="tabs__tab">Shadows</button>
       </core-tabs>
 
       <div>

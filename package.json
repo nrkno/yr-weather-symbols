@@ -5,19 +5,25 @@
   "author": "alexander.pope@nrk.no, Simen Sægrov <simen.sagrov@nrk.no>",
   "dependencies": {
     "@nrk/yr-convert-graphics": "0.0.12",
+    "cpy-cli": "^3.1.1",
+    "gh-pages": "^3.1.0",
     "typescript": "^4.2.3"
   },
   "types": "dist/index.d.ts",
   "scripts": {
-    "clean": "rimraf dist/*",
-    "build": "npm run clean && npm run build:symbols && npm run build:docs && npm run build:locales && npm run build:typescript",
+    "clean": "rimraf dist/* docs/*",
+    "build": "npm run clean && npm run build:symbols && npm run build:typescript && npm run build:copy-locales && npm run build:docs",
     "prebuild:symbols": "docker build --build-arg SRC_FOLDER=symbols --build-arg SCRIPT_FOLDER=bin --build-arg NPM_TOKEN=${NPM_TOKEN} --tag yr-weather-symbols-1 .",
     "build:symbols": "docker run -v $PWD/dist:/dist --cap-add=SYS_ADMIN --rm yr-weather-symbols-1",
-    "build:docs": "rimraf docs/*.css && tsc --resolveJsonModule bin/buildDocs.ts && node bin/buildDocs.js",
-    "build:locales": "cpy locales/* dist/locales",
     "build:typescript": "tsc",
+    "build:copy-locales": "cpy locales/* dist/locales",
+    "build:docs": "npm run build:docs:build && npm run build:docs:copy-symbols && npm run build:docs:zip-symbols",
+    "build:docs:build": "tsc --resolveJsonModule bin/buildDocs.ts && node bin/buildDocs.js",
+    "build:docs:copy-symbols": "cpy dist/light-mode/default/svg docs/symbols/light-mode/default && cpy dist/light-mode/shadows/svg docs/symbols/light-mode/shadows",
+    "build:docs:zip-symbols": "zip -r docs/light-mode.zip dist/light-mode",
     "lint": "prettier --list-different \"src/**/*.{js,css,ts,tsx}\"",
-    "prepublishOnly": "npm run lint && npm run build"
+    "prepublishOnly": "npm run lint && npm run build",
+    "publish:docs": "gh-pages --dist docs"
   },
   "repository": "https://github.com/nrkno/yr-weather-symbols/",
   "license": "MIT",
