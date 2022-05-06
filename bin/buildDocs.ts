@@ -1,8 +1,8 @@
 import { weatherSymbolKeys, TWeatherSymbolKey, TWeatherSymbolId, convertSymbolKeyToId } from '../src/index';
-import * as en from "../locales/en.json";
-import * as nb from "../locales/nb.json";
-import * as nn from "../locales/nn.json";
-import { promises as fs} from 'fs';
+import * as en from '../locales/en.json';
+import * as nb from '../locales/nb.json';
+import * as nn from '../locales/nn.json';
+import { promises as fs } from 'fs';
 
 type TWeatherSymbolPeriod = 'day' | 'night' | 'polartwilight';
 
@@ -17,7 +17,7 @@ interface IWeatherSymbolGroup {
   polartwilight?: IWeatherSymbolPeriod;
 }
 
-const groupedWeatherSymbols: { [key: string]: IWeatherSymbolGroup} = {};
+const groupedWeatherSymbols: { [key: string]: IWeatherSymbolGroup } = {};
 
 for (const symbolKey of Object.keys(weatherSymbolKeys)) {
   const symbolId = convertSymbolKeyToId(symbolKey as TWeatherSymbolKey);
@@ -39,12 +39,11 @@ for (const symbolKey of Object.keys(weatherSymbolKeys)) {
 
   groupedWeatherSymbols[name][type as TWeatherSymbolPeriod] = {
     key: symbolKey as TWeatherSymbolKey,
-    id: symbolId
+    id: symbolId,
   };
 }
 
 // TODO(scb): Loop through weatherSymbolKeys and group by first part of key (before _)
-
 
 function createTable(path: string) {
   const rows = [];
@@ -69,17 +68,17 @@ function createTable(path: string) {
   </table>`;
 }
 
-function createRow({ group, path}: { group: IWeatherSymbolGroup, path: string }) {
+function createRow({ group, path }: { group: IWeatherSymbolGroup; path: string }) {
   if (group.day == null) {
     throw new Error(`Unable to create symbol row because group is missing "day" period`);
   }
 
-  const numericId = group.day.id.replace(/\D/g,'');
+  const numericId = group.day.id.replace(/\D/g, '');
 
   return `<tr>
-    ${createSymbolCell({period: group.day, path})}
-    ${createSymbolCell({period: group.night, path})}
-    ${createSymbolCell({period: group.polartwilight, path})}
+    ${createSymbolCell({ period: group.day, path })}
+    ${createSymbolCell({ period: group.night, path })}
+    ${createSymbolCell({ period: group.polartwilight, path })}
 
     <td>
       <p class="symbol-table__description" lang="en">${en[numericId]}</p>
@@ -89,13 +88,13 @@ function createRow({ group, path}: { group: IWeatherSymbolGroup, path: string })
   </tr>`;
 }
 
-function createSymbolCell({ period, path }: {period?: IWeatherSymbolPeriod; path: string}) {
+function createSymbolCell({ period, path }: { period?: IWeatherSymbolPeriod; path: string }) {
   if (period == null) {
     return '<td class="symbol-table__symbol"></td>';
   }
 
   return `<td class="symbol-table__symbol">
-    <img src="/${path}/${period.id}.svg" width="50" height="50" />
+    <img src="./${path}/${period.id}.svg" width="50" height="50" />
 
     <dl class="symbol-table__definition-list">
       <dt>Old id</dt>
@@ -104,17 +103,17 @@ function createSymbolCell({ period, path }: {period?: IWeatherSymbolPeriod; path
       <dt>New id</dt>
       <dd>${period.key}</dd>
     </dl>
-  </td>`
+  </td>`;
 }
 
 async function createHtml() {
-  const lightModeDefaultTable = createTable("symbols/light-mode/default");
-  const lightModeShadowsTable = createTable("symbols/light-mode/shadows");
+  const lightModeDefaultTable = createTable('symbols/light-mode/default');
+  const lightModeShadowsTable = createTable('symbols/light-mode/shadows');
   const table = `<!doctype html>
 <html>
   <head>
     <title>Yr weather symbols</title>
-    <script src="https://static.nrk.no/core-components/major/7/core-tabs/core-tabs.min.js"></script>
+    <script src="https://static.nrk.no/core-components/major/9/core-tabs/core-tabs.min.js"></script>
     <style>
       body {
         margin: 0;
@@ -229,19 +228,19 @@ async function createHtml() {
           Information about the API can be found on the <a href="https://developer.yr.no/">developer portal</a>.
         </p>
         <p>The weather API documention from The Norwegian Meteorological Institute has <a href="https://api.met.no/weatherapi/weathericon/2.0">more detailed information about the weather symbol code and ids</a>.</p>
-        <p>You can <a href="/light-mode.zip">download a zip file</a> containing all the weather symbols.</p>
+        <p>You can <a href="./light-mode.zip">download a zip file</a> containing all the weather symbols.</p>
       </div>
 
       <core-tabs class="tabs">
-        <button class="tabs__tab">Default</button>
-        <button class="tabs__tab">Shadows</button>
+        <button data-for="default" class="tabs__tab">Default</button>
+        <button data-for="shadows" class="tabs__tab">Shadows</button>
       </core-tabs>
 
-      <div>
+      <div id="default">
         ${lightModeDefaultTable}
       </div>
 
-      <div>
+      <div id="shadows">
         ${lightModeShadowsTable}
       </div>
     </main>
