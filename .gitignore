@@ -1,6 +1,11 @@
 node_modules
 .DS_Store
-src/graphicsDefs.svg
-dist/
 
-yarn-error.log
+# Build artifacts
+docs
+dist
+
+# Build artifacts from build:docs
+bin/*.js
+bin/*.d.ts
+src/*.js
