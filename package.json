@@ -3,12 +3,6 @@
   "version": "10.0.1",
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no, Simen Sægrov <simen.sagrov@nrk.no>",
-  "dependencies": {
-    "@nrk/yr-convert-graphics": "^1.0.0",
-    "cpy-cli": "^3.1.1",
-    "gh-pages": "^3.1.0",
-    "typescript": "^4.2.3"
-  },
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "scripts": {
@@ -27,9 +21,14 @@
   },
   "repository": "https://github.com/nrkno/yr-weather-symbols/",
   "license": "MIT",
+  "dependencies": {},
   "devDependencies": {
+    "@nrk/yr-convert-graphics": "^1.0.0",
     "@types/node": "^14.14.37",
-    "rimraf": "^3.0.2"
+    "cpy-cli": "^3.1.1",
+    "gh-pages": "^3.1.0",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.2.3"
   },
   "files": [
     "dist"
