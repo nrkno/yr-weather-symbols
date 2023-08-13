@@ -227,7 +227,7 @@ async function createHtml() {
           The weather symbols are meant to be used together with the APIs from The Norwegian Meteorological Institute.
           Information about the API can be found on the <a href="https://developer.yr.no/">developer portal</a>.
         </p>
-        <p>The weather API documention from The Norwegian Meteorological Institute has <a href="https://api.met.no/weatherapi/weathericon/2.0">more detailed information about the weather symbol code and ids</a>.</p>
+        <p>The weather API documention from The Norwegian Meteorological Institute has <a href="https://api.met.no/weatherapi/weathericon/2.0/documentation">more detailed information about the weather symbol code and ids</a>.</p>
         <p>You can <a href="./light-mode.zip">download a zip file</a> containing all the weather symbols.</p>
       </div>
 
