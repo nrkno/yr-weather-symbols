@@ -4,6 +4,7 @@ node_modules
 # Build artifacts
 docs
 dist
+temp
 
 # Build artifacts from build:docs
 bin/*.js
