@@ -107,8 +107,9 @@ function createSymbolCell({ period, path }: { period?: IWeatherSymbolPeriod; pat
 }
 
 async function createHtml() {
-  const defaultTable = createTable('symbols/default');
+  const lightModeTable = createTable('symbols/lightmode');
   const darkModeTable = createTable('symbols/darkmode');
+  const shadowsTable = createTable('symbols/shadows');
   const table = `<!doctype html>
 <html>
   <head>
@@ -232,16 +233,21 @@ async function createHtml() {
       </div>
 
       <core-tabs class="tabs">
-        <button data-for="default" class="tabs__tab">Default</button>
+        <button data-for="lightmode" class="tabs__tab">Lightmode</button>
         <button data-for="darkmode" class="tabs__tab">Darkmode</button>
+        <button data-for="shadows" class="tabs__tab">Shadows</button>
       </core-tabs>
 
-      <div id="default">
-        ${defaultTable}
+      <div id="lightmode">
+        ${lightModeTable}
       </div>
 
       <div id="darkmode">
         ${darkModeTable}
+      </div>
+
+      <div id="shadows">
+        ${shadowsTable}
       </div>
     </main>
   </body>
