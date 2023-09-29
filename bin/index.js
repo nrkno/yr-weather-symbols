@@ -1,4 +1,4 @@
-var convertSvgFiles = require('@nrk/yr-convert-graphics').convertSvgFiles;
+const { convertSvgFiles } = require('./lib/convertSvgFiles');
 
 const pngSizes = [100, 200];
 const expectedSvgDimensionsDefault = { width: 100, height: 100 };
