@@ -14,8 +14,8 @@
     "build:copy-locales": "cpy locales/* dist/locales",
     "build:docs": "npm run build:docs:build && npm run build:docs:copy-symbols && npm run build:docs:zip-symbols",
     "build:docs:build": "tsc --resolveJsonModule bin/buildDocs.ts && node bin/buildDocs.js",
-    "build:docs:copy-symbols": "cpy dist/light-mode/default/svg docs/symbols/light-mode/default && cpy dist/light-mode/shadows/svg docs/symbols/light-mode/shadows",
-    "build:docs:zip-symbols": "zip -r docs/light-mode.zip dist/light-mode",
+    "build:docs:copy-symbols": "cpy dist/symbols/lightmode/svg docs/symbols/lightmode && cpy dist/symbols/darkmode/svg docs/symbols/darkmode && cpy dist/symbols/shadows/svg docs/symbols/shadows",
+    "build:docs:zip-symbols": "zip -r docs/symbols.zip dist/symbols",
     "prepublishOnly": "npm run build",
     "publish:docs": "gh-pages --dist docs"
   },

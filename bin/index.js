@@ -1,19 +1,27 @@
 var convertSvgFiles = require('@nrk/yr-convert-graphics').convertSvgFiles;
 
 const pngSizes = [100, 200];
-const expectedSvgDimensionsDefault = { width: 100, height: 100 };
+const expectedSvgDimensionsLightmode = { width: 100, height: 100 };
+const expectedSvgDimensionsDarkmode = { width: 100, height: 100 };
 const expectedSvgDimensionsShadows = { width: 130, height: 130 };
 
 convertSvgFiles({
-  src: 'symbols/light-mode/default',
+  src: 'symbols/lightmode',
   pngSizes,
-  expectedSvgDimensions: expectedSvgDimensionsDefault,
-  output: 'light-mode/default',
+  expectedSvgDimensions: expectedSvgDimensionsLightmode,
+  output: 'symbols/lightmode',
 });
 
 convertSvgFiles({
-  src: 'symbols/light-mode/shadows',
+  src: 'symbols/darkmode',
+  pngSizes,
+  expectedSvgDimensions: expectedSvgDimensionsDarkmode,
+  output: 'symbols/darkmode',
+});
+
+convertSvgFiles({
+  src: 'symbols/shadows',
   pngSizes,
   expectedSvgDimensions: expectedSvgDimensionsShadows,
-  output: 'light-mode/shadows',
+  output: 'symbols/shadows',
 });

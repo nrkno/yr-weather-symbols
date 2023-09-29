@@ -107,8 +107,9 @@ function createSymbolCell({ period, path }: { period?: IWeatherSymbolPeriod; pat
 }
 
 async function createHtml() {
-  const lightModeDefaultTable = createTable('symbols/light-mode/default');
-  const lightModeShadowsTable = createTable('symbols/light-mode/shadows');
+  const lightModeTable = createTable('symbols/lightmode');
+  const darkModeTable = createTable('symbols/darkmode');
+  const shadowsTable = createTable('symbols/shadows');
   const table = `<!doctype html>
 <html>
   <head>
@@ -228,20 +229,25 @@ async function createHtml() {
           Information about the API can be found on the <a href="https://developer.yr.no/">developer portal</a>.
         </p>
         <p>The weather API documention from The Norwegian Meteorological Institute has <a href="https://api.met.no/weatherapi/weathericon/2.0">more detailed information about the weather symbol code and ids</a>.</p>
-        <p>You can <a href="./light-mode.zip">download a zip file</a> containing all the weather symbols.</p>
+        <p>You can <a href="./symbols.zip">download a zip file</a> containing all the weather symbols.</p>
       </div>
 
       <core-tabs class="tabs">
-        <button data-for="default" class="tabs__tab">Default</button>
+        <button data-for="lightmode" class="tabs__tab">Lightmode</button>
+        <button data-for="darkmode" class="tabs__tab">Darkmode</button>
         <button data-for="shadows" class="tabs__tab">Shadows</button>
       </core-tabs>
 
-      <div id="default">
-        ${lightModeDefaultTable}
+      <div id="lightmode">
+        ${lightModeTable}
+      </div>
+
+      <div id="darkmode">
+        ${darkModeTable}
       </div>
 
       <div id="shadows">
-        ${lightModeShadowsTable}
+        ${shadowsTable}
       </div>
     </main>
   </body>

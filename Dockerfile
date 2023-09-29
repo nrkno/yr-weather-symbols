@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:16.4.2
+FROM node:18-alpine
 
 ARG SRC_FOLDER
 ARG SCRIPT_FOLDER
@@ -10,10 +10,10 @@ ENV CONVERT_SCRIPT=$SCRIPT_FOLDER/index.js
 
 # Installs Chromium package and other dependencies
 RUN apk update && apk upgrade && \
-    echo @edge http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
-    echo @edge http://nl.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories && \
+    echo @main http://nl.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories && \
+    echo @community http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
     apk add --no-cache \
-    chromium=86.0.4240.111-r0
+    chromium
 
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
