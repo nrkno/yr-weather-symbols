@@ -1,14 +1,24 @@
-<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g clip-path="url(#clip0_1965_4981)">
-<path d="M51.4 21C53.8 25.2 55.3 30.1 55.3 35.3C55.3 51.1 42.5 63.9 26.7 63.9C25.4 63.9 24.2 63.8 23 63.6C28 72.2 37.2 78 47.7 78C63.5 78 76.3 65.2 76.3 49.4C76.3 34.8 65.5 22.8 51.4 21Z" fill="url(#paint0_linear_1965_4981)"/>
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_1965_4981)" filter="url(#filter0_d_1965_4981)">
+<path d="M61.4 28C63.8 32.2 65.3 37.1 65.3 42.3C65.3 58.1 52.5 70.9 36.7 70.9C35.4 70.9 34.2 70.8 33 70.6C38 79.2 47.2 85 57.7 85C73.5 85 86.3 72.2 86.3 56.4C86.3 41.8 75.5 29.8 61.4 28Z" fill="url(#paint0_linear_1965_4981)"/>
 </g>
 <defs>
-<linearGradient id="paint0_linear_1965_4981" x1="34.4251" y1="75.4921" x2="71.1806" y2="31.6887" gradientUnits="userSpaceOnUse">
+<filter id="filter0_d_1965_4981" x="0" y="0" width="120" height="120" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feMorphology radius="3" operator="dilate" in="SourceAlpha" result="effect1_dropShadow_1965_4981"/>
+<feOffset dy="3"/>
+<feGaussianBlur stdDeviation="3.5"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1965_4981"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1965_4981" result="shape"/>
+</filter>
+<linearGradient id="paint0_linear_1965_4981" x1="44.4251" y1="82.4921" x2="81.1806" y2="38.6887" gradientUnits="userSpaceOnUse">
 <stop stop-color="#686E73"/>
 <stop offset="0.9891" stop-color="#6A7075"/>
 </linearGradient>
 <clipPath id="clip0_1965_4981">
-<rect width="100" height="100" fill="white"/>
+<rect width="100" height="100" fill="white" transform="translate(10 7)"/>
 </clipPath>
 </defs>
 </svg>
