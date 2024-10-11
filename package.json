@@ -16,7 +16,6 @@
     "build:docs:build": "tsc --resolveJsonModule bin/buildDocs.ts && node bin/buildDocs.js",
     "build:docs:copy-symbols": "cpy dist/symbols/lightmode/svg docs/symbols/lightmode && cpy dist/symbols/darkmode/svg docs/symbols/darkmode && cpy dist/symbols/shadows/svg docs/symbols/shadows",
     "build:docs:zip-symbols": "zip -r docs/symbols.zip dist/symbols",
-    "prepublishOnly": "npm run build",
     "publish:docs": "gh-pages --dist docs"
   },
   "repository": "https://github.com/nrkno/yr-weather-symbols/",
