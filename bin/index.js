@@ -4,7 +4,7 @@ const pngSizes = [100, 200];
 const expectedSvgDimensionsLightmode = { width: 100, height: 100 };
 const expectedSvgDimensionsDarkmode = { width: 100, height: 100 };
 const expectedSvgDimensionsShadows = { width: 130, height: 130 };
-const expectedSvgDimensionsOutline = { width: 120, height: 120 };
+const expectedSvgDimensionsOutline = { width: 100, height: 100 };
 
 convertSvgFiles({
   src: 'symbols/lightmode',
