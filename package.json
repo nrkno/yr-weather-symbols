@@ -1,6 +1,6 @@
 {
   "name": "@nrk/yr-weather-symbols",
-  "version": "0.0.0-add-map-symbols-with-ts",
+  "version": "0.0.0-add-map-symbols-6035efbc1fe68ad3747afb2948258c433443a3b8",
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no, Simen Sægrov <simen.sagrov@nrk.no>",
   "types": "dist/index.d.ts",
