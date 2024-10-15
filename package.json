@@ -1,6 +1,6 @@
 {
   "name": "@nrk/yr-weather-symbols",
-  "version": "13.0.0",
+  "version": "0.0.0-add-map-symbols-6035efbc1fe68ad3747afb2948258c433443a3b8",
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no, Simen Sægrov <simen.sagrov@nrk.no>",
   "types": "dist/index.d.ts",
@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "@nrk/yr-convert-graphics": "^1.0.0",
+    "@nrk/yr-convert-graphics": "^1.1.0",
     "@types/node": "^14.14.37",
     "cpy-cli": "^3.1.1",
     "gh-pages": "^3.1.0",
