@@ -1,6 +1,6 @@
 {
   "name": "@nrk/yr-weather-symbols",
-  "version": "15.0.0-beta.0.1",
+  "version": "15.0.0-beta.0.2",
   "description": "Yr weather symbols",
   "author": "alexander.pope@nrk.no, Simen Sægrov <simen.sagrov@nrk.no>",
   "types": "dist/index.d.ts",
