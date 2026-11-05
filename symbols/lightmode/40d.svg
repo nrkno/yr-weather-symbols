@@ -18,7 +18,9 @@
 <g clip-path="url(#clip1_1829_1540)">
 <path d="M17.5446 19.0236L16.4554 20.9764" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
 </g>
-<path d="M13.5446 19.0236L13 20" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
+<g clip-path="url(#clip2_1829_1540)">
+<path d="M13.5446 19.0236L12.4554 20.9764" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
+</g>
 <defs>
 <linearGradient id="paint0_linear_1829_1540" x1="7.74988" y1="5.99812" x2="7.96715" y2="10.0134" gradientUnits="userSpaceOnUse">
 <stop stop-color="#FFAF22"/>
@@ -34,6 +36,9 @@
 <path id="stroke0_1829_1540" d="M12.5 5C10.1707 5 8.25574 6.76985 8.02441 9.03809C7.85339 9.0124 7.67818 9 7.5 9C5.567 9 4 10.567 4 12.5C4 14.4134 5.53545 15.9667 7.44141 15.998V16H17.6719V15.9951C20.0775 15.9047 22 13.9277 22 11.5C22 9.01472 19.9853 7 17.5 7C17.0988 7 16.71 7.05287 16.3398 7.15137C15.5487 5.86074 14.1247 5 12.5 5Z"/>
 <clipPath id="clip1_1829_1540">
 <rect width="4" height="4" fill="white" transform="matrix(1 0 0 -1 15 22)"/>
+</clipPath>
+<clipPath id="clip2_1829_1540">
+<rect width="4" height="4" fill="white" transform="matrix(1 0 0 -1 11 22)"/>
 </clipPath>
 </defs>
 </svg>

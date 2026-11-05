@@ -10,18 +10,18 @@
 <g mask="url(#mask0_1829_1551)">
 <circle opacity="0.1" cx="13" cy="8" r="11" fill="url(#paint0_linear_1829_1551)"/>
 </g>
-<path d="M3.70179 20.7505L6.29987 19.2505" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M3.70179 19.2505L6.29987 20.7505" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M5.00082 18.5005V21.5005" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M14.7018 20.7505L17.2999 19.2505" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M14.7018 19.2505L17.2999 20.7505" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M16.0008 18.5005V21.5005" stroke-linecap="round" stroke="#01A1BE"/>
 <use xlink:href="#stroke2_1829_1551" fill="#F56A00"/>
 <mask id="stroke3_1829_1551" maskUnits="userSpaceOnUse" x="9" y="10" width="7" height="12" fill="black">
 <rect fill="white" x="9" y="10" width="7" height="12"/>
 <use xlink:href="#stroke2_1829_1551"/>
 </mask>
 <path d="M14.7512 16.4266L12.6697 19.9948C12.3984 20.4598 11.6847 20.2265 11.7405 19.691L11.967 17.5167C11.9871 17.3235 11.8935 17.1361 11.7269 17.0362L10.4496 16.2698C10.2049 16.1229 10.1325 15.8012 10.2909 15.5637L12.5679 12.1481C12.873 11.6905 13.5856 11.989 13.4735 12.5274L13.0725 14.4521C13.0291 14.6604 13.1223 14.8734 13.3047 14.9828L14.5765 15.7459C14.8112 15.8867 14.8891 16.1901 14.7512 16.4266Z" stroke-width="2" stroke-linejoin="round" stroke="white" mask="url(#stroke3_1829_1551)"/>
+<path d="M3.70179 20.7505L6.29987 19.2505" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M3.70179 19.2505L6.29987 20.7505" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M5.00082 18.5005V21.5005" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M14.7018 20.7505L17.2999 19.2505" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M14.7018 19.2505L17.2999 20.7505" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M16.0008 18.5005V21.5005" stroke-linecap="round" stroke="#01A1BE"/>
 <g clip-path="url(#clip0_1829_1551)">
 <path d="M20.5446 19.0236L19.4554 20.9765" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
 </g>

@@ -1,23 +1,26 @@
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<use xlink:href="#stroke0_1829_1557" fill="#CADAE3"/>
+<use xlink:href="#stroke0_1829_1557" fill="#9DB7C2"/>
 <mask id="stroke1_1829_1557" fill="white">
 <use xlink:href="#stroke0_1829_1557"/>
 </mask>
-<path d="M12.5 5C10.1707 5 8.25574 6.76985 8.02441 9.03809C7.85339 9.0124 7.67818 9 7.5 9C5.567 9 4 10.567 4 12.5C4 14.4134 5.53545 15.9667 7.44141 15.998V16H17.6719V15.9951C20.0775 15.9047 22 13.9277 22 11.5C22 9.01472 19.9853 7 17.5 7C17.0988 7 16.71 7.05287 16.3398 7.15137C15.5487 5.86074 14.1247 5 12.5 5Z" stroke-width="2" stroke="#729AAA" mask="url(#stroke1_1829_1557)"/>
+<path d="M12.5 5C10.1707 5 8.25574 6.76985 8.02441 9.03809C7.85339 9.0124 7.67818 9 7.5 9C5.567 9 4 10.567 4 12.5C4 14.4134 5.53545 15.9667 7.44141 15.998V16H17.6719V15.9951C20.0775 15.9047 22 13.9277 22 11.5C22 9.01472 19.9853 7 17.5 7C17.0988 7 16.71 7.05287 16.3398 7.15137C15.5487 5.86074 14.1247 5 12.5 5Z" stroke-width="2" stroke="#74929E" mask="url(#stroke1_1829_1557)"/>
 <mask id="mask0_1829_1557" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="4" y="5" width="18" height="11">
 <path d="M12.5 5C10.1707 5 8.25574 6.76985 8.02441 9.03809C7.85339 9.0124 7.67818 9 7.5 9C5.567 9 4 10.567 4 12.5C4 14.4134 5.53545 15.9667 7.44141 15.998V16H17.6719V15.9951C20.0775 15.9047 22 13.9277 22 11.5C22 9.01472 19.9853 7 17.5 7C17.0988 7 16.71 7.05287 16.3398 7.15137C15.5487 5.86074 14.1247 5 12.5 5Z" fill="#D9D9D9"/>
 </mask>
 <g mask="url(#mask0_1829_1557)">
 <circle opacity="0.1" cx="13" cy="8" r="11" fill="url(#paint0_linear_1829_1557)"/>
 </g>
-<path d="M11.251 21.299L12.751 18.701" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M10.501 20H13.501" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M11.251 18.701L12.751 21.299" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M5.70179 20.7505L8.29987 19.2505" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M5.70179 19.2505L8.29987 20.7505" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M7.00085 18.5005V21.5005" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M7.74902 18.701L6.24902 21.2991" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M8.49902 20H5.49902" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M7.74902 21.2991L6.24902 18.701" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M15.749 18.701L14.249 21.299" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M16.499 20H13.499" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M15.749 21.299L14.249 18.701" stroke-linecap="round" stroke="#01A1BE"/>
 <g clip-path="url(#clip0_1829_1557)">
-<path d="M17.5446 19.0236L16.4554 20.9764" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
+<path d="M10.4554 20.9765L11.5446 19.0236" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
+</g>
+<g clip-path="url(#clip1_1829_1557)">
+<path d="M18.4554 20.9765L19.5446 19.0236" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
 </g>
 <defs>
 <linearGradient id="paint0_linear_1829_1557" x1="19.5" y1="17" x2="11" y2="3" gradientUnits="userSpaceOnUse">
@@ -26,7 +29,10 @@
 </linearGradient>
 <path id="stroke0_1829_1557" d="M12.5 5C10.1707 5 8.25574 6.76985 8.02441 9.03809C7.85339 9.0124 7.67818 9 7.5 9C5.567 9 4 10.567 4 12.5C4 14.4134 5.53545 15.9667 7.44141 15.998V16H17.6719V15.9951C20.0775 15.9047 22 13.9277 22 11.5C22 9.01472 19.9853 7 17.5 7C17.0988 7 16.71 7.05287 16.3398 7.15137C15.5487 5.86074 14.1247 5 12.5 5Z"/>
 <clipPath id="clip0_1829_1557">
-<rect width="4" height="4" fill="white" transform="matrix(1 0 0 -1 15 22)"/>
+<rect width="4" height="4" fill="white" transform="matrix(-1 0 0 1 13 18.0001)"/>
+</clipPath>
+<clipPath id="clip1_1829_1557">
+<rect width="4" height="4" fill="white" transform="matrix(-1 0 0 1 21 18.0001)"/>
 </clipPath>
 </defs>
 </svg>
