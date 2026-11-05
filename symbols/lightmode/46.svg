@@ -11,10 +11,10 @@
 <circle opacity="0.1" cx="13" cy="8" r="11" fill="url(#paint0_linear_1829_1531)"/>
 </g>
 <g clip-path="url(#clip0_1829_1531)">
-<path d="M17.5446 19.0236L16.4554 20.9764" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
+<path d="M15.5446 19.0236L14.4554 20.9764" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
 </g>
 <g clip-path="url(#clip1_1829_1531)">
-<path d="M13.5446 19.0236L12.4554 20.9764" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
+<path d="M11.5446 19.0236L10.4554 20.9764" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
 </g>
 <defs>
 <linearGradient id="paint0_linear_1829_1531" x1="19.5" y1="17" x2="11" y2="3" gradientUnits="userSpaceOnUse">
@@ -23,10 +23,10 @@
 </linearGradient>
 <path id="stroke0_1829_1531" d="M12.5 5C10.1707 5 8.25574 6.76985 8.02441 9.03809C7.85339 9.0124 7.67818 9 7.5 9C5.567 9 4 10.567 4 12.5C4 14.4134 5.53545 15.9667 7.44141 15.998V16H17.6719V15.9951C20.0775 15.9047 22 13.9277 22 11.5C22 9.01472 19.9853 7 17.5 7C17.0988 7 16.71 7.05287 16.3398 7.15137C15.5487 5.86074 14.1247 5 12.5 5Z"/>
 <clipPath id="clip0_1829_1531">
-<rect width="4" height="4" fill="white" transform="matrix(1 0 0 -1 15 22)"/>
+<rect width="4" height="4" fill="white" transform="matrix(1 0 0 -1 13 22)"/>
 </clipPath>
 <clipPath id="clip1_1829_1531">
-<rect width="4" height="4" fill="white" transform="matrix(1 0 0 -1 11 22)"/>
+<rect width="4" height="4" fill="white" transform="matrix(1 0 0 -1 9 22)"/>
 </clipPath>
 </defs>
 </svg>

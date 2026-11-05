@@ -10,10 +10,10 @@
 <g mask="url(#mask0_1829_1534)">
 <circle opacity="0.1" cx="13" cy="8" r="11" fill="url(#paint0_linear_1829_1534)"/>
 </g>
-<path d="M11.251 21.299L12.751 18.701" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M10.501 20H13.501" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M11.251 18.701L12.751 21.299" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M17.5446 19.0236L16.4554 20.9764" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
+<path d="M10.251 21.299L11.751 18.701" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M9.50098 20H12.501" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M10.251 18.701L11.751 21.299" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M16.5446 19.0236L15.4554 20.9764" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
 <defs>
 <linearGradient id="paint0_linear_1829_1534" x1="19.5" y1="17" x2="11" y2="3" gradientUnits="userSpaceOnUse">
 <stop/>
