@@ -10,7 +10,7 @@
 <g mask="url(#mask0_1829_1551)">
 <circle opacity="0.1" cx="13" cy="8" r="11" fill="url(#paint0_linear_1829_1551)"/>
 </g>
-<use xlink:href="#stroke2_1829_1551" fill="#F56A00"/>
+<use xlink:href="#stroke2_1829_1551" fill="#EB7100"/>
 <mask id="stroke3_1829_1551" maskUnits="userSpaceOnUse" x="9" y="10" width="7" height="12" fill="black">
 <rect fill="white" x="9" y="10" width="7" height="12"/>
 <use xlink:href="#stroke2_1829_1551"/>
