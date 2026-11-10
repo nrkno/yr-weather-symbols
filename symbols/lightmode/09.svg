@@ -6,7 +6,7 @@
 <path d="M9.54458 19.0236L8.45542 20.9764" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
 </g>
 <g clip-path="url(#clip1_2178_3126)">
-<path d="M13.5446 19.0236L12.4554 20.9764" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
+<path d="M13.5446 20.0236L12.4554 21.9764" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
 </g>
 <g clip-path="url(#clip2_2178_3126)">
 <path d="M17.5446 19.0236L16.4554 20.9764" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
@@ -21,7 +21,7 @@
 <rect width="4" height="4" fill="white" transform="matrix(1 0 0 -1 7 22)"/>
 </clipPath>
 <clipPath id="clip1_2178_3126">
-<rect width="4" height="4" fill="white" transform="matrix(1 0 0 -1 11 22)"/>
+<rect width="4" height="4" fill="white" transform="matrix(1 0 0 -1 11 23)"/>
 </clipPath>
 <clipPath id="clip2_2178_3126">
 <rect width="4" height="4" fill="white" transform="matrix(1 0 0 -1 15 22)"/>

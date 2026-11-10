@@ -2,12 +2,12 @@
 <use xlink:href="#stroke0_2178_3161" fill="#F2F7FA"/>
 <use xlink:href="#stroke0_2178_3161" fill="url(#paint0_linear_2178_3161)" fill-opacity="0.15" style="mix-blend-mode:multiply"/>
 <path d="M22 11.5C22 9.01472 19.9853 7 17.5 7C17.0988 7 16.71 7.05287 16.3398 7.15137C15.5487 5.86074 14.1247 5 12.5 5C10.1707 5 8.25574 6.76985 8.02441 9.03809C7.85339 9.0124 7.67818 9 7.5 9C5.567 9 4 10.567 4 12.5C4 14.4134 5.53545 15.9667 7.44141 15.998V16H17.6719V15.9951C20.0775 15.9047 22 13.9277 22 11.5ZM21 11.5C21 13.3874 19.5054 14.9256 17.6348 14.9961L17.5303 15H7.57324L7.45801 14.998C6.0964 14.9757 5 13.8661 5 12.5C5 11.1193 6.11929 10 7.5 10C7.63188 10 7.75739 10.0095 7.87598 10.0273L8.91309 10.1826L9.01953 9.13965C9.19938 7.37623 10.6893 6 12.5 6C13.7627 6 14.8705 6.66765 15.4873 7.67383L15.877 8.30957L16.5967 8.11816C16.8843 8.04162 17.1871 8 17.5 8C19.433 8 21 9.567 21 11.5Z" fill="#729AAA"/>
-<path d="M15.251 21.299L16.751 18.701" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M14.501 20H17.501" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M15.251 18.701L16.751 21.299" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M9.70179 20.7505L12.2999 19.2505" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M9.70179 19.2505L12.2999 20.7505" stroke-linecap="round" stroke="#01A1BE"/>
-<path d="M11.0009 18.5005V21.5005" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M15.251 22.299L16.751 19.701" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M14.501 21H17.501" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M15.251 19.701L16.751 22.299" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M8.70179 20.7505L11.2999 19.2505" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M8.70179 19.2505L11.2999 20.7505" stroke-linecap="round" stroke="#01A1BE"/>
+<path d="M10.0009 18.5005V21.5005" stroke-linecap="round" stroke="#01A1BE"/>
 <defs>
 <linearGradient id="paint0_linear_2178_3161" x1="17" y1="20" x2="10.5192" y2="10.9476" gradientUnits="userSpaceOnUse">
 <stop/>
