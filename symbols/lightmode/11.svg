@@ -9,16 +9,16 @@
 </mask>
 <path d="M14.7512 16.4266L12.6697 19.9948C12.3984 20.4598 11.6847 20.2265 11.7405 19.691L11.967 17.5167C11.9871 17.3235 11.8935 17.1361 11.7269 17.0362L10.4496 16.2698C10.2049 16.1229 10.1325 15.8012 10.2909 15.5637L12.5679 12.1481C12.873 11.6905 13.5856 11.989 13.4735 12.5274L13.0725 14.4521C13.0291 14.6604 13.1223 14.8734 13.3047 14.9828L14.5765 15.7459C14.8112 15.8867 14.8891 16.1901 14.7512 16.4266Z" stroke-width="2" stroke-linejoin="round" stroke="white" mask="url(#stroke2_2178_3146)"/>
 <g clip-path="url(#clip0_2178_3146)">
-<path d="M5.54458 19.0236L4.45542 20.9765" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
+<path d="M5.54458 19.0236L4.45542 20.9765" stroke-width="1.5" stroke-linecap="round" stroke="#1767CE"/>
 </g>
 <g clip-path="url(#clip1_2178_3146)">
-<path d="M15.5446 19.0236L14.4554 20.9765" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
+<path d="M15.5446 19.0236L14.4554 20.9765" stroke-width="1.5" stroke-linecap="round" stroke="#1767CE"/>
 </g>
 <g clip-path="url(#clip2_2178_3146)">
-<path d="M9.54458 19.0236L8.45542 20.9765" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
+<path d="M9.54458 19.0236L8.45542 20.9765" stroke-width="1.5" stroke-linecap="round" stroke="#1767CE"/>
 </g>
 <g clip-path="url(#clip3_2178_3146)">
-<path d="M19.5446 19.0236L18.4554 20.9765" stroke-width="1.5" stroke-linecap="round" stroke="#3D81D8"/>
+<path d="M19.5446 19.0236L18.4554 20.9765" stroke-width="1.5" stroke-linecap="round" stroke="#1767CE"/>
 </g>
 <defs>
 <linearGradient id="paint0_linear_2178_3146" x1="17" y1="20" x2="10.5192" y2="10.9476" gradientUnits="userSpaceOnUse">
